@@ -9,7 +9,7 @@
 We are on user side. *_OneSync_* will be the one of the easiest-to-use sync tool that will do everything without complex configuration. We hope that users will have great experience using *_OneSync_*.
 
 = Will *_OneSync_* screw up my PCs? =
-Well, if you are a normal user and use our sync tool correctly, you are assured that *_OneSync_* will not harm your PCs. However, if you use our sync tool in illegal methods, your PCs may be screwed up due to God's Will. 
+Well, if you are a normal user and use our sync tool correctly, you are assured that *_OneSync_* will not harm your PCs. However, if you use our sync tool in illegal ways, your PCs may be screwed up due to God's Will. 
 
 = Is *_OneSync_* free? =
 Of course, *_OneSync_* is free for all. However, if you feel our sync tool is good and intend to support us, you may make donation to us. 
