@@ -1,8 +1,10 @@
-#summary One-sentence summary of this page.
+#Introduction of OneSync
 
 = Introduction =
 
-What is OneSync?
+*What is _OneSync_?*
+*_OneSync_* is a sync tool which makes use of free online storage such as DropBox, FTP effectively utilizes online disk space to synchronize files/folders between computers.
+
 
 
 = Details =
