@@ -93,7 +93,7 @@ namespace OneSync.UI
                 IList<SyncAction> actions =  new SQLiteActionProvider(profiles[0]).Load(profiles[0].SyncSource);
                 foreach (SyncAction action in actions)
                 {
-                    Console.WriteLine(action.SyncSourcePath);
+                    Console.WriteLine(action.TargetAbsoluteRootDir);
                 }
             }            
         }
