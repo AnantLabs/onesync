@@ -13,7 +13,7 @@ namespace OneSync.Synchronization
         private SyncSource syncSource = null;
 
         // Refers to absolute folder path of where metadata is stored.
-        private MetaDataSource metaDataSource = null;
+        private IntermediaryStorage metaDataSource = null;
 
         /// <summary>
         /// List of dirty items
@@ -22,7 +22,7 @@ namespace OneSync.Synchronization
         private IList<SyncAction> actions = null;
 
 
-        public Patch(SyncSource syncSource, MetaDataSource metaDataSource, IList<SyncAction> actions)
+        public Patch(SyncSource syncSource, IntermediaryStorage metaDataSource, IList<SyncAction> actions)
         {
             this.syncSource = syncSource;
             this.metaDataSource = metaDataSource;
@@ -102,7 +102,7 @@ namespace OneSync.Synchronization
             get { return this.dirtyItems; }
         }
 
-        public MetaDataSource MetaDataSource
+        public IntermediaryStorage MetaDataSource
         {
             get { return this.metaDataSource; }
         }

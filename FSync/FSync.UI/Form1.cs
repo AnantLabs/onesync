@@ -27,7 +27,7 @@ namespace OneSync.UI
         private void buttonCreate_Click(object sender, EventArgs e)
         {
             SyncSource source = new SyncSource(System.Guid.NewGuid().ToString(), textSyncSource.Text.Trim());
-            MetaDataSource mdSource = new MetaDataSource(textMdSource.Text.Trim());
+            IntermediaryStorage mdSource = new IntermediaryStorage(textMdSource.Text.Trim());
             Profile profile = new Profile(System.Guid.NewGuid().ToString(), textProfileName.Text.Trim(), source, mdSource);
 
             UIProcess.CreateProfile(Application.StartupPath, profile);
@@ -36,7 +36,7 @@ namespace OneSync.UI
         private void buttonCreateSchema_Click(object sender, EventArgs e)
         {
             SyncSource source = new SyncSource(System.Guid.NewGuid().ToString(), textSyncSource.Text.Trim());
-            MetaDataSource mSource = new MetaDataSource(textMdSource.Text.Trim());
+            IntermediaryStorage mSource = new IntermediaryStorage(textMdSource.Text.Trim());
             UIProcess.CreateDataStore(Application.StartupPath,  source, mSource); 
         }
 

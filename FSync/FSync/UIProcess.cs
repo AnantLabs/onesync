@@ -10,7 +10,7 @@ namespace OneSync.Synchronization
 {
     public class UIProcess
     {      
-        public static void CreateDataStore(string userDataPath , SyncSource source, MetaDataSource mSource)
+        public static void CreateDataStore(string userDataPath , SyncSource source, IntermediaryStorage mSource)
         {
             string pathToMdSource = @mSource.Path + @"\data.md";
             string pathTouserSource = @userDataPath + @"\profiles\data.md";

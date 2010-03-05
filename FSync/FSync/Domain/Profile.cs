@@ -15,8 +15,8 @@ namespace OneSync.Synchronization
         private string profileId;
         private string profileName;
         private SyncSource syncSource;
-        private MetaDataSource mdSource;
-        public Profile(string id , string name , SyncSource syncSource, MetaDataSource metaDataSource)
+        private IntermediaryStorage mdSource;
+        public Profile(string id , string name , SyncSource syncSource, IntermediaryStorage metaDataSource)
         {
             this.profileId = id;
             this.profileName = name;
@@ -52,7 +52,7 @@ namespace OneSync.Synchronization
             }
         }
 
-        public MetaDataSource MetaDataSource
+        public IntermediaryStorage MetaDataSource
         {
             set
             {

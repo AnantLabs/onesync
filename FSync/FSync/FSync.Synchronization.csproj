@@ -65,7 +65,6 @@
     <Compile Include="Base Objects\SyncAction.cs" />
     <Compile Include="Common Interfaces\IActionProvider.cs" />
     <Compile Include="Common Interfaces\IMetaDataProvider.cs" />
-    <Compile Include="Common Interfaces\IMetaDataItemComparer.cs" />
     <Compile Include="Base Objects\BaseSyncAgent.cs" />
     <Compile Include="Common Interfaces\IProfileManager.cs" />
     <Compile Include="Common Interfaces\ISyncProvider.cs" />
