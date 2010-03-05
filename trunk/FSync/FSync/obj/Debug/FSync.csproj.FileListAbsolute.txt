@@ -1,5 +1,0 @@
-E:\Workspaces\Visual Studio 2008\FSync\FSync\bin\Debug\FSync.dll
-E:\Workspaces\Visual Studio 2008\FSync\FSync\bin\Debug\FSync.pdb
-E:\Workspaces\Visual Studio 2008\FSync\FSync\obj\Debug\ResolveAssemblyReference.cache
-E:\Workspaces\Visual Studio 2008\FSync\FSync\obj\Debug\FSync.dll
-E:\Workspaces\Visual Studio 2008\FSync\FSync\obj\Debug\FSync.pdb
