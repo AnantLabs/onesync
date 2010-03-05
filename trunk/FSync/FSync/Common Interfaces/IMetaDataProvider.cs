@@ -10,6 +10,6 @@ namespace OneSync.Synchronization
     {        
         void Insert(FileMetaData metadata);
         void Update(FileMetaData metadata);
-        FileMetaData Load(SyncSource source);        
+        FileMetaData Load(SyncSource source);
     }
 }

@@ -58,7 +58,7 @@ namespace OneSync.Synchronization
                         while (reader.Read())
                         {
                             SyncSource source = new SyncSource((string)reader[Profile.SYNC_SOURCE_ID], (string)reader[SyncSource.PATH]);
-                            MetaDataSource mdSource = new MetaDataSource((string)reader[Profile.METADATA_SOURCE_LOCATION]);
+                            IntermediaryStorage mdSource = new IntermediaryStorage((string)reader[Profile.METADATA_SOURCE_LOCATION]);
                             Profile p = new Profile((string)reader[Profile.PROFILE_ID],
                                 (string)reader[Profile.NAME], source, mdSource);
                             profiles.Add(p);
