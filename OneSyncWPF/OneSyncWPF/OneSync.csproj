@@ -68,6 +68,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Log.cs" />
     <Compile Include="OneSyncInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
