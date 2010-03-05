@@ -1,0 +1,15 @@
+E:\Workspaces\Visual Studio 2008\FSync\FSync.Files.XCopy\obj\Debug\ResolveAssemblyReference.cache
+E:\Workspaces\Visual Studio 2008\FSync\FSync.Files.XCopy\bin\Debug\FSync.Files.XCopy.dll
+E:\Workspaces\Visual Studio 2008\FSync\FSync.Files.XCopy\bin\Debug\FSync.Files.XCopy.pdb
+E:\Workspaces\Visual Studio 2008\FSync\FSync.Files.XCopy\obj\Debug\FSync.Files.XCopy.dll
+E:\Workspaces\Visual Studio 2008\FSync\FSync.Files.XCopy\obj\Debug\FSync.Files.XCopy.pdb
+E:\Workspaces\Visual Studio 2008\FSync (2) - Copy\FSync\FSync.Files.XCopy\bin\Debug\FSync.Files.XCopy.dll
+E:\Workspaces\Visual Studio 2008\FSync (2) - Copy\FSync\FSync.Files.XCopy\bin\Debug\FSync.Files.XCopy.pdb
+E:\Workspaces\Visual Studio 2008\FSync (2) - Copy\FSync\FSync.Files.XCopy\obj\Debug\ResolveAssemblyReference.cache
+E:\Workspaces\Visual Studio 2008\FSync (2) - Copy\FSync\FSync.Files.XCopy\obj\Debug\FSync.Files.XCopy.dll
+E:\Workspaces\Visual Studio 2008\FSync (2) - Copy\FSync\FSync.Files.XCopy\obj\Debug\FSync.Files.XCopy.pdb
+C:\Users\chockablock\Desktop\FSync\FSync.Files.XCopy\bin\Debug\FSync.Files.XCopy.dll
+C:\Users\chockablock\Desktop\FSync\FSync.Files.XCopy\bin\Debug\FSync.Files.XCopy.pdb
+C:\Users\chockablock\Desktop\FSync\FSync.Files.XCopy\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\chockablock\Desktop\FSync\FSync.Files.XCopy\obj\Debug\FSync.Files.XCopy.dll
+C:\Users\chockablock\Desktop\FSync\FSync.Files.XCopy\obj\Debug\FSync.Files.XCopy.pdb

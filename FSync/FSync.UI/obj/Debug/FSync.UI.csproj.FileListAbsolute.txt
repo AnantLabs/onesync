@@ -1,0 +1,47 @@
+E:\Workspaces\Visual Studio 2008\FSync\FSync.UI\bin\Debug\FSync.UI.exe
+E:\Workspaces\Visual Studio 2008\FSync\FSync.UI\bin\Debug\FSync.UI.pdb
+E:\Workspaces\Visual Studio 2008\FSync\FSync.UI\obj\Debug\ResolveAssemblyReference.cache
+E:\Workspaces\Visual Studio 2008\FSync\FSync.UI\obj\Debug\FSync.UI.Properties.Resources.resources
+E:\Workspaces\Visual Studio 2008\FSync\FSync.UI\obj\Debug\FSync.UI.csproj.GenerateResource.Cache
+E:\Workspaces\Visual Studio 2008\FSync\FSync.UI\obj\Debug\FSync.UI.exe
+E:\Workspaces\Visual Studio 2008\FSync\FSync.UI\obj\Debug\FSync.UI.pdb
+E:\Workspaces\Visual Studio 2008\FSync\FSync.UI\bin\Debug\FSync.Files.dll
+E:\Workspaces\Visual Studio 2008\FSync\FSync.UI\bin\Debug\FSync.Files.pdb
+E:\Workspaces\Visual Studio 2008\FSync\FSync.UI\bin\Debug\FSync.Files.XCopy.dll
+E:\Workspaces\Visual Studio 2008\FSync\FSync.UI\bin\Debug\FSync.Files.XCopy.pdb
+E:\Workspaces\Visual Studio 2008\FSync\FSync.UI\bin\Debug\FSync.Files.xml
+E:\Workspaces\Visual Studio 2008\FSync (2) - Copy\FSync\FSync.UI\bin\Debug\FSync.UI.exe
+E:\Workspaces\Visual Studio 2008\FSync (2) - Copy\FSync\FSync.UI\bin\Debug\FSync.UI.pdb
+E:\Workspaces\Visual Studio 2008\FSync (2) - Copy\FSync\FSync.UI\bin\Debug\FSync.Files.dll
+E:\Workspaces\Visual Studio 2008\FSync (2) - Copy\FSync\FSync.UI\bin\Debug\FSync.Files.XCopy.dll
+E:\Workspaces\Visual Studio 2008\FSync (2) - Copy\FSync\FSync.UI\bin\Debug\FSync.Files.XCopy.pdb
+E:\Workspaces\Visual Studio 2008\FSync (2) - Copy\FSync\FSync.UI\bin\Debug\FSync.Files.pdb
+E:\Workspaces\Visual Studio 2008\FSync (2) - Copy\FSync\FSync.UI\bin\Debug\FSync.Files.xml
+E:\Workspaces\Visual Studio 2008\FSync (2) - Copy\FSync\FSync.UI\obj\Debug\ResolveAssemblyReference.cache
+E:\Workspaces\Visual Studio 2008\FSync (2) - Copy\FSync\FSync.UI\obj\Debug\FSync.UI.Form1.resources
+E:\Workspaces\Visual Studio 2008\FSync (2) - Copy\FSync\FSync.UI\obj\Debug\FSync.UI.Properties.Resources.resources
+E:\Workspaces\Visual Studio 2008\FSync (2) - Copy\FSync\FSync.UI\obj\Debug\FSync.UI.csproj.GenerateResource.Cache
+E:\Workspaces\Visual Studio 2008\FSync (2) - Copy\FSync\FSync.UI\obj\Debug\FSync.UI.exe
+E:\Workspaces\Visual Studio 2008\FSync (2) - Copy\FSync\FSync.UI\obj\Debug\FSync.UI.pdb
+E:\Workspaces\Visual Studio 2008\FSync\FSync.UI\bin\Debug\Community.CsharpSqlite.dll
+E:\Workspaces\Visual Studio 2008\FSync\FSync.UI\bin\Debug\Community.CsharpSqlite.SQLiteClient.dll
+E:\Workspaces\Visual Studio 2008\FSync\FSync.UI\obj\Debug\OneSync.UI.Form1.resources
+E:\Workspaces\Visual Studio 2008\FSync\FSync.UI\bin\Debug\OneSync.Synchronization.dll
+E:\Workspaces\Visual Studio 2008\FSync\FSync.UI\bin\Debug\OneSync.Synchronization.pdb
+C:\Users\chockablock\Desktop\FSync\FSync.UI\obj\Debug\FSync.UI.exe
+C:\Users\chockablock\Desktop\FSync\FSync.UI\obj\Debug\FSync.UI.pdb
+C:\Users\chockablock\Desktop\FSync\FSync.UI\bin\Debug\FSync.UI.exe
+C:\Users\chockablock\Desktop\FSync\FSync.UI\bin\Debug\FSync.UI.pdb
+C:\Users\chockablock\Desktop\FSync\FSync.UI\bin\Debug\Community.CsharpSqlite.dll
+C:\Users\chockablock\Desktop\FSync\FSync.UI\bin\Debug\Community.CsharpSqlite.SQLiteClient.dll
+C:\Users\chockablock\Desktop\FSync\FSync.UI\bin\Debug\FSync.Files.dll
+C:\Users\chockablock\Desktop\FSync\FSync.UI\bin\Debug\FSync.Files.XCopy.dll
+C:\Users\chockablock\Desktop\FSync\FSync.UI\bin\Debug\OneSync.Synchronization.dll
+C:\Users\chockablock\Desktop\FSync\FSync.UI\bin\Debug\OneSync.Synchronization.pdb
+C:\Users\chockablock\Desktop\FSync\FSync.UI\bin\Debug\FSync.Files.XCopy.pdb
+C:\Users\chockablock\Desktop\FSync\FSync.UI\bin\Debug\FSync.Files.pdb
+C:\Users\chockablock\Desktop\FSync\FSync.UI\bin\Debug\FSync.Files.xml
+C:\Users\chockablock\Desktop\FSync\FSync.UI\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\chockablock\Desktop\FSync\FSync.UI\obj\Debug\OneSync.UI.Form1.resources
+C:\Users\chockablock\Desktop\FSync\FSync.UI\obj\Debug\FSync.UI.Properties.Resources.resources
+C:\Users\chockablock\Desktop\FSync\FSync.UI\obj\Debug\FSync.UI.csproj.GenerateResource.Cache

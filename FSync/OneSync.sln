@@ -1,0 +1,70 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSync.Synchronization", "FSync\FSync.Synchronization.csproj", "{FB5B1CE9-2B4B-42F2-ADF8-AB76E05F2B03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSync.UI", "FSync.UI\FSync.UI.csproj", "{FE97F39B-012B-43AA-9876-16BA3A53EBCB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSync.Files", "FSync.Files\FSync.Files.csproj", "{2B4B46F6-7ECB-4BD6-8DC2-9527D145634D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSync.UI.FolderDiff", "FSync.UI.FolderDiff\FSync.UI.FolderDiff.csproj", "{AD07F8C6-F082-4F3F-B2A2-C141057B8CB9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSync.Files.XCopy", "FSync.Files.XCopy\FSync.Files.XCopy.csproj", "{6429E185-0801-4FC0-9F71-8EF19D9044E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrameworkTest", "FrameworkTest\FrameworkTest.csproj", "{0AFAA1E9-A8B9-4BD4-B08E-1759DBA276DA}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://chock.webhop.net:17012/
+		SccProjectUniqueName0 = FrameworkTest\\FrameworkTest.csproj
+		SccProjectName0 = FrameworkTest
+		SccAuxPath0 = http://chock.webhop.net:17012
+		SccLocalPath0 = FrameworkTest
+		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName1 = FSync.UI\\FSync.UI.csproj
+		SccProjectName1 = FSync.UI
+		SccAuxPath1 = http://chock.webhop.net:17012
+		SccLocalPath1 = FSync.UI
+		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName2 = FSync\\FSync.Synchronization.csproj
+		SccProjectName2 = FSync
+		SccAuxPath2 = http://chock.webhop.net:17012
+		SccLocalPath2 = FSync
+		SccProvider2 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FB5B1CE9-2B4B-42F2-ADF8-AB76E05F2B03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB5B1CE9-2B4B-42F2-ADF8-AB76E05F2B03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB5B1CE9-2B4B-42F2-ADF8-AB76E05F2B03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB5B1CE9-2B4B-42F2-ADF8-AB76E05F2B03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE97F39B-012B-43AA-9876-16BA3A53EBCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE97F39B-012B-43AA-9876-16BA3A53EBCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE97F39B-012B-43AA-9876-16BA3A53EBCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE97F39B-012B-43AA-9876-16BA3A53EBCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B4B46F6-7ECB-4BD6-8DC2-9527D145634D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B4B46F6-7ECB-4BD6-8DC2-9527D145634D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B4B46F6-7ECB-4BD6-8DC2-9527D145634D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B4B46F6-7ECB-4BD6-8DC2-9527D145634D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD07F8C6-F082-4F3F-B2A2-C141057B8CB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD07F8C6-F082-4F3F-B2A2-C141057B8CB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD07F8C6-F082-4F3F-B2A2-C141057B8CB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD07F8C6-F082-4F3F-B2A2-C141057B8CB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6429E185-0801-4FC0-9F71-8EF19D9044E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6429E185-0801-4FC0-9F71-8EF19D9044E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6429E185-0801-4FC0-9F71-8EF19D9044E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6429E185-0801-4FC0-9F71-8EF19D9044E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AFAA1E9-A8B9-4BD4-B08E-1759DBA276DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AFAA1E9-A8B9-4BD4-B08E-1759DBA276DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AFAA1E9-A8B9-4BD4-B08E-1759DBA276DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AFAA1E9-A8B9-4BD4-B08E-1759DBA276DA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
