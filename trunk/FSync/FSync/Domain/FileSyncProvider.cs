@@ -55,7 +55,7 @@ namespace OneSync.Synchronization
             {
                 CreateAction createAction = new CreateAction(
                     current.SourcePath,
-                    current.SourceId, ChangeType.NEWLY_CREATED, left.RelativePath, left.HashCode);
+                    current.SourceId, left.RelativePath, left.HashCode);
                 actions.Add(createAction);
             }
 
@@ -67,7 +67,7 @@ namespace OneSync.Synchronization
             {
                 DeleteAction deleteAction = new DeleteAction(
                     current.SourcePath,
-                    current.SourceId, ChangeType.DELETED, right.RelativePath, right.HashCode);
+                    current.SourceId, right.RelativePath, right.HashCode);
                 actions.Add(deleteAction);
             }
             

@@ -62,7 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base Objects\BaseSQLiteProvider.cs" />
-    <Compile Include="Base Objects\BaseSyncAction.cs" />
+    <Compile Include="Base Objects\SyncAction.cs" />
     <Compile Include="Common Interfaces\IActionProvider.cs" />
     <Compile Include="Common Interfaces\IMetaData.cs" />
     <Compile Include="Common Interfaces\IMetaDataItem.cs" />
@@ -74,17 +74,16 @@
     <Compile Include="Common Interfaces\ISyncSourceProvider.cs" />
     <Compile Include="Common Interfaces\ISyncVerifier.cs" />
     <Compile Include="Domain\ChangeItem.cs" />
+    <Compile Include="Domain\Actions\RenameAction.cs" />
     <Compile Include="Domain\DirtyItem.cs" />
     <Compile Include="Domain\MetaDataSource.cs" />
     <Compile Include="Domain\Patch.cs" />
     <Compile Include="Domain\Profile.cs" />
     <Compile Include="Domain\SQLiteProfileManager.cs" />
     <Compile Include="Domain\SQLiteActionProvider.cs" />
-    <Compile Include="Domain\CreateAction.cs" />
+    <Compile Include="Domain\Actions\CreateAction.cs" />
     <Compile Include="Domain\SQLiteMetaDataProvider.cs" />
-    <Compile Include="Domain\DeleteAction.cs" />
-    <Compile Include="Domain\ModifyAction.cs" />
-    <Compile Include="Domain\RenameAction.cs" />
+    <Compile Include="Domain\Actions\DeleteAction.cs" />
     <Compile Include="Domain\SQLiteSyncSourceProvider.cs" />
     <Compile Include="Domain\SyncSource.cs" />
     <Compile Include="Domain\FileMetaData.cs" />

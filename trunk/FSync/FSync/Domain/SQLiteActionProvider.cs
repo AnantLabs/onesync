@@ -82,7 +82,7 @@ namespace OneSync.Synchronization
                                 case (int)ChangeType.DELETED:
                                     DeleteAction delAction = new DeleteAction(
                                         source.Path,
-                                        (string)reader[SyncAction.CHANGE_IN], (ChangeType)((int)reader[SyncAction.ACTION]),
+                                        (string)reader[SyncAction.CHANGE_IN],
                                         (string)reader[SyncAction.OLD], (string)reader[SyncAction.OLD_HASH]);
                                     actions.Add(delAction);
                                     break;
@@ -97,14 +97,14 @@ namespace OneSync.Synchronization
                                 case (int)ChangeType.NEWLY_CREATED:
                                     CreateAction createAction = new CreateAction(
                                         source.Path,
-                                        (string)reader[SyncAction.CHANGE_IN], (ChangeType)((int)reader[SyncAction.ACTION]),
+                                        (string)reader[SyncAction.CHANGE_IN],
                                         (string)reader[SyncAction.NEW], (string)reader[SyncAction.NEW_HASH]);
                                     actions.Add(createAction);
                                     break;
                                 case (int)ChangeType.RENAMED:
                                     RenameAction renameAction = new RenameAction(
                                         source.Path,
-                                        (string)reader[SyncAction.CHANGE_IN], (ChangeType)((int)reader[SyncAction.ACTION]),
+                                        (string)reader[SyncAction.CHANGE_IN],
                                         (string)reader[SyncAction.OLD], (string)reader[SyncAction.NEW], (string)reader[SyncAction.OLD_HASH]);
                                     actions.Add(renameAction);
                                     break;
@@ -184,7 +184,7 @@ namespace OneSync.Synchronization
                                                 SyncAction.NEW_HASH + ") VALUES (@changeIn, @action, @newPath, @newHash)"                                            
                                                 ;
                     SqliteParameter param1 = new SqliteParameter("@changeIn", System.Data.DbType.String);
-                    param1.Value = createAction.ChangeIn;
+                    param1.Value = createAction.SourceID;
                     cmd.Parameters.Add(param1);
 
                     SqliteParameter param2 = new SqliteParameter("@action", System.Data.DbType.Int32);
@@ -192,11 +192,11 @@ namespace OneSync.Synchronization
                     cmd.Parameters.Add(param2);
 
                     SqliteParameter param3 = new SqliteParameter("@newPath", System.Data.DbType.String);
-                    param3.Value = createAction.ItemPath;
+                    param3.Value = createAction.RelativeFilePath;
                     cmd.Parameters.Add(param3);
 
                     SqliteParameter param4 = new SqliteParameter("@newHash", System.Data.DbType.String);
-                    param4.Value = createAction.ItemHash;
+                    param4.Value = createAction.FileHash;
                     cmd.Parameters.Add(param4);                   
 
                     cmd.ExecuteNonQuery();
@@ -215,7 +215,7 @@ namespace OneSync.Synchronization
                                             SyncAction.OLD_HASH + ") VALUES (@changeIn, @action, @oldPath, @oldHash)"
                                             ;
                 SqliteParameter param1 = new SqliteParameter("@changeIn", System.Data.DbType.String);
-                param1.Value = deleteAction.ChangeIn;
+                param1.Value = deleteAction.SourceID;
                 cmd.Parameters.Add(param1);
 
                 SqliteParameter param2 = new SqliteParameter("@action", System.Data.DbType.Int32);
@@ -223,11 +223,11 @@ namespace OneSync.Synchronization
                 cmd.Parameters.Add(param2);
 
                 SqliteParameter param3 = new SqliteParameter("@oldPath", System.Data.DbType.String);
-                param3.Value = deleteAction.ItemPath;
+                param3.Value = deleteAction.FileHash;
                 cmd.Parameters.Add(param3);
 
                 SqliteParameter param4 = new SqliteParameter("@oldHash", System.Data.DbType.String);
-                param4.Value = deleteAction.ItemHash;
+                param4.Value = deleteAction.FileHash;
                 cmd.Parameters.Add(param4);
 
                 cmd.ExecuteNonQuery();
@@ -235,6 +235,7 @@ namespace OneSync.Synchronization
 
         }
 
+        /*
         private void InsertModifyAction(ModifyAction modifyAction, SqliteConnection con)
         {
             using (SqliteCommand cmd = con.CreateCommand())
@@ -247,7 +248,7 @@ namespace OneSync.Synchronization
                                             SyncAction.NEW_HASH + ") VALUES (@changeIn, @action, @old, @old_hash, @new_hash)"
                                             ;
                 SqliteParameter param1 = new SqliteParameter("@changeIn", System.Data.DbType.String);
-                param1.Value = modifyAction.ChangeIn;
+                param1.Value = modifyAction.SourceID;
                 cmd.Parameters.Add(param1);
 
                 SqliteParameter param2 = new SqliteParameter("@action", System.Data.DbType.Int32);
@@ -255,7 +256,7 @@ namespace OneSync.Synchronization
                 cmd.Parameters.Add(param2);
 
                 SqliteParameter param3 = new SqliteParameter("@old", System.Data.DbType.String);
-                param3.Value = modifyAction.ItemPath;
+                param3.Value = modifyAction.RelativeFilePath;
                 cmd.Parameters.Add(param3);
 
                 SqliteParameter param4 = new SqliteParameter("@old_hash", System.Data.DbType.String);
@@ -269,7 +270,7 @@ namespace OneSync.Synchronization
                 cmd.ExecuteNonQuery();
             }
 
-        }
+        }*/
 
     }
 }

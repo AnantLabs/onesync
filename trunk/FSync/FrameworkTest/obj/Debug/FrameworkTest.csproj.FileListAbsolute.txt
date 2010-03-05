@@ -46,3 +46,6 @@ E:\Workspaces\Visual Studio 2008\OneSync\trunk\FSync\FrameworkTest\bin\Debug\One
 E:\Workspaces\Visual Studio 2008\OneSync\trunk\FSync\FrameworkTest\obj\Debug\ResolveAssemblyReference.cache
 E:\Workspaces\Visual Studio 2008\OneSync\trunk\FSync\FrameworkTest\obj\Debug\FrameworkTest.exe
 E:\Workspaces\Visual Studio 2008\OneSync\trunk\FSync\FrameworkTest\obj\Debug\FrameworkTest.pdb
+C:\Users\Desmond\Desktop\3215\FSync\FrameworkTest\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Desmond\Desktop\3215\FSync\FrameworkTest\obj\Debug\FrameworkTest.exe
+C:\Users\Desmond\Desktop\3215\FSync\FrameworkTest\obj\Debug\FrameworkTest.pdb
