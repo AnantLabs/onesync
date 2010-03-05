@@ -13,6 +13,9 @@ namespace FSync.Files
     public static class DriveUtil
     {
 
+        /// <summary>
+        /// Provides access to information on a drive.
+        /// </summary>
         public class DriveDetails
         {
             /// <summary>
@@ -146,6 +149,10 @@ namespace FSync.Files
         /// Get the details of drive with specified device ID.
         /// </summary>
         /// <param name="deviceId">Device ID. e.g. PHYSICALDRIVE0</param>
+        /// <param name="driveLetter">
+        /// A valid drive drive letter.
+        /// This can be either uppercase or lowercase, 'a' to 'z'.
+        /// </param>
         /// <returns>Drive Details</returns>
         private static DriveDetails GetDetails(string deviceId, char driveLetter)
         {

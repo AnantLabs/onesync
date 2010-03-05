@@ -9,8 +9,10 @@ namespace OneSync.Synchronization
     /// </summary>
     public interface ISyncProvider
     {
-        //this change results must contains change in source (compare to destination) and changes in destination
-        //(compared to source).
-        IList<SyncAction> EnumerateChanges();        
+        /// <summary>
+        /// Generates the sync actions required for 2 sync sources to be synchronized.
+        /// </summary>
+        /// <returns></returns>
+        IList<SyncAction> GenerateActions();
     }
 }

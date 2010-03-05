@@ -5,7 +5,7 @@ using System.Text;
 
 namespace OneSync.Synchronization
 {
-    public interface IMetaDataItemComparer:IEqualityComparer<IMetaDataItem>
+    public interface IMetaDataItemComparer
     {
          
     }

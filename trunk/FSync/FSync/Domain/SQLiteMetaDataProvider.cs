@@ -74,7 +74,7 @@ namespace OneSync.Synchronization
         /// Create metadata table and insert file metadata into the table
         /// </summary>
         /// <param name="mData"></param>
-        public  void Insert(IMetaData mData)
+        public void Insert(FileMetaData mData)
         {
             FileMetaData fileMetaData = (FileMetaData)mData;              
             
@@ -138,7 +138,7 @@ namespace OneSync.Synchronization
 
         
         
-        public void Update(IMetaData mdData)
+        public void Update(FileMetaData mdData)
         {
  	        
         }
@@ -149,7 +149,7 @@ namespace OneSync.Synchronization
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public IMetaData FromPath(SyncSource source)
+        public FileMetaData FromPath(SyncSource source)
         {
             FileMetaData metaData = new FileMetaData(source.ID, source.Path);
             string[] files = Directory.GetFiles(source.Path, "*.*", SearchOption.AllDirectories);
@@ -170,7 +170,7 @@ namespace OneSync.Synchronization
         /// </summary>
         /// <param name="sourceId"></param>
         /// <returns></returns>
-        public IMetaData Load(SyncSource source)
+        public FileMetaData Load(SyncSource source)
         {
             FileMetaData mData = new FileMetaData(source.ID, source.Path);            
             using (SqliteConnection con = new SqliteConnection(ConnectionString))
@@ -195,7 +195,7 @@ namespace OneSync.Synchronization
                     }
                 }
             }
-            return (IMetaData) mData;
+            return mData;
         }        
     }
 }

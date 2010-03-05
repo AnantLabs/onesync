@@ -10,7 +10,7 @@ using System.Xml.Serialization;
 namespace OneSync.Synchronization
 {
     
-    public class FileMetaData:IMetaData
+    public class FileMetaData
     {
         private string sourceId = "";
         private string sourcePath = "";
@@ -28,7 +28,7 @@ namespace OneSync.Synchronization
         public const string NTFS_ID2 = "NTFS_ID2";
         #endregion list of column names in METADATA TABLE
 
-        protected IList<IMetaDataItem> items = new List<IMetaDataItem>();              
+        protected IList<FileMetaDataItem> items = new List<FileMetaDataItem>();              
         
         
         public FileMetaData(string sourceId, string sourcePath):base()
@@ -56,7 +56,7 @@ namespace OneSync.Synchronization
             }
         }
 
-        public IList<IMetaDataItem> MetaDataItems
+        public IList<FileMetaDataItem> MetaDataItems
         {
             set
             {

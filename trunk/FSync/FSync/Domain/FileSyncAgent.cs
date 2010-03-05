@@ -33,7 +33,7 @@ namespace OneSync.Synchronization
             FileSyncProvider syncProvider = new FileSyncProvider(currentItems, storedItems);
             
             //generate list of sync actions by comparing 2 metadata
-            IList<SyncAction> newActions =  syncProvider.EnumerateChanges();
+            IList<SyncAction> newActions =  syncProvider.GenerateActions();
             
 
             /*
