@@ -40,6 +40,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Community.CsharpSqlite, Version=3.6.22.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Desktop\Tralala\FSync\FSync.Lib\Community.CsharpSqlite.dll</HintPath>
+    </Reference>
+    <Reference Include="Community.CsharpSqlite.SQLiteClient, Version=3.6.22.3, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Desktop\Tralala\FSync\FSync.Lib\Community.CsharpSqlite.SQLiteClient.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core">
@@ -68,13 +76,58 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Log.cs" />
+    <Compile Include="DirectoryInfoComparer.cs" />
+    <Compile Include="FileChangeDetection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="FileInfoComparer.cs" />
+    <Compile Include="FileUtils.cs" />
+    <Compile Include="FolderComparer.cs" />
     <Compile Include="OneSyncInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="OneSyncInstaller.Designer.cs">
       <DependentUpon>OneSyncInstaller.cs</DependentUpon>
     </Compile>
+    <Compile Include="Sync Logic\BaseSQLiteProvider.cs" />
+    <Compile Include="Sync Logic\BaseSyncAction.cs" />
+    <Compile Include="Sync Logic\BaseSyncAgent.cs" />
+    <Compile Include="Sync Logic\ChangeItem.cs" />
+    <Compile Include="Sync Logic\CreateAction.cs" />
+    <Compile Include="Sync Logic\DatabaseException.cs" />
+    <Compile Include="Sync Logic\DeleteAction.cs" />
+    <Compile Include="Sync Logic\DirtyItem.cs" />
+    <Compile Include="Sync Logic\FileMetaData.cs" />
+    <Compile Include="Sync Logic\FileMetaDataItem.cs" />
+    <Compile Include="Sync Logic\FileMetaDataItemComparer.cs" />
+    <Compile Include="Sync Logic\FileSyncAgent.cs" />
+    <Compile Include="Sync Logic\FileSyncProvider.cs" />
+    <Compile Include="Sync Logic\IActionProvider.cs" />
+    <Compile Include="Sync Logic\IChangeItem.cs" />
+    <Compile Include="Sync Logic\IMetaData.cs" />
+    <Compile Include="Sync Logic\IMetaDataItem.cs" />
+    <Compile Include="Sync Logic\IMetaDataItemComparer.cs" />
+    <Compile Include="Sync Logic\IMetaDataProvider.cs" />
+    <Compile Include="Sync Logic\IProfileManager.cs" />
+    <Compile Include="Sync Logic\ISyncAgent.cs" />
+    <Compile Include="Sync Logic\ISyncProvider.cs" />
+    <Compile Include="Sync Logic\ISyncSourceProvider.cs" />
+    <Compile Include="Sync Logic\ISyncVerifier.cs" />
+    <Compile Include="Sync Logic\Log.cs" />
+    <Compile Include="Sync Logic\MetaDataSource.cs" />
+    <Compile Include="Sync Logic\ModifyAction.cs" />
+    <Compile Include="Sync Logic\Patch.cs" />
+    <Compile Include="Sync Logic\Patcher.cs" />
+    <Compile Include="Sync Logic\Profile.cs" />
+    <Compile Include="Sync Logic\RenameAction.cs" />
+    <Compile Include="Sync Logic\SQLiteActionProvider.cs" />
+    <Compile Include="Sync Logic\SQLiteMetaDataProvider.cs" />
+    <Compile Include="Sync Logic\SQLiteProfileManager.cs" />
+    <Compile Include="Sync Logic\SQLiteSyncSourceProvider.cs" />
+    <Compile Include="Sync Logic\SyncCancelledEventArgs.cs" />
+    <Compile Include="Sync Logic\SyncCompletesEventArgs.cs" />
+    <Compile Include="Sync Logic\SyncSource.cs" />
+    <Compile Include="Sync Logic\SyncStartsEventArgs.cs" />
     <Compile Include="UILogEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -97,6 +150,9 @@
     <Resource Include="OneSync Transparent Logo.gif" />
     <Resource Include="OneSync Transparent Logo.png" />
     <Resource Include="processing_icon.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Copy of processing_icon.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
