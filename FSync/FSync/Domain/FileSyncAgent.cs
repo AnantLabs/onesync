@@ -22,8 +22,7 @@ namespace OneSync.Synchronization
             #region Apply and Verify Patch Applied
             IList<SyncAction> actions = new SQLiteActionProvider(profile).Load(profile.SyncSource);
             Patch patch = new Patch(profile.SyncSource, profile.MetaDataSource, actions);
-            Patcher patcher = new Patcher();
-            if (patcher.Verify(patch)) patcher.Apply (patch);
+            if (patch.Verify()) patch.Apply();            
             #endregion Apply and Verify Patch Applied
 
             #region generate patch            

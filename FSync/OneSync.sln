@@ -14,26 +14,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrameworkTest", "FrameworkTest\FrameworkTest.csproj", "{0AFAA1E9-A8B9-4BD4-B08E-1759DBA276DA}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 3
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://chock.webhop.net:17012/
-		SccProjectUniqueName0 = FrameworkTest\\FrameworkTest.csproj
-		SccProjectName0 = FrameworkTest
-		SccAuxPath0 = http://chock.webhop.net:17012
-		SccLocalPath0 = FrameworkTest
-		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName1 = FSync.UI\\FSync.UI.csproj
-		SccProjectName1 = FSync.UI
-		SccAuxPath1 = http://chock.webhop.net:17012
-		SccLocalPath1 = FSync.UI
-		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName2 = FSync\\FSync.Synchronization.csproj
-		SccProjectName2 = FSync
-		SccAuxPath2 = http://chock.webhop.net:17012
-		SccLocalPath2 = FSync
-		SccProvider2 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
