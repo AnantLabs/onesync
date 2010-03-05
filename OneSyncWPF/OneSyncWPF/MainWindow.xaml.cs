@@ -22,6 +22,7 @@ using System.Diagnostics;
 //The following two are imported for Aero Glass effect (Aero Glass Part 1/3).
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
+using OneSync.Log;
 
 namespace OneSync
 {
@@ -31,7 +32,7 @@ namespace OneSync
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		//This is the logs collection for current sync session.
+        //This is the logs collection for current sync session.
 		//These logs will be displayed on the GUI.
 		//They will be recorded in the Log class as well.
 		ObservableCollection<UILogEntry> _LogsCollection = new ObservableCollection<UILogEntry>();
@@ -155,7 +156,8 @@ namespace OneSync
             }
 			
             //Show the log of current/just-finished sync job.
-			if(File.Exists("Logs.html")) //To be changed. Depends on Naing.
+            textblock_show_log.Visibility = Visibility.Hidden;
+			if(File.Exists(Log.Log.returnLogReportPath(current_syncing_dir, true))) //To be changed. Depends on Naing.
 			{
 				textblock_show_log.Visibility = Visibility.Visible;
 			}
@@ -306,6 +308,17 @@ namespace OneSync
 	
 				//Change the displaying text so that the user knows that OneSync is now syncing the source folder.
 				label_message.Content = "You are now syncing";
+
+                //Thuat and Desmond's sync logic takes actions!
+                //Generate a Global Unique Identifier.
+                Guid g = new Guid();
+                string id = g.ToString();
+                string name = profile_name;
+                Synchronization.SyncSource syncSource = new OneSync.Synchronization.SyncSource(id, current_syncing_dir);
+                Synchronization.MetaDataSource metaDataSource = new OneSync.Synchronization.MetaDataSource(storage_dir);
+                Synchronization.Profile currentProfile = new OneSync.Synchronization.Profile(id, name, syncSource, metaDataSource);
+                Synchronization.FileSyncAgent currentAgent = new OneSync.Synchronization.FileSyncAgent(currentProfile);
+                currentAgent.Synchronize();
 			}
         }
 		
@@ -315,7 +328,7 @@ namespace OneSync
         /// </summary>
 		private void SyncProcessDone()
 		{
-			if(File.Exists("Logs.html")) //To be changed. Depends on Naing.
+            if (File.Exists(Log.Log.returnLogReportPath(current_syncing_dir, true))) //To be changed. Depends on Naing.
 			{
 				textblock_show_log.Visibility = Visibility.Visible;
 			}
@@ -401,7 +414,7 @@ namespace OneSync
 		private void textblock_show_log_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
 			//View log file (The extension of the file should be .html).
-			Process.Start("file:///C:/Users/u0707373/Desktop/Microsoft%20Corporation.htm");
+            Process.Start(Log.Log.returnLogReportPath(current_syncing_dir, true));
 		}
 
         /// <summary>
