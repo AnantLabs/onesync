@@ -59,15 +59,16 @@
 				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
 					<GradientStop Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}" Offset="1"/>
 					<GradientStop Color="white" Offset="0.337"/>
-					<GradientStop Color="{DynamicResource {x:Static SystemColors.ActiveCaptionColorKey}}" Offset="0.768"/>
+					<GradientStop Color="#FF99B4D1" Offset="0.768"/>
 				</LinearGradientBrush>
 			</Rectangle.Fill>
 		</Rectangle>
-		<ComboBox x:Name="combobox_profile_name" Height="21.787" IsEditable="True" Width="443" Canvas.Left="148.988" Canvas.Top="95.96"/>
+		<ComboBox x:Name="combobox_profile_name" Height="21.787" IsEditable="True" Width="443" Canvas.Left="148.988" Canvas.Top="95.96" KeyUp="combobox_profile_name_KeyUp"/>
 		<Label x:Name="label_profile_message" Width="174" Height="25" Content="My Sync Job:" FontSize="10.667" Canvas.Left="74.988" Canvas.Top="95.96" Foreground="#FF0000B9"/>
 		<Button x:Name="button_new_profile" Width="54" Height="25" Content="Do Job" Canvas.Left="595.988" Canvas.Top="95" ToolTip="Click to create your new profile" Click="button_new_profile_Click" RenderTransformOrigin="0.519,-1.6" />
 		<Label x:Name="label_current_syncing_dir_frontpage" Height="25" Content="C:\Documents\Module Materials\lec1.txt" FontSize="10.667" FontWeight="Bold" MouseEnter="label_current_syncing_dir_MouseEnter" Width="457" Canvas.Left="183.988" Canvas.Top="66" Foreground="#FF0000B9"/>
 		<Label x:Name="label_message_frontpage" Width="158" Height="25" Content="You are now selecting" FontSize="10.667" Canvas.Left="74.988" Canvas.Top="66" Foreground="#FF0000B9"/>
 		<Label x:Name="label_notification" Width="662" Height="25" Content="" FontSize="10.667" Canvas.Top="-1" Foreground="#FFB90000" FontStyle="Italic" FontWeight="Bold"/>
+		<TextBlock x:Name="textblock_rename_profile" Width="145" Text="Rename Selected Profile" TextWrapping="Wrap" TextDecorations="Underline" FontWeight="Bold" FontFamily="Times New Roman" FontSize="13.333" Cursor="Hand" Foreground="#FF3000FF" MouseDown="textblock_rename_profile_MouseDown" Height="18" Canvas.Left="148.988" Canvas.Top="117.747" d:LayoutOverrides="VerticalAlignment, Height" Visibility="Hidden"/>
 	</Canvas>
 </Window>
