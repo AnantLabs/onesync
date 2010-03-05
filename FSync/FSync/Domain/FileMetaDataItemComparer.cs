@@ -5,15 +5,16 @@ using System.Text;
 
 namespace OneSync.Synchronization
 {
-    public class FileMetaDataItemComparer:IMetaDataItemComparer
+    public class FileMetaDataItemComparer : IEqualityComparer<FileMetaDataItem>
     {
-        public bool Equals(IMetaDataItem item1, IMetaDataItem item2)
+        public bool Equals(FileMetaDataItem item1, FileMetaDataItem item2)
         {
-            return GetHashCode (item1) == GetHashCode(item2);
+            //return GetHashCode (item1) == GetHashCode(item2);
+            return item1.RelativePath.Equals(item2.RelativePath);
         }
-        public int GetHashCode(IMetaDataItem item)
+        public int GetHashCode(FileMetaDataItem item)
         {
-            return ((FileMetaDataItem) item).RelativePath.GetHashCode();
+            return item.RelativePath.GetHashCode();
         }
     }
 }

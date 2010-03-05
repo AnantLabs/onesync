@@ -7,21 +7,27 @@ namespace OneSync.Synchronization
 {
     public class FileSyncProvider:ISyncProvider
     {
+        // MetaData of current PC
         protected FileMetaData current;
+
+        // MetaData from other PC
         protected FileMetaData stored;      
 
-        public FileSyncProvider()
+        /// <summary>
+        /// Provides the ...
+        /// </summary>
+        /// <param name="current">Metadata of current PC</param>
+        /// <param name="stored">Metadata of other PC</param>
+        public FileSyncProvider(FileMetaData current, FileMetaData stored)
         {
-
+            this.current = current;
+            this.stored = stored;
         }
 
-        public FileSyncProvider(IMetaData current, IMetaData stored)
-        {
-            this.current = (FileMetaData) current;
-            this.stored =(FileMetaData) stored;
-        }
-
-        public IMetaData CurrentMetaData
+        /// <summary>
+        /// Metadata of current PC
+        /// </summary>
+        public FileMetaData CurrentMetaData
         {
             get
             {
@@ -29,7 +35,11 @@ namespace OneSync.Synchronization
             }
         }
 
-        public IMetaData StoredMetaData
+
+        /// <summary>
+        /// Metadata of other PC
+        /// </summary>
+        public FileMetaData StoredMetaData
         {
             get
             {
@@ -38,18 +48,23 @@ namespace OneSync.Synchronization
         }
         
         /// <summary>
-        /// Enumerate changes between 2 meta data
-        /// and return a list of actions
+        /// Generates list of sync actions that will synchronize current PC
+        /// and other PC based on the metadata.
         /// </summary>
-        /// <returns></returns>
-        public  IList<SyncAction> EnumerateChanges()
-        {           
+        /// <returns>List of sync actions</returns>
+        public  IList<SyncAction> GenerateActions()
+        {
             IList<SyncAction> actions = new List<SyncAction>();
+
+            // Note:
+            // Left refers to current PC
+            // Right refers to other PC
             
             //Get newly created items by comparing relative paths
-            IEnumerable<IMetaDataItem> leftOnly = from left in current.MetaDataItems
+            IEnumerable<FileMetaDataItem> leftOnly = from left in current.MetaDataItems
                                                   where !stored.MetaDataItems.Contains(left, new FileMetaDataItemComparer())
                                                   select left;
+
 
             foreach (FileMetaDataItem left in leftOnly)
             {
@@ -60,7 +75,7 @@ namespace OneSync.Synchronization
             }
 
             //Get deleted items 
-            IEnumerable<IMetaDataItem> rightOnly = from right in stored.MetaDataItems
+            IEnumerable<FileMetaDataItem> rightOnly = from right in stored.MetaDataItems
                                                   where !current.MetaDataItems.Contains(right, new FileMetaDataItemComparer())
                                                   select right;
             foreach (FileMetaDataItem right in rightOnly)
@@ -73,9 +88,9 @@ namespace OneSync.Synchronization
             
             //get the items from 2 metadata with same relative paths but different hashes.
             IEnumerable<ChangeItem> bothModified =   from right in stored.MetaDataItems
-                                                        from left in current.MetaDataItems
-                                                        where ((FileMetaDataItem)right).RelativePath.Equals(((FileMetaDataItem)left).RelativePath)
-                                                        && !((FileMetaDataItem)right).HashCode.Equals(((FileMetaDataItem)left).HashCode)
+                                                     from left in current.MetaDataItems
+                                                     where ((FileMetaDataItem)right).RelativePath.Equals(((FileMetaDataItem)left).RelativePath)
+                                                     && !((FileMetaDataItem)right).HashCode.Equals(((FileMetaDataItem)left).HashCode)
                                                         select new ChangeItem (right, left);
             foreach (ChangeItem item in bothModified) 
             {

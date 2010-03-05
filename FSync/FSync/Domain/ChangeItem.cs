@@ -7,20 +7,20 @@ namespace OneSync.Synchronization
 {
     public class ChangeItem
     {
-        private IMetaDataItem oldItem;
-        private IMetaDataItem newItem;
-        public ChangeItem(IMetaDataItem oldItem, IMetaDataItem newItem)
+        private FileMetaDataItem oldItem;
+        private FileMetaDataItem newItem;
+        public ChangeItem(FileMetaDataItem oldItem, FileMetaDataItem newItem)
         {
             this.oldItem = oldItem;
             this.newItem = newItem;
         }
 
-        public IMetaDataItem OldItem
+        public FileMetaDataItem OldItem
         {
             get { return this.oldItem; }
         }
 
-        public IMetaDataItem NewItem
+        public FileMetaDataItem NewItem
         {
             get { return this.newItem;  }
         }

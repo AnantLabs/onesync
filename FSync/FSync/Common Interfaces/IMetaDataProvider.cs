@@ -8,8 +8,8 @@ namespace OneSync.Synchronization
     //defines a common interface for metadata provider (file, database,...)
     public interface IMetaDataProvider
     {        
-        void Insert(IMetaData metadata);
-        void Update(IMetaData metadata);
-        IMetaData Load(SyncSource source);        
+        void Insert(FileMetaData metadata);
+        void Update(FileMetaData metadata);
+        FileMetaData Load(SyncSource source);        
     }
 }

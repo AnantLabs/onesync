@@ -64,8 +64,6 @@
     <Compile Include="Base Objects\BaseSQLiteProvider.cs" />
     <Compile Include="Base Objects\SyncAction.cs" />
     <Compile Include="Common Interfaces\IActionProvider.cs" />
-    <Compile Include="Common Interfaces\IMetaData.cs" />
-    <Compile Include="Common Interfaces\IMetaDataItem.cs" />
     <Compile Include="Common Interfaces\IMetaDataProvider.cs" />
     <Compile Include="Common Interfaces\IMetaDataItemComparer.cs" />
     <Compile Include="Base Objects\BaseSyncAgent.cs" />
