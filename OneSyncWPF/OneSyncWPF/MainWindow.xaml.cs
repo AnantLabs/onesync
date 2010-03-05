@@ -19,6 +19,7 @@ using System.Windows.Media.Animation;
 using System.Collections.ObjectModel;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Reflection;
 //The following two are imported for Aero Glass effect (Aero Glass Part 1/3).
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
@@ -69,6 +70,8 @@ namespace OneSync
 		string current_syncing_dir; //The directory of the chosen source folder.
         string storage_dir; //The storage directory.
         bool is_sync_job_created_previously = false; //The value is true if the sync job is not created currently, but previously.
+        Synchronization.SQLiteProfileManager profileManager = new OneSync.Synchronization.SQLiteProfileManager(
+            Assembly.GetExecutingAssembly().Location.Substring(0, Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + "\\"); //The SQLite profile manager from Thuat.
         UIProfileStorageXML profileXml = new UIProfileStorageXML(); //The profileXml object.
 		DoubleAnimation instantNotificationAnimation = new DoubleAnimation(); //The animation of label_notification.
         Storyboard myStoryboard = new Storyboard(); //The storyboard of label_notification.
@@ -145,14 +148,19 @@ namespace OneSync
 			label_current_syncing_dir_frontpage.Content = displaying_current_syncing_dir;
 
             //Import all the previous created existing sync job profiles.
-            //Note that only the profile having the directory which is the current directory will be imported. 
-            List<ProfileItem> profileItemsCollection = profileXml.RetrieveAllProfiles();
-            foreach(ProfileItem profileItem in profileItemsCollection)
+            //Note that only the profile having the directory which is the current directory will be imported.
+			//TO BE DISCUSSED: Note that for those profile has Sync Source Directory not exist anymore will be deleted.
+            IList<Synchronization.Profile> profileItemsCollection = profileManager.Load();
+            foreach (Synchronization.Profile profileItem in profileItemsCollection)
             {
-                if (profileItem.SourceDir.Equals(current_syncing_dir))
+				//Retrieve.
+                if (profileItem.SyncSource.Equals(current_syncing_dir))
                 {
-                    combobox_profile_name.Items.Add(profileItem);
+                    combobox_profile_name.Items.Add(profileItem.Name);
                 }
+				//TODO: Delete no longer exist profile.
+				//NOTE: Only not existing profile will be deleted.
+				//WAIT: Thuat is implementing the Delete function in OneSync.Synchronization.SQLiteProfileManager.
             }
 			
             //Show the log of current/just-finished sync job.
@@ -274,11 +282,6 @@ namespace OneSync
 			else
 			{
 				InstantNotification("");
-                //Add/update the profile xml file.
-                if (!is_sync_job_created_previously) 
-                {
-                    profileXml.StoreProfile(profile_name, current_syncing_dir, storage_dir);
-                }
 
 				//Rotate the OneSync Logo on the button.
 				button_sync_copy.Visibility = Visibility.Visible;
@@ -318,6 +321,10 @@ namespace OneSync
                 Synchronization.MetaDataSource metaDataSource = new OneSync.Synchronization.MetaDataSource(storage_dir);
                 Synchronization.Profile currentProfile = new OneSync.Synchronization.Profile(id, name, syncSource, metaDataSource);
                 Synchronization.FileSyncAgent currentAgent = new OneSync.Synchronization.FileSyncAgent(currentProfile);
+                if (!is_sync_job_created_previously) //Add a new profile entry to Thuat's SQLite profile manager.
+                {
+                    profileManager.Insert(currentProfile);
+                }
                 currentAgent.Synchronize();
 			}
         }
@@ -472,14 +479,14 @@ namespace OneSync
                 profile_name = combobox_profile_name.Text;
                 ProfileCreationControlsVisibility(Visibility.Visible, Visibility.Hidden);
 				Window.Title = combobox_profile_name.Text + " - OneSync";
-                foreach (ProfileItem item in combobox_profile_name.Items)
+                foreach (Synchronization.Profile item in combobox_profile_name.Items)
                 {
                     //Check to see if the profile is an existing profile or not.
                     //If yes, then it will import the storage directory to the program.
-                    if (item.ToString().Equals(profile_name))
+                    if (item.Name.Equals(profile_name))
                     {
                         is_sync_job_created_previously = true;
-                        textbox_storage_path.Text = item.StorageDir;
+                        textbox_storage_path.Text = item.MetaDataSource.Path;
                         break;
                     }
                 }
@@ -505,6 +512,34 @@ namespace OneSync
         private void button_sync_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
         	button_sync.Source = new BitmapImage(new Uri("OneSync Transparent Logo (Inactive).png", UriKind.Relative));
+        }
+
+        private void textblock_rename_profile_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+        	//TODO: When user clicks on this link, the user should be able to rename the profile.
+			//NOTE: Only existing profile can be created.
+			//WAIT: Thuat is implementing the Update function in OneSync.Synchronization.SQLiteProfileManager.
+        }
+
+		/// <summary>
+		/// When the user is typing something in the Profile Name combobox. If it detects the name is same as
+		/// the name of an existing profile, then it will show the link to allow the user to rename the profile.
+		/// </summary>
+		/// <param name="sender">The event sender.</param>
+		/// <param name="e">The event arguments.</param>
+        private void combobox_profile_name_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+        	foreach (Synchronization.Profile item in combobox_profile_name.Items)
+            {
+                //Check to see if the profile is an existing profile or not.
+                //If yes, then it will show the rename profile link.
+                if (item.Name.Equals(combobox_profile_name.Text))
+                {
+                    textblock_rename_profile.Visibility = Visibility.Visible;
+                    break;
+                }
+            }
+			textblock_rename_profile.Visibility = Visibility.Hidden;
         }
 	}
 }
