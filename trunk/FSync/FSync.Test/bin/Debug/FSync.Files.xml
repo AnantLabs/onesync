@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FSync.Files</name>
+    </assembly>
+    <members>
+        <member name="M:FSync.Files.FolderComparer.GetFileInfos(System.String)">
+            <summary>
+            Get info of a FileInfo given a path
+            </summary>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FSync.Files.FolderComparer.GetCommonFiles">
+            <summary>
+            Return a list of common files
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FSync.Files.FolderComparer.GetSourceOnly">
+            <summary>
+            Return only files in source
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FSync.Files.FolderComparer.GetDestinationOnly">
+            <summary>
+            Return only files in destination
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FSync.Files.FolderComparer.GetDirectoryInfos(System.String)">
+            <summary>
+            Get info of DirectoryInfo object given a path
+            </summary>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FSync.Files.FolderComparer.GetCommonFolders">
+            <summary>
+            Get common folders
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FSync.Files.FolderComparer.GetFoldersInSourcesOnly">
+            <summary>
+            Get folders in source only
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FSync.Files.FolderComparer.GetFoldersInDestinationOnly">
+            <summary>
+            Get folders in destination only
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:FSync.Files.FolderComparer.Source">
+            <summary>
+            Get Source folder
+            </summary>
+        </member>
+        <member name="P:FSync.Files.FolderComparer.Destination">
+            <summary>
+            Get destination folder
+            </summary>
+        </member>
+        <member name="T:FSync.Files.FileInfoComparer">
+            <summary>
+            Implement IEqualityComparer interface
+            </summary>
+        </member>
+        <member name="F:FSync.Files.FileInfoComparer.baseSource">
+             <summary>
+            Path to source folder
+             </summary>
+        </member>
+        <member name="F:FSync.Files.FileInfoComparer.baseDestination">
+            <summary>
+            Path to destination folder
+            </summary>
+        </member>
+        <member name="M:FSync.Files.FileInfoComparer.#ctor(System.String,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="baseSource">Path to the source folder</param>
+            <param name="baseDestination">Path to the destination folder</param>
+            
+        </member>
+        <member name="M:FSync.Files.FileInfoComparer.Equals(System.IO.FileInfo,System.IO.FileInfo)">
+            <summary>
+            Two compared objects are equal if they have same hash code values
+            </summary>
+            <param name="fileInfo1">FileInfo</param>
+            <param name="fileInfo2">FileInfo</param>
+            <returns>bool</returns>
+        </member>
+        <member name="M:FSync.Files.FileInfoComparer.GetHashCode(System.IO.FileInfo)">
+            <summary>
+            Get HashCode of a fileinfo object
+            </summary>
+            <param name="fi">FileInfo</param>
+            <returns>int</returns>
+            
+        </member>
+        <member name="T:FSync.Files.FileChangeDetection">
+            <summary>
+            FileChangeDetection monitor change of a given folder
+            </summary>
+        </member>
+        <member name="M:FSync.Files.FileChangeDetection.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="M:FSync.Files.FileChangeDetection.#ctor(System.String,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="path">Path to the folder</param>
+            <param name="filter"></param>
+        </member>
+        <member name="M:FSync.Files.FileChangeDetection.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="path">Path to the folder</param>
+        </member>
+        <member name="P:FSync.Files.FileChangeDetection.FolderPath">
+            <summary>
+            Set and get FolderPath
+            </summary>
+        </member>
+        <member name="M:FSync.Files.FileUtils.GetFileHash(System.String)">
+            <summary>
+            Compute the hash of content of any given file
+            </summary>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FSync.Files.FileUtils.PrintFileInfo(System.IO.FileInfo)">
+            <summary>
+            Print information of any given fileinfo object
+            </summary>
+            <param name="fileInfo"></param>
+        </member>
+        <member name="M:FSync.Files.FileUtils.GetRelativePath(System.String,System.String)">
+            <summary>
+            Get the relative path given the base directory and the full path to a file
+            </summary>
+            <param name="baseDirectory"></param>
+            <param name="fullPath"></param>
+            <returns></returns>
+        </member>
+        <member name="T:FSync.Files.DirectoryInfoComparer">
+            <summary>
+            Compare info of 2 DirectoryInfo objects
+            </summary>
+        </member>
+        <member name="M:FSync.Files.DirectoryInfoComparer.GetHashCode(System.IO.DirectoryInfo)">
+            <summary>
+            Get Hash Code of a given DirectoryInfo object 
+            </summary>
+            <param name="directoryInfo"></param>
+            <returns>int</returns>
+        </member>
+    </members>
+</doc>

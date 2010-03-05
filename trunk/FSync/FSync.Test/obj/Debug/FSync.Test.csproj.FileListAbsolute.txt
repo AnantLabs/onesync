@@ -1,0 +1,8 @@
+E:\Workspaces\Visual Studio 2008\FSync\FSync.Test\bin\Debug\FSync.Test.dll
+E:\Workspaces\Visual Studio 2008\FSync\FSync.Test\bin\Debug\FSync.Test.pdb
+E:\Workspaces\Visual Studio 2008\FSync\FSync.Test\bin\Debug\FSync.Files.dll
+E:\Workspaces\Visual Studio 2008\FSync\FSync.Test\bin\Debug\FSync.Files.pdb
+E:\Workspaces\Visual Studio 2008\FSync\FSync.Test\obj\Debug\ResolveAssemblyReference.cache
+E:\Workspaces\Visual Studio 2008\FSync\FSync.Test\obj\Debug\FSync.Test.dll
+E:\Workspaces\Visual Studio 2008\FSync\FSync.Test\obj\Debug\FSync.Test.pdb
+E:\Workspaces\Visual Studio 2008\FSync\FSync.Test\bin\Debug\FSync.Files.xml
