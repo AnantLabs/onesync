@@ -24,6 +24,19 @@ namespace OneSync.Synchronization
             Process(actions);
         }
 
+        public bool Verify()
+        {
+            return true;
+        }
+
+        public void Apply()
+        {
+            foreach (SyncAction action in actions)
+            {
+                action.Execute();
+            }
+        }
+
         private void Process(IList<SyncAction> actions)
         {
             DirtyItem dirtyItem = null;
