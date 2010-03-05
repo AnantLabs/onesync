@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace OneSync.Files
 {
@@ -12,6 +13,30 @@ namespace OneSync.Files
     /// </summary>
     public class FileUtils
     {
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern bool GetFileInformationByHandle(IntPtr hFile,
+           out BY_HANDLE_FILE_INFORMATION lpFileInformation);
+
+        /* MSDN Reference:
+         * http://msdn.microsoft.com/en-us/library/aa363788(VS.85).aspx
+         * http://msdn.microsoft.com/en-us/library/aa364952(VS.85).aspx
+         * */
+
+        struct BY_HANDLE_FILE_INFORMATION
+        {
+            public uint FileAttributes;
+            public Int64 CreationTime;
+            public Int64 LastAccessTime;
+            public Int64 LastWriteTime;
+            public uint VolumeSerialNumber;
+            public uint FileSizeHigh;
+            public uint FileSizeLow;
+            public uint NumberOfLinks;
+            public uint FileIndexHigh;
+            public uint FileIndexLow;
+        }
+
         /// <summary>
         /// Compute the hash of content of any given file
         /// </summary>
@@ -67,5 +92,32 @@ namespace OneSync.Files
             //overwriten on exist
             File.Copy(source, destination, true);
         }
+
+        /// <summary>
+        /// Returns unique identifier that is associated with the file specified.
+        /// Renaming a file in the FAT file system can also change the file ID,
+        /// but only if the new file name is longer than the old one.
+        /// In the NTFS file system, a file keeps the same file ID until it is deleted.
+        /// File path specified is assumed to be valid and file exist.
+        /// </summary>
+        /// <param name="filePath">Path to file.</param>
+        public static UInt64 GetFileUniqueID(string filePath)
+        {
+            BY_HANDLE_FILE_INFORMATION info;
+            UInt64 uid = 0;
+
+            // Assume that file path is valid and file exists.
+            using (FileStream fs = new FileStream(filePath, FileMode.Open))
+            {
+                GetFileInformationByHandle(fs.SafeFileHandle.DangerousGetHandle(), out info);
+            }
+
+            uid = info.FileSizeHigh << 32;
+            uid &= info.FileSizeLow;
+
+            return uid;
+        }
+
+
     }
 }
