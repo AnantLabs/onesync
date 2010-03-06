@@ -76,64 +76,68 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DirectoryInfoComparer.cs" />
-    <Compile Include="FileChangeDetection.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="FileInfoComparer.cs" />
-    <Compile Include="FileUtils.cs" />
-    <Compile Include="FolderComparer.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="OneSyncInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="OneSyncInstaller.Designer.cs">
       <DependentUpon>OneSyncInstaller.cs</DependentUpon>
     </Compile>
-    <Compile Include="Sync Logic\BaseSQLiteProvider.cs" />
-    <Compile Include="Sync Logic\BaseSyncAction.cs" />
-    <Compile Include="Sync Logic\BaseSyncAgent.cs" />
-    <Compile Include="Sync Logic\ChangeItem.cs" />
-    <Compile Include="Sync Logic\CreateAction.cs" />
-    <Compile Include="Sync Logic\DatabaseException.cs" />
-    <Compile Include="Sync Logic\DeleteAction.cs" />
-    <Compile Include="Sync Logic\DirtyItem.cs" />
-    <Compile Include="Sync Logic\FileMetaData.cs" />
-    <Compile Include="Sync Logic\FileMetaDataItem.cs" />
-    <Compile Include="Sync Logic\FileMetaDataItemComparer.cs" />
-    <Compile Include="Sync Logic\FileSyncAgent.cs" />
-    <Compile Include="Sync Logic\FileSyncProvider.cs" />
-    <Compile Include="Sync Logic\IActionProvider.cs" />
-    <Compile Include="Sync Logic\IChangeItem.cs" />
-    <Compile Include="Sync Logic\IMetaData.cs" />
-    <Compile Include="Sync Logic\IMetaDataItem.cs" />
-    <Compile Include="Sync Logic\IMetaDataItemComparer.cs" />
-    <Compile Include="Sync Logic\IMetaDataProvider.cs" />
-    <Compile Include="Sync Logic\IProfileManager.cs" />
-    <Compile Include="Sync Logic\ISyncAgent.cs" />
-    <Compile Include="Sync Logic\ISyncProvider.cs" />
-    <Compile Include="Sync Logic\ISyncSourceProvider.cs" />
-    <Compile Include="Sync Logic\ISyncVerifier.cs" />
-    <Compile Include="Sync Logic\Log.cs" />
-    <Compile Include="Sync Logic\MetaDataSource.cs" />
-    <Compile Include="Sync Logic\ModifyAction.cs" />
-    <Compile Include="Sync Logic\Patch.cs" />
-    <Compile Include="Sync Logic\Patcher.cs" />
-    <Compile Include="Sync Logic\Profile.cs" />
-    <Compile Include="Sync Logic\RenameAction.cs" />
-    <Compile Include="Sync Logic\SQLiteActionProvider.cs" />
-    <Compile Include="Sync Logic\SQLiteMetaDataProvider.cs" />
-    <Compile Include="Sync Logic\SQLiteProfileManager.cs" />
-    <Compile Include="Sync Logic\SQLiteSyncSourceProvider.cs" />
-    <Compile Include="Sync Logic\SyncCancelledEventArgs.cs" />
-    <Compile Include="Sync Logic\SyncCompletesEventArgs.cs" />
-    <Compile Include="Sync Logic\SyncSource.cs" />
-    <Compile Include="Sync Logic\SyncStartsEventArgs.cs" />
+    <Compile Include="OneSync\OneSync.Files.XCopy\Class1.cs" />
+    <Compile Include="OneSync\OneSync.Files.XCopy\ICopy.cs" />
+    <Compile Include="OneSync\OneSync.Files.XCopy\IFilter.cs" />
+    <Compile Include="OneSync\OneSync.Files.XCopy\JobDetails.cs" />
+    <Compile Include="OneSync\OneSync.Files.XCopy\XCopy.cs" />
+    <Compile Include="OneSync\OneSync.Files.XCopy\XCopyFailedEvent.cs" />
+    <Compile Include="OneSync\OneSync.Files.XCopy\XError.cs" />
+    <Compile Include="OneSync\OneSync.Files.XCopy\XFilter.cs" />
+    <Compile Include="OneSync\OneSync.Files\DirectoryInfoComparer.cs" />
+    <Compile Include="OneSync\OneSync.Files\DriveUtil.cs" />
+    <Compile Include="OneSync\OneSync.Files\FileChangeDetection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="OneSync\OneSync.Files\FileInfoComparer.cs" />
+    <Compile Include="OneSync\OneSync.Files\FileUtils.cs" />
+    <Compile Include="OneSync\OneSync.Files\FolderComparer.cs" />
+    <Compile Include="OneSync\OneSync\Base Objects\BaseSQLiteProvider.cs" />
+    <Compile Include="OneSync\OneSync\Base Objects\BaseSyncAgent.cs" />
+    <Compile Include="OneSync\OneSync\Base Objects\SyncAction.cs" />
+    <Compile Include="OneSync\OneSync\Common Interfaces\IActionProvider.cs" />
+    <Compile Include="OneSync\OneSync\Common Interfaces\IChangeItem.cs" />
+    <Compile Include="OneSync\OneSync\Common Interfaces\IMetaDataProvider.cs" />
+    <Compile Include="OneSync\OneSync\Common Interfaces\IProfileManager.cs" />
+    <Compile Include="OneSync\OneSync\Common Interfaces\ISyncAgent.cs" />
+    <Compile Include="OneSync\OneSync\Common Interfaces\ISyncProvider.cs" />
+    <Compile Include="OneSync\OneSync\Common Interfaces\ISyncSourceProvider.cs" />
+    <Compile Include="OneSync\OneSync\Common Interfaces\ISyncVerifier.cs" />
+    <Compile Include="OneSync\OneSync\Domain\Actions\CreateAction.cs" />
+    <Compile Include="OneSync\OneSync\Domain\Actions\DeleteAction.cs" />
+    <Compile Include="OneSync\OneSync\Domain\Actions\RenameAction.cs" />
+    <Compile Include="OneSync\OneSync\Domain\DirtyItem.cs" />
+    <Compile Include="OneSync\OneSync\Domain\FileMetaData.cs" />
+    <Compile Include="OneSync\OneSync\Domain\FileMetaDataItem.cs" />
+    <Compile Include="OneSync\OneSync\Domain\FileMetaDataItemComparer.cs" />
+    <Compile Include="OneSync\OneSync\Domain\FileSyncAgent.cs" />
+    <Compile Include="OneSync\OneSync\Domain\FileSyncProvider.cs" />
+    <Compile Include="OneSync\OneSync\Domain\IntermediaryStorage.cs" />
+    <Compile Include="OneSync\OneSync\Domain\Patch.cs" />
+    <Compile Include="OneSync\OneSync\Domain\Patcher.cs" />
+    <Compile Include="OneSync\OneSync\Domain\Profile.cs" />
+    <Compile Include="OneSync\OneSync\Domain\SQLiteActionProvider.cs" />
+    <Compile Include="OneSync\OneSync\Domain\SQLiteMetaDataProvider.cs" />
+    <Compile Include="OneSync\OneSync\Domain\SQLiteProfileManager.cs" />
+    <Compile Include="OneSync\OneSync\Domain\SQLiteSyncSourceProvider.cs" />
+    <Compile Include="OneSync\OneSync\Domain\SyncSource.cs" />
+    <Compile Include="OneSync\OneSync\Exceptions\DatabaseException.cs" />
+    <Compile Include="OneSync\OneSync\SyncEvents\SyncCancelledEventArgs.cs" />
+    <Compile Include="OneSync\OneSync\SyncEvents\SyncCompletesEventArgs.cs" />
+    <Compile Include="OneSync\OneSync\SyncEvents\SyncStartsEventArgs.cs" />
+    <Compile Include="OneSync\OneSync\UIProcess.cs" />
     <Compile Include="UILogEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UIProfileStorageXML.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -142,6 +146,14 @@
     <None Include="Application.ico">
       <Visible>false</Visible>
     </None>
+    <None Include="OneSync\OneSync.Files\design.cd" />
+    <None Include="OneSync\OneSync.Files\vpproject\FSync.Files.vpp" />
+    <None Include="OneSync\OneSync.Files\vpproject\FSync.Files.vpppath" />
+    <None Include="OneSync\OneSync.Files\vpproject\FSync.Files.vpp~7" />
+    <None Include="OneSync\OneSync.Files\vpproject\FSync.Files.vpp~8" />
+    <None Include="OneSync\OneSync\ClassDiagram1.cd" />
+    <None Include="OneSync\OneSync\vpproject\FSync.Synchronization.vpp" />
+    <None Include="OneSync\OneSync\vpproject\FSync.Synchronization.vpppath" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="completed_icon.gif" />
@@ -152,7 +164,14 @@
     <Resource Include="processing_icon.gif" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Copy of processing_icon.gif" />
+    <Content Include="OneSync\OneSync.Files.XCopy\FSync.Files.XCopy.csproj" />
+    <Content Include="OneSync\OneSync.Files\FSync.Files.csproj" />
+    <Content Include="OneSync\OneSync.Lib\Community.CsharpSqlite.dll" />
+    <Content Include="OneSync\OneSync.Lib\Community.CsharpSqlite.SQLiteClient.dll" />
+    <Content Include="OneSync\OneSync\FSync.Synchronization.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="OneSync\OneSync\UIProcess\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

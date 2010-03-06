@@ -23,7 +23,6 @@ using System.Reflection;
 //The following two are imported for Aero Glass effect (Aero Glass Part 1/3).
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
-using OneSync.Log;
 
 namespace OneSync
 {
@@ -170,7 +169,7 @@ namespace OneSync
 			
             //Show the log of current/just-finished sync job.
             textblock_show_log.Visibility = Visibility.Hidden;
-			if(File.Exists(Log.Log.returnLogReportPath(current_syncing_dir, true))) //To be changed. Depends on Naing.
+			if(File.Exists(Log.returnLogReportPath(current_syncing_dir, true))) //To be changed. Depends on Naing.
 			{
 				textblock_show_log.Visibility = Visibility.Visible;
 			}
@@ -340,7 +339,7 @@ namespace OneSync
         /// </summary>
 		private void SyncProcessDone()
 		{
-            if (File.Exists(Log.Log.returnLogReportPath(current_syncing_dir, true))) //To be changed. Depends on Naing.
+            if (File.Exists(Log.returnLogReportPath(current_syncing_dir, true))) //To be changed. Depends on Naing.
 			{
 				textblock_show_log.Visibility = Visibility.Visible;
 			}
@@ -426,7 +425,7 @@ namespace OneSync
 		private void textblock_show_log_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
 			//View log file (The extension of the file should be .html).
-            Process.Start(Log.Log.returnLogReportPath(current_syncing_dir, true));
+            Process.Start(Log.returnLogReportPath(current_syncing_dir, true));
 		}
 
         /// <summary>
@@ -492,7 +491,7 @@ namespace OneSync
                     if (item.Name.Equals(profile_name))
                     {
                         is_sync_job_created_previously = true;
-                        textbox_storage_path.Text = item.IntermediaryStorage.Path;
+                        textbox_storage_path.Text = item.MetaDataSource.Path;
 						textblock_delete_profile.Visibility = Visibility.Visible;
                         break;
                     }
