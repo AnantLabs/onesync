@@ -79,7 +79,7 @@ namespace OneSync.Synchronization
                 transaction1.Commit();              
             }
             catch (Exception ex)
-            {                               
+            {
                 if (transaction1 != null) transaction1.Rollback();
                 throw new DatabaseException("Database Exception");
             }
