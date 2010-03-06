@@ -491,7 +491,7 @@ namespace OneSync
                     if (item.Name.Equals(profile_name))
                     {
                         is_sync_job_created_previously = true;
-                        textbox_storage_path.Text = item.MetaDataSource.Path;
+                        textbox_storage_path.Text = item.IntermediaryStorage.Path;
 						textblock_delete_profile.Visibility = Visibility.Visible;
                         break;
                     }
