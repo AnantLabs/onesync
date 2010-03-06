@@ -321,8 +321,11 @@ namespace OneSync
                 Synchronization.Profile currentProfile = new OneSync.Synchronization.Profile(System.Guid.NewGuid().ToString(), name, syncSource, metaDataSource);
                 Synchronization.FileSyncAgent currentAgent = new OneSync.Synchronization.FileSyncAgent(currentProfile);
                 //Create profile
-                OneSync.Synchronization.UIProcess.CreateDataStore(current_syncing_dir, syncSource, metaDataSource);
-                OneSync.Synchronization.UIProcess.CreateProfile(current_syncing_dir, currentProfile);
+                if(!is_sync_job_created_previously)
+                {
+                    OneSync.Synchronization.UIProcess.CreateDataStore(current_syncing_dir, syncSource, metaDataSource);
+                    OneSync.Synchronization.UIProcess.CreateProfile(current_syncing_dir, currentProfile);
+                }
                 currentAgent.Synchronize();
 			}
         }
