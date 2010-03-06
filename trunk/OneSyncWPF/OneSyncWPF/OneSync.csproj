@@ -103,7 +103,6 @@
     <Compile Include="OneSync\OneSync\Base Objects\BaseSyncAgent.cs" />
     <Compile Include="OneSync\OneSync\Base Objects\SyncAction.cs" />
     <Compile Include="OneSync\OneSync\Common Interfaces\IActionProvider.cs" />
-    <Compile Include="OneSync\OneSync\Common Interfaces\IChangeItem.cs" />
     <Compile Include="OneSync\OneSync\Common Interfaces\IMetaDataProvider.cs" />
     <Compile Include="OneSync\OneSync\Common Interfaces\IProfileManager.cs" />
     <Compile Include="OneSync\OneSync\Common Interfaces\ISyncAgent.cs" />
@@ -121,7 +120,6 @@
     <Compile Include="OneSync\OneSync\Domain\FileSyncProvider.cs" />
     <Compile Include="OneSync\OneSync\Domain\IntermediaryStorage.cs" />
     <Compile Include="OneSync\OneSync\Domain\Patch.cs" />
-    <Compile Include="OneSync\OneSync\Domain\Patcher.cs" />
     <Compile Include="OneSync\OneSync\Domain\Profile.cs" />
     <Compile Include="OneSync\OneSync\Domain\SQLiteActionProvider.cs" />
     <Compile Include="OneSync\OneSync\Domain\SQLiteMetaDataProvider.cs" />
