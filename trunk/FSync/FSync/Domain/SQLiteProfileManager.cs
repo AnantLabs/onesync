@@ -137,7 +137,7 @@ namespace OneSync.Synchronization
                     cmd.Parameters.Add(param2);
 
                     SqliteParameter param3 = new SqliteParameter("@meta", System.Data.DbType.String);
-                    param3.Value = profile.MetaDataSource.Path;
+                    param3.Value = profile.IntermediaryStorage.Path;
                     cmd.Parameters.Add(param3);
 
                     SqliteParameter param4 = new SqliteParameter("@source", System.Data.DbType.String);

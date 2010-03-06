@@ -10,10 +10,10 @@ namespace OneSync.Synchronization
     public class Patch
     {
 
-        private SyncSource syncSource = null;
+        private SyncSource targetSyncSource = null;
 
         // Refers to absolute folder path of where metadata is stored.
-        private IntermediaryStorage metaDataSource = null;
+        private IntermediaryStorage iStorage = null;
 
         /// <summary>
         /// List of dirty items
@@ -22,10 +22,16 @@ namespace OneSync.Synchronization
         private IList<SyncAction> actions = null;
 
 
-        public Patch(SyncSource syncSource, IntermediaryStorage metaDataSource, IList<SyncAction> actions)
+        /// <summary>
+        /// Creates a new Patch.
+        /// </summary>
+        /// <param name="syncSource">SyncSource of other PC where patch is to be applied.</param>
+        /// <param name="iStorage">Information about intermediary storage</param>
+        /// <param name="actions">Actions to be contained in this patch.</param>
+        public Patch(SyncSource targetSyncSource, IntermediaryStorage iStorage, IList<SyncAction> actions)
         {
-            this.syncSource = syncSource;
-            this.metaDataSource = metaDataSource;
+            this.targetSyncSource = targetSyncSource;
+            this.iStorage = iStorage;
             this.actions = actions;
             Process(actions);
         }
@@ -40,7 +46,7 @@ namespace OneSync.Synchronization
         public bool Verify(bool checkHash)
         {
             // Root directory where all dirty files are stored
-            string rootDir = metaDataSource.DirtyFolderPath;
+            string rootDir = iStorage.DirtyFolderPath;
 
 
             foreach (SyncAction a in actions)
@@ -67,8 +73,38 @@ namespace OneSync.Synchronization
         {
             foreach (SyncAction action in actions)
             {
-                action.Execute();
+                if (action is CreateAction)
+                {
+                    string srcPath = Path.Combine(iStorage.DirtyFolderPath, action.RelativeFilePath);
+                    string destPath = Path.Combine(targetSyncSource.Path, action.RelativeFilePath);
+
+                    // TODO: check if destPath already exists, if it is, check if it's dirty...
+                    File.Copy(srcPath, destPath);
+                }
+                else if (action is DeleteAction)
+                {
+                    string filePath = Path.Combine(targetSyncSource.Path, action.RelativeFilePath);
+
+                    if (File.Exists(filePath)) File.Delete(filePath);
+                }
+                else if (action is RenameAction)
+                {
+                    RenameAction a = (RenameAction)action;
+
+                    string oldPath = Path.Combine(targetSyncSource.Path, a.PreviousRelativeFilePath);
+                    string newPath = Path.Combine(targetSyncSource.Path, a.RelativeFilePath);
+
+                    File.Move(oldPath, newPath);
+                }
+                else
+                {
+                    //throw action unhandled exception?
+                }
             }
+
+            // TODO:
+            // Update metadata after patch is applied
+            // Delete all dirty files
         }
 
         private void Process(IList<SyncAction> actions)
@@ -78,15 +114,17 @@ namespace OneSync.Synchronization
             {
                 switch (action.ChangeType)
                 {
+                    /*
                     case ChangeType.MODIFIED:
                         ModifyAction modifiedAction = (ModifyAction)action;
                         dirtyItem = new DirtyItem(syncSource + modifiedAction.RelativeFilePath,
                            metaDataSource.Path + modifiedAction.RelativeFilePath, modifiedAction.NewItemHash);
                         dirtyItems.Add(dirtyItem);
                         break;
+                     */
                     case ChangeType.NEWLY_CREATED:
                         CreateAction createAction = (CreateAction)action;
-                        dirtyItem = new DirtyItem(syncSource + createAction.RelativeFilePath, metaDataSource.Path + createAction.RelativeFilePath, createAction.FileHash);
+                        dirtyItem = new DirtyItem(targetSyncSource + createAction.RelativeFilePath, iStorage.Path + createAction.RelativeFilePath, createAction.FileHash);
                         break;
                 }
             }
@@ -104,12 +142,16 @@ namespace OneSync.Synchronization
 
         public IntermediaryStorage MetaDataSource
         {
-            get { return this.metaDataSource; }
+            get { return this.iStorage; }
         }
 
-        public SyncSource SyncSource
+        /// <summary>
+        /// Gets information regarding the folder (on other PC)
+        /// where this patch is to be applied.
+        /// </summary>
+        public SyncSource TargetSyncSource
         {
-            get { return this.syncSource; }
+            get { return this.targetSyncSource; }
         }
     
     }

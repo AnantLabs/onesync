@@ -5,7 +5,10 @@ using System.Text;
 
 namespace OneSync.Synchronization
 {
-     
+    
+    /// <summary>
+    /// Represents a folder on a PC to be synchronized.
+    /// </summary>
     public class SyncSource
     {        
         private string gid = "";
@@ -17,6 +20,7 @@ namespace OneSync.Synchronization
         public const string PATH = "PATH";
         public const string GID = "ID";
         public const string DATASOURCE_INFO_TABLE = "DATASOURCE_INFO";
+
 
         public SyncSource(string id, string path)
         {

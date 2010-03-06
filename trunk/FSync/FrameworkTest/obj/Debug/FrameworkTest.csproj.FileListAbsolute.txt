@@ -49,3 +49,12 @@ E:\Workspaces\Visual Studio 2008\OneSync\trunk\FSync\FrameworkTest\obj\Debug\Fra
 C:\Users\Desmond\Desktop\3215\FSync\FrameworkTest\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\Desmond\Desktop\3215\FSync\FrameworkTest\obj\Debug\FrameworkTest.exe
 C:\Users\Desmond\Desktop\3215\FSync\FrameworkTest\obj\Debug\FrameworkTest.pdb
+C:\Users\Desmond\Desktop\3215\FSync\FrameworkTest\bin\Debug\FrameworkTest.exe
+C:\Users\Desmond\Desktop\3215\FSync\FrameworkTest\bin\Debug\FrameworkTest.pdb
+C:\Users\Desmond\Desktop\3215\FSync\FrameworkTest\bin\Debug\OneSync.Synchronization.dll
+C:\Users\Desmond\Desktop\3215\FSync\FrameworkTest\bin\Debug\FSync.Files.dll
+C:\Users\Desmond\Desktop\3215\FSync\FrameworkTest\bin\Debug\Community.CsharpSqlite.dll
+C:\Users\Desmond\Desktop\3215\FSync\FrameworkTest\bin\Debug\Community.CsharpSqlite.SQLiteClient.dll
+C:\Users\Desmond\Desktop\3215\FSync\FrameworkTest\bin\Debug\FSync.Files.pdb
+C:\Users\Desmond\Desktop\3215\FSync\FrameworkTest\bin\Debug\FSync.Files.xml
+C:\Users\Desmond\Desktop\3215\FSync\FrameworkTest\bin\Debug\OneSync.Synchronization.pdb

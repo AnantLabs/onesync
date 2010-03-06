@@ -5,6 +5,11 @@ using System.Text;
 
 namespace OneSync.Synchronization
 {
+    /// <summary>
+    /// Represents a sync job profile that contains the information
+    /// of the local folder to be synchronized as well as the intermediary
+    /// storage information
+    /// </summary>
     public class Profile
     {
         public const string PROFILE_TABLE =  "PROFILE";
@@ -12,18 +17,23 @@ namespace OneSync.Synchronization
         public const string NAME = "NAME";
         public const string METADATA_SOURCE_LOCATION = "METADATA_SOURCE_LOCATION";
         public const string SYNC_SOURCE_ID = "SYNC_SOURCE_ID";
+        
         private string profileId;
         private string profileName;
         private SyncSource syncSource;
-        private IntermediaryStorage mdSource;
-        public Profile(string id , string name , SyncSource syncSource, IntermediaryStorage metaDataSource)
+        private IntermediaryStorage iStorage;
+        
+        public Profile(string id , string name , SyncSource syncSource, IntermediaryStorage iStorage)
         {
             this.profileId = id;
             this.profileName = name;
             this.syncSource = syncSource;
-            this.mdSource = metaDataSource;
+            this.iStorage = iStorage;
         }
         
+        /// <summary>
+        /// Returns the profile name. Each PC will have unique profile name.
+        /// </summary>
         public string Name
         {
             get
@@ -32,6 +42,9 @@ namespace OneSync.Synchronization
             }
         }
 
+        /// <summary>
+        /// Gets the unique ID of this profile.
+        /// </summary>
         public string ID
         {
             get
@@ -40,6 +53,10 @@ namespace OneSync.Synchronization
             }
         }
 
+        /// <summary>
+        /// Gets information regarding the local folder that is to be
+        /// synchronized for this profile.
+        /// </summary>
         public SyncSource SyncSource
         {
             set
@@ -52,15 +69,18 @@ namespace OneSync.Synchronization
             }
         }
 
-        public IntermediaryStorage MetaDataSource
+        /// <summary>
+        /// Get information regarding the intermediary storage for this profile.
+        /// </summary>
+        public IntermediaryStorage IntermediaryStorage
         {
             set
             {
-                this.mdSource = value;
+                this.iStorage = value;
             }
             get
             {
-                return this.mdSource;
+                return this.iStorage;
             }
         }        
     }

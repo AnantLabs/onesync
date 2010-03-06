@@ -37,7 +37,10 @@ namespace OneSync.Synchronization
             this.sourcePath = sourcePath;
         }
 
-        public string SourcePath
+        /// <summary>
+        /// Absolute root directory folder to be synchronized.
+        /// </summary>
+        public string RootDir
         {
             get
             {

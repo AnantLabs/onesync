@@ -65,7 +65,7 @@ namespace OneSync.UI
             if (profiles.Count >= 1)
             {
                 FileMetaData currentItems = (FileMetaData)new SQLiteMetaDataProvider() .FromPath(profiles[0].SyncSource);
-                new SQLiteMetaDataProvider(profiles[0].MetaDataSource.Path).Insert(currentItems);
+                new SQLiteMetaDataProvider(profiles[0].IntermediaryStorage.Path).Insert(currentItems);
             }
         }
 
@@ -93,7 +93,7 @@ namespace OneSync.UI
                 IList<SyncAction> actions =  new SQLiteActionProvider(profiles[0]).Load(profiles[0].SyncSource);
                 foreach (SyncAction action in actions)
                 {
-                    Console.WriteLine(action.TargetAbsoluteRootDir);
+                    //Console.WriteLine(action.TargetAbsoluteRootDir);
                 }
             }            
         }

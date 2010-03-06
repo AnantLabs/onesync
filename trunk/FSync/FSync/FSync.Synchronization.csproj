@@ -70,10 +70,9 @@
     <Compile Include="Common Interfaces\ISyncProvider.cs" />
     <Compile Include="Common Interfaces\ISyncSourceProvider.cs" />
     <Compile Include="Common Interfaces\ISyncVerifier.cs" />
-    <Compile Include="Domain\ChangeItem.cs" />
     <Compile Include="Domain\Actions\RenameAction.cs" />
     <Compile Include="Domain\DirtyItem.cs" />
-    <Compile Include="Domain\MetaDataSource.cs" />
+    <Compile Include="Domain\IntermediaryStorage.cs" />
     <Compile Include="Domain\Patch.cs" />
     <Compile Include="Domain\Profile.cs" />
     <Compile Include="Domain\SQLiteProfileManager.cs" />

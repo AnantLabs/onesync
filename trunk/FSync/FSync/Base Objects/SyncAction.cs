@@ -18,7 +18,7 @@ namespace OneSync.Synchronization
     /// This class is the base class for all the sync action (rename, delete, create,...)
     /// </summary>
     public abstract class SyncAction
-    {       
+    {           
         #region columns of action table
         public const string TABLE_NAME = "ACTION_TABLE";
         public const string CHANGE_IN = "CHANGE_IN";
@@ -33,7 +33,6 @@ namespace OneSync.Synchronization
         protected string fileHash = "";
         protected string sourceID = "";
         protected ChangeType changeType = ChangeType.NO_CHANGED;
-        protected string targetAbsRootDir = "";
         
         /// <summary>
         /// Creates a new SyncAction.
@@ -43,10 +42,9 @@ namespace OneSync.Synchronization
         /// <param name="changeType">Action type.</param>
         /// <param name="relFilePath">Relative path of relevant/dirty file of this action.</param>
         /// <param name="fileHash">File hash of the relevant/dirty file of this action.</param>
-        public SyncAction(string targetAbsRootDir,  string sourceID, ChangeType changeType,
+        public SyncAction(string sourceID, ChangeType changeType,
                           string relFilePath, string fileHash)
         {
-            this.targetAbsRootDir = targetAbsRootDir;            
             this.sourceID = sourceID;
             this.changeType = changeType;
             this.relFilePath = relFilePath;
@@ -63,14 +61,6 @@ namespace OneSync.Synchronization
             {
                 return sourceID;
             }
-        }
-        
-        /// <summary>
-        /// Target root directory of where this action is should be applied.
-        /// </summary>
-        public string TargetAbsoluteRootDir
-        {
-            get { return this.targetAbsRootDir; }
         }
 
 
@@ -107,8 +97,6 @@ namespace OneSync.Synchronization
                 return changeType;
             }
         }       
-
-        public abstract void Execute();
         
     }
 }

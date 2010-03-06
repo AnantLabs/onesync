@@ -21,7 +21,7 @@ namespace OneSync.Synchronization
         /// <param name="fileHash">File hash of file to be renamed.</param>
         public RenameAction(string targetAbsRootDir, string sourceID,
                             string relFilePath, string prevRelFilePath, string fileHash)
-            : base(targetAbsRootDir, sourceID, ChangeType.RENAMED, relFilePath, fileHash)
+            : base(sourceID, ChangeType.RENAMED, relFilePath, fileHash)
         {
             this.prevRelFilePath = prevRelFilePath;
         }
@@ -35,15 +35,5 @@ namespace OneSync.Synchronization
             get { return prevRelFilePath; } 
         }
 
-       
-        // Public Methods
-        public override void Execute()
-        {
-            string oldPath = Path.Combine(targetAbsRootDir, prevRelFilePath);
-            string newPath = Path.Combine(targetAbsRootDir, relFilePath);
-
-            if (File.Exists(oldPath))
-                File.Move(oldPath, newPath);
-        }
     }
 }
