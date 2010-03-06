@@ -15,7 +15,7 @@ namespace OneSync.Synchronization
             string pathToMdSource = @mSource.Path + @"\data.md";
             string pathTouserSource = @userDataPath + @"\profiles\data.md";
 
-            if (!Directory.Exists(userDataPath)) Directory.CreateDirectory(@userDataPath);
+            if (!Directory.Exists(userDataPath + "\\profiles\\")) Directory.CreateDirectory(@userDataPath + "\\profiles\\");
             if (!File.Exists (pathTouserSource))File.Create(@pathTouserSource);
 
             if (!Directory.Exists(mSource.Path)) Directory.CreateDirectory(@mSource.Path);            
