@@ -10,13 +10,13 @@ namespace OneSync.Synchronization
     /// Instance of this class is in charge of managing profile records 
     /// </summary>
     public interface IProfileManager
-    {      
-        IList<Profile> Load();              
+    {
+        IList<Profile> Load();
 
         void Update(Profile profile);
 
         void Delete(Profile profile);
 
-        void Insert(Profile profile);        
+        void Insert(Profile profile);
     }
 }

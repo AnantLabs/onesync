@@ -21,16 +21,16 @@ namespace OneSync.Synchronization
         {  
             #region Apply and Verify Patch Applied
             IList<SyncAction> actions = new SQLiteActionProvider(profile).Load(profile.SyncSource);
-            Patch patch = new Patch(profile.SyncSource, profile.MetaDataSource, actions);
+            Patch patch = new Patch(profile.SyncSource, profile.IntermediaryStorage, actions);
             if (patch.Verify(true)) patch.Apply();            
             #endregion Apply and Verify Patch Applied
 
             #region generate patch            
             //load metadata from database
-            FileMetaData storedItems = (FileMetaData) new SQLiteMetaDataProvider(Profile).Load(Profile.SyncSource);
+            FileMetaData storedItems = new SQLiteMetaDataProvider(Profile).Load(Profile.SyncSource);
             //generate metadata of a folder
             FileMetaData currentItems =(FileMetaData) new SQLiteMetaDataProvider (Profile).FromPath(Profile.SyncSource);            
-            FileSyncProvider syncProvider = new FileSyncProvider(currentItems, storedItems);
+            FileSyncProvider syncProvider = new FileSyncProvider(currentItems, storedItems, profile.IntermediaryStorage);
             
             //generate list of sync actions by comparing 2 metadata
             IList<SyncAction> newActions =  syncProvider.GenerateActions();

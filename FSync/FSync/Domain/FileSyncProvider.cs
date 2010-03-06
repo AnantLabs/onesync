@@ -11,17 +11,22 @@ namespace OneSync.Synchronization
         protected FileMetaData current;
 
         // MetaData from other PC
-        protected FileMetaData stored;      
+        protected FileMetaData stored;
+
+        // Intermediary storage information used for sync
+        protected IntermediaryStorage iStorage;
+
 
         /// <summary>
         /// Provides the ...
         /// </summary>
         /// <param name="current">Metadata of current PC</param>
         /// <param name="stored">Metadata of other PC</param>
-        public FileSyncProvider(FileMetaData current, FileMetaData stored)
+        public FileSyncProvider(FileMetaData current, FileMetaData stored, IntermediaryStorage iStorage)
         {
             this.current = current;
             this.stored = stored;
+            this.iStorage = iStorage;
         }
 
         /// <summary>
@@ -68,9 +73,8 @@ namespace OneSync.Synchronization
 
             foreach (FileMetaDataItem left in leftOnly)
             {
-                CreateAction createAction = new CreateAction(
-                    current.SourcePath,
-                    current.SourceId, left.RelativePath, left.HashCode);
+                CreateAction createAction = new CreateAction(current.RootDir, current.SourceId,
+                                                             left.RelativePath, left.HashCode);
                 actions.Add(createAction);
             }
 
@@ -80,25 +84,24 @@ namespace OneSync.Synchronization
                                                   select right;
             foreach (FileMetaDataItem right in rightOnly)
             {
-                DeleteAction deleteAction = new DeleteAction(
-                    current.SourcePath,
-                    current.SourceId, right.RelativePath, right.HashCode);
+                DeleteAction deleteAction = new DeleteAction(current.SourceId, right.RelativePath, right.HashCode);
                 actions.Add(deleteAction);
             }
             
-            //get the items from 2 metadata with same relative paths but different hashes.
-            IEnumerable<ChangeItem> bothModified =   from right in stored.MetaDataItems
+            // Since patch is already applied, newly updated files (according using hash)
+            // on current PC (left) should be enumerated to generate the patch
+            IEnumerable<FileMetaDataItem> bothModified =   from right in stored.MetaDataItems
                                                      from left in current.MetaDataItems
-                                                     where ((FileMetaDataItem)right).RelativePath.Equals(((FileMetaDataItem)left).RelativePath)
-                                                     && !((FileMetaDataItem)right).HashCode.Equals(((FileMetaDataItem)left).HashCode)
-                                                        select new ChangeItem (right, left);
-            foreach (ChangeItem item in bothModified) 
+                                                     where right.RelativePath.Equals(left.RelativePath)
+                                                     && !right.HashCode.Equals(left.HashCode)
+                                                        select left;
+            
+            foreach (FileMetaDataItem left in bothModified)
             {
-                FileMetaDataItem oldItem =(FileMetaDataItem) item.OldItem;
-                FileMetaDataItem newItem =(FileMetaDataItem) item.NewItem;
-                ModifyAction modifyAction = new ModifyAction(current.SourcePath, current.SourceId, ChangeType.MODIFIED,
-                    oldItem.RelativePath, oldItem.HashCode, newItem.HashCode); 
-                actions.Add(modifyAction);
+
+                CreateAction a = new CreateAction(current.RootDir, current.SourceId, left.RelativePath,
+                                                  left.HashCode);
+                actions.Add(a);
             }
 
             return  actions;

@@ -62,7 +62,7 @@ namespace OneSync.Synchronization
 
         public static void CreateProfile(string pathToUserData, Profile profile)
         {
-            string pathToMdSource = profile.MetaDataSource.Path + @"\data.md";
+            string pathToMdSource = profile.IntermediaryStorage.Path + @"\data.md";
             string pathTouserSource = pathToUserData + @"\profiles\data.md";            
 
             string conString1 = string.Format("Version=3,uri=file:{0}", @pathTouserSource);            
@@ -91,7 +91,7 @@ namespace OneSync.Synchronization
 
         public static void InsertMetaData(Profile profile, FileMetaData md)
         {
-           string pathToMdSource = profile.MetaDataSource.Path + @"\data.md";
+           string pathToMdSource = profile.IntermediaryStorage.Path + @"\data.md";
            new SQLiteMetaDataProvider(profile).Insert(md);
         }
 

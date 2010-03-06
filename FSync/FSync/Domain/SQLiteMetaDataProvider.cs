@@ -19,7 +19,7 @@ namespace OneSync.Synchronization
         /// Profile used to get the base path of the sync source
         /// </summary>
         /// <param name="p"></param>
-        public SQLiteMetaDataProvider(Profile p):base(p.MetaDataSource.Path)            
+        public SQLiteMetaDataProvider(Profile p):base(p.IntermediaryStorage.Path)            
         {
             this.profile = p;
         }

@@ -16,7 +16,7 @@ namespace OneSync.Synchronization
         /// Often used when load the actions
         /// </summary>
         /// <param name="profile"></param>
-        public SQLiteActionProvider(Profile profile):base(profile.MetaDataSource.Path)
+        public SQLiteActionProvider(Profile profile):base(profile.IntermediaryStorage.Path)
         {
             this.profile = profile;
         }
@@ -81,11 +81,11 @@ namespace OneSync.Synchronization
                             {
                                 case (int)ChangeType.DELETED:
                                     DeleteAction delAction = new DeleteAction(
-                                        source.Path,
                                         (string)reader[SyncAction.CHANGE_IN],
                                         (string)reader[SyncAction.OLD], (string)reader[SyncAction.OLD_HASH]);
                                     actions.Add(delAction);
                                     break;
+                                /*
                                 case (int)ChangeType.MODIFIED:
                                     ModifyAction modAction = new ModifyAction(
                                         source.Path,
@@ -94,6 +94,7 @@ namespace OneSync.Synchronization
                                     actions.Add(modAction);
                                     actions.Add(modAction);
                                     break;
+                                 */
                                 case (int)ChangeType.NEWLY_CREATED:
                                     CreateAction createAction = new CreateAction(
                                         source.Path,
@@ -131,9 +132,11 @@ namespace OneSync.Synchronization
                         {
                             case ChangeType.DELETED:
                                 break;
+                            /*
                             case ChangeType.MODIFIED:
                                 InsertModifyAction((ModifyAction)action,con);
                                 break;
+                             */
                             case ChangeType.NEWLY_CREATED:
                                 InsertCreateAction((CreateAction) action,con);
                                 break;
