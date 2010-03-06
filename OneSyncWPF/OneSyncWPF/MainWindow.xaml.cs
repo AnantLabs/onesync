@@ -70,7 +70,7 @@ namespace OneSync
         string storage_dir; //The storage directory.
         bool is_sync_job_created_previously = false; //The value is true if the sync job is not created currently, but previously.
         Synchronization.SQLiteProfileManager profileManager = new OneSync.Synchronization.SQLiteProfileManager(
-            Assembly.GetExecutingAssembly().Location.Substring(0, Assembly.GetExecutingAssembly().Location.LastIndexOf('\\')) + "\\"); //The SQLite profile manager from Thuat.
+            Assembly.GetExecutingAssembly().Location.Substring(0, Assembly.GetExecutingAssembly().Location.LastIndexOf('\\'))); //The SQLite profile manager from Thuat.
 		DoubleAnimation instantNotificationAnimation = new DoubleAnimation(); //The animation of label_notification.
         Storyboard myStoryboard = new Storyboard(); //The storyboard of label_notification.
         //End: Global variables.
@@ -150,21 +150,18 @@ namespace OneSync
 			//TO BE DISCUSSED: Note that for those profile has Sync Source Directory not exist anymore will be deleted.
             try
             {
-                IList<Synchronization.Profile> profileItemsCollection = profileManager.Load();
+                IList<Synchronization.Profile> profileItemsCollection = new Synchronization.SQLiteProfileManager(current_syncing_dir + @"\profiles").Load();
                 foreach (Synchronization.Profile profileItem in profileItemsCollection)
                 {
                     //Retrieve.
-                    if (profileItem.SyncSource.Equals(current_syncing_dir))
-                    {
-                        combobox_profile_name.Items.Add(profileItem.Name);
-                    }
+                    combobox_profile_name.Items.Add(profileItem.Name);
                     //TODO: Delete no longer exist profile.
                     //NOTE: Only not existing profile will be deleted.
                     //WAIT: Thuat is implementing the Delete function in OneSync.Synchronization.SQLiteProfileManager.
                 }
-            }catch(Exception)
+            }catch(Exception ex)
             {
-
+                System.Windows.Forms.MessageBox.Show(ex.ToString());
             }
 			
             //Show the log of current/just-finished sync job.
@@ -318,17 +315,14 @@ namespace OneSync
 
                 //Thuat and Desmond's sync logic takes actions!
                 //Generate a Global Unique Identifier.
-                Guid g = new Guid();
-                string id = g.ToString();
                 string name = profile_name;
-                Synchronization.SyncSource syncSource = new OneSync.Synchronization.SyncSource(id, current_syncing_dir);
+                Synchronization.SyncSource syncSource = new OneSync.Synchronization.SyncSource(System.Guid.NewGuid().ToString(), current_syncing_dir);
                 Synchronization.IntermediaryStorage metaDataSource = new OneSync.Synchronization.IntermediaryStorage(storage_dir);
-                Synchronization.Profile currentProfile = new OneSync.Synchronization.Profile(id, name, syncSource, metaDataSource);
+                Synchronization.Profile currentProfile = new OneSync.Synchronization.Profile(System.Guid.NewGuid().ToString(), name, syncSource, metaDataSource);
                 Synchronization.FileSyncAgent currentAgent = new OneSync.Synchronization.FileSyncAgent(currentProfile);
-                if (!is_sync_job_created_previously) //Add a new profile entry to Thuat's SQLite profile manager.
-                {
-                    profileManager.Insert(currentProfile);
-                }
+                //Create profile
+                OneSync.Synchronization.UIProcess.CreateDataStore(current_syncing_dir, syncSource, metaDataSource);
+                OneSync.Synchronization.UIProcess.CreateProfile(current_syncing_dir, currentProfile);
                 currentAgent.Synchronize();
 			}
         }
@@ -484,7 +478,7 @@ namespace OneSync
                 profile_name = combobox_profile_name.Text;
                 ProfileCreationControlsVisibility(Visibility.Visible, Visibility.Hidden);
 				Window.Title = combobox_profile_name.Text + " - OneSync";
-                foreach (Synchronization.Profile item in combobox_profile_name.Items)
+                foreach (Synchronization.Profile item in (new Synchronization.SQLiteProfileManager(current_syncing_dir + @"\profiles").Load()))
                 {
                     //Check to see if the profile is an existing profile or not.
                     //If yes, then it will import the storage directory to the program.
@@ -535,11 +529,11 @@ namespace OneSync
 		/// <param name="e">The event arguments.</param>
         private void combobox_profile_name_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
-        	foreach (Synchronization.Profile item in combobox_profile_name.Items)
+        	foreach (String item in combobox_profile_name.Items)
             {
                 //Check to see if the profile is an existing profile or not.
                 //If yes, then it will show the rename profile link.
-                if (item.Name.Equals(combobox_profile_name.Text))
+                if (item.Equals(combobox_profile_name.Text))
                 {
                     textblock_rename_profile.Visibility = Visibility.Visible;
                     break;
