@@ -6,7 +6,7 @@ using System.IO;
 
 namespace OneSync.Synchronization
 {
-    public class RenameAction:SyncAction
+    public class RenameAction : SyncAction
     {
         private string prevRelFilePath;
 
@@ -19,9 +19,9 @@ namespace OneSync.Synchronization
         /// <param name="relFilePath">Relative file path of file after renamed.</param>
         /// <param name="prevRelFilePath">Relative file path before rename.</param>
         /// <param name="fileHash">File hash of file to be renamed.</param>
-        public RenameAction(string targetAbsRootDir, string sourceID,
+        public RenameAction(int actionId, string sourceID,
                             string relFilePath, string prevRelFilePath, string fileHash)
-            : base(sourceID, ChangeType.RENAMED, relFilePath, fileHash)
+            : base(actionId, sourceID, ChangeType.RENAMED, relFilePath, fileHash)
         {
             this.prevRelFilePath = prevRelFilePath;
         }
@@ -31,8 +31,9 @@ namespace OneSync.Synchronization
         /// <summary>
         /// Previous relative file path of renamed file.
         /// </summary>
-        public string PreviousRelativeFilePath { 
-            get { return prevRelFilePath; } 
+        public string PreviousRelativeFilePath
+        {
+            get { return prevRelFilePath; }
         }
 
     }

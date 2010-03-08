@@ -6,10 +6,8 @@ using System.IO;
 
 namespace OneSync.Synchronization
 {
-    public class CreateAction:SyncAction
+    public class CreateAction : SyncAction
     {
-        private string dirtyFilesAbsDir = "";
-
         /// <summary>
         /// To
         /// </summary>
@@ -19,11 +17,11 @@ namespace OneSync.Synchronization
         /// <param name="relFilePath">Relative file path where file should be created.</param>
         /// <param name="fileHash">File hash of the file to be created.</param>
         /// <param name="dirtyFilesDir">Absolute root directory of where dirty files are stored.</param>
-        public CreateAction(string targetAbsRootDir, string sourceID, string relFilePath, string fileHash)
-            : base(sourceID, ChangeType.NEWLY_CREATED, relFilePath, fileHash)
+        public CreateAction(int actionId, string sourceID, string relFilePath, string fileHash)
+            : base(actionId, sourceID, ChangeType.NEWLY_CREATED, relFilePath, fileHash)
         {
         }
 
-        
+
     }
 }

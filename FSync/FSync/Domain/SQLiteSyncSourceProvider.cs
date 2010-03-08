@@ -13,12 +13,17 @@ namespace OneSync.Synchronization
     public class SQLiteSyncSourceProvider:BaseSQLiteProvider, ISyncSourceProvider
     {
         private SqliteConnection con = null;
-        //name of table that contains source info               
+                       
         public SQLiteSyncSourceProvider(string baseFolder):base(baseFolder)
         {
             this.baseFolder = baseFolder;
         }
 
+        /// <summary>
+        /// This constructor is called when SQLiteSyncSourceProvider involved in 
+        /// any operation that requires transaction features (for commit and rollback purpose)
+        /// </summary>
+        /// <param name="con"></param>
         public SQLiteSyncSourceProvider(SqliteConnection con)
         {
             this.con = con;
@@ -34,7 +39,7 @@ namespace OneSync.Synchronization
              using (SqliteCommand cmd = con.CreateCommand())
              {
                     cmd.CommandText = "INSERT INTO " + SyncSource.DATASOURCE_INFO_TABLE + 
-                        "(" + SyncSource.GID + "," + SyncSource.PATH + ") VALUES (@id, @path)" ;
+                        "(" + SyncSource.SOURCE_ID + "," + SyncSource.SOURCE_ABSOLUTE_PATH + ") VALUES (@id, @path)" ;
                     SqliteParameter param1 = new SqliteParameter("@id", System.Data.DbType.String);
                     param1.Value = source.ID;
                     cmd.Parameters.Add(param1);
@@ -65,7 +70,7 @@ namespace OneSync.Synchronization
                     {
                         while (reader.Read())
                         {
-                            replicas.Add(new SyncSource((string)reader[SyncSource.GID], (string)reader[SyncSource.PATH]));
+                            replicas.Add(new SyncSource((string)reader[SyncSource.SOURCE_ID], (string)reader[SyncSource.SOURCE_ABSOLUTE_PATH]));
                         }
                     }
                 }
@@ -84,7 +89,7 @@ namespace OneSync.Synchronization
                 using (SqliteCommand cmd = con.CreateCommand())
                 {
                     cmd.CommandText = "UPDATE " + SyncSource.DATASOURCE_INFO_TABLE +
-                        " SET " + SyncSource.PATH + " = @path WHERE " + SyncSource.GID + " = @id" ;
+                        " SET " + SyncSource.SOURCE_ABSOLUTE_PATH + " = @path WHERE " + SyncSource.SOURCE_ID + " = @id" ;
                     SqliteParameter param1 = new SqliteParameter("@id", System.Data.DbType.String);
                     param1.Value = source.ID;
                     cmd.Parameters.Add(param1);
@@ -107,6 +112,11 @@ namespace OneSync.Synchronization
 
         }
 
+        /// <summary>
+        /// To find that list of sync sources that have specific absolute paths
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public IList<SyncSource> FindByPath( string path)
         {
             IList<SyncSource> sources = Load();
@@ -115,6 +125,11 @@ namespace OneSync.Synchronization
                      select source).ToList();            
         }
 
+        /// <summary>
+        /// To find sync source that has specific and unique id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public SyncSource FindById(string id)
         {
             IList<SyncSource> sources = Load();
@@ -137,8 +152,8 @@ namespace OneSync.Synchronization
                 using (SqliteCommand cmd = con.CreateCommand())
                 {
                     cmd.CommandText = "CREATE TABLE IF NOT EXISTS " + SyncSource.DATASOURCE_INFO_TABLE +
-                                                " ( " + SyncSource.PATH + " TEXT, " +
-                                                SyncSource.GID + " TEXT PRIMARY KEY)";
+                                                " ( " + SyncSource.SOURCE_ABSOLUTE_PATH + " TEXT, " +
+                                                SyncSource.SOURCE_ID + " TEXT PRIMARY KEY)";
                     cmd.ExecuteNonQuery();
                 }            
         }

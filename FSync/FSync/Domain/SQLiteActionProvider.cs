@@ -43,14 +43,12 @@ namespace OneSync.Synchronization
         {
             using (SqliteCommand cmd = con.CreateCommand())
             {
-                        cmd.CommandText = "DROP TABLE IF EXISTS " + SyncAction.TABLE_NAME;
-                        cmd.ExecuteNonQuery();
-
-                        cmd.CommandText = "CREATE TABLE IF NOT EXISTS " + SyncAction.TABLE_NAME +
-                                                    " ( " + SyncAction.CHANGE_IN + " TEXT, " +
-                                                    SyncAction.ACTION + " INT, " +
-                                                    SyncAction.OLD + " TEXT, " +
-                                                    SyncAction.NEW + " TEXT, " +
+                        cmd.CommandText = "CREATE TABLE IF NOT EXISTS " + SyncAction.ACTION_TABLE +
+                                                    " ( " + SyncAction.ACTION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                                    SyncAction.CHANGE_IN + " TEXT, " +
+                                                    SyncAction.ACTION_TYPE + " INT, " +
+                                                    SyncAction.OLD_RELATIVE_PATH + " TEXT, " +
+                                                    SyncAction.NEW_RELATIVE_PATH + " TEXT, " +
                                                     SyncAction.NEW_HASH + " TEXT, " +
                                                     SyncAction.OLD_HASH + " TEXT)"
                                                     ;
@@ -60,15 +58,16 @@ namespace OneSync.Synchronization
 
         #region IActionsProvider Members
 
-        public IList<SyncAction> Load(SyncSource source)
+        public IList<SyncAction> Load(SyncSource source, SourceOption option)
         {
+            string opt = (option == SourceOption.EQUAL_SOURCE_ID) ? " = " : " <> ";
             IList<SyncAction> actions = new List<SyncAction>();
             using (SqliteConnection con = new SqliteConnection(ConnectionString))
             {                
                 con.Open();
                 using (SqliteCommand cmd = con.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM " + SyncAction.TABLE_NAME + " WHERE " + SyncAction.CHANGE_IN + " <> @sourceId";
+                    cmd.CommandText = "SELECT * FROM " + SyncAction.ACTION_TABLE + " WHERE " + SyncAction.CHANGE_IN + opt  + " @sourceId";
                     SqliteParameter param1 = new SqliteParameter("@sourceId",  System.Data.DbType.String);
                     param1.Value = source.ID;
                     cmd.Parameters.Add(param1);
@@ -76,37 +75,31 @@ namespace OneSync.Synchronization
                     {
                         while (reader.Read())
                         {
-                            int actionType = (int) reader[SyncAction.ACTION];
+                            int actionType = (int) reader[SyncAction.ACTION_TYPE];
                             switch (actionType)
                             {
                                 case (int)ChangeType.DELETED:
                                     DeleteAction delAction = new DeleteAction(
+                                        (int)reader[SyncAction.ACTION_ID],                                        
                                         (string)reader[SyncAction.CHANGE_IN],
-                                        (string)reader[SyncAction.OLD], (string)reader[SyncAction.OLD_HASH]);
+                                        (string)reader[SyncAction.OLD_RELATIVE_PATH], (string)reader[SyncAction.OLD_HASH]);
                                     actions.Add(delAction);
                                     break;
-                                /*
-                                case (int)ChangeType.MODIFIED:
-                                    ModifyAction modAction = new ModifyAction(
-                                        source.Path,
-                                        (string)reader[SyncAction.CHANGE_IN], (ChangeType)((int)reader[SyncAction.ACTION]),
-                                        (string)reader[SyncAction.OLD], (string)reader[SyncAction.OLD_HASH], (string)reader[SyncAction.NEW_HASH]);
-                                    actions.Add(modAction);
-                                    actions.Add(modAction);
-                                    break;
-                                 */
                                 case (int)ChangeType.NEWLY_CREATED:
                                     CreateAction createAction = new CreateAction(
-                                        source.Path,
+                                        (int)reader[SyncAction.ACTION_ID],                                     
                                         (string)reader[SyncAction.CHANGE_IN],
-                                        (string)reader[SyncAction.NEW], (string)reader[SyncAction.NEW_HASH]);
+                                        (string)reader[SyncAction.NEW_RELATIVE_PATH], (string)reader[SyncAction.NEW_HASH]);
                                     actions.Add(createAction);
                                     break;
                                 case (int)ChangeType.RENAMED:
                                     RenameAction renameAction = new RenameAction(
-                                        source.Path,
-                                        (string)reader[SyncAction.CHANGE_IN],
-                                        (string)reader[SyncAction.OLD], (string)reader[SyncAction.NEW], (string)reader[SyncAction.OLD_HASH]);
+                                        (int)reader[SyncAction.ACTION_ID],
+                                        (string)reader [SyncAction.CHANGE_IN],
+                                        (string)reader[SyncAction.NEW_RELATIVE_PATH],
+                                        (string)reader[SyncAction.OLD_RELATIVE_PATH],
+                                        (string)reader[SyncAction.OLD_HASH]
+                                       );
                                     actions.Add(renameAction);
                                     break;
                             }                           
@@ -118,59 +111,83 @@ namespace OneSync.Synchronization
         }
 
 
-        public void Insert(IList<SyncAction> actions)
+        public void Insert(IList<SyncAction> actions, SqliteConnection con)
         {
-            using (SqliteConnection con = new SqliteConnection (ConnectionString))
-            {
-                con.Open();
-                SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
-                try
+           foreach (SyncAction action in actions)
+           {
+                switch (action.ChangeType)
                 {
-                    foreach (SyncAction action in actions)
-                    {
-                        switch (action.ChangeType)
-                        {
-                            case ChangeType.DELETED:
-                                break;
-                            /*
-                            case ChangeType.MODIFIED:
-                                InsertModifyAction((ModifyAction)action,con);
-                                break;
-                             */
-                            case ChangeType.NEWLY_CREATED:
-                                InsertCreateAction((CreateAction) action,con);
-                                break;
-                            case ChangeType.RENAMED:
-                                break;
-                        }
-                    }
-                    transaction.Commit();
+
+                    case ChangeType.DELETED:
+                        InsertDeleteAction((DeleteAction)action, con);
+                    break;
+                    case ChangeType.NEWLY_CREATED:
+                        InsertCreateAction((CreateAction) action,con);
+                    break;
+                    case ChangeType.RENAMED:
+                        
+                    break;                   
+
                 }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    throw new DatabaseException("");
-                }                
-            }
+                    
+            }           
         }
 
-        public void Insert(SyncAction action)
+        public void Insert(SyncAction action, SqliteConnection con)
         {
-            using (SqliteConnection con = new SqliteConnection (ConnectionString))
+          
+           switch (action.ChangeType)
+           {
+                 case ChangeType.DELETED:
+                    InsertDeleteAction((DeleteAction)action, con);
+                 break;
+                 case ChangeType.NEWLY_CREATED:
+                    InsertCreateAction((CreateAction)action, con);
+                    break;
+                case ChangeType.RENAMED:
+                    InsertRenameAction((RenameAction)action, con);
+                    break;
+           }                    
+                
+                
+       }
+
+        public void Delete(IList<SyncAction> actions, SqliteConnection con)
+        {
+            foreach (SyncAction action in actions)
             {
-                con.Open();
-
+                using (SqliteCommand cmd = con.CreateCommand())
+                {
+                    cmd.CommandText = "DELETE FROM " + SyncAction.ACTION_TABLE + " WHERE " + SyncAction.ACTION_ID + " = @id";
+                    cmd.Parameters.Add(new SqliteParameter("@id", System.Data.DbType.Int32) { Value = action.ActionId});
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
 
-        public void Update(SyncAction action)
+        public void DeleteBySourceId (SyncSource source, SqliteConnection con, SourceOption option)
         {
-            
+            string opt = "";
+            if (option == SourceOption.EQUAL_SOURCE_ID) opt = " = ";
+            else opt = " <> ";
+
+            using (SqliteCommand cmd = con.CreateCommand())
+            {
+                cmd.CommandText = "DELETE FROM " + SyncAction.ACTION_TABLE + " WHERE " + SyncAction.CHANGE_IN + " " +opt + " @id";
+                cmd.Parameters.Add(new SqliteParameter("@id", System.Data.DbType.Int32) { Value = source.ID });
+                cmd.ExecuteNonQuery();                
+            }
         }
 
-        public void Delete(SyncAction action)
+        public void Delete(SyncAction action, SqliteConnection con )
         {
-
+            using (SqliteCommand cmd = con.CreateCommand())
+            {
+                cmd.CommandText = "DELETE FROM " + SyncAction.ACTION_TABLE + 
+                            " WHERE " + SyncAction.ACTION_ID + " = @id";
+                cmd.Parameters.Add(new SqliteParameter("@id",  System.Data.DbType.Int32) {Value = action.ActionId });
+                cmd.ExecuteNonQuery();
+             }             
         }
 
         #endregion
@@ -180,10 +197,10 @@ namespace OneSync.Synchronization
         {           
                 using (SqliteCommand cmd = con.CreateCommand())
                 {
-                    cmd.CommandText = "INSERT INTO " + SyncAction.TABLE_NAME +
+                    cmd.CommandText = "INSERT INTO " + SyncAction.ACTION_TABLE +
                                                 " ( " + SyncAction.CHANGE_IN + "," +
-                                                SyncAction.ACTION  + "," +                                               
-                                                SyncAction.NEW + "," +
+                                                SyncAction.ACTION_TYPE  + "," +                                               
+                                                SyncAction.NEW_RELATIVE_PATH + "," +
                                                 SyncAction.NEW_HASH + ") VALUES (@changeIn, @action, @newPath, @newHash)"                                            
                                                 ;
                     SqliteParameter param1 = new SqliteParameter("@changeIn", System.Data.DbType.String);
@@ -203,77 +220,49 @@ namespace OneSync.Synchronization
                     cmd.Parameters.Add(param4);                   
 
                     cmd.ExecuteNonQuery();
-                }
-            
+                }            
         }
 
         private void InsertDeleteAction(DeleteAction deleteAction, SqliteConnection con)
         {
             using (SqliteCommand cmd = con.CreateCommand())
-            {                
-                cmd.CommandText = "INSERT INTO " + SyncAction.TABLE_NAME +
+            {
+                cmd.CommandText = "INSERT INTO " + SyncAction.ACTION_TABLE +
                                             " ( " + SyncAction.CHANGE_IN + "," +
-                                            SyncAction.ACTION + "," +
-                                            SyncAction.OLD + "," +
+                                            SyncAction.ACTION_TYPE + "," +
+                                            SyncAction.OLD_RELATIVE_PATH + "," +
                                             SyncAction.OLD_HASH + ") VALUES (@changeIn, @action, @oldPath, @oldHash)"
                                             ;
-                SqliteParameter param1 = new SqliteParameter("@changeIn", System.Data.DbType.String);
-                param1.Value = deleteAction.SourceID;
-                cmd.Parameters.Add(param1);
-
-                SqliteParameter param2 = new SqliteParameter("@action", System.Data.DbType.Int32);
-                param2.Value = (int)deleteAction.ChangeType;
-                cmd.Parameters.Add(param2);
-
-                SqliteParameter param3 = new SqliteParameter("@oldPath", System.Data.DbType.String);
-                param3.Value = deleteAction.FileHash;
-                cmd.Parameters.Add(param3);
-
-                SqliteParameter param4 = new SqliteParameter("@oldHash", System.Data.DbType.String);
-                param4.Value = deleteAction.FileHash;
-                cmd.Parameters.Add(param4);
-
+                cmd.Parameters.Add(new SqliteParameter("@changeIn", System.Data.DbType.String) { Value = deleteAction.SourceID });
+                cmd.Parameters.Add(new SqliteParameter("@action", System.Data.DbType.Int32) { Value = (int)deleteAction.ChangeType});
+                cmd.Parameters.Add(new SqliteParameter("@oldPath", System.Data.DbType.String) { Value = deleteAction.RelativeFilePath });
+                cmd.Parameters.Add(new SqliteParameter("@oldHash", System.Data.DbType.String) { Value = deleteAction.FileHash });
                 cmd.ExecuteNonQuery();
             }
 
         }
 
-        /*
-        private void InsertModifyAction(ModifyAction modifyAction, SqliteConnection con)
+        private void InsertRenameAction(RenameAction renameAction, SqliteConnection con)
         {
             using (SqliteCommand cmd = con.CreateCommand())
-            {                
-                cmd.CommandText = "INSERT INTO " + SyncAction.TABLE_NAME +
+            {
+                cmd.CommandText = "INSERT INTO " + SyncAction.ACTION_TABLE +
                                             " ( " + SyncAction.CHANGE_IN + "," +
-                                            SyncAction.ACTION + "," +
-                                            SyncAction.OLD + "," +
-                                            SyncAction.OLD_HASH + "," +
-                                            SyncAction.NEW_HASH + ") VALUES (@changeIn, @action, @old, @old_hash, @new_hash)"
+                                            SyncAction.ACTION_TYPE + "," +
+                                            SyncAction.OLD_RELATIVE_PATH + "," +
+                                            SyncAction.NEW_RELATIVE_PATH + "," +
+                                            SyncAction.OLD_HASH + ") VALUES (@changeIn, @action, @oldPath, @newPath, @oldHash)"
                                             ;
-                SqliteParameter param1 = new SqliteParameter("@changeIn", System.Data.DbType.String);
-                param1.Value = modifyAction.SourceID;
-                cmd.Parameters.Add(param1);
-
-                SqliteParameter param2 = new SqliteParameter("@action", System.Data.DbType.Int32);
-                param2.Value = (int)modifyAction.ChangeType;
-                cmd.Parameters.Add(param2);
-
-                SqliteParameter param3 = new SqliteParameter("@old", System.Data.DbType.String);
-                param3.Value = modifyAction.RelativeFilePath;
-                cmd.Parameters.Add(param3);
-
-                SqliteParameter param4 = new SqliteParameter("@old_hash", System.Data.DbType.String);
-                param4.Value = modifyAction.OldItemHash;
-                cmd.Parameters.Add(param4);
-
-                SqliteParameter param5 = new SqliteParameter("@new_hash", System.Data.DbType.String);
-                param4.Value = modifyAction.NewItemHash;
-                cmd.Parameters.Add(param5);
+                cmd.Parameters.Add(new SqliteParameter("@changeIn", System.Data.DbType.String) { Value = renameAction.SourceID});
+                cmd.Parameters.Add(new SqliteParameter("@action", System.Data.DbType.Int32) { Value = renameAction.ChangeType});
+                cmd.Parameters.Add(new SqliteParameter("@oldPath", System.Data.DbType.String) { Value = renameAction.PreviousRelativeFilePath});
+                cmd.Parameters.Add(new SqliteParameter("@newPath", System.Data.DbType.String) { Value = renameAction.RelativeFilePath});
+                cmd.Parameters.Add(new SqliteParameter("@oldHash", System.Data.DbType.String) { Value = renameAction.FileHash});               
 
                 cmd.ExecuteNonQuery();
             }
 
-        }*/
-
+        }
+        
     }
 }

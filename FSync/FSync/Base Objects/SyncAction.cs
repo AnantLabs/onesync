@@ -18,22 +18,24 @@ namespace OneSync.Synchronization
     /// This class is the base class for all the sync action (rename, delete, create,...)
     /// </summary>
     public abstract class SyncAction
-    {           
+    {
         #region columns of action table
-        public const string TABLE_NAME = "ACTION_TABLE";
+        public const string ACTION_TABLE = "ACTION_TABLE";
+        public const string ACTION_ID = "ACTION_ID";
         public const string CHANGE_IN = "CHANGE_IN";
-        public const string ACTION = "ACTION";
-        public const string OLD = "OLD";
-        public const string NEW = "NEW";
+        public const string ACTION_TYPE = "ACTION_TYPE";
+        public const string OLD_RELATIVE_PATH = "OLD_RELATIVE_PATH";
+        public const string NEW_RELATIVE_PATH = "NEW_RELATIVE_PATH";
         public const string OLD_HASH = "OLD_HASH";
         public const string NEW_HASH = "NEW_HASH";
         #endregion columns of action table
 
+        protected int actionId = 0;
         protected string relFilePath = "";
-        protected string fileHash = "";
+        protected string fileHash = ""; 
         protected string sourceID = "";
         protected ChangeType changeType = ChangeType.NO_CHANGED;
-        
+
         /// <summary>
         /// Creates a new SyncAction.
         /// </summary>
@@ -42,9 +44,10 @@ namespace OneSync.Synchronization
         /// <param name="changeType">Action type.</param>
         /// <param name="relFilePath">Relative path of relevant/dirty file of this action.</param>
         /// <param name="fileHash">File hash of the relevant/dirty file of this action.</param>
-        public SyncAction(string sourceID, ChangeType changeType,
+        public SyncAction(int actionId, string sourceID, ChangeType changeType,
                           string relFilePath, string fileHash)
         {
+            this.actionId = actionId;
             this.sourceID = sourceID;
             this.changeType = changeType;
             this.relFilePath = relFilePath;
@@ -63,7 +66,13 @@ namespace OneSync.Synchronization
             }
         }
 
-
+        /// <summary>
+        /// Action Id to uniquely identify action in action table
+        /// </summary>
+        public int ActionId
+        {
+            get { return this.actionId; }
+        }
         /// <summary>
         /// Relative path of relevant/dirty file of this action.
         /// </summary>
@@ -96,7 +105,7 @@ namespace OneSync.Synchronization
             {
                 return changeType;
             }
-        }       
-        
+        }
+
     }
 }

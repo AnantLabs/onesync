@@ -7,5 +7,6 @@ namespace OneSync.Synchronization
 {
     public class SyncStartsEventArgs:EventArgs 
     {
+        public SyncStartsEventArgs() : base() { }
     }
 }
