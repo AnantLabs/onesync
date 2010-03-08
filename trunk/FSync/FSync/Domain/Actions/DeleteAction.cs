@@ -6,7 +6,7 @@ using System.IO;
 
 namespace OneSync.Synchronization
 {
-    public class DeleteAction:SyncAction
+    public class DeleteAction : SyncAction
     {
 
         /// <summary>
@@ -16,11 +16,11 @@ namespace OneSync.Synchronization
         /// <param name="sourceID">Source ID of where this action is generated.</param>
         /// <param name="relFilePath">Relative file path of file to be deleted.</param>
         /// <param name="fileHash">File hash of file to be deleted.</param>
-        public DeleteAction(string sourceID, string relFilePath, string fileHash)
-            : base(sourceID, ChangeType.DELETED, relFilePath, fileHash)
+        public DeleteAction(int actionId, string sourceID, string relFilePath, string fileHash)
+            : base(actionId, sourceID, ChangeType.DELETED, relFilePath, fileHash)
         {
         }
 
-       
+
     }
 }

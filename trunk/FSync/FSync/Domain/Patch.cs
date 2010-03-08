@@ -3,24 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using Community.CsharpSqlite.SQLiteClient;
+using Community.CsharpSqlite;
+
 
 namespace OneSync.Synchronization
 {
-    
+
     public class Patch
     {
-
-        private SyncSource targetSyncSource = null;
-
-        // Refers to absolute folder path of where metadata is stored.
-        private IntermediaryStorage iStorage = null;
-
-        /// <summary>
-        /// List of dirty items
-        /// </summary>
+       
         private IList<DirtyItem> dirtyItems = new List<DirtyItem>();
         private IList<SyncAction> actions = null;
-
+        private Profile profile = null;
 
         /// <summary>
         /// Creates a new Patch.
@@ -28,15 +23,12 @@ namespace OneSync.Synchronization
         /// <param name="syncSource">SyncSource of other PC where patch is to be applied.</param>
         /// <param name="iStorage">Information about intermediary storage</param>
         /// <param name="actions">Actions to be contained in this patch.</param>
-        public Patch(SyncSource targetSyncSource, IntermediaryStorage iStorage, IList<SyncAction> actions)
+        public Patch(Profile profile)
         {
-            this.targetSyncSource = targetSyncSource;
-            this.iStorage = iStorage;
-            this.actions = actions;
-            Process(actions);
+            this.profile = profile;
+            actions = new SQLiteActionProvider(profile).Load(profile.SyncSource, SourceOption.NOT_EQUAL_SOURCE_ID);
         }
 
-        
         /// <summary>
         /// Verify whether all the files contained in this patch are valid by
         /// checking whether it exists and optionally its file hash is the same.
@@ -46,7 +38,7 @@ namespace OneSync.Synchronization
         public bool Verify(bool checkHash)
         {
             // Root directory where all dirty files are stored
-            string rootDir = iStorage.DirtyFolderPath;
+            string rootDir = profile.IntermediaryStorage.DirtyFolderPath;
 
 
             foreach (SyncAction a in actions)
@@ -68,43 +60,61 @@ namespace OneSync.Synchronization
             return true;
         }
 
-        
         public void Apply()
         {
             foreach (SyncAction action in actions)
             {
-                if (action is CreateAction)
-                {
-                    string srcPath = Path.Combine(iStorage.DirtyFolderPath, action.RelativeFilePath);
-                    string destPath = Path.Combine(targetSyncSource.Path, action.RelativeFilePath);
 
-                    // TODO: check if destPath already exists, if it is, check if it's dirty...
-                    File.Copy(srcPath, destPath);
+                if (action.ChangeType == ChangeType.NEWLY_CREATED)
+                {
+                    CopyToSyncFolderAndUpdateActionTable(action,profile);
                 }
-                else if (action is DeleteAction)
+                else if (action.ChangeType == ChangeType.DELETED)
                 {
-                    string filePath = Path.Combine(targetSyncSource.Path, action.RelativeFilePath);
-
-                    if (File.Exists(filePath)) File.Delete(filePath);
+                    DeleteInSourceFolderAndUpdateActionTable(action, profile);
                 }
-                else if (action is RenameAction)
+                else if (action.ChangeType == ChangeType.RENAMED)
                 {
-                    RenameAction a = (RenameAction)action;
-
-                    string oldPath = Path.Combine(targetSyncSource.Path, a.PreviousRelativeFilePath);
-                    string newPath = Path.Combine(targetSyncSource.Path, a.RelativeFilePath);
-
-                    File.Move(oldPath, newPath);
-                }
-                else
-                {
-                    //throw action unhandled exception?
+                    RenameInSourceFolderAndUpdateActionTable((RenameAction)action, profile);
                 }
             }
 
             // TODO:
             // Update metadata after patch is applied
             // Delete all dirty files
+        }
+
+        public void Generate()
+        {
+
+            FileMetaData currentItems = (FileMetaData)new SQLiteMetaDataProvider(profile).FromPath(profile.SyncSource);
+            //read metadata of the current folder stored in the database
+            FileMetaData storedItems = new SQLiteMetaDataProvider(profile).Load(profile.SyncSource, SourceOption.EQUAL_SOURCE_ID);
+            MetaDataProcess.UpdateMetadata (profile, storedItems, currentItems);
+
+
+            storedItems = (FileMetaData)new SQLiteMetaDataProvider(profile).Load(profile.SyncSource, SourceOption.NOT_EQUAL_SOURCE_ID);
+            FileSyncProvider syncProvider = new FileSyncProvider(currentItems, storedItems, profile.IntermediaryStorage);
+
+            //generate list of sync actions by comparing 2 metadata
+
+            IList<SyncAction> newActions = syncProvider.GenerateActions();
+
+            //delete actions of previous sync
+            ActionProcess.DeleteBySourceId(profile, SourceOption.EQUAL_SOURCE_ID);
+            if (Directory.Exists(profile.IntermediaryStorage.DirtyFolderPath)) Directory.Delete(profile.IntermediaryStorage.DirtyFolderPath, true);
+            foreach (SyncAction action in newActions)
+            {
+                if (action.ChangeType == ChangeType.NEWLY_CREATED)
+                {
+                    CopyToDirtyFolderAndUpdateActionTable(action, profile);
+                }
+                else if (action.ChangeType == ChangeType.DELETED || action.ChangeType == ChangeType.RENAMED)
+                {
+                    ActionProcess.InsertAction(action, profile);
+                }
+            }
+            
         }
 
         private void Process(IList<SyncAction> actions)
@@ -124,35 +134,106 @@ namespace OneSync.Synchronization
                      */
                     case ChangeType.NEWLY_CREATED:
                         CreateAction createAction = (CreateAction)action;
-                        dirtyItem = new DirtyItem(targetSyncSource + createAction.RelativeFilePath, iStorage.Path + createAction.RelativeFilePath, createAction.FileHash);
+                        dirtyItem = new DirtyItem(profile.SyncSource.Path + createAction.RelativeFilePath, profile.IntermediaryStorage.Path + createAction.RelativeFilePath, createAction.FileHash);
                         break;
                 }
             }
         }
+       
 
-        public IList<SyncAction> Actions
+       
+        #region Carryout actions 
+        public void CopyToDirtyFolderAndUpdateActionTable(SyncAction action, Profile profile)
         {
-            get { return this.actions;  }
+            string connectionString = string.Format("Version=3,uri=file:{0}", profile.IntermediaryStorage.Path + Configuration.METADATA_RELATIVE_PATH);
+            string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
+            string absolutePathInImediateStorage = profile.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
+            using (SqliteConnection con = new SqliteConnection(connectionString))
+            {
+                con.Open();
+                SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
+                try
+                {
+                    new SQLiteActionProvider(profile).Insert(action, con);
+                    Files.FileUtils.Copy(absolutePathInSyncSource, absolutePathInImediateStorage);
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new DatabaseException();
+                }
+            }
         }
 
-        public IList<DirtyItem> DirtyItems
+        public void CopyToSyncFolderAndUpdateActionTable(SyncAction action, Profile profile)
         {
-            get { return this.dirtyItems; }
+            string absolutePathInIntermediateStorage = profile.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
+            string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
+            string conString1 = string.Format("Version=3,uri=file:{0}", profile.IntermediaryStorage.Path + Configuration.METADATA_RELATIVE_PATH);
+            using (SqliteConnection con = new SqliteConnection(conString1))
+            {
+                con.Open();
+                SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
+                try
+                {
+                    new SQLiteActionProvider(profile).Delete(action, con);
+                    Files.FileUtils.Copy(absolutePathInIntermediateStorage, absolutePathInSyncSource);
+                    File.Delete(absolutePathInIntermediateStorage);
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new DatabaseException();
+                }
+            }
         }
 
-        public IntermediaryStorage MetaDataSource
+        public void DeleteInSourceFolderAndUpdateActionTable(SyncAction action, Profile profile)
         {
-            get { return this.iStorage; }
+            string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
+            string conString1 = string.Format("Version=3,uri=file:{0}", profile.IntermediaryStorage.Path + Configuration.METADATA_RELATIVE_PATH);
+            using (SqliteConnection con = new SqliteConnection(conString1))
+            {
+                con.Open();
+                SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
+                try
+                {
+                    new SQLiteActionProvider(profile).Delete(action, con);
+                    File.Delete(absolutePathInSyncSource);
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new DatabaseException();
+                }
+            }
         }
 
-        /// <summary>
-        /// Gets information regarding the folder (on other PC)
-        /// where this patch is to be applied.
-        /// </summary>
-        public SyncSource TargetSyncSource
+        public void RenameInSourceFolderAndUpdateActionTable(RenameAction action, Profile profile)
         {
-            get { return this.targetSyncSource; }
+            string oldAbsolutePathInSyncSource = profile.SyncSource.Path + action.PreviousRelativeFilePath;
+            string newAbsolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
+            string conString1 = string.Format("Version=3,uri=file:{0}", profile.IntermediaryStorage.Path + Configuration.METADATA_RELATIVE_PATH);
+            using (SqliteConnection con = new SqliteConnection(conString1))
+            {
+                con.Open();
+                SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
+                try
+                {
+                    new SQLiteActionProvider(profile).Delete(action, con);
+                    Files.FileUtils.Copy(oldAbsolutePathInSyncSource, newAbsolutePathInSyncSource);
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new DatabaseException();
+                }
+            }
         }
-    
-    }
+        #endregion Carryout actions
+    }    
 }

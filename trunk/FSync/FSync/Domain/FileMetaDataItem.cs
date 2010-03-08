@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 namespace OneSync.Synchronization
 {
     public class FileMetaDataItem: IComparable<FileMetaDataItem>, IEqualityComparer<FileMetaDataItem>
+
     {
         private string source_id = "";
         private string fullName = "";

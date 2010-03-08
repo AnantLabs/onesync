@@ -11,15 +11,22 @@ namespace OneSync.Synchronization
     /// </summary>
     public class SyncSource
     {        
+        /// <summary>
+        /// Attribute gid to uniquely identify a SyncSource record
+        /// </summary>
         private string gid = "";
+
+        /// <summary>
+        /// Absolute path to a sync source
+        /// </summary>
         private string path = "";
 
         /// <summary>
         /// column names for sync source table
         /// </summary>
-        public const string PATH = "PATH";
-        public const string GID = "ID";
-        public const string DATASOURCE_INFO_TABLE = "DATASOURCE_INFO";
+        public const string SOURCE_ABSOLUTE_PATH = "SOURCE_ABSOLUTE_PATH";
+        public const string SOURCE_ID = "SOURCE_ID";
+        public const string DATASOURCE_INFO_TABLE = "DATASOURCE_INFO_TABLE";
 
 
         public SyncSource(string id, string path)

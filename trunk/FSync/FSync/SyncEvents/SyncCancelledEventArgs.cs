@@ -7,5 +7,7 @@ namespace OneSync.Synchronization
 {
     public class SyncCancelledEventArgs:EventArgs
     {
+        public SyncCancelledEventArgs()
+            : base() { }       
     }
 }

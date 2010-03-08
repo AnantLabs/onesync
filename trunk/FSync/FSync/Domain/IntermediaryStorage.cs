@@ -24,6 +24,10 @@ namespace OneSync.Synchronization
             {
                 return path;
             }
+            set
+            {
+                path = value;
+            }
         }
 
         public string DirtyFolderPath

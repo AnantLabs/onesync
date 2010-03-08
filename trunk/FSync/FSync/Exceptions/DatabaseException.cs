@@ -5,7 +5,7 @@ using System.Text;
 
 namespace OneSync.Synchronization
 {
-    public class DatabaseException:Exception
+    public class DatabaseException:ApplicationException
     {
         public DatabaseException() : base() { }
         public DatabaseException(string message) : base(message) { }

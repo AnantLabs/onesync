@@ -5,8 +5,34 @@ using System.IO;
 
 namespace OneSync.Synchronization
 {
-    public class FileSyncAgent:BaseSyncAgent
+
+    
+    public delegate void SyncStartsHandler(object sender, SyncStartsEventArgs eventArgs);       
+    public delegate void SyncCompletesHandler(object sender, SyncCompletesEventArgs eventArgs);        
+    public delegate void SyncCancelledHandler(object sender, SyncCancelledEventArgs eventArgs);
+    public delegate void SyncStatusChangedHandler(object sender, SyncStatusChangedEventArgs args);
+    public delegate void SyncProgressChangedHandler(object sender, SyncProgressChangedEventArgs args);
+   
+
+    public enum SyncStatus
     {
+        VERIFY_PATCH,
+        APPLY_PATH,
+        GENERATE_PATCH,
+        UPDATE_DATA
+    }  
+
+    /// <summary>
+    /// 
+    /// </summary>    
+    public class FileSyncAgent:BaseSyncAgent
+    {       
+        public event SyncStartsHandler SyncStartEvent;
+        public event SyncCompletesHandler SyncCompletesEvent;
+        public event SyncCancelledHandler SyncCancelledEvent;
+        public event SyncStatusChangedHandler SyncStatusChangedEvent;
+        public event SyncProgressChangedHandler SyncProgressChangedEvent;
+
         IList<SyncAction> syncActions = new List<SyncAction>();
         public FileSyncAgent():base()
         {            
@@ -18,48 +44,10 @@ namespace OneSync.Synchronization
         }
 
         public override void Synchronize()
-        {  
-            #region Apply and Verify Patch Applied
-            IList<SyncAction> actions = new SQLiteActionProvider(profile).Load(profile.SyncSource);
-            Patch patch = new Patch(profile.SyncSource, profile.IntermediaryStorage, actions);
-            if (patch.Verify(true)) patch.Apply();            
-            #endregion Apply and Verify Patch Applied
-
-            #region generate patch            
-            //load metadata from database
-            FileMetaData storedItems = new SQLiteMetaDataProvider(Profile).Load(Profile.SyncSource);
-            //generate metadata of a folder
-            FileMetaData currentItems =(FileMetaData) new SQLiteMetaDataProvider (Profile).FromPath(Profile.SyncSource);            
-            FileSyncProvider syncProvider = new FileSyncProvider(currentItems, storedItems, profile.IntermediaryStorage);
-            
-            //generate list of sync actions by comparing 2 metadata
-            IList<SyncAction> newActions =  syncProvider.GenerateActions();
-            
-
-            /*
-            Patch patch = new Patch(Profile.SyncSource.Path, Profile.MetaDataSource.Path, actions);
-            FileSyncVerifier verifier = new FileSyncVerifier(Profile);
-            verifier.Verify(patch);
-            new SQLiteActionProvider(Profile.MetaDataSource.Path).Insert(actions);           
-            */
-            //Copy dirty items to intermediate drives
-
-            //Update metadata
-            //new SQLiteMetaDataProvider(Profile.MetaDataSource)
-        #endregion generate patch
+        {            
+            Patch patch = new Patch(profile);
+            patch.Apply();                      
+            patch.Generate();
         }
-
-        public IList<SyncAction> SyncActions
-        {
-            get
-            {
-                return this.syncActions;
-            }
-        }    
-
-        private void ApplyPatch(Patch patch)
-        {
-            
-        }       
     }
 }

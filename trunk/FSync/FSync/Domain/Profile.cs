@@ -13,22 +13,31 @@ namespace OneSync.Synchronization
     public class Profile
     {
         public const string PROFILE_TABLE =  "PROFILE";
-        public const string PROFILE_ID = "ID";
-        public const string NAME = "NAME";
+        public const string PROFILE_ID = "PROFILE_ID";
+        public const string PROFILE_NAME = "PROFILE_NAME";
         public const string METADATA_SOURCE_LOCATION = "METADATA_SOURCE_LOCATION";
         public const string SYNC_SOURCE_ID = "SYNC_SOURCE_ID";
         
         private string profileId;
         private string profileName;
-        private SyncSource syncSource;
+        private SyncSource syncSource;       
+        
+
         private IntermediaryStorage iStorage;
         
         public Profile(string id , string name , SyncSource syncSource, IntermediaryStorage iStorage)
+
         {
             this.profileId = id;
             this.profileName = name;
             this.syncSource = syncSource;
             this.iStorage = iStorage;
+        }
+
+        public Profile(SyncSource syncSource, IntermediaryStorage metaDataSource)
+        {
+            this.syncSource = syncSource;
+            this.iStorage = metaDataSource;
         }
         
         /// <summary>
@@ -39,6 +48,10 @@ namespace OneSync.Synchronization
             get
             {
                 return this.profileName;
+            }
+            set
+            {
+                this.profileName = value;
             }
         }
 
@@ -73,6 +86,7 @@ namespace OneSync.Synchronization
         /// Get information regarding the intermediary storage for this profile.
         /// </summary>
         public IntermediaryStorage IntermediaryStorage
+
         {
             set
             {
