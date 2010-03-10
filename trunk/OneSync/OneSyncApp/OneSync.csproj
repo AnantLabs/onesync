@@ -1,0 +1,190 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ExpressionBlendVersion>3.0.1927.0</ExpressionBlendVersion>
+    <ProjectGuid>{18DA4780-0E82-440E-B282-6DDF766420E4}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <DefaultClrNameSpace>OneSyncWPF</DefaultClrNameSpace>
+    <RootNamespace>OneSync</RootNamespace>
+    <AssemblyName>OneSync</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <ApplicationVersion>1.0.0.*</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <AlwaysCompileMarkupFilesInSeparateDomain>false</AlwaysCompileMarkupFilesInSeparateDomain>
+    <ApplicationIcon>Application.ico</ApplicationIcon>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Community.CsharpSqlite, Version=3.6.22.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Desktop\Tralala\FSync\FSync.Lib\Community.CsharpSqlite.dll</HintPath>
+    </Reference>
+    <Reference Include="Community.CsharpSqlite.SQLiteClient, Version=3.6.22.3, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Desktop\Tralala\FSync\FSync.Lib\Community.CsharpSqlite.SQLiteClient.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Log.cs" />
+    <Compile Include="OneSyncInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="OneSyncInstaller.Designer.cs">
+      <DependentUpon>OneSyncInstaller.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OneSync\OneSync.Files.XCopy\Class1.cs" />
+    <Compile Include="OneSync\OneSync.Files.XCopy\ICopy.cs" />
+    <Compile Include="OneSync\OneSync.Files.XCopy\IFilter.cs" />
+    <Compile Include="OneSync\OneSync.Files.XCopy\JobDetails.cs" />
+    <Compile Include="OneSync\OneSync.Files.XCopy\XCopy.cs" />
+    <Compile Include="OneSync\OneSync.Files.XCopy\XCopyFailedEvent.cs" />
+    <Compile Include="OneSync\OneSync.Files.XCopy\XError.cs" />
+    <Compile Include="OneSync\OneSync.Files.XCopy\XFilter.cs" />
+    <Compile Include="OneSync\OneSync.Files\DirectoryInfoComparer.cs" />
+    <Compile Include="OneSync\OneSync.Files\DriveUtil.cs" />
+    <Compile Include="OneSync\OneSync.Files\FileChangeDetection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="OneSync\OneSync.Files\FileInfoComparer.cs" />
+    <Compile Include="OneSync\OneSync.Files\FileUtils.cs" />
+    <Compile Include="OneSync\OneSync.Files\FolderComparer.cs" />
+    <Compile Include="OneSync\OneSync\Base Objects\BaseSQLiteProvider.cs" />
+    <Compile Include="OneSync\OneSync\Base Objects\BaseSyncAgent.cs" />
+    <Compile Include="OneSync\OneSync\Base Objects\SyncAction.cs" />
+    <Compile Include="OneSync\OneSync\Common Interfaces\IActionProvider.cs" />
+    <Compile Include="OneSync\OneSync\Common Interfaces\IMetaDataProvider.cs" />
+    <Compile Include="OneSync\OneSync\Common Interfaces\IProfileManager.cs" />
+    <Compile Include="OneSync\OneSync\Common Interfaces\ISyncAgent.cs" />
+    <Compile Include="OneSync\OneSync\Common Interfaces\ISyncProvider.cs" />
+    <Compile Include="OneSync\OneSync\Common Interfaces\ISyncSourceProvider.cs" />
+    <Compile Include="OneSync\OneSync\Common Interfaces\ISyncVerifier.cs" />
+    <Compile Include="OneSync\OneSync\Configuration\Configuration.cs" />
+    <Compile Include="OneSync\OneSync\Domain\ActionGenerator.cs" />
+    <Compile Include="OneSync\OneSync\Domain\Actions\CreateAction.cs" />
+    <Compile Include="OneSync\OneSync\Domain\Actions\DeleteAction.cs" />
+    <Compile Include="OneSync\OneSync\Domain\Actions\RenameAction.cs" />
+    <Compile Include="OneSync\OneSync\Domain\DirtyItem.cs" />
+    <Compile Include="OneSync\OneSync\Domain\FileMetaData.cs" />
+    <Compile Include="OneSync\OneSync\Domain\FileMetaDataItem.cs" />
+    <Compile Include="OneSync\OneSync\Domain\FileMetaDataItemComparer.cs" />
+    <Compile Include="OneSync\OneSync\Domain\FileSyncAgent.cs" />
+    <Compile Include="OneSync\OneSync\Domain\IntermediaryStorage.cs" />
+    <Compile Include="OneSync\OneSync\Domain\Patch.cs" />
+    <Compile Include="OneSync\OneSync\Domain\Profile.cs" />
+    <Compile Include="OneSync\OneSync\Domain\SQLiteActionProvider.cs" />
+    <Compile Include="OneSync\OneSync\Domain\SQLiteMetaDataProvider.cs" />
+    <Compile Include="OneSync\OneSync\Domain\SQLiteProfileManager.cs" />
+    <Compile Include="OneSync\OneSync\Domain\SQLiteSyncSourceProvider.cs" />
+    <Compile Include="OneSync\OneSync\Domain\SyncSource.cs" />
+    <Compile Include="OneSync\OneSync\Exceptions\DatabaseException.cs" />
+    <Compile Include="OneSync\OneSync\Exceptions\MetaDataAlreadyExistsException.cs" />
+    <Compile Include="OneSync\OneSync\Exceptions\ProfileNameExistsException.cs" />
+    <Compile Include="OneSync\OneSync\Exceptions\SyncSourcesNumberExceededException.cs" />
+    <Compile Include="OneSync\OneSync\SyncEvents\SyncCancelledEventArgs.cs" />
+    <Compile Include="OneSync\OneSync\SyncEvents\SyncCompletesEventArgs.cs" />
+    <Compile Include="OneSync\OneSync\SyncEvents\SyncProgressChangedEventArgs.cs" />
+    <Compile Include="OneSync\OneSync\SyncEvents\SyncStartsEventArgs.cs" />
+    <Compile Include="OneSync\OneSync\SyncEvents\SyncStatusChangedEventArgs.cs" />
+    <Compile Include="OneSync\OneSync\UIProcess.cs" />
+    <Compile Include="OneSync\OneSync\UIProcess\ActionProcess.cs" />
+    <Compile Include="OneSync\OneSync\UIProcess\ProfileProcess.cs" />
+    <Compile Include="OneSync\OneSync\UIProcess\SyncClient.cs" />
+    <Compile Include="OneSync\OneSync\UIProcess\SyncProcess.cs" />
+    <Compile Include="UILogEntry.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <AppDesigner Include="Properties\" />
+    <None Include="Application.ico">
+      <Visible>false</Visible>
+    </None>
+    <None Include="OneSync\OneSync.Files\design.cd" />
+    <None Include="OneSync\OneSync.Files\vpproject\FSync.Files.vpp" />
+    <None Include="OneSync\OneSync.Files\vpproject\FSync.Files.vpppath" />
+    <None Include="OneSync\OneSync.Files\vpproject\FSync.Files.vpp~7" />
+    <None Include="OneSync\OneSync.Files\vpproject\FSync.Files.vpp~8" />
+    <None Include="OneSync\OneSync\ClassDiagram1.cd" />
+    <None Include="OneSync\OneSync\vpproject\FSync.Synchronization.vpp" />
+    <None Include="OneSync\OneSync\vpproject\FSync.Synchronization.vpppath" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="completed_icon.gif" />
+    <Resource Include="conflicting_icon.gif" />
+    <Resource Include="OneSync Transparent Logo %28Inactive%29.png" />
+    <Resource Include="OneSync Transparent Logo.gif" />
+    <Resource Include="OneSync Transparent Logo.png" />
+    <Resource Include="processing_icon.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Application.ico" />
+    <Content Include="OneSync\OneSync.Files.XCopy\FSync.Files.XCopy.csproj" />
+    <Content Include="OneSync\OneSync.Files\FSync.Files.csproj" />
+    <Content Include="OneSync\OneSync.Lib\Community.CsharpSqlite.dll" />
+    <Content Include="OneSync\OneSync.Lib\Community.CsharpSqlite.SQLiteClient.dll" />
+    <Content Include="OneSync\OneSync\FSync.Synchronization.csproj" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+		 Other similar extension points exist, see Microsoft.Common.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+	-->
+</Project>

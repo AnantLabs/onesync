@@ -1,0 +1,77 @@
+﻿<Window
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	x:Class="OneSync.MainWindow"
+	x:Name="Window"
+	DataContext="{Binding RelativeSource={RelativeSource Self}}"
+	Title="OneSync" Height="215" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" SourceInitialized="Window_SourceInitialized" Width="719" mc:Ignorable="d" Closing="Window_Closing">
+	<Window.Background>
+		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+			<GradientStop Color="#FF69DAF4" Offset="1"/>
+			<GradientStop Color="White" Offset="0.337"/>
+			<GradientStop Color="#FFC9EFF8" Offset="0.768"/>
+		</LinearGradientBrush>
+	</Window.Background>
+
+	<Canvas x:Name="LayoutRoot">
+        <TextBlock x:Name="textblock_delete_profile" Width="112" Text="Delete Current Profile" TextWrapping="Wrap" TextDecorations="Underline" FontWeight="Bold" FontSize="10.667" Cursor="Hand" Foreground="#FFFF0030" MouseDown="textblock_delete_profile_MouseDown" Height="18" Canvas.Left="593" Canvas.Top="24" d:LayoutOverrides="VerticalAlignment, Height" Visibility="Hidden"/>
+        <Image x:Name="button_sync_copy" Stretch="Fill" Cursor="Hand" ToolTip="Sync this folder now!" VerticalAlignment="Bottom" Width="104" Canvas.Left="595.988" Canvas.Top="40" Height="104" MouseLeave="button_sync_MouseLeave" Source="OneSync Transparent Logo.png" Visibility="Hidden" />
+        <Label x:Name="label_current_syncing_dir" Height="25" Content="C:\Documents\Module Materials\lec1.txt" FontSize="10.667" FontWeight="Bold" MouseEnter="label_current_syncing_dir_MouseEnter" Width="457" Canvas.Left="118" Canvas.Top="37"/>
+		<Label x:Name="label_message" Width="158" Height="25" Content="You are now selecting" FontSize="10.667" Canvas.Left="9" Canvas.Top="37"/>
+		<Label Width="174" Height="25" Content="Intermediate Storage Location:" FontSize="10.667" Canvas.Left="9" Canvas.Top="62" x:Name="label_storage_message" />
+		<TextBlock x:Name="textblock_show_log" Width="61" Text="Show Log " TextWrapping="Wrap" TextDecorations="Underline" FontWeight="Bold" FontFamily="Times New Roman" FontSize="13.333" Cursor="Hand" Foreground="#FF3000FF" MouseDown="textblock_show_log_MouseDown" Height="18" Canvas.Left="12" Canvas.Top="136" d:LayoutOverrides="VerticalAlignment, Height"/>
+		<ProgressBar x:Name="progressbar_sync_progress" Value="20" Width="571" Height="18" Canvas.Left="12" Canvas.Top="95"/>
+		<Image x:Name="button_sync" Stretch="Fill" Cursor="Hand" MouseDown="Image_MouseDown" ToolTip="Sync this folder now!" VerticalAlignment="Bottom" Width="104" Canvas.Left="595.988" Canvas.Top="40" Height="104" MouseEnter="button_sync_MouseEnter" MouseLeave="button_sync_MouseLeave" Source="OneSync Transparent Logo (Inactive).png" />
+		<Expander x:Name="Expander" VerticalAlignment="Top" Width="697" Height="243" Header="Show details" Canvas.Left="8" Canvas.Top="161" Collapsed="Expander_Collapsed" Expanded="Expander_Expanded">
+			<Grid>
+				<ListView x:Name="listview_current_situation" ItemsSource="{Binding LogsCollection}" Margin="8">
+					<ListView.Resources>
+				        <DataTemplate x:Key="IconTemplate">
+				            <Grid>
+				                <Grid.ColumnDefinitions>
+				                    <ColumnDefinition Width="Auto"/>
+				                    <ColumnDefinition/>
+				                </Grid.ColumnDefinitions>
+				                <Image Grid.Column="0" Source="{Binding ImageSrc}"/>
+				                <TextBlock Grid.Column="1" Text="{Binding FileName}"/>
+				            </Grid>
+				        </DataTemplate>
+			    	</ListView.Resources>  
+					<ListView.View>
+						<GridView>
+							<GridViewColumn Width="140" Header="File"
+								CellTemplate="{StaticResource IconTemplate}" />
+						    <GridViewColumn Width="140" Header="Status"
+								DisplayMemberBinding="{Binding Status}" />
+						    <GridViewColumn Width="420" Header="Message"
+								DisplayMemberBinding="{Binding Message}" />
+						</GridView>
+					</ListView.View>
+				</ListView>
+			</Grid>
+		</Expander>
+		<Label x:Name="label_current_processing_file" Width="574" Height="25" Content="label_current_processing_file" FontSize="10.667" Canvas.Left="9" Canvas.Top="109"/>
+		<Button x:Name="button_file_browser" Width="27" Height="25" Content="..." Canvas.Left="555" Canvas.Top="61" ToolTip="Click to browse folders" Click="button_file_browser_Click"/>
+		<TextBox x:Name="textbox_storage_path" Width="387" Height="23" Canvas.Left="164" Canvas.Top="62" TextWrapping="Wrap"/>
+		<TextBlock x:Name="textblock_back_to_home" Width="95.012" Text="Back to Start Page" TextWrapping="Wrap" TextDecorations="Underline" FontWeight="Bold" FontSize="10.667" Cursor="Hand" Foreground="#FF3000FF" MouseDown="textblock_back_to_home_MouseDown" Height="18" Canvas.Left="609.988" Canvas.Top="8" d:LayoutOverrides="VerticalAlignment, Height"/>
+		<Rectangle x:Name="rectangle_shadow" Width="713" Height="190" Canvas.Top="-1">
+			<Rectangle.Fill>
+				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+					<GradientStop Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}" Offset="1"/>
+					<GradientStop Color="white" Offset="0.337"/>
+					<GradientStop Color="#FF99B4D1" Offset="0.768"/>
+				</LinearGradientBrush>
+			</Rectangle.Fill>
+		</Rectangle>
+		<ComboBox x:Name="combobox_profile_name" Height="21.787" IsEditable="True" Width="443" Canvas.Left="148.988" Canvas.Top="95.96" KeyUp="combobox_profile_name_KeyUp"/>
+		<Label x:Name="label_profile_message" Width="174" Height="25" Content="My Sync Job:" FontSize="10.667" Canvas.Left="74.988" Canvas.Top="95.96" Foreground="#FF0000B9"/>
+		<Button x:Name="button_new_profile" Width="54" Height="25" Content="Do Job" Canvas.Left="595.988" Canvas.Top="95" ToolTip="Click to create your new profile" Click="button_new_profile_Click" RenderTransformOrigin="0.519,-1.6" />
+		<Label x:Name="label_current_syncing_dir_frontpage" Height="25" Content="C:\Documents\Module Materials\lec1.txt" FontSize="10.667" FontWeight="Bold" MouseEnter="label_current_syncing_dir_MouseEnter" Width="457" Canvas.Left="183.988" Canvas.Top="66" Foreground="#FF0000B9"/>
+		<Label x:Name="label_message_frontpage" Width="158" Height="25" Content="You are now selecting" FontSize="10.667" Canvas.Left="74.988" Canvas.Top="66" Foreground="#FF0000B9"/>
+		<Label x:Name="label_notification" Width="662" Height="25" Content="" FontSize="10.667" Canvas.Top="-1" Foreground="#FFB90000" FontStyle="Italic" FontWeight="Bold"/>
+		<TextBlock x:Name="textblock_rename_profile" Width="145" Text="Rename This Profile:" TextWrapping="Wrap" FontSize="10.667" Cursor="Hand" Foreground="#FF0000B9" MouseDown="textblock_rename_profile_MouseDown" Height="21.043" Canvas.Left="80" Canvas.Top="125.96" d:LayoutOverrides="VerticalAlignment" Visibility="Hidden" />
+		<TextBox x:Name="textbox_rename_profile" Width="348.012" Height="23.998" Canvas.Left="183.988" Canvas.Top="120.52" TextWrapping="Wrap" Visibility="Hidden" />
+		<Button x:Name="button_rename_profile" Width="55.988" Height="24.255" Content="Rename" Canvas.Left="536" Canvas.Top="121.747" Visibility="Hidden" Click="button_rename_profile_Click" />
+	</Canvas>
+</Window>
