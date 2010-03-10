@@ -575,6 +575,11 @@ namespace OneSync
             }
         }
 
+        /// <summary>
+        /// This method will be called when the user clicks on a button to go back to the home page.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
         private void textblock_back_to_home_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
         	ProfileCreationControlsVisibility(Visibility.Hidden, Visibility.Visible);
