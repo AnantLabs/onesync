@@ -1,4 +1,7 @@
 ﻿/*
+ $Id$
+ */
+/*
  * 1. If a file exists in both source and destination locations, by default robocopy copies the file
  * only if the two versions have different timestamps or different size.
  * 

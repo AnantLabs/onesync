@@ -1,4 +1,7 @@
-﻿/*FileInfoComparer class implements IEqualityComparer   
+﻿/*
+ $Id$
+ */
+/*FileInfoComparer class implements IEqualityComparer   
  */
 using System;
 using System.Collections.Generic;
