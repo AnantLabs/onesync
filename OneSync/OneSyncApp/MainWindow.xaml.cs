@@ -453,6 +453,7 @@ namespace OneSync
         /// <param name="e">The event arguments.</param>
 		private void label_current_syncing_dir_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
 		{
+            label_current_syncing_dir_frontpage.ToolTip = current_syncing_dir;
 			label_current_syncing_dir.ToolTip = current_syncing_dir;
 		}
 
