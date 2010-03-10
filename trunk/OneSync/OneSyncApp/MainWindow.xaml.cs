@@ -1,6 +1,5 @@
 ﻿/*
- Filename: MainWindow.xaml.cs
- Author:   Chun Lin
+ $Id$
  */
 using System;
 using System.Collections.Generic;
