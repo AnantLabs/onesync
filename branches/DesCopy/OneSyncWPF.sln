@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneSync", "OneSyncWPF\OneSync.csproj", "{18DA4780-0E82-440E-B282-6DDF766420E4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneSync", "OneSyncWPF\OneSyncApp.csproj", "{18DA4780-0E82-440E-B282-6DDF766420E4}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "OneSyncSetup", "OneSyncSetup\OneSyncSetup.vdproj", "{BC6A3BC4-5007-476B-B866-691736DAB9D3}"
 EndProject
