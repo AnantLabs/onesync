@@ -286,15 +286,12 @@ namespace OneSync
                     string name = profile_name;
                     Synchronization.SyncSource syncSource = new OneSync.Synchronization.SyncSource(System.Guid.NewGuid().ToString(), current_syncing_dir);
                     Synchronization.IntermediaryStorage metaDataSource = new OneSync.Synchronization.IntermediaryStorage(storage_dir);
-                    Synchronization.Profile currentProfile = new OneSync.Synchronization.Profile(System.Guid.NewGuid().ToString(), name, syncSource, metaDataSource);
-                    Synchronization.FileSyncAgent currentAgent = new OneSync.Synchronization.FileSyncAgent(currentProfile);
                     //Create profile
                     if (!is_sync_job_created_previously)
                     {
                         try
                         {
-                            Synchronization.SyncClient.ProfileProcess.CreateProfile(System.Windows.Forms.Application.StartupPath, profile_name, current_syncing_dir, storage_dir);
-                        }
+                            Synchronization.SyncClient.ProfileProcess.CreateProfile(System.Windows.Forms.Application.StartupPath, profile_name, current_syncing_dir, storage_dir);                        }
                         catch (Exception ee)
                         {
                             InstantNotification("Oops... " + ee.Message);
@@ -323,11 +320,19 @@ namespace OneSync
                     }
                     if (should_i_sync)
                     {
-                        currentAgent.OnStarted += new OneSync.Synchronization.SyncStartsHandler(SyncProcessNowStarted);
-                        currentAgent.OnProgressChanged += new OneSync.Synchronization.SyncProgressChangedHandler(SyncProcessOngoing);
-                        currentAgent.OnStatusChanged += new OneSync.Synchronization.SyncStatusChangedHandler(SyncProcessOngoingStatus);
-                        currentAgent.OnCompleted += new OneSync.Synchronization.SyncCompletesHandler(SyncProcessCompleted);
-                        currentAgent.Synchronize();
+                        Synchronization.FileSyncAgent currentAgent;
+                        foreach (Synchronization.Profile item in (Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath)))
+                        {
+                            if (item.Name == profile_name)
+                            {
+                                currentAgent = new OneSync.Synchronization.FileSyncAgent(item);
+                                currentAgent.OnStarted += new OneSync.Synchronization.SyncStartsHandler(SyncProcessNowStarted);
+                                currentAgent.OnProgressChanged += new OneSync.Synchronization.SyncProgressChangedHandler(SyncProcessOngoing);
+                                currentAgent.OnStatusChanged += new OneSync.Synchronization.SyncStatusChangedHandler(SyncProcessOngoingStatus);
+                                currentAgent.OnCompleted += new OneSync.Synchronization.SyncCompletesHandler(SyncProcessCompleted);
+                                currentAgent.Synchronize();
+                            }
+                        }
                     }
                 }
             }
