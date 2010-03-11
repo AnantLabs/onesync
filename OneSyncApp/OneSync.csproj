@@ -160,20 +160,18 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="completed_icon.gif" />
-    <Resource Include="conflicting_icon.gif" />
-    <Resource Include="OneSync Transparent Logo %28Inactive%29.png" />
-    <Resource Include="OneSync Transparent Logo.gif" />
-    <Resource Include="OneSync Transparent Logo.png" />
-    <Resource Include="processing_icon.gif" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Application.ico" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="OneSyncLogic\OneSync.Lib\Community.CsharpSqlite.dll" />
     <Content Include="OneSyncLogic\OneSync.Lib\Community.CsharpSqlite.SQLiteClient.dll" />
     <Content Include="OneSyncLogic\OneSync.Lib\FSync.Files.dll" />
+    <Resource Include="Resource\completed_icon.gif" />
+    <Resource Include="Resource\conflicting_icon.gif" />
+    <Resource Include="Resource\OneSync Transparent Logo %28Inactive%29.png" />
+    <Resource Include="Resource\OneSync Transparent Logo.gif" />
+    <Resource Include="Resource\OneSync Transparent Logo.png" />
+    <Resource Include="Resource\processing_icon.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

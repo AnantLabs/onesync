@@ -7,10 +7,10 @@
 "LanguageId" = "3:1033"
 "CodePage" = "3:1252"
 "UILanguageId" = "3:1033"
-"SccProjectName" = "8:SAK"
-"SccLocalPath" = "8:SAK"
-"SccAuxPath" = "8:SAK"
-"SccProvider" = "8:SAK"
+"SccProjectName" = "8:"
+"SccLocalPath" = "8:"
+"SccAuxPath" = "8:"
+"SccProvider" = "8:"
     "Hierarchy"
     {
         "Entry"
@@ -21,44 +21,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_7B9C63E37DB6775C780F69BE7D25D07B"
-        "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E7B0C5E4372385E9338A6CDE3A4F89DC"
-        "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E7B0C5E4372385E9338A6CDE3A4F89DC"
-        "OwnerKey" = "8:_7B9C63E37DB6775C780F69BE7D25D07B"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_7B9C63E37DB6775C780F69BE7D25D07B"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E7B0C5E4372385E9338A6CDE3A4F89DC"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -212,68 +176,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7B9C63E37DB6775C780F69BE7D25D07B"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Community.CsharpSqlite.SQLiteClient, Version=3.6.22.3, Culture=neutral, processorArchitecture=x86"
-                "ScatterAssemblies"
-                {
-                    "_7B9C63E37DB6775C780F69BE7D25D07B"
-                    {
-                    "Name" = "8:Community.CsharpSqlite.SQLiteClient.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Community.CsharpSqlite.SQLiteClient.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_E017F1941B1444CBBF2A995811C34F54"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E7B0C5E4372385E9338A6CDE3A4F89DC"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Community.CsharpSqlite, Version=3.6.22.1, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_E7B0C5E4372385E9338A6CDE3A4F89DC"
-                    {
-                    "Name" = "8:Community.CsharpSqlite.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Community.CsharpSqlite.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_E017F1941B1444CBBF2A995811C34F54"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
         }
