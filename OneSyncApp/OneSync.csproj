@@ -57,6 +57,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <Reference Include="System.Xml.Linq">
@@ -103,17 +104,20 @@
     <Compile Include="OneSyncLogic\OneSync.Files\FileInfoComparer.cs" />
     <Compile Include="OneSyncLogic\OneSync.Files\FileUtils.cs" />
     <Compile Include="OneSyncLogic\OneSync.Files\FolderComparer.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Base Objects\BaseSQLiteProvider.cs" />
+    <Compile Include="OneSyncLogic\OneSync\Base Objects\SyncActionsProvider.cs" />
+    <Compile Include="OneSyncLogic\OneSync\Base Objects\BaseSQLiteProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="OneSyncLogic\OneSync\Base Objects\BaseSyncAgent.cs" />
+    <Compile Include="OneSyncLogic\OneSync\Base Objects\MetaDataProvider.cs" />
     <Compile Include="OneSyncLogic\OneSync\Base Objects\SyncAction.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Common Interfaces\IActionProvider.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Common Interfaces\IMetaDataProvider.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Common Interfaces\IProfileManager.cs" />
+    <Compile Include="OneSyncLogic\OneSync\Base Objects\SyncSourceProvider.cs" />
+    <Compile Include="OneSyncLogic\OneSync\Base Objects\ProfileManager.cs" />
     <Compile Include="OneSyncLogic\OneSync\Common Interfaces\ISyncAgent.cs" />
     <Compile Include="OneSyncLogic\OneSync\Common Interfaces\ISyncProvider.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Common Interfaces\ISyncSourceProvider.cs" />
     <Compile Include="OneSyncLogic\OneSync\Common Interfaces\ISyncVerifier.cs" />
     <Compile Include="OneSyncLogic\OneSync\Configuration\Configuration.cs" />
+    <Compile Include="OneSyncLogic\OneSync\Data\SQLiteAccess.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\ActionGenerator.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\Actions\CreateAction.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\Actions\DeleteAction.cs" />
@@ -126,7 +130,7 @@
     <Compile Include="OneSyncLogic\OneSync\Domain\IntermediaryStorage.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\Patch.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\Profile.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Domain\SQLiteActionProvider.cs" />
+    <Compile Include="OneSyncLogic\OneSync\Domain\SQLiteSyncActionsProvider.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\SQLiteMetaDataProvider.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\SQLiteProfileManager.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\SQLiteSyncSourceProvider.cs" />
@@ -141,7 +145,6 @@
     <Compile Include="OneSyncLogic\OneSync\SyncEvents\SyncStartsEventArgs.cs" />
     <Compile Include="OneSyncLogic\OneSync\SyncEvents\SyncStatusChangedEventArgs.cs" />
     <Compile Include="OneSyncLogic\OneSync\UIProcess\ActionProcess.cs" />
-    <Compile Include="OneSyncLogic\OneSync\UIProcess\ProfileProcess.cs" />
     <Compile Include="OneSyncLogic\OneSync\UIProcess\SyncClient.cs" />
     <Compile Include="OneSyncLogic\OneSync\UIProcess\SyncProcess.cs" />
     <Compile Include="OneSyncLogic\OneSync\UIProcess\UIProcess.cs" />

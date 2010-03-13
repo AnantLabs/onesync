@@ -3,25 +3,26 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.IO;
-using System.Windows.Media.Animation;
-using System.Collections.ObjectModel;
 using System.Windows.Forms;
-using System.Diagnostics;
-using System.Reflection;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
+using OneSync.Synchronization;
+
 //The following two are imported for Aero Glass effect (Aero Glass Part 1/3).
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
+
+
+
+
 
 namespace OneSync
 {
@@ -149,7 +150,9 @@ namespace OneSync
 			//TO BE DISCUSSED: Note that for those profile has Sync Source Directory not exist anymore will be deleted.
             try
             {
-                IList<Synchronization.Profile> profileItemsCollection = OneSync.Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath);
+                //IList<Synchronization.Profile> profileItemsCollection = OneSync.Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath);
+                IList<Synchronization.Profile> profileItemsCollection = SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles();
+
                 foreach (Synchronization.Profile profileItem in profileItemsCollection)
                 {
                     //Retrieve.
@@ -293,7 +296,8 @@ namespace OneSync
                     {
                         try
                         {
-                            Synchronization.SyncClient.ProfileProcess.CreateProfile(System.Windows.Forms.Application.StartupPath, profile_name, current_syncing_dir, storage_dir);
+                            //Synchronization.SyncClient.ProfileProcess.CreateProfile(System.Windows.Forms.Application.StartupPath, profile_name, current_syncing_dir, storage_dir);
+                            SyncClient.Initialize(System.Windows.Forms.Application.StartupPath, profile_name, current_syncing_dir, storage_dir);
                         }
                         catch (Exception ee)
                         {
@@ -308,7 +312,8 @@ namespace OneSync
                         {
                             current_profile.SyncSource.Path = current_syncing_dir;
                             current_profile.IntermediaryStorage.Path = storage_dir;
-                            Synchronization.SyncClient.ProfileProcess.UpdateProfile(System.Windows.Forms.Application.StartupPath, current_profile);
+                            //Synchronization.SyncClient.ProfileProcess.UpdateProfile(System.Windows.Forms.Application.StartupPath, current_profile);
+                            SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).Update(current_profile);
                         }
                         catch (Synchronization.DatabaseException de)
                         {
@@ -550,7 +555,7 @@ namespace OneSync
                 current_profile = null;
                 try
                 {
-                    foreach (Synchronization.Profile item in (Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath)))
+                    foreach (Synchronization.Profile item in (SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles()))
                     {
                         //Check to see if the profile is an existing profile or not.
                         //If yes, then it will import the storage directory to the program.
@@ -589,12 +594,12 @@ namespace OneSync
 
         private void button_sync_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
-        	button_sync.Source = new BitmapImage(new Uri("OneSync Transparent Logo.png", UriKind.Relative));
+        	button_sync.Source = new BitmapImage(new Uri("Resource/OneSync Transparent Logo.png", UriKind.Relative));
         }
 
         private void button_sync_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-        	button_sync.Source = new BitmapImage(new Uri("OneSync Transparent Logo (Inactive).png", UriKind.Relative));
+            button_sync.Source = new BitmapImage(new Uri("Resource/OneSync Transparent Logo (Inactive).png", UriKind.Relative));
         }
 
         private void textblock_rename_profile_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -632,14 +637,15 @@ namespace OneSync
 
         private void textblock_delete_profile_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-        	System.Windows.Forms.DialogResult result
+        	DialogResult result
 			= System.Windows.Forms.MessageBox.Show("Are you sure you want to delete " + profile_name + "?", "Job Profile Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 			if(result == System.Windows.Forms.DialogResult.Yes)
 			{
 				//Delete the profile.
                 try
                 {
-                    Synchronization.SyncClient.ProfileProcess.DeleteProfile(System.Windows.Forms.Application.StartupPath, current_profile.ID);
+                    //Synchronization.SyncClient.ProfileProcess.DeleteProfile(System.Windows.Forms.Application.StartupPath, current_profile.ID);
+                    SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).Delete(current_profile);
                     
                     //Go back to the home page.
                     ProfileCreationControlsVisibility(Visibility.Hidden, Visibility.Visible);
@@ -675,7 +681,7 @@ namespace OneSync
             {
                 ProfileCreationControlsVisibility(Visibility.Visible, Visibility.Hidden);
 
-                foreach (Synchronization.Profile item in (Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath)))
+                foreach (Synchronization.Profile item in (SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles()))
                 {
                     if (item.Name.Equals(combobox_profile_name.Text))
                     {
@@ -694,7 +700,8 @@ namespace OneSync
                 try
                 {
                     current_profile.Name = textbox_rename_profile.Text.Trim();
-                    Synchronization.SyncClient.ProfileProcess.UpdateProfile(System.Windows.Forms.Application.StartupPath, current_profile);
+                    //Synchronization.SyncClient.ProfileProcess.UpdateProfile(System.Windows.Forms.Application.StartupPath, current_profile);
+                    SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).Update(current_profile);
                 }
                 catch (Synchronization.DatabaseException de)
                 {
@@ -715,7 +722,8 @@ namespace OneSync
             combobox_profile_name.Items.Clear();
             try
             {
-                IList<Synchronization.Profile> profileItemsCollection = OneSync.Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath);
+                //IList<Synchronization.Profile> profileItemsCollection = OneSync.Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath);
+                IList<Synchronization.Profile> profileItemsCollection = SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles();
                 foreach (Synchronization.Profile profileItem in profileItemsCollection)
                 {
                     //Retrieve.

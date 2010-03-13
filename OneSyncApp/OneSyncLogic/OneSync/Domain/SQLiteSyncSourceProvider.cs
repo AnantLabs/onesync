@@ -7,141 +7,127 @@ using System.Linq;
 using System.Text;
 using Community.CsharpSqlite.SQLiteClient;
 using Community.CsharpSqlite;
+using System.IO;
+using System.Data;
 
 namespace OneSync.Synchronization
 {
-    public enum SourceOption
+    
+    public class SQLiteSyncSourceProvider : SyncSourceProvider
     {
-        NOT_EQUAL_SOURCE_ID,
-        EQUAL_SOURCE_ID
-    }
+        public const string DATABASE_NAME = "data.md";
+        public const string ACTION_TABLE = "ACTION_TABLE";
+        public const string ACTION_ID = "ACTION_ID";
+        public const string CHANGE_IN = "CHANGE_IN";
+        public const string ACTION_TYPE = "ACTION_TYPE";
+        public const string OLD_RELATIVE_PATH = "OLD_RELATIVE_PATH";
+        public const string NEW_RELATIVE_PATH = "NEW_RELATIVE_PATH";
+        public const string OLD_HASH = "OLD_HASH";
+        public const string NEW_HASH = "NEW_HASH";
 
-    /// <summary>
-    /// This class provide sync agent information about sync source objects
-    /// </summary>
-    public class SQLiteSyncSourceProvider:BaseSQLiteProvider, ISyncSourceProvider
-    {
-        public SQLiteSyncSourceProvider(string baseFolder):base(baseFolder)
+
+        // TODO: move constants declaration to centralized location?
+        public const string SOURCE_ABSOLUTE_PATH = "SOURCE_ABSOLUTE_PATH";
+        public const string SOURCE_ID = "SOURCE_ID";
+        public const string DATASOURCE_INFO_TABLE = "DATASOURCE_INFO_TABLE";
+
+        public SQLiteSyncSourceProvider(string storagePath)
+            : base(storagePath)
         {
-            this.baseFolder = baseFolder;
+            // Create database schema if necessary
+
+            FileInfo fi = new FileInfo(Path.Combine(this.StoragePath, DATABASE_NAME));
+
+            if (!fi.Exists)
+            {
+                // If the parent directory already exists, Create() does nothing.
+                fi.Directory.Create();
+                this.CreateSchema();
+            }
         }
 
-        //default constructor
-        public SQLiteSyncSourceProvider() { }
+        public override bool Add(SyncSource s)
+        {
+            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME)))
+            {
+                string cmdText = "INSERT INTO " + DATASOURCE_INFO_TABLE +
+                                 "(" + SOURCE_ID + "," + SOURCE_ABSOLUTE_PATH + ") VALUES (@id, @path)";
 
-        #region ISyncSourceProvider Members
-        /// <summary>
-        /// Insert sync source object
-        /// </summary>
-        /// <param name="source"></param>
-        public void Insert(SyncSource source, SqliteConnection con )
-        {                        
-             using (SqliteCommand cmd = con.CreateCommand())
-             {
-                    cmd.CommandText = "INSERT INTO " + SyncSource.DATASOURCE_INFO_TABLE + 
-                        "(" + SyncSource.SOURCE_ID + "," + SyncSource.SOURCE_ABSOLUTE_PATH + ") VALUES (@id, @path)" ;
-                    SqliteParameter param1 = new SqliteParameter("@id", System.Data.DbType.String);
-                    param1.Value = source.ID;
-                    cmd.Parameters.Add(param1);
+                SqliteParameterCollection paramList = new SqliteParameterCollection();
+                paramList.Add(new SqliteParameter("@id", DbType.String) { Value = s.ID });
+                paramList.Add(new SqliteParameter("@path", DbType.String) { Value = s.Path });
 
-                    SqliteParameter param2 = new SqliteParameter("@path", System.Data.DbType.String);
-                    param2.Value = source.Path;
-                    cmd.Parameters.Add(param2);
-                    cmd.ExecuteNonQuery();
+                db.ExecuteNonQuery(cmdText, paramList, false);
+
             }
-            
-        }    
+            return true;
+        }
 
-
-        /// <summary>
-        /// Load information of replicas
-        /// </summary>
-        /// <returns></returns>
-        public IList<SyncSource> Load()
+        public override IList<SyncSource> LoadAll()
         {
             IList<SyncSource> syncSources = new List<SyncSource>();
-            using (SqliteConnection con = new SqliteConnection(ConnectionString))
-            {   
-                con.Open();
-                using (SqliteCommand cmd = con.CreateCommand())
-                {
-                    cmd.CommandText = "SELECT * FROM  " + SyncSource.DATASOURCE_INFO_TABLE;
-                    using (SqliteDataReader reader = cmd.ExecuteReader())
+
+            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME)))
+            {
+                string cmdText = "SELECT * FROM  " + DATASOURCE_INFO_TABLE;
+
+                db.ExecuteReader(cmdText, reader =>
                     {
-                        while (reader.Read())
-                        {
-                            syncSources.Add(new SyncSource((string)reader[SyncSource.SOURCE_ID], (string)reader[SyncSource.SOURCE_ABSOLUTE_PATH]));
-                        }
+                        syncSources.Add(new SyncSource((string)reader[SOURCE_ID], (string)reader[SOURCE_ABSOLUTE_PATH]));
                     }
-                }
+                );
             }
+
             return syncSources;
         }
-        /// <summary>
-        /// Update sync source object
-        /// </summary>
-        /// <param name="source"></param>
-        public void Update(SyncSource source)
+
+        public override bool Update(SyncSource source)
         {
-            using (SqliteConnection con = new SqliteConnection(ConnectionString))
-            {                
-                con.Open();
-                using (SqliteCommand cmd = con.CreateCommand())
-                {
-                    cmd.CommandText = "UPDATE " + SyncSource.DATASOURCE_INFO_TABLE +
-                        " SET " + SyncSource.SOURCE_ABSOLUTE_PATH + " = @path WHERE " + SyncSource.SOURCE_ID + " = @id" ;
-                    SqliteParameter param1 = new SqliteParameter("@id", System.Data.DbType.String);
-                    param1.Value = source.ID;
-                    cmd.Parameters.Add(param1);
-
-                    SqliteParameter param2 = new SqliteParameter("@path", System.Data.DbType.String);
-                    param2.Value = source.Path;
-                    cmd.Parameters.Add(param2);
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Create new empty table
-        /// </summary>
-        public void CreateSchema(SqliteConnection con)
-        {            
-                using (SqliteCommand cmd = con.CreateCommand())
-                {
-                    cmd.CommandText = "CREATE TABLE IF NOT EXISTS " + SyncSource.DATASOURCE_INFO_TABLE +
-                                                " ( " + SyncSource.SOURCE_ABSOLUTE_PATH + " TEXT, " +
-                                                SyncSource.SOURCE_ID + " TEXT PRIMARY KEY)";
-                    cmd.ExecuteNonQuery();
-                }            
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Get the number of sync sources which already participate in sync job.
-        /// Maximum 2 sync sources are allowed.
-        /// </summary>
-        /// <returns></returns>
-        public int GetNumberOfSyncSources()
-        {
-            using (SqliteConnection con = new SqliteConnection(ConnectionString))
+            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME)))
             {
-                con.Open();
-                using (SqliteCommand cmd = con.CreateCommand())
+                string cmdText = "UPDATE " + DATASOURCE_INFO_TABLE +
+                        " SET " + SOURCE_ABSOLUTE_PATH + " = @path WHERE " + SOURCE_ID + " = @id";
+
+                SqliteParameterCollection paramList = new SqliteParameterCollection();
+                paramList.Add(new SqliteParameter("@id", DbType.String) { Value = source.ID });
+                paramList.Add(new SqliteParameter("@path", DbType.String) { Value = source.Path });
+
+                db.ExecuteNonQuery(cmdText, false);
+            }
+            return true;
+        }
+
+        public override int GetSyncSourceCount()
+        {
+            try
+            {
+                using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME)))
                 {
-                    cmd.CommandText = "SELECT COUNT (DISTINCT " + SyncSource.SOURCE_ID + ") AS num" +
-                        " FROM " + SyncSource.DATASOURCE_INFO_TABLE;
-                    using (SqliteDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            return Convert.ToInt32((Int64)reader[0]);
-                        }
-                    }
+                    string cmdText = "SELECT COUNT (DISTINCT " + SOURCE_ID + ") AS num" +
+                            " FROM " + DATASOURCE_INFO_TABLE;
+
+
+                    return Convert.ToInt32(db.ExecuteScalar(cmdText, null));
                 }
             }
-            return -1;
+            catch (Exception)
+            {
+                // Possible exception during first-run when DataSourceInfo Table not created yet.
+                // Log error?
+                return -1;
+            }
+        }
+
+        private void CreateSchema()
+        {
+            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME)))
+            {
+                string cmdText = "CREATE TABLE IF NOT EXISTS " + DATASOURCE_INFO_TABLE +
+                                 " ( " + SOURCE_ABSOLUTE_PATH + " TEXT, " +
+                                 SOURCE_ID + " TEXT PRIMARY KEY)";
+
+                db.ExecuteNonQuery(cmdText, false);
+            }
         }
     }
 }

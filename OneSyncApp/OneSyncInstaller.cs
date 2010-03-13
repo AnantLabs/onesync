@@ -45,7 +45,7 @@ namespace OneSync
                 if(regcmd != null)
                     regcmd.SetValue("", "\"" + Assembly.GetExecutingAssembly().Location + "\" \"%1\"");
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 //Do nothing?!
             }
@@ -80,7 +80,7 @@ namespace OneSync
                     Registry.ClassesRoot.DeleteSubKey(MenuName);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //Do nothing again?
             }
