@@ -86,8 +86,6 @@ namespace OneSync
 			instantNotificationAnimation.From = 1.0;
 			instantNotificationAnimation.To = 0.0;
 			instantNotificationAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(800));
-			instantNotificationAnimation.RepeatBehavior = RepeatBehavior.Forever;
-			//instantNotificationAnimation.DecelerationRatio = 0.1;
 			myStoryboard.Children.Add(instantNotificationAnimation);
 			Storyboard.SetTargetName(instantNotificationAnimation, label_notification.Name);
 			Storyboard.SetTargetProperty(instantNotificationAnimation, new PropertyPath("(UIElement.Opacity)"));
@@ -248,16 +246,13 @@ namespace OneSync
 			label_current_syncing_dir_frontpage.Visibility = sideVisibility;
 			label_profile_message.Visibility = sideVisibility;
 			combobox_profile_name.Visibility = sideVisibility;
-			button_new_profile.Visibility = sideVisibility;
 			rectangle_shadow.Visibility = sideVisibility;
 
             //Reset control's content.
             textbox_storage_path.Text = "";
 
             //Always hidden.
-            textblock_rename_profile.Visibility = Visibility.Hidden;
-            textbox_rename_profile.Visibility = Visibility.Hidden;
-            button_rename_profile.Visibility = Visibility.Hidden;
+			showHideProfileEditting(Visibility.Hidden);
         }
 
         /// <summary>
@@ -536,51 +531,6 @@ namespace OneSync
 		}
 
         /// <summary>
-        /// This method will be called when the user clicks on the New Job button.
-        /// </summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event arguments.</param>
-        private void button_new_profile_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            if (combobox_profile_name.Text.Trim().Length > 0)
-            {
-				textblock_delete_profile.Visibility = Visibility.Hidden;
-				InstantNotification(""); //Empty the notification message (if any).
-                profile_name = combobox_profile_name.Text.Trim();
-                ProfileCreationControlsVisibility(Visibility.Visible, Visibility.Hidden);
-                Window.Title = profile_name + " - OneSync";
-                //Hide the progress bar.
-                progressbar_sync_progress.Visibility = Visibility.Hidden;
-                label_current_processing_file.Visibility = Visibility.Hidden;
-                current_profile = null;
-                try
-                {
-                    foreach (Synchronization.Profile item in (Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath)))
-                    {
-                        //Check to see if the profile is an existing profile or not.
-                        //If yes, then it will import the storage directory to the program.
-                        if (item.Name.Equals(profile_name))
-                        {
-                            is_sync_job_created_previously = true;
-                            current_profile = item;
-                            textbox_storage_path.Text = item.IntermediaryStorage.Path;
-                            textblock_delete_profile.Visibility = Visibility.Visible;
-                            break;
-                        }
-                    }
-                }
-                catch (Exception) 
-                {
-                    //Do nothing
-                }
-            }
-            else 
-            {
-                InstantNotification("Please select/enter the name of your sync job.");
-            }
-        }
-
-        /// <summary>
         /// This method will be called when the user clicks on a button to go back to the home page.
         /// </summary>
         /// <param name="sender">The event sender.</param>
@@ -604,9 +554,41 @@ namespace OneSync
 
         private void textblock_rename_profile_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-        	//TODO: When user clicks on this link, the user should be able to rename the profile.
-			//NOTE: Only existing profile can be created.
-			//WAIT: Thuat is implementing the Update function in OneSync.Synchronization.SQLiteProfileManager.
+        	//Rename a profile.
+            if(textbox_rename_profile.Text.Trim().Length > 0)
+            {
+                ProfileCreationControlsVisibility(Visibility.Visible, Visibility.Hidden);
+
+                foreach (Synchronization.Profile item in (Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath)))
+                {
+                    if (item.Name.Equals(combobox_profile_name.Text))
+                    {
+                        is_sync_job_created_previously = true;
+                        current_profile = item;
+                        profile_name = textbox_rename_profile.Text.Trim();
+                        textbox_storage_path.Text = current_profile.IntermediaryStorage.Path;
+                        break;
+                    }
+                }
+                Window.Title = profile_name + " - OneSync";
+                //Hide the progress bar.
+                progressbar_sync_progress.Visibility = Visibility.Hidden;
+                label_current_processing_file.Visibility = Visibility.Hidden;
+                try
+                {
+                    current_profile.Name = textbox_rename_profile.Text.Trim();
+                    Synchronization.SyncClient.ProfileProcess.UpdateProfile(System.Windows.Forms.Application.StartupPath, current_profile);
+                }
+                catch (Synchronization.DatabaseException de)
+                {
+                    InstantNotification("Can't update: " + de.Message);
+                }
+                catch (Exception ex)
+                {
+                    InstantNotification("Can't update: " + ex.Message);
+                }
+                reloadProfileComboBox();
+            }
         }
 
 		/// <summary>
@@ -617,18 +599,14 @@ namespace OneSync
 		/// <param name="e">The event arguments.</param>
         private void combobox_profile_name_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            textblock_rename_profile.Visibility = Visibility.Hidden;
-            textbox_rename_profile.Visibility = Visibility.Hidden;
-            button_rename_profile.Visibility = Visibility.Hidden;
+			showHideProfileEditting(Visibility.Hidden);
             foreach (String item in combobox_profile_name.Items)
             {
                 //Check to see if the profile is an existing profile or not.
                 //If yes, then it will show the rename profile link.
                 if (item.Equals(combobox_profile_name.Text))
                 {
-                    textblock_rename_profile.Visibility = Visibility.Visible;
-                    textbox_rename_profile.Visibility = Visibility.Visible;
-                    button_rename_profile.Visibility = Visibility.Visible;
+                    showHideProfileEditting(Visibility.Visible);
                     textbox_rename_profile.Text = combobox_profile_name.Text;
                     break;
                 }
@@ -673,47 +651,6 @@ namespace OneSync
             }
         }
 
-        private void button_rename_profile_Click(object sender, RoutedEventArgs e)
-        {
-            //Rename a profile.
-            if(textbox_rename_profile.Text.Trim().Length > 0)
-            {
-                ProfileCreationControlsVisibility(Visibility.Visible, Visibility.Hidden);
-
-                foreach (Synchronization.Profile item in (Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath)))
-                {
-                    if (item.Name.Equals(combobox_profile_name.Text))
-                    {
-                        is_sync_job_created_previously = true;
-                        current_profile = item;
-                        profile_name = textbox_rename_profile.Text.Trim();
-                        textbox_storage_path.Text = current_profile.IntermediaryStorage.Path;
-                        textblock_delete_profile.Visibility = Visibility.Visible;
-                        break;
-                    }
-                }
-                Window.Title = profile_name + " - OneSync";
-                //Hide the progress bar.
-                progressbar_sync_progress.Visibility = Visibility.Hidden;
-                label_current_processing_file.Visibility = Visibility.Hidden;
-                try
-                {
-                    current_profile.Name = textbox_rename_profile.Text.Trim();
-                    Synchronization.SyncClient.ProfileProcess.UpdateProfile(System.Windows.Forms.Application.StartupPath, current_profile);
-                }
-                catch (Synchronization.DatabaseException de)
-                {
-                    InstantNotification("Can't update: " + de.Message);
-                }
-                catch (Exception ex)
-                {
-                    InstantNotification("Can't update: " + ex.Message);
-                }
-                reloadProfileComboBox();
-            }
-
-        }
-
         private void reloadProfileComboBox() 
         {
             //Reload the profile combobox.
@@ -735,5 +672,60 @@ namespace OneSync
                 InstantNotification("Oops... " + ex.Message);
             }
         }
+		
+		private void showHideProfileEditting(Visibility visibility)
+		{
+			textblock_new_profile.Visibility = visibility;
+			textblock_rename_profile_label.Visibility = visibility;
+            textbox_rename_profile.Visibility = visibility;
+            textblock_rename_profile.Visibility = visibility;
+			textblock_delete_profile.Visibility = visibility;
+			path_profile_operations_1.Visibility = visibility;
+			path_profile_operations_2.Visibility = visibility;
+			path_profile_operations_3.Visibility = visibility;
+		}
+		
+		/// <summary>
+        /// This method will be called when the user clicks on the New Job link.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+		private void textblock_new_profile_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			if (combobox_profile_name.Text.Trim().Length > 0)
+            {
+				InstantNotification(""); //Empty the notification message (if any).
+                profile_name = combobox_profile_name.Text.Trim();
+                ProfileCreationControlsVisibility(Visibility.Visible, Visibility.Hidden);
+                Window.Title = profile_name + " - OneSync";
+                //Hide the progress bar.
+                progressbar_sync_progress.Visibility = Visibility.Hidden;
+                label_current_processing_file.Visibility = Visibility.Hidden;
+                current_profile = null;
+                try
+                {
+                    foreach (Synchronization.Profile item in (Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath)))
+                    {
+                        //Check to see if the profile is an existing profile or not.
+                        //If yes, then it will import the storage directory to the program.
+                        if (item.Name.Equals(profile_name))
+                        {
+                            is_sync_job_created_previously = true;
+                            current_profile = item;
+                            textbox_storage_path.Text = item.IntermediaryStorage.Path;
+                            break;
+                        }
+                    }
+                }
+                catch (Exception) 
+                {
+                    //Do nothing
+                }
+            }
+            else 
+            {
+                InstantNotification("Please provide the name of your sync job.");
+            }
+		}
 	}
 }

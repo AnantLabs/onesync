@@ -18,7 +18,6 @@ $Id$
 	</Window.Background>
 
 	<Canvas x:Name="LayoutRoot">
-        <TextBlock x:Name="textblock_delete_profile" Width="112" Text="Delete Current Profile" TextWrapping="Wrap" TextDecorations="Underline" FontWeight="Bold" FontSize="10.667" Cursor="Hand" Foreground="#FFFF0030" MouseDown="textblock_delete_profile_MouseDown" Height="18" Canvas.Left="593" Canvas.Top="24" d:LayoutOverrides="VerticalAlignment, Height" Visibility="Hidden"/>
         <Image x:Name="button_sync_copy" Stretch="Fill" Cursor="Hand" ToolTip="Sync this folder now!" VerticalAlignment="Bottom" Width="104" Canvas.Left="595.988" Canvas.Top="40" Height="104" MouseLeave="button_sync_MouseLeave" Source="OneSync Transparent Logo.png" Visibility="Hidden" />
         <Label x:Name="label_current_syncing_dir" Height="25" Content="C:\Documents\Module Materials\lec1.txt" FontSize="10.667" FontWeight="Bold" MouseEnter="label_current_syncing_dir_MouseEnter" Width="457" Canvas.Left="118" Canvas.Top="37"/>
 		<Label x:Name="label_message" Width="158" Height="25" Content="You are now selecting" FontSize="10.667" Canvas.Left="9" Canvas.Top="37"/>
@@ -57,7 +56,7 @@ $Id$
 		<Label x:Name="label_current_processing_file" Width="574" Height="25" Content="label_current_processing_file" FontSize="10.667" Canvas.Left="9" Canvas.Top="109"/>
 		<Button x:Name="button_file_browser" Width="27" Height="25" Content="..." Canvas.Left="555" Canvas.Top="61" ToolTip="Click to browse folders" Click="button_file_browser_Click"/>
 		<TextBox x:Name="textbox_storage_path" Width="387" Height="23" Canvas.Left="164" Canvas.Top="62" TextWrapping="Wrap"/>
-		<TextBlock x:Name="textblock_back_to_home" Width="95.012" Text="Back to Start Page" TextWrapping="Wrap" TextDecorations="Underline" FontWeight="Bold" FontSize="10.667" Cursor="Hand" Foreground="#FF3000FF" MouseDown="textblock_back_to_home_MouseDown" Height="18" Canvas.Left="609.988" Canvas.Top="8" d:LayoutOverrides="VerticalAlignment, Height"/>
+		<TextBlock x:Name="textblock_back_to_home" Width="53.012" Text="Quit Job" TextWrapping="Wrap" TextDecorations="Underline" FontWeight="Bold" FontSize="10.667" Cursor="Hand" Foreground="#FF3000FF" MouseDown="textblock_back_to_home_MouseDown" Height="18" Canvas.Left="659.988" Canvas.Top="6" d:LayoutOverrides="VerticalAlignment, Height"/>
 		<Rectangle x:Name="rectangle_shadow" Width="713" Height="190" Canvas.Top="-1">
 			<Rectangle.Fill>
 				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -67,14 +66,66 @@ $Id$
 				</LinearGradientBrush>
 			</Rectangle.Fill>
 		</Rectangle>
-		<ComboBox x:Name="combobox_profile_name" Height="21.787" IsEditable="True" Width="443" Canvas.Left="148.988" Canvas.Top="95.96" KeyUp="combobox_profile_name_KeyUp"/>
-		<Label x:Name="label_profile_message" Width="174" Height="25" Content="My Sync Job:" FontSize="10.667" Canvas.Left="74.988" Canvas.Top="95.96" Foreground="#FF0000B9"/>
-		<Button x:Name="button_new_profile" Width="54" Height="25" Content="Do Job" Canvas.Left="595.988" Canvas.Top="95" ToolTip="Click to create your new profile" Click="button_new_profile_Click" RenderTransformOrigin="0.519,-1.6" />
-		<Label x:Name="label_current_syncing_dir_frontpage" Height="25" Content="C:\Documents\Module Materials\lec1.txt" FontSize="10.667" FontWeight="Bold" MouseEnter="label_current_syncing_dir_MouseEnter" Width="457" Canvas.Left="183.988" Canvas.Top="66" Foreground="#FF0000B9"/>
-		<Label x:Name="label_message_frontpage" Width="158" Height="25" Content="You are now selecting" FontSize="10.667" Canvas.Left="74.988" Canvas.Top="66" Foreground="#FF0000B9"/>
-		<Label x:Name="label_notification" Width="662" Height="25" Content="" FontSize="10.667" Canvas.Top="-1" Foreground="#FFB90000" FontStyle="Italic" FontWeight="Bold"/>
-		<TextBlock x:Name="textblock_rename_profile" Width="145" Text="Rename This Profile:" TextWrapping="Wrap" FontSize="10.667" Cursor="Hand" Foreground="#FF0000B9" MouseDown="textblock_rename_profile_MouseDown" Height="21.043" Canvas.Left="80" Canvas.Top="125.96" d:LayoutOverrides="VerticalAlignment" Visibility="Hidden" />
-		<TextBox x:Name="textbox_rename_profile" Width="348.012" Height="23.998" Canvas.Left="183.988" Canvas.Top="120.52" TextWrapping="Wrap" Visibility="Hidden" />
-		<Button x:Name="button_rename_profile" Width="55.988" Height="24.255" Content="Rename" Canvas.Left="536" Canvas.Top="121.747" Visibility="Hidden" Click="button_rename_profile_Click" />
+		<ComboBox x:Name="combobox_profile_name" Height="22" IsEditable="True" Width="443" Canvas.Left="135" Canvas.Top="86.002" KeyUp="combobox_profile_name_KeyUp"/>
+		<Label x:Name="label_profile_message" Width="70" Height="25" Content="My Sync Job:" FontSize="10.667" Canvas.Left="61" Canvas.Top="86.002" Foreground="#FF0000B9"/>
+		<Label x:Name="label_current_syncing_dir_frontpage" Height="25" Content="C:\Documents\Module Materials\lec1.txt" FontSize="10.667" FontWeight="Bold" MouseEnter="label_current_syncing_dir_MouseEnter" Width="457" Canvas.Left="170" Canvas.Top="56.042" Foreground="#FF0000B9"/>
+		<Label x:Name="label_message_frontpage" Width="114" Height="25" Content="You are now selecting" FontSize="10.667" Canvas.Left="61" Canvas.Top="56.042" Foreground="#FF0000B9"/>
+		<Label x:Name="label_notification" Width="655.988" Height="25" Content="" FontSize="10.667" Canvas.Top="-1" Foreground="#FFB90000" FontStyle="Italic" FontWeight="Bold"/>
+		<TextBlock x:Name="textblock_rename_profile_label" Width="85.988" Text="Rename This Job:" TextWrapping="Wrap" FontSize="10.667" Cursor="Hand" Foreground="#FF0000B9" MouseDown="textblock_rename_profile_MouseDown" Height="21.043" Canvas.Left="135" Canvas.Top="120" d:LayoutOverrides="VerticalAlignment" />
+		<TextBox x:Name="textbox_rename_profile" Width="353.012" Height="22" Canvas.Left="224.988" Canvas.Top="114.56" TextWrapping="Wrap" />
+		<Path x:Name="path_profile_operations_1" Stretch="Fill" Width="1" Height="36.44" Canvas.Left="68" Canvas.Top="116.56" Data="M53,108.56 L53,157" RenderTransformOrigin="0.5,0.5" Stroke="#FF0100FF">
+			<Path.RenderTransform>
+				<TransformGroup>
+					<ScaleTransform ScaleX="-1"/>
+					<SkewTransform/>
+					<RotateTransform/>
+					<TranslateTransform/>
+				</TransformGroup>
+			</Path.RenderTransform>
+			<Path.Fill>
+				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+					<GradientStop Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}" Offset="1"/>
+					<GradientStop Color="white" Offset="0.337"/>
+					<GradientStop Color="#FF0000B9" Offset="0.768"/>
+				</LinearGradientBrush>
+			</Path.Fill>
+		</Path>
+		<Path x:Name="path_profile_operations_2" Stretch="Fill" Stroke="#FF0100FF" Width="59" Height="1" Canvas.Left="69" Canvas.Top="128" Data="M53,117 L127,114" RenderTransformOrigin="0.5,0.5">
+			<Path.RenderTransform>
+				<TransformGroup>
+					<ScaleTransform ScaleY="-1"/>
+					<SkewTransform/>
+					<RotateTransform/>
+					<TranslateTransform/>
+				</TransformGroup>
+			</Path.RenderTransform>
+			<Path.Fill>
+				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+					<GradientStop Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}" Offset="1"/>
+					<GradientStop Color="white" Offset="0.337"/>
+					<GradientStop Color="#FF0000B9" Offset="0.768"/>
+				</LinearGradientBrush>
+			</Path.Fill>
+		</Path>
+		<Path x:Name="path_profile_operations_3" Stretch="Fill" Stroke="#FF0100FF" Width="59" Height="1" RenderTransformOrigin="0.5,0.5" Canvas.Left="69" Canvas.Top="152" Data="M53,117 L127,114">
+			<Path.RenderTransform>
+				<TransformGroup>
+					<ScaleTransform ScaleY="-1"/>
+					<SkewTransform/>
+					<RotateTransform/>
+					<TranslateTransform/>
+				</TransformGroup>
+			</Path.RenderTransform>
+			<Path.Fill>
+				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+					<GradientStop Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}" Offset="1"/>
+					<GradientStop Color="white" Offset="0.337"/>
+					<GradientStop Color="#FF0000B9" Offset="0.768"/>
+				</LinearGradientBrush>
+			</Path.Fill>
+		</Path>
+        <TextBlock x:Name="textblock_delete_profile" Width="112" Text="Delete This Job" TextWrapping="Wrap" TextDecorations="Underline" FontWeight="Bold" FontSize="10.667" Cursor="Hand" Foreground="#FFFF0030" MouseDown="textblock_delete_profile_MouseDown" Height="18" Canvas.Left="135" Canvas.Top="145" d:LayoutOverrides="VerticalAlignment, Height"/>
+        <TextBlock x:Name="textblock_new_profile" Width="42" Text="Do Job" TextWrapping="Wrap" TextDecorations="Underline" FontWeight="Bold" FontSize="10.667" Cursor="Hand" Foreground="#FF0000B9" MouseDown="textblock_new_profile_MouseDown" Height="18" Canvas.Left="582" Canvas.Top="90.002" d:LayoutOverrides="VerticalAlignment, Height"/>
+        <TextBlock x:Name="textblock_rename_profile" Width="69" Text="Rename Job" TextWrapping="Wrap" TextDecorations="Underline" FontWeight="Bold" FontSize="10.667" Cursor="Hand" Foreground="#FF0000B9" MouseDown="textblock_rename_profile_MouseDown" Height="18" Canvas.Left="582" Canvas.Top="118.56" d:LayoutOverrides="VerticalAlignment, Height"/>
 	</Canvas>
 </Window>
