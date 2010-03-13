@@ -60,22 +60,41 @@ namespace OneSync.Synchronization
 
         public void Apply()
         {
+            // Logging
+            List<LogActivity> applyActivities = new List<LogActivity>();
+            int count = 0;
+            DateTime starttime = DateTime.Now;
+
             foreach (SyncAction action in actions)
             {
+                try
+                {
+                    if (action.ChangeType == ChangeType.NEWLY_CREATED)
+                    {
+                        CopyToSyncFolderAndUpdateActionTable((CreateAction)action, profile);
+                    }
+                    else if (action.ChangeType == ChangeType.DELETED)
+                    {
+                        DeleteInSyncFolderAndUpdateActionTable((DeleteAction)action, profile);
+                    }
+                    else if (action.ChangeType == ChangeType.RENAMED)
+                    {
+                        RenameInSyncFolderAndUpdateActionTable((RenameAction)action, profile);
+                    }
 
-                if (action.ChangeType == ChangeType.NEWLY_CREATED)
-                {
-                    CopyToSyncFolderAndUpdateActionTable((CreateAction) action,profile);
+                    applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "Success"));
                 }
-                else if (action.ChangeType == ChangeType.DELETED)
+                catch (Exception)
                 {
-                    DeleteInSyncFolderAndUpdateActionTable((DeleteAction) action, profile);
+                    applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "Fail"));
                 }
-                else if (action.ChangeType == ChangeType.RENAMED)
-                {
-                    RenameInSyncFolderAndUpdateActionTable((RenameAction)action, profile);
-                }
+
+                count++;
             }
+
+            // Add to log
+            Log.addToLog(profile.SyncSource.Path, profile.IntermediaryStorage.Path,
+                    profile.Name, applyActivities, Log.from, count, starttime, DateTime.Now);
 
             // TODO:
             // Update metadata after patch is applied
@@ -104,18 +123,38 @@ namespace OneSync.Synchronization
             //delete actions of previous sync
             ActionProcess.DeleteBySourceId(profile, SourceOption.EQUAL_SOURCE_ID);
             if (Directory.Exists(profile.IntermediaryStorage.DirtyFolderPath)) Directory.Delete(profile.IntermediaryStorage.DirtyFolderPath, true);
+
+            // Logging
+            List<LogActivity> generateActivities = new List<LogActivity>();
+            int count = 0;
+            DateTime starttime = DateTime.Now;
+
             foreach (SyncAction action in newActions)
             {
-                if (action.ChangeType == ChangeType.NEWLY_CREATED)
+                try
                 {
-                    CopyToDirtyFolderAndUpdateActionTable(action, profile);
+                    if (action.ChangeType == ChangeType.NEWLY_CREATED)
+                    {
+                        CopyToDirtyFolderAndUpdateActionTable(action, profile);
+                    }
+                    else if (action.ChangeType == ChangeType.DELETED || action.ChangeType == ChangeType.RENAMED)
+                    {
+                        ActionProcess.InsertAction(action, profile);
+                    }
+
+                    generateActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "Success"));
                 }
-                else if (action.ChangeType == ChangeType.DELETED || action.ChangeType == ChangeType.RENAMED)
+                catch (Exception)
                 {
-                    ActionProcess.InsertAction(action, profile);
+                    generateActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "Fail"));
                 }
+
+                count++;
             }
-            
+
+            // Add to log
+            Log.addToLog(profile.SyncSource.Path, profile.IntermediaryStorage.Path,
+                profile.Name, generateActivities, Log.to, count, starttime, DateTime.Now);            
         }
 
         private void Process(IList<SyncAction> actions)
