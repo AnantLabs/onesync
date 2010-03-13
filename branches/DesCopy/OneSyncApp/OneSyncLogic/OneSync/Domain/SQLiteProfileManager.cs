@@ -7,280 +7,239 @@ using System.Linq;
 using System.Text;
 using Community.CsharpSqlite;
 using Community.CsharpSqlite.SQLiteClient;
+using System.IO;
 
 namespace OneSync.Synchronization
 {
     /// <summary>
     /// This class manages jobs related to profiles
     /// </summary>
-    public class SQLiteProfileManager: BaseSQLiteProvider, IProfileManager
-    {        
-        public SQLiteProfileManager(string baseFolder):base(baseFolder)
-        {            
-        }
-        //default constructor
-        public SQLiteProfileManager() { }
-        #region IProfileManager Members
-       
-        /// <summary>
-        /// Given a sync source absolute path, return a list of profiles contain that sources
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="profiles"></param>
-        /// <returns></returns>
-        public IList<Profile> FindByDataSource(string path, IList<Profile> profiles)
-        {
-            IEnumerable<Profile> results = from profile in profiles
-                                           where profile.SyncSource.Path.Equals(path)
-                                           select profile;
-            return results.ToList();
-        }
+    public class SQLiteProfileManager: ProfileManager
+    {
+        // TODO: Wrap Update/Add etc with try catch and return false if exception thrown?
+
+        // TODO: Find a better place to define these constant?
+        // Database constants
+        public const string DATABASE_NAME = "data.md";
+        public const string PROFILE_TABLE = "PROFILE";
+        public const string COL_PROFILE_ID = "PROFILE_ID";
+        public const string COL_PROFILE_NAME = "PROFILE_NAME";
+        public const string COL_METADATA_SOURCE_LOCATION = "METADATA_SOURCE_LOCATION";
+        public const string COL_SYNC_SOURCE_ID = "SYNC_SOURCE_ID";
+        public const string COL_SOURCE_ABS_PATH = "SOURCE_ABSOLUTE_PATH";
+        public const string COL_SOURCE_ID = "SOURCE_ID";
+        public const string DATASOURCE_INFO_TABLE = "DATASOURCE_INFO_TABLE";
 
         /// <summary>
-        /// Given a list of profiles loaded from database, return a profile with specific id
+        /// Creates an instance of SQLiteProfileManager. Database schema will be created if database file is newly created.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="profiles"></param>
-        /// <returns></returns>
-        public Profile FindByProfileId(string id, IList<Profile> profiles)
+        /// <param name="storagePath">Location where all database of profiles are saved to or loaded from.</param>
+        public SQLiteProfileManager(string storagePath)
+            : base(storagePath)
         {
-            IEnumerable<Profile> results = from profile in profiles
-                                           where profile.ID.Equals(id)
-                                           select profile;
-            IList<Profile> pList = results.ToList();
-            if (pList.Count == 1) return pList[0];
-            return null;
-        }        
-        #endregion
+            // Create database schema if necessary
 
-        #region IProfileManager Members
+            FileInfo fi = new FileInfo(Path.Combine(this.StoragePath, DATABASE_NAME));
 
-        /// <summary>
-        /// Load all profiles
-        /// </summary>
-        /// <returns></returns>
-        public IList<Profile> Load()
-        {
-            IList<Profile> profiles = new List<Profile>();
-            using (SqliteConnection con = new SqliteConnection(ConnectionString))
+            if (!fi.Exists)
             {
-                con.Open();
-                using (SqliteCommand cmd = con.CreateCommand ())
-                {
-                    cmd.CommandText = "SELECT * FROM " + Profile.PROFILE_TABLE +
-                        " p, " + SyncSource.DATASOURCE_INFO_TABLE +
-                        " d WHERE p" + "." + Profile.SYNC_SOURCE_ID + " = d" + "." + SyncSource.SOURCE_ID;
-                       
-                    using (SqliteDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            SyncSource source = new SyncSource((string)reader[Profile.SYNC_SOURCE_ID], (string)reader[SyncSource.SOURCE_ABSOLUTE_PATH]);
-                            IntermediaryStorage mdSource = new IntermediaryStorage((string)reader[Profile.METADATA_SOURCE_LOCATION]);
-                            Profile p = new Profile((string)reader[Profile.PROFILE_ID],
-                                (string)reader[Profile.PROFILE_NAME], source, mdSource);
-                            profiles.Add(p);
-                        }                        
-                    }
-                }
-            }
-            return profiles;
-        }
-
-        /// <summary>
-        /// Load profile with specific profile id 
-        /// </summary>
-        /// <param name="profileId"></param>
-        /// <returns></returns>
-        public Profile Load(string profileId)
-        {            
-            using (SqliteConnection con = new SqliteConnection(ConnectionString))
-            {
-                con.Open();
-                using (SqliteCommand cmd = con.CreateCommand())
-                {
-                    cmd.CommandText = "SELECT * FROM " + Profile.PROFILE_TABLE +
-                        " p, " + SyncSource.DATASOURCE_INFO_TABLE +
-                        " d WHERE p" + "." + Profile.SYNC_SOURCE_ID + " = d" + "." + SyncSource.SOURCE_ID +
-                        " AND " + Profile.PROFILE_ID + " = @pid";
-                    cmd.Parameters.Add(new SqliteParameter("@pid", System.Data.DbType.String) { Value = profileId});
-
-                    using (SqliteDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            SyncSource source = new SyncSource((string)reader[Profile.SYNC_SOURCE_ID], (string)reader[SyncSource.SOURCE_ABSOLUTE_PATH]);
-                            IntermediaryStorage mdSource = new IntermediaryStorage((string)reader[Profile.METADATA_SOURCE_LOCATION]);
-                            Profile p = new Profile((string)reader[Profile.PROFILE_ID],
-                                (string)reader[Profile.PROFILE_NAME], source, mdSource);
-                            return p;
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
-        #endregion
-
-        #region IProfileManager Members                      
-
-
-        /// <summary>
-        /// Update a profile requires update 2 tables at the same time, 
-        /// If one update on a table fails, the total update action must fail too.
-        /// </summary>
-        /// <param name="profile"></param>
-        public void Update(Profile profile)
-        {
-            using (SqliteConnection con = new SqliteConnection(ConnectionString))
-            {
-                con.Open();
-                SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
-                try
-                {
-                    using (SqliteCommand cmd = con.CreateCommand())
-                    {
-                        cmd.CommandText = "UPDATE " + Profile.PROFILE_TABLE + 
-                            " SET " + Profile.METADATA_SOURCE_LOCATION + " = @mdSource, " +
-                            Profile.PROFILE_NAME + " = @name WHERE " + Profile.PROFILE_ID + " = @id";
-                        cmd.Parameters.Add(new SqliteParameter("@mdSource", System.Data.DbType.String) { Value = profile.IntermediaryStorage.Path});
-                        cmd.Parameters.Add(new SqliteParameter("@name", System.Data.DbType.String) { Value = profile.Name});
-                        cmd.Parameters.Add(new SqliteParameter("@id", System.Data.DbType.String) { Value = profile.ID });                        
-                        cmd.ExecuteNonQuery();
-
-                        cmd.CommandText = "UPDATE " + SyncSource.DATASOURCE_INFO_TABLE +
-                            " SET " + SyncSource.SOURCE_ABSOLUTE_PATH + " = @path WHERE " + SyncSource.SOURCE_ID + " = @gid" ;
-                        cmd.Parameters.Add(new SqliteParameter("@path", System.Data.DbType.String) { Value = profile.SyncSource.Path });
-                        cmd.Parameters.Add(new SqliteParameter("@gid",System.Data.DbType.String){Value = profile.SyncSource.ID} );
-                        cmd.ExecuteNonQuery();
-                        transaction.Commit();
-                    }                    
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    throw new DatabaseException("Database Exception");
-                }                
+                // If the parent directory already exists, Create() does nothing.
+                fi.Directory.Create();
+                this.CreateSchema();
             }
         }
-
-
-        /// <summary>
-        /// Delete a profile requires delete data from 2 tables DATASOURCE_INFO and PROFILE
-        /// If deletion action on one table fails, the total action must fail too.
-        /// </summary>
-        /// <param name="profile"></param>
-        public void Delete(Profile profile)
-        {
-            using (SqliteConnection con = new SqliteConnection(ConnectionString))
-            {
-                con.Open();
-                SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
-                try
-                {
-                    using (SqliteCommand cmd = con.CreateCommand())
-                    {
-                        cmd.CommandText = "DELETE FROM " + SyncSource.DATASOURCE_INFO_TABLE +
-                            " WHERE " + SyncSource.SOURCE_ID + " = @sid";
-                        cmd.Parameters.Add(new SqliteParameter("@sid", System.Data.DbType.String) { Value = profile.SyncSource.ID });
-                        cmd.ExecuteNonQuery();                        
-                        
-                        cmd.CommandText = "DELETE FROM " + Profile.PROFILE_TABLE +                        
-                            " WHERE " + Profile.PROFILE_ID + " = @pid";
-                        cmd.Parameters.Add(new SqliteParameter("@pid", System.Data.DbType.String) { Value = profile.ID});
-                        cmd.ExecuteNonQuery();
-                        
-                        transaction.Commit();
-                    }                    
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    throw new DatabaseException("Database Exception");
-                }
-            }
-        }
-      
-        #endregion
-
-        #region IProfileManager Members
-
-       
 
         /// <summary>
         /// Create schema for profile table
         /// </summary>
-        public void CreateSchema(SqliteConnection con)
+        public void CreateSchema()
         {
-            using (SqliteCommand cmd = con.CreateCommand())
-            {       
-                    cmd.CommandText = "CREATE TABLE IF NOT EXISTS " + Profile.PROFILE_TABLE +
-                            "(" + Profile.PROFILE_ID + " VARCHAR(50) PRIMARY KEY, "
-                            + Profile.PROFILE_NAME + " VARCHAR(50) UNIQUE NOT NULL, "
-                            + Profile.METADATA_SOURCE_LOCATION + " TEXT, "
-                            + Profile.SYNC_SOURCE_ID + " VARCHAR (50), "
-                            + "FOREIGN KEY (" + Profile.SYNC_SOURCE_ID + ") REFERENCES "
-                            + SyncSource.DATASOURCE_INFO_TABLE + "(" + SyncSource.SOURCE_ID + "))"
-                            ;
-                    cmd.ExecuteNonQuery();                                           
-            }
-        }
-
-        #endregion
-
-        #region IProfileManager Members
-
-        /// <summary>
-        /// Insert new profile
-        /// </summary>
-        /// <param name="profile"></param>
-        public void Insert(Profile profile, SqliteConnection con)
-        {
-                using (SqliteCommand cmd = con.CreateCommand())
-                {
-                    cmd.CommandText = "INSERT INTO " + Profile.PROFILE_TABLE +
-                        " (" + Profile.PROFILE_ID + ", " + Profile.PROFILE_NAME +
-                        " ," + Profile.METADATA_SOURCE_LOCATION + ", " +
-                        Profile.SYNC_SOURCE_ID + ") VALUES (@id, @name, @meta, @source)";
-                    SqliteParameter param1 = new SqliteParameter("@id", System.Data.DbType.String);
-                    param1.Value = profile.ID;
-                    cmd.Parameters.Add(param1);
-
-                    SqliteParameter param2 = new SqliteParameter("@name", System.Data.DbType.String);
-                    param2.Value = profile.Name;
-                    cmd.Parameters.Add(param2);
-
-                    SqliteParameter param3 = new SqliteParameter("@meta", System.Data.DbType.String);
-                    param3.Value = profile.IntermediaryStorage.Path;
-                    cmd.Parameters.Add(param3);
-
-                    SqliteParameter param4 = new SqliteParameter("@source", System.Data.DbType.String);
-                    param4.Value = profile.SyncSource.ID;
-                    cmd.Parameters.Add(param4);
-
-                    cmd.ExecuteNonQuery();
-                }            
-        }
-        #endregion
-
-        public bool IsAlreadyCreated (string profileName)
-        {
-            using (SqliteConnection con = new SqliteConnection(ConnectionString))
+            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME)))
             {
-                con.Open();
-                using (SqliteCommand cmd = con.CreateCommand())
-                {
-                    cmd.CommandText = "SELECT * FROM " + Profile.PROFILE_TABLE + " WHERE "
-                        + Profile.PROFILE_NAME + " = @profileName";
-                    cmd.Parameters.Add (new SqliteParameter ("@profileName",  System.Data.DbType.String){Value = profileName});
-                    using (SqliteDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read()) { return true; }                       
-                    }
-                }                
+                string cmdText = "CREATE TABLE IF NOT EXISTS " + PROFILE_TABLE +
+                                "(" + COL_PROFILE_ID + " VARCHAR(50) PRIMARY KEY, "
+                                + COL_PROFILE_NAME + " VARCHAR(50) UNIQUE NOT NULL, "
+                                + COL_METADATA_SOURCE_LOCATION + " TEXT, "
+                                + COL_SYNC_SOURCE_ID + " VARCHAR (50), "
+                                + "FOREIGN KEY (" + COL_SYNC_SOURCE_ID + ") REFERENCES "
+                                + DATASOURCE_INFO_TABLE + "(" + COL_SOURCE_ID + "))";
+
+                db.ExecuteNonQuery(cmdText, false);
             }
-            return false;
+        }
+
+        public override IList<Profile> LoadAllProfiles()
+        {
+            IList<Profile> profiles = new List<Profile>();
+
+            // Note: The SQL depends on other tables as well which might not be created.
+            // So empty profile list should be returned if there is an exception
+
+            try
+            {
+                using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME)))
+                {
+                    string cmdText = "SELECT * FROM " + PROFILE_TABLE +
+                                     " p, " + DATASOURCE_INFO_TABLE +
+                                     " d WHERE p" + "." + COL_SYNC_SOURCE_ID + " = d" + "." + COL_SOURCE_ID;
+
+                    db.ExecuteReader(cmdText, reader =>
+                    {
+                        while (reader.Read())
+                        {
+                            // TODO: constructor of Profile takes in more arguments to remove dependency on IntermediaryStorage and SyncSource class.
+                            SyncSource source = new SyncSource((string)reader[COL_SYNC_SOURCE_ID], (string)reader[COL_SOURCE_ABS_PATH]);
+                            IntermediaryStorage mdSource = new IntermediaryStorage((string)reader[COL_METADATA_SOURCE_LOCATION]);
+                            Profile p = new Profile((string)reader[COL_PROFILE_ID],
+                                (string)reader[COL_PROFILE_NAME], source, mdSource);
+                            profiles.Add(p);
+                        }
+                    }
+                    );
+                }
+
+            }
+            catch (Exception)
+            {
+                // Log error?
+            }
+            
+            return profiles;
+        }
+
+        public override Profile Load(string profileId)
+        {
+            Profile p = null;
+
+            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME)))
+            {
+                string cmdText = "SELECT * FROM " + PROFILE_TABLE +
+                                 " p, " + DATASOURCE_INFO_TABLE +
+                                 " d WHERE p" + "." + COL_SYNC_SOURCE_ID + " = d" + "." + COL_SOURCE_ID +
+                                 " AND " + COL_PROFILE_ID + " = @pid";
+
+
+                SqliteParameterCollection paramList = new SqliteParameterCollection();
+                paramList.Add(new SqliteParameter("@pid", System.Data.DbType.String) { Value = profileId });
+
+                db.ExecuteReader(cmdText, paramList, reader => 
+                    {
+                        // TODO: constructor of Profile takes in more arguments to remove dependency on IntermediaryStorage and SyncSource class.
+                        SyncSource source = new SyncSource((string)reader[COL_SYNC_SOURCE_ID], (string)reader[COL_SOURCE_ABS_PATH]);
+                        IntermediaryStorage mdSource = new IntermediaryStorage((string)reader[COL_METADATA_SOURCE_LOCATION]);
+                        
+                        p = new Profile((string)reader[COL_PROFILE_ID], (string)reader[COL_PROFILE_NAME], source, mdSource);
+                        
+                        return;
+                    }
+                );
+
+            }
+            return p;
+        }
+
+        public override bool CreateProfile(string profileName, string absoluteSyncPath, string absoluteIntermediatePath)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Update(Profile profile)
+        {
+            // Update a profile requires update 2 tables at the same time, 
+            // If one update on a table fails, the total update action must fail too.
+
+            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME)))
+            {
+                SqliteParameterCollection paramList = new SqliteParameterCollection();
+
+                string cmdText = "UPDATE " + PROFILE_TABLE +
+                                 " SET " + COL_METADATA_SOURCE_LOCATION + " = @mdSource, " +
+                                 COL_PROFILE_NAME + " = @name WHERE " + COL_PROFILE_ID + " = @id;";
+
+                
+                // Add parameters for 1st Update statement
+                paramList.Add(new SqliteParameter("@mdSource", System.Data.DbType.String) { Value = profile.IntermediaryStorage.Path });
+                paramList.Add(new SqliteParameter("@name", System.Data.DbType.String) { Value = profile.Name });
+                paramList.Add(new SqliteParameter("@id", System.Data.DbType.String) { Value = profile.ID });
+
+                // Concat 2nd Update statement
+                cmdText += "UPDATE " + SyncSource.DATASOURCE_INFO_TABLE +
+                           " SET " + SyncSource.SOURCE_ABSOLUTE_PATH + " = @path WHERE " + COL_SOURCE_ID + " = @gid";
+
+                // Add parameters for 2nd Update statement
+                paramList.Add(new SqliteParameter("@path", System.Data.DbType.String) { Value = profile.SyncSource.Path });
+                paramList.Add(new SqliteParameter("@gid", System.Data.DbType.String) { Value = profile.SyncSource.ID });
+
+                db.ExecuteNonQuery(cmdText, paramList, true);
+            }
+
+            return true;
+        }
+
+        public override bool Delete(Profile profile)
+        {
+            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME)))
+            {
+                SqliteParameterCollection paramList = new SqliteParameterCollection();
+
+                string cmdText = "DELETE FROM " + SyncSource.DATASOURCE_INFO_TABLE +
+                                 " WHERE " + SyncSource.SOURCE_ID + " = @sid;";
+                
+                paramList.Add(new SqliteParameter("@sid", System.Data.DbType.String) { Value = profile.SyncSource.ID });
+
+                cmdText += "DELETE FROM " + PROFILE_TABLE +
+                           " WHERE " + COL_PROFILE_ID + " = @pid";
+
+                paramList.Add(new SqliteParameter("@pid", System.Data.DbType.String) { Value = profile.ID });
+
+                db.ExecuteNonQuery(cmdText, paramList, true);
+            }
+
+            return true;
+        }
+
+        public override bool Add(Profile profile)
+        {
+            if (this.ProfileExists(profile.Name))
+                throw new ProfileNameExistException("Profile " + profile.Name + " is already created");
+
+            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME)))
+            {
+                string cmdText = "INSERT INTO " + PROFILE_TABLE +
+                                 " (" + COL_PROFILE_ID + ", " + COL_PROFILE_NAME +
+                                 " ," + COL_METADATA_SOURCE_LOCATION + ", " + COL_SYNC_SOURCE_ID +
+                                 ") VALUES (@id, @name, @meta, @source)";
+
+                SqliteParameterCollection paramList = new SqliteParameterCollection();
+                paramList.Add(new SqliteParameter("@id", System.Data.DbType.String) { Value = profile.ID });
+                paramList.Add(new SqliteParameter("@name", System.Data.DbType.String) { Value = profile.Name });
+                paramList.Add(new SqliteParameter("@meta", System.Data.DbType.String) { Value = profile.IntermediaryStorage.Path });
+                paramList.Add(new SqliteParameter("@source", System.Data.DbType.String) { Value = profile.SyncSource.ID });
+
+                db.ExecuteNonQuery(cmdText, false);
+            }
+
+            return true;
+        }
+
+        public override bool ProfileExists(string profileName)
+        {
+            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME)))
+            {
+                // TODO: Change sql to SELECT COUNT(*)?
+                string cmdText = "SELECT * FROM " + PROFILE_TABLE + " WHERE "
+                                 + COL_PROFILE_NAME + " = @profileName";
+
+                SqliteParameterCollection paramList = new SqliteParameterCollection();
+                paramList.Add(new SqliteParameter("@profileName", System.Data.DbType.String) { Value = profileName });
+
+                bool found = false;
+                db.ExecuteReader(cmdText, paramList, reader =>
+                    { found = true; return; }
+                );
+
+                return found;
+            }
         }
     }
 }
