@@ -2,4 +2,7 @@
   <PropertyGroup>
     <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <StartArguments>C:\Users\Desmond\Desktop\3215\Test\MyFolderToSync</StartArguments>
+  </PropertyGroup>
 </Project>

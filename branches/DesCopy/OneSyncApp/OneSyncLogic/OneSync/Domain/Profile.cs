@@ -28,8 +28,12 @@ namespace OneSync.Synchronization
         private IntermediaryStorage _iStorage;
 
         
-        public Profile(string id , string name , SyncSource syncSource, IntermediaryStorage iStorage)
+        public Profile(string name , SyncSource syncSource, IntermediaryStorage iStorage)
+            : this(System.Guid.NewGuid().ToString(), name, syncSource, iStorage)
+        {
+        }
 
+        public Profile(string id, string name, SyncSource syncSource, IntermediaryStorage iStorage)
         {
             this._profileId = id;
             this._profileName = name;
@@ -41,6 +45,11 @@ namespace OneSync.Synchronization
         {
             SyncSource syncSource = new SyncSource(System.Guid.NewGuid().ToString(), absoluteSyncPath);
             IntermediaryStorage iSource = new IntermediaryStorage(absoluteIntermediatePath);
+
+            this._profileId = System.Guid.NewGuid().ToString();
+            this._profileName = profileName;
+            this._syncSource = syncSource;
+            this._iStorage = iSource;
         }
 
         

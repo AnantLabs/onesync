@@ -22,8 +22,6 @@ using System.Windows.Interop;
 
 
 
-
-
 namespace OneSync
 {
 	/// <summary>
@@ -287,10 +285,13 @@ namespace OneSync
                     //Thuat and Desmond's sync logic takes actions!
                     //Generate a Global Unique Identifier.
                     string name = profile_name;
-                    Synchronization.SyncSource syncSource = new OneSync.Synchronization.SyncSource(System.Guid.NewGuid().ToString(), current_syncing_dir);
-                    Synchronization.IntermediaryStorage metaDataSource = new OneSync.Synchronization.IntermediaryStorage(storage_dir);
-                    Synchronization.Profile currentProfile = new OneSync.Synchronization.Profile(System.Guid.NewGuid().ToString(), name, syncSource, metaDataSource);
-                    Synchronization.FileSyncAgent currentAgent = new OneSync.Synchronization.FileSyncAgent(currentProfile);
+                    SyncSource syncSource = new SyncSource(System.Guid.NewGuid().ToString(), current_syncing_dir);
+                    IntermediaryStorage metaDataSource = new IntermediaryStorage(storage_dir);
+
+                    Profile currentProfile = new Profile(System.Guid.NewGuid().ToString(), name, syncSource, metaDataSource);
+                    FileSyncAgent currentAgent = new FileSyncAgent(currentProfile);
+
+
                     //Create profile
                     if (!is_sync_job_created_previously)
                     {

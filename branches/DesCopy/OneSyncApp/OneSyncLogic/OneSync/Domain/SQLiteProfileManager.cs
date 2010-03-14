@@ -3,11 +3,8 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Community.CsharpSqlite;
-using Community.CsharpSqlite.SQLiteClient;
 using System.IO;
+using Community.CsharpSqlite.SQLiteClient;
 
 namespace OneSync.Synchronization
 {
@@ -45,8 +42,10 @@ namespace OneSync.Synchronization
             {
                 // If the parent directory already exists, Create() does nothing.
                 fi.Directory.Create();
-                this.CreateSchema();
             }
+
+            // Create table if it does not exist
+            this.CreateSchema();
         }
 
         /// <summary>
@@ -216,7 +215,7 @@ namespace OneSync.Synchronization
                 paramList.Add(new SqliteParameter("@meta", System.Data.DbType.String) { Value = profile.IntermediaryStorage.Path });
                 paramList.Add(new SqliteParameter("@source", System.Data.DbType.String) { Value = profile.SyncSource.ID });
 
-                db.ExecuteNonQuery(cmdText, false);
+                db.ExecuteNonQuery(cmdText, paramList, false);
             }
 
             return true;

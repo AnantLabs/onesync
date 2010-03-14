@@ -22,16 +22,6 @@ namespace OneSync.Synchronization
     /// </summary>
     public abstract class SyncAction
     {
-        #region columns of action table
-        public const string ACTION_TABLE = "ACTION_TABLE";
-        public const string ACTION_ID = "ACTION_ID";
-        public const string CHANGE_IN = "CHANGE_IN";
-        public const string ACTION_TYPE = "ACTION_TYPE";
-        public const string OLD_RELATIVE_PATH = "OLD_RELATIVE_PATH";
-        public const string NEW_RELATIVE_PATH = "NEW_RELATIVE_PATH";
-        public const string OLD_HASH = "OLD_HASH";
-        public const string NEW_HASH = "NEW_HASH";
-        #endregion columns of action table
 
         protected int actionId = 0;
         protected string relFilePath = "";
