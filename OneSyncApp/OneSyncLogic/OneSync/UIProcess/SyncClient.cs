@@ -72,11 +72,9 @@ namespace OneSync.Synchronization
             // which will be used to check if more than 2 syncsource exist. However, the table does
             // not exist, an exeption will be thrown and caught and it is assumed to be 'first-run'.
 
-            // Creates and save SyncSource information in profile folder as well and on intermediary storage.
-            // In this implementaion, an empty table will be created in both location during first-run.
-            SyncSourceProvider syncSrc;
-            syncSrc = GetSyncSourceProvider(absolutePathToProfileFolder);
-            syncSrc = GetSyncSourceProvider(absoluteIntermediatePath);
+            
+            // Check sync source count in intermediary storage
+            SyncSourceProvider syncSrc = GetSyncSourceProvider(absoluteIntermediatePath);
 
             // Intermediary storage shouldn't be paired with more than 2 SyncSource.
             if (syncSrc.GetSyncSourceCount() >= 2)
@@ -88,6 +86,13 @@ namespace OneSync.Synchronization
             ProfileManager pfManager = SyncClient.GetProfileManager(absolutePathToProfileFolder);
             Profile profile = new Profile(profileName, absoluteSyncPath, absoluteIntermediatePath);
             pfManager.Add(profile);
+
+            // Save sync source information in intermediary storage
+            syncSrc.Add(profile.SyncSource);
+
+            // Save sync source information in profile folder
+            syncSrc = GetSyncSourceProvider(absolutePathToProfileFolder);
+            syncSrc.Add(profile.SyncSource);
 
             // Creates and save metadata
             MetaDataProvider mdProvider = SyncClient.GetMetaDataProvider(absoluteIntermediatePath, absoluteSyncPath);

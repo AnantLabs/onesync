@@ -17,20 +17,6 @@ namespace OneSync.Synchronization
 
     public class SQLiteMetaDataProvider : MetaDataProvider
     {
-        // TODO: store database constants elsewhere?
-
-        // Database table and column names
-        public const string DATABASE_NAME = "data.md";
-        public const string DATASOURCE_INFO_TABLE = "DATASOURCE_INFO_TABLE";
-        public const string METADATA_TABLE = "METADATA_TABLE";
-        public const string COL_SOURCE_ID = "SOURCE_ID";
-        public const string COL_FULL_NAME = "FULL_NAME"; // TODO: not used???
-        public const string COL_RELATIVE_PATH = "RELATIVE_PATH";
-        public const string COL_HASH_CODE = "HASH_CODE";
-        public const string COL_LAST_MODIFIED_TIME = "LAST_MODIFIED_TIME";
-        public const string COL_NTFS_ID1 = "NTFS_ID1";
-        public const string COL_NTFS_ID2 = "NTFS_ID2";
-
 
         /// <summary>
         /// Creates an SQLiteMetaDataProvider that manages metadata stored in specified path.
@@ -42,14 +28,16 @@ namespace OneSync.Synchronization
         {
             // Create database schema if necessary
 
-            FileInfo fi = new FileInfo(Path.Combine(this.StoragePath, DATABASE_NAME));
+            FileInfo fi = new FileInfo(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
 
             if (!fi.Exists)
             {
                 // If the parent directory already exists, Create() does nothing.
                 fi.Directory.Create();
-                this.CreateSchema();
             }
+
+            // Create table if it does not exist
+            this.CreateSchema();
         }
 
         public override FileMetaData Load(string currId, bool loadOther)
@@ -58,10 +46,10 @@ namespace OneSync.Synchronization
 
             FileMetaData mData = new FileMetaData(currId, this.RootPath);
 
-            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME)))
+            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)))
             {
-                string cmdText = "SELECT * FROM " + METADATA_TABLE + 
-                                 " WHERE " + COL_SOURCE_ID + opt + " @sourceId";
+                string cmdText = "SELECT * FROM " + Configuration.TBL_METADATA + 
+                                 " WHERE " + Configuration.COL_SOURCE_ID + opt + " @sourceId";
 
                 SqliteParameterCollection paramList = new SqliteParameterCollection();
                 paramList.Add(new SqliteParameter("@sourceId", DbType.String) { Value = currId });
@@ -69,10 +57,10 @@ namespace OneSync.Synchronization
                 db.ExecuteReader(cmdText, paramList, reader =>
                     {
                         mData.MetaDataItems.Add(new FileMetaDataItem(
-                            (string)reader[COL_SOURCE_ID],
-                            this.RootPath + (string)reader[COL_RELATIVE_PATH], (string)reader[COL_RELATIVE_PATH],
-                            (string)reader[COL_HASH_CODE], (DateTime)reader[COL_LAST_MODIFIED_TIME],
-                            Convert.ToUInt32(reader[COL_NTFS_ID1]), Convert.ToUInt32(reader[COL_NTFS_ID2])));
+                            (string)reader[Configuration.COL_SOURCE_ID],
+                            this.RootPath + (string)reader[Configuration.COL_RELATIVE_PATH], (string)reader[Configuration.COL_RELATIVE_PATH],
+                            (string)reader[Configuration.COL_HASH_CODE], (DateTime)reader[Configuration.COL_LAST_MODIFIED_TIME],
+                            Convert.ToUInt32(reader[Configuration.COL_NTFS_ID1]), Convert.ToUInt32(reader[Configuration.COL_NTFS_ID2])));
                     }
                 );
             }
@@ -88,7 +76,7 @@ namespace OneSync.Synchronization
 
         public override bool Add(IList<FileMetaDataItem> mData)
         {
-            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME)))
+            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)))
             {
                 SqliteCommand cmd = db.GetTransactCommand();
 
@@ -96,12 +84,12 @@ namespace OneSync.Synchronization
                 {
                     foreach (FileMetaDataItem item in mData)
                     {
-                        cmd.CommandText = "INSERT INTO " + METADATA_TABLE +
-                                     "( " + COL_SOURCE_ID + "," + COL_RELATIVE_PATH + "," +
-                                     COL_HASH_CODE + "," +
-                                     COL_LAST_MODIFIED_TIME + "," +
-                                     COL_NTFS_ID1 + "," +
-                                     COL_NTFS_ID2 + ")" +
+                        cmd.CommandText = "INSERT INTO " + Configuration.TBL_METADATA +
+                                     "( " + Configuration.COL_SOURCE_ID + "," + Configuration.COL_RELATIVE_PATH + "," +
+                                     Configuration.COL_HASH_CODE + "," +
+                                     Configuration.COL_LAST_MODIFIED_TIME + "," +
+                                     Configuration.COL_NTFS_ID1 + "," +
+                                     Configuration.COL_NTFS_ID2 + ")" +
                                      "VALUES (@source_id , @relative_path, @hash_code, @last_modified_time, @ntfs_id1, @ntfs_id2) ";
 
                         cmd.Parameters.Clear();
@@ -140,7 +128,7 @@ namespace OneSync.Synchronization
         {
             // All deletions are atomic
 
-            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME)))
+            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)))
             {
                 SqliteCommand cmd = db.GetTransactCommand();
 
@@ -148,9 +136,9 @@ namespace OneSync.Synchronization
                 {
                     foreach (FileMetaDataItem item in items)
                     {
-                        cmd.CommandText = "DELETE FROM " + METADATA_TABLE +
-                                          " WHERE " + COL_SOURCE_ID + " = @sourceId AND " +
-                                          COL_RELATIVE_PATH + " = @path";
+                        cmd.CommandText = "DELETE FROM " + Configuration.TBL_METADATA +
+                                          " WHERE " + Configuration.COL_SOURCE_ID + " = @sourceId AND " +
+                                          Configuration.COL_RELATIVE_PATH + " = @path";
 
                         cmd.Parameters.Clear();
                         cmd.Parameters.Add(new SqliteParameter("@sourceId", DbType.String) { Value = item.SourceId });
@@ -181,15 +169,15 @@ namespace OneSync.Synchronization
 
         public override bool Update(IList<FileMetaDataItem> items)
         {
-            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME)))
+            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)))
             {
                 foreach (FileMetaDataItem item in items)
                 {
-                    string cmdText = "UPDATE " + METADATA_TABLE +
-                                     " SET " + COL_HASH_CODE + " = @hash, " +
-                                     COL_LAST_MODIFIED_TIME + " = @lmf" +
-                                     " WHERE " + COL_RELATIVE_PATH + " = @rel AND " +
-                                     COL_SOURCE_ID + " = @sourceId";
+                    string cmdText = "UPDATE " + Configuration.TBL_METADATA +
+                                     " SET " + Configuration.COL_HASH_CODE + " = @hash, " +
+                                     Configuration.COL_LAST_MODIFIED_TIME + " = @lmf" +
+                                     " WHERE " + Configuration.COL_RELATIVE_PATH + " = @rel AND " +
+                                     Configuration.COL_SOURCE_ID + " = @sourceId";
 
                     SqliteParameterCollection paramList = new SqliteParameterCollection();
                     paramList.Add(new SqliteParameter("@hash", DbType.String) { Value = item.HashCode });
@@ -225,7 +213,7 @@ namespace OneSync.Synchronization
                                                          && !_new.HashCode.Equals(old.HashCode)
                                                          select _new;
 
-            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME)))
+            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)))
             {
                 // TODO: make 3 actions atomic
                 this.Add(newOnly.ToList());
@@ -239,17 +227,17 @@ namespace OneSync.Synchronization
 
         private void CreateSchema()
         {
-            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME)))
+            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)))
             {
-                string cmdText = "CREATE TABLE IF NOT EXISTS " + METADATA_TABLE +
-                                                " ( " + COL_SOURCE_ID + " TEXT, " +
-                                                COL_RELATIVE_PATH + " TEXT, " +
-                                                COL_HASH_CODE + " TEXT, " +
-                                                COL_LAST_MODIFIED_TIME + " DATETIME, " +
-                                                COL_NTFS_ID1 + " INT, " +
-                                                COL_NTFS_ID2 + " INT," +
-                                                "FOREIGN KEY (" + COL_SOURCE_ID + ") REFERENCES " + DATASOURCE_INFO_TABLE + "(" + COL_SOURCE_ID + ")" +
-                                                "PRIMARY KEY (" + COL_SOURCE_ID + "," + COL_RELATIVE_PATH + ")" +
+                string cmdText = "CREATE TABLE IF NOT EXISTS " + Configuration.TBL_METADATA +
+                                                " ( " + Configuration.COL_SOURCE_ID + " TEXT, " +
+                                                Configuration.COL_RELATIVE_PATH + " TEXT, " +
+                                                Configuration.COL_HASH_CODE + " TEXT, " +
+                                                Configuration.COL_LAST_MODIFIED_TIME + " DATETIME, " +
+                                                Configuration.COL_NTFS_ID1 + " INT, " +
+                                                Configuration.COL_NTFS_ID2 + " INT," +
+                                                "FOREIGN KEY (" + Configuration.COL_SOURCE_ID + ") REFERENCES " + Configuration.TBL_DATASOURCE_INFO + "(" + Configuration.COL_SOURCE_ID + ")" +
+                                                "PRIMARY KEY (" + Configuration.COL_SOURCE_ID + "," + Configuration.COL_RELATIVE_PATH + ")" +
                                                 ")";
 
                 db.ExecuteNonQuery(cmdText, false);
