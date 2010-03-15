@@ -150,7 +150,7 @@ namespace OneSync.Synchronization
                     else if (action.ChangeType == ChangeType.DELETED || action.ChangeType == ChangeType.RENAMED)
                     {
                         //ActionProcess.InsertAction(action, profile);
-                        SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
+                        //SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
                         bool result = actProvider.Add(action); // do anything if result is false?
                     }
 
