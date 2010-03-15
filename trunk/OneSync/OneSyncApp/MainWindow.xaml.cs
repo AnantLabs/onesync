@@ -283,9 +283,6 @@ namespace OneSync
                     SyncSource syncSource = new SyncSource(System.Guid.NewGuid().ToString(), current_syncing_dir);
                     IntermediaryStorage metaDataSource = new IntermediaryStorage(storage_dir);
 
-                    Profile currentProfile = new Profile(System.Guid.NewGuid().ToString(), name, syncSource, metaDataSource);
-                    FileSyncAgent currentAgent = new FileSyncAgent(currentProfile);
-
 
                     //Create profile
                     if (!is_sync_job_created_previously)
@@ -324,8 +321,9 @@ namespace OneSync
                     }
                     if (should_i_sync)
                     {
-                        Synchronization.FileSyncAgent currentAgent;
-                        foreach (Synchronization.Profile item in (Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath)))
+                        FileSyncAgent currentAgent;
+                        //foreach (Synchronization.Profile item in (Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath)))
+                        foreach (Profile item in (SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles()))
                         {
                             if (item.Name == profile_name)
                             {
@@ -568,7 +566,8 @@ namespace OneSync
             {
                 ProfileCreationControlsVisibility(Visibility.Visible, Visibility.Hidden);
 
-                foreach (Synchronization.Profile item in (Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath)))
+                //foreach (Synchronization.Profile item in (Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath)))
+                foreach (Profile item in (SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles()))
                 {
                     if (item.Name.Equals(combobox_profile_name.Text))
                     {
@@ -586,7 +585,9 @@ namespace OneSync
                 try
                 {
                     current_profile.Name = textbox_rename_profile.Text.Trim();
-                    Synchronization.SyncClient.ProfileProcess.UpdateProfile(System.Windows.Forms.Application.StartupPath, current_profile);
+                    //SyncClient.ProfileProcess.UpdateProfile(System.Windows.Forms.Application.StartupPath, current_profile);
+                    SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).Update(current_profile);
+
                 }
                 catch (Synchronization.DatabaseException de)
                 {
@@ -715,7 +716,8 @@ namespace OneSync
                 current_profile = null;
                 try
                 {
-                    foreach (Synchronization.Profile item in (Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath)))
+                    //foreach (Synchronization.Profile item in (Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath)))
+                    foreach (Synchronization.Profile item in (SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles()))
                     {
                         //Check to see if the profile is an existing profile or not.
                         //If yes, then it will import the storage directory to the program.
