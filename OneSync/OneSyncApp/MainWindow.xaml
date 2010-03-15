@@ -66,7 +66,7 @@ $Id$
 				</LinearGradientBrush>
 			</Rectangle.Fill>
 		</Rectangle>
-		<ComboBox x:Name="combobox_profile_name" Height="22" IsEditable="True" Width="443" Canvas.Left="135" Canvas.Top="86.002" KeyUp="combobox_profile_name_KeyUp"/>
+		<ComboBox x:Name="combobox_profile_name" Height="22" IsEditable="True" Width="443" Canvas.Left="135" Canvas.Top="86.002" KeyUp="combobox_profile_name_KeyUp" DropDownClosed="combobox_profile_name_DropDownClosed"/>
 		<Label x:Name="label_profile_message" Width="70" Height="25" Content="My Sync Job:" FontSize="10.667" Canvas.Left="61" Canvas.Top="86.002" Foreground="#FF0000B9"/>
 		<Label x:Name="label_current_syncing_dir_frontpage" Height="25" Content="C:\Documents\Module Materials\lec1.txt" FontSize="10.667" FontWeight="Bold" MouseEnter="label_current_syncing_dir_MouseEnter" Width="457" Canvas.Left="170" Canvas.Top="56.042" Foreground="#FF0000B9"/>
 		<Label x:Name="label_message_frontpage" Width="114" Height="25" Content="You are now selecting" FontSize="10.667" Canvas.Left="61" Canvas.Top="56.042" Foreground="#FF0000B9"/>

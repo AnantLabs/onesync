@@ -167,7 +167,7 @@ namespace OneSync
 			
             //Show the log of current/just-finished sync job.
             textblock_show_log.Visibility = Visibility.Hidden;
-			if(File.Exists(Log.returnLogReportPath(current_syncing_dir, true))) //To be changed. Depends on Naing.
+			if(File.Exists(Log.returnLogReportPath(current_syncing_dir, false))) //To be changed. Depends on Naing.
 			{
 				textblock_show_log.Visibility = Visibility.Visible;
 			}
@@ -243,6 +243,7 @@ namespace OneSync
 			InstantNotification(""); //Empty the notification message (if any).
 			
             //Controls to be hidden/displayed before a sync job profile is created and displayed after the profile is created.
+            textblock_new_profile.Visibility = sideVisibility;
 			label_message_frontpage.Visibility = sideVisibility;
 			label_current_syncing_dir_frontpage.Visibility = sideVisibility;
 			label_profile_message.Visibility = sideVisibility;
@@ -405,7 +406,7 @@ namespace OneSync
             Expander.Visibility = Visibility.Hidden;
             label_current_processing_file.Content = "Sync process successfully is done.";
 
-            if (File.Exists(Log.returnLogReportPath(current_syncing_dir, true))) //To be changed. Depends on Naing.
+            if (File.Exists(Log.returnLogReportPath(current_syncing_dir, false))) //To be changed. Depends on Naing.
 			{
 				textblock_show_log.Visibility = Visibility.Visible;
 			}
@@ -492,7 +493,7 @@ namespace OneSync
 		private void textblock_show_log_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
 			//View log file (The extension of the file should be .html).
-            Process.Start(Log.returnLogReportPath(current_syncing_dir, true));
+            Process.Start(Log.returnLogReportPath(current_syncing_dir, false));
 		}
 
         /// <summary>
@@ -609,18 +610,25 @@ namespace OneSync
 		/// <param name="e">The event arguments.</param>
         private void combobox_profile_name_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
-			showHideProfileEditting(Visibility.Hidden);
-            foreach (String item in combobox_profile_name.Items)
-            {
-                //Check to see if the profile is an existing profile or not.
-                //If yes, then it will show the rename profile link.
-                if (item.Equals(combobox_profile_name.Text))
-                {
-                    showHideProfileEditting(Visibility.Visible);
-                    textbox_rename_profile.Text = combobox_profile_name.Text;
-                    break;
-                }
-            }
+			if (e.Key == Key.Return)
+			{
+				do_job();
+			}
+			else
+			{
+				showHideProfileEditting(Visibility.Hidden);
+				foreach (String item in combobox_profile_name.Items)
+				{
+					//Check to see if the profile is an existing profile or not.
+					//If yes, then it will show the rename profile link.
+					if (item.Equals(combobox_profile_name.Text))
+					{
+						showHideProfileEditting(Visibility.Visible);
+						textbox_rename_profile.Text = combobox_profile_name.Text;
+						break;
+					}
+				}
+			}
         }
 
         private void textblock_delete_profile_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -687,7 +695,6 @@ namespace OneSync
 		
 		private void showHideProfileEditting(Visibility visibility)
 		{
-			textblock_new_profile.Visibility = visibility;
 			textblock_rename_profile_label.Visibility = visibility;
             textbox_rename_profile.Visibility = visibility;
             textblock_rename_profile.Visibility = visibility;
@@ -703,6 +710,11 @@ namespace OneSync
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event arguments.</param>
 		private void textblock_new_profile_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			do_job();
+		}
+		
+		private void do_job()
 		{
 			if (combobox_profile_name.Text.Trim().Length > 0)
             {
@@ -738,6 +750,22 @@ namespace OneSync
             else 
             {
                 InstantNotification("Please provide the name of your sync job.");
+            }
+		}
+
+		private void combobox_profile_name_DropDownClosed(object sender, System.EventArgs e)
+		{
+			showHideProfileEditting(Visibility.Hidden);
+            foreach (String item in combobox_profile_name.Items)
+            {
+                //Check to see if the profile is an existing profile or not.
+                //If yes, then it will show the rename profile link.
+                if (item.Equals(combobox_profile_name.Text))
+                {
+                    showHideProfileEditting(Visibility.Visible);
+                    textbox_rename_profile.Text = combobox_profile_name.Text;
+                    break;
+                }
             }
 		}
 	}
