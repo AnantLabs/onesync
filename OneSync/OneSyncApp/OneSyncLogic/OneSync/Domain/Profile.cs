@@ -21,26 +21,43 @@ namespace OneSync.Synchronization
         public const string METADATA_SOURCE_LOCATION = "METADATA_SOURCE_LOCATION";
         public const string SYNC_SOURCE_ID = "SYNC_SOURCE_ID";
         
-        private string profileId;
-        private string profileName;
-        private SyncSource syncSource;       
+        private string _profileId;
+        private string _profileName;
         
+        private SyncSource _syncSource;       
+        private IntermediaryStorage _iStorage;
 
-        private IntermediaryStorage iStorage;
         
-        public Profile(string id , string name , SyncSource syncSource, IntermediaryStorage iStorage)
-
+        public Profile(string name , SyncSource syncSource, IntermediaryStorage iStorage)
+            : this(System.Guid.NewGuid().ToString(), name, syncSource, iStorage)
         {
-            this.profileId = id;
-            this.profileName = name;
-            this.syncSource = syncSource;
-            this.iStorage = iStorage;
         }
+
+        public Profile(string id, string name, SyncSource syncSource, IntermediaryStorage iStorage)
+        {
+            this._profileId = id;
+            this._profileName = name;
+            this._syncSource = syncSource;
+            this._iStorage = iStorage;
+        }
+
+        public Profile(string profileName, string absoluteSyncPath, string absoluteIntermediatePath)
+        {
+            SyncSource syncSource = new SyncSource(System.Guid.NewGuid().ToString(), absoluteSyncPath);
+            IntermediaryStorage iSource = new IntermediaryStorage(absoluteIntermediatePath);
+
+            this._profileId = System.Guid.NewGuid().ToString();
+            this._profileName = profileName;
+            this._syncSource = syncSource;
+            this._iStorage = iSource;
+        }
+
+        
 
         public Profile(SyncSource syncSource, IntermediaryStorage metaDataSource)
         {
-            this.syncSource = syncSource;
-            this.iStorage = metaDataSource;
+            this._syncSource = syncSource;
+            this._iStorage = metaDataSource;
         }
         
         /// <summary>
@@ -50,11 +67,11 @@ namespace OneSync.Synchronization
         {
             get
             {
-                return this.profileName;
+                return this._profileName;
             }
             set
             {
-                this.profileName = value;
+                this._profileName = value;
             }
         }
 
@@ -65,7 +82,7 @@ namespace OneSync.Synchronization
         {
             get
             {
-                return this.profileId;
+                return this._profileId;
             }
         }
 
@@ -75,13 +92,9 @@ namespace OneSync.Synchronization
         /// </summary>
         public SyncSource SyncSource
         {
-            set
-            {
-                this.syncSource = value;
-            }
             get
             {
-                return this.syncSource;
+                return this._syncSource;
             }
         }
 
@@ -89,15 +102,10 @@ namespace OneSync.Synchronization
         /// Get information regarding the intermediary storage for this profile.
         /// </summary>
         public IntermediaryStorage IntermediaryStorage
-
         {
-            set
-            {
-                this.iStorage = value;
-            }
             get
             {
-                return this.iStorage;
+                return this._iStorage;
             }
         }        
     }

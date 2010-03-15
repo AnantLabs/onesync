@@ -26,7 +26,9 @@ namespace OneSync.Synchronization
         public Patch(Profile profile)
         {
             this.profile = profile;
-            actions = new SQLiteActionProvider(profile).Load(profile.SyncSource, SourceOption.NOT_EQUAL_SOURCE_ID);
+            //actions = new SQLiteSyncActionsProvider(profile).Load(profile.SyncSource, SourceOption.NOT_EQUAL_SOURCE_ID);
+            SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
+            actions = actProvider.Load(profile.SyncSource.ID, true);
         }
 
         /// <summary>
@@ -103,17 +105,21 @@ namespace OneSync.Synchronization
 
         public void Generate()
         {
-            //read metadata of the current folder in file system 
-            FileMetaData currentItems = (FileMetaData)new SQLiteMetaDataProvider().FromPath(profile.SyncSource);
+            // Generate metadata of the current folder in file system
+            FileMetaData currentItems = MetaDataProvider.Generate(profile.SyncSource.Path, profile.SyncSource.ID);
 
             //read metadata of the current folder stored in the database
-            FileMetaData storedItems = new SQLiteMetaDataProvider(profile).Load(profile.SyncSource, SourceOption.EQUAL_SOURCE_ID);
+            MetaDataProvider mdProvider = SyncClient.GetMetaDataProvider(profile.IntermediaryStorage.Path, profile.SyncSource.Path);
+            FileMetaData storedItems = mdProvider.Load(profile.SyncSource.ID, false);
 
             //Update metadata 
-            new SQLiteMetaDataProvider().Update(profile, storedItems, currentItems);
+            //new SQLiteMetaDataProvider().Update(profile, storedItems, currentItems);
+            mdProvider.Update(storedItems, currentItems);
 
 
-            storedItems = (FileMetaData)new SQLiteMetaDataProvider(profile).Load(profile.SyncSource, SourceOption.NOT_EQUAL_SOURCE_ID);
+            //storedItems = (FileMetaData)new SQLiteMetaDataProvider(profile).Load(profile.SyncSource, SourceOption.NOT_EQUAL_SOURCE_ID);
+            storedItems = mdProvider.Load(profile.SyncSource.ID, true);
+
             ActionGenerator actionGenerator = new ActionGenerator(currentItems, storedItems);
 
             //generate list of sync actions by comparing 2 metadata
@@ -121,7 +127,11 @@ namespace OneSync.Synchronization
             IList<SyncAction> newActions = actionGenerator.Generate();
 
             //delete actions of previous sync
-            ActionProcess.DeleteBySourceId(profile, SourceOption.EQUAL_SOURCE_ID);
+            //ActionProcess.DeleteBySourceId(profile, SourceOption.EQUAL_SOURCE_ID);
+            SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
+            actProvider.Delete(profile.SyncSource.ID, false);
+
+
             if (Directory.Exists(profile.IntermediaryStorage.DirtyFolderPath)) Directory.Delete(profile.IntermediaryStorage.DirtyFolderPath, true);
 
             // Logging
@@ -185,6 +195,21 @@ namespace OneSync.Synchronization
         #region Carryout actions 
         public void CopyToDirtyFolderAndUpdateActionTable(SyncAction action, Profile profile)
         {
+            // TODO: Need another mechanism to 'rollback' to make this method 'atomic'.
+            // Maybe do enclose in try block and delete action in catch block?
+            // However, if say thumbdrive is removed during copy, then rollback of db will fail too...
+
+            // TODO: Use Path.Combine()
+            string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
+            string absolutePathInImediateStorage = profile.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
+
+
+            SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
+            actProvider.Add(action);
+            Files.FileUtils.Copy(absolutePathInSyncSource, absolutePathInImediateStorage);
+
+
+            /*
             string connectionString = string.Format("Version=3,uri=file:{0}", profile.IntermediaryStorage.Path + Configuration.METADATA_RELATIVE_PATH);
             string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
             string absolutePathInImediateStorage = profile.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
@@ -194,20 +219,31 @@ namespace OneSync.Synchronization
                 SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
                 try
                 {
-                    new SQLiteActionProvider(profile).Insert(action, con);
+                    new SQLiteSyncActionsProvider(profile).Insert(action, con);
                     Files.FileUtils.Copy(absolutePathInSyncSource, absolutePathInImediateStorage);
                     transaction.Commit();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     transaction.Rollback();
                     throw new DatabaseException();
                 }
             }
+            */
         }
 
         public void CopyToSyncFolderAndUpdateActionTable(SyncAction action, Profile profile)
         {
+            string absolutePathInIntermediateStorage = profile.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
+            string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
+
+            SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
+            actProvider.Delete(action);
+            
+            Files.FileUtils.Copy(absolutePathInIntermediateStorage, absolutePathInSyncSource);
+            File.Delete(absolutePathInIntermediateStorage);
+
+            /*
             string absolutePathInIntermediateStorage = profile.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
             string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
             string conString1 = string.Format("Version=3,uri=file:{0}", profile.IntermediaryStorage.Path + Configuration.METADATA_RELATIVE_PATH);
@@ -217,21 +253,30 @@ namespace OneSync.Synchronization
                 SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
                 try
                 {
-                    new SQLiteActionProvider(profile).Delete(action, con);
+                    new SQLiteSyncActionsProvider(profile).Delete(action, con);
                     Files.FileUtils.Copy(absolutePathInIntermediateStorage, absolutePathInSyncSource);
                     File.Delete(absolutePathInIntermediateStorage);
                     transaction.Commit();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     transaction.Rollback();
                     throw new DatabaseException();
                 }
             }
+            */
         }
 
         public void DeleteInSyncFolderAndUpdateActionTable(SyncAction action, Profile profile)
         {
+            string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
+
+            SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
+            actProvider.Delete(action);
+
+            File.Delete(absolutePathInSyncSource);
+
+            /*
             string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
             string conString1 = string.Format("Version=3,uri=file:{0}", profile.IntermediaryStorage.Path + Configuration.METADATA_RELATIVE_PATH);
             using (SqliteConnection con = new SqliteConnection(conString1))
@@ -240,7 +285,7 @@ namespace OneSync.Synchronization
                 SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
                 try
                 {
-                    new SQLiteActionProvider(profile).Delete(action, con);
+                    new SQLiteSyncActionsProvider(profile).Delete(action, con);
                     File.Delete(absolutePathInSyncSource);
                     transaction.Commit();
                 }
@@ -250,10 +295,19 @@ namespace OneSync.Synchronization
                     throw new DatabaseException();
                 }
             }
+            */
         }
 
         public void RenameInSyncFolderAndUpdateActionTable(RenameAction action, Profile profile)
         {
+            string oldAbsolutePathInSyncSource = profile.SyncSource.Path + action.PreviousRelativeFilePath;
+            string newAbsolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
+
+            SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
+            actProvider.Delete(action);
+            Files.FileUtils.Copy(oldAbsolutePathInSyncSource, newAbsolutePathInSyncSource);
+
+            /*
             string oldAbsolutePathInSyncSource = profile.SyncSource.Path + action.PreviousRelativeFilePath;
             string newAbsolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
             string conString1 = string.Format("Version=3,uri=file:{0}", profile.IntermediaryStorage.Path + Configuration.METADATA_RELATIVE_PATH);
@@ -263,7 +317,7 @@ namespace OneSync.Synchronization
                 SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
                 try
                 {
-                    new SQLiteActionProvider(profile).Delete(action, con);
+                    new SQLiteSyncActionsProvider(profile).Delete(action, con);
                     Files.FileUtils.Copy(oldAbsolutePathInSyncSource, newAbsolutePathInSyncSource);
                     transaction.Commit();
                 }
@@ -273,6 +327,7 @@ namespace OneSync.Synchronization
                     throw new DatabaseException();
                 }
             }
+            */
         }
         #endregion Carryout actions
     }    
