@@ -18,13 +18,13 @@ $Id$
 	</Window.Background>
 
 	<Canvas x:Name="LayoutRoot">
-        <Image x:Name="button_sync_copy" Stretch="Fill" Cursor="Hand" ToolTip="Sync this folder now!" VerticalAlignment="Bottom" Width="104" Canvas.Left="595.988" Canvas.Top="40" Height="104" MouseLeave="button_sync_MouseLeave" Source="OneSync Transparent Logo.png" Visibility="Hidden" />
+        <Image x:Name="button_sync_copy" Stretch="Fill" Cursor="Hand" ToolTip="Sync this folder now!" VerticalAlignment="Bottom" Width="104" Canvas.Left="595.988" Canvas.Top="40" Height="104" MouseLeave="button_sync_MouseLeave" Source="Resource/OneSync Transparent Logo.png" Visibility="Hidden" />
         <Label x:Name="label_current_syncing_dir" Height="25" Content="C:\Documents\Module Materials\lec1.txt" FontSize="10.667" FontWeight="Bold" MouseEnter="label_current_syncing_dir_MouseEnter" Width="457" Canvas.Left="118" Canvas.Top="37"/>
 		<Label x:Name="label_message" Width="158" Height="25" Content="You are now selecting" FontSize="10.667" Canvas.Left="9" Canvas.Top="37"/>
 		<Label Width="174" Height="25" Content="Intermediate Storage Location:" FontSize="10.667" Canvas.Left="9" Canvas.Top="62" x:Name="label_storage_message" />
 		<TextBlock x:Name="textblock_show_log" Width="61" Text="Show Log " TextWrapping="Wrap" TextDecorations="Underline" FontWeight="Bold" FontFamily="Times New Roman" FontSize="13.333" Cursor="Hand" Foreground="#FF3000FF" MouseDown="textblock_show_log_MouseDown" Height="18" Canvas.Left="12" Canvas.Top="136" d:LayoutOverrides="VerticalAlignment, Height"/>
 		<ProgressBar x:Name="progressbar_sync_progress" Value="20" Width="571" Height="18" Canvas.Left="12" Canvas.Top="95"/>
-		<Image x:Name="button_sync" Stretch="Fill" Cursor="Hand" MouseDown="Image_MouseDown" ToolTip="Sync this folder now!" VerticalAlignment="Bottom" Width="104" Canvas.Left="595.988" Canvas.Top="40" Height="104" MouseEnter="button_sync_MouseEnter" MouseLeave="button_sync_MouseLeave" Source="OneSync Transparent Logo (Inactive).png" />
+		<Image x:Name="button_sync" Stretch="Fill" Cursor="Hand" MouseDown="Image_MouseDown" ToolTip="Sync this folder now!" VerticalAlignment="Bottom" Width="104" Canvas.Left="595.988" Canvas.Top="40" Height="104" MouseEnter="button_sync_MouseEnter" MouseLeave="button_sync_MouseLeave" Source="Resource/OneSync Transparent Logo (Inactive).png" />
 		<Expander x:Name="Expander" VerticalAlignment="Top" Width="697" Height="243" Header="Show details" Canvas.Left="8" Canvas.Top="161" Collapsed="Expander_Collapsed" Expanded="Expander_Expanded">
 			<Grid>
 				<ListView x:Name="listview_current_situation" ItemsSource="{Binding LogsCollection}" Margin="8">

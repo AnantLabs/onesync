@@ -14,6 +14,12 @@ namespace OneSync.Synchronization
     {        
         public static void UpdateMetadata(Profile profile, FileMetaData oldMetadata, FileMetaData newMetada)
         {
+            // todo: check 2nd argument is not important during update?
+            MetaDataProvider mdProvider = SyncClient.GetMetaDataProvider(profile.IntermediaryStorage.Path, newMetada.RootDir);
+
+            mdProvider.Update(oldMetadata, newMetada);
+
+            /*
             //Get newly created items by comparing relative paths
             //newOnly is metadata item in current metadata but not in old one
             IEnumerable<FileMetaDataItem> newOnly = from _new in newMetada.MetaDataItems
@@ -50,7 +56,7 @@ namespace OneSync.Synchronization
                     transaction.Rollback();
                     throw new DatabaseException("Database error");
                 }
-            }
+            }*/
         }
 
     }

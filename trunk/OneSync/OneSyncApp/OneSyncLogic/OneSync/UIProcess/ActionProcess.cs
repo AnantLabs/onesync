@@ -12,6 +12,7 @@ namespace OneSync.Synchronization
 {
     public class ActionProcess
     {
+        /*
         public static void DeleteBySourceId(Profile profile, SourceOption option)
         {
             string conString1 = string.Format("Version=3,uri=file:{0}", profile.IntermediaryStorage.Path + Configuration.METADATA_RELATIVE_PATH);
@@ -21,19 +22,23 @@ namespace OneSync.Synchronization
                 SqliteTransaction trasaction = (SqliteTransaction)con.BeginTransaction();
                 try
                 {
-                    new SQLiteActionProvider(profile).DeleteBySourceId(profile.SyncSource, con, option);
+                    new SQLiteSyncActionsProvider(profile).DeleteBySourceId(profile.SyncSource, con, option);
                     trasaction.Commit();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     trasaction.Rollback();
                     throw new DatabaseException("Database error");
                 }
             }
-        }
+        }*/
 
         public static void InsertAction(SyncAction action, Profile profile)
         {
+            SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
+            bool result = actProvider.Add(action); // inform UI if result == false?
+
+            /*
             string conString1 = string.Format("Version=3,uri=file:{0}", profile.IntermediaryStorage.Path + Configuration.METADATA_RELATIVE_PATH);
             using (SqliteConnection con = new SqliteConnection(conString1))
             {
@@ -41,15 +46,16 @@ namespace OneSync.Synchronization
                 SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
                 try
                 {
-                    new SQLiteActionProvider(profile).Insert(action, con);
+                    new SQLiteSyncActionsProvider(profile).Insert(action, con);
                     transaction.Commit();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     transaction.Rollback();
                     throw new DatabaseException("Database error");
                 }
             }
+             */
         }
 
         /// <summary>
@@ -59,6 +65,10 @@ namespace OneSync.Synchronization
         /// <param name="profile"></param>
         public static void InsertActions(IList<SyncAction> actions, Profile profile)
         {
+            SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
+            bool result = actProvider.Add(actions); // inform UI if result == false?
+
+            /*
             string conString1 = string.Format("Version=3,uri=file:{0}", profile.IntermediaryStorage.Path + Configuration.METADATA_RELATIVE_PATH);
             using (SqliteConnection con = new SqliteConnection(conString1))
             {
@@ -66,20 +76,24 @@ namespace OneSync.Synchronization
                 SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
                 try
                 {
-                    new SQLiteActionProvider(profile).Insert(actions, con);
+                    new SQLiteSyncActionsProvider(profile).Insert(actions, con);
                     transaction.Commit();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     transaction.Rollback();
                     throw new DatabaseException("Database error");
                 }
-            }
+            }*/
         }
 
 
         public static void DeleteActions(IList<SyncAction> actions, Profile profile)
         {
+            SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
+            bool result = actProvider.Delete(actions); // inform UI if result == false?
+
+            /*
             string conString1 = string.Format("Version=3,uri=file:{0}", profile.IntermediaryStorage.Path + Configuration.METADATA_RELATIVE_PATH);
             using (SqliteConnection con = new SqliteConnection())
             {
@@ -87,15 +101,16 @@ namespace OneSync.Synchronization
                 SqliteTransaction trasaction = (SqliteTransaction)con.BeginTransaction();
                 try
                 {
-                    new SQLiteActionProvider(profile).Delete(actions, con);
+                    new SQLiteSyncActionsProvider(profile).Delete(actions, con);
                     trasaction.Commit();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     trasaction.Rollback();
                     throw new DatabaseException("Database error");
                 }
             }
+            */
         }
 
     }
