@@ -133,7 +133,6 @@
     <Compile Include="OneSyncLogic\OneSync\Domain\SQLiteSyncActionsProvider.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\SQLiteMetaDataProvider.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\SQLiteProfileManager.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Domain\SQLiteSyncActionsProvider.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\SQLiteSyncSourceProvider.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\SyncSource.cs" />
     <Compile Include="OneSyncLogic\OneSync\Exceptions\DatabaseException.cs" />
