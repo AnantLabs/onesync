@@ -105,7 +105,11 @@
     <Compile Include="OneSyncLogic\OneSync.Files\FolderComparer.cs" />
     <Compile Include="OneSyncLogic\OneSync\Base Objects\BaseSQLiteProvider.cs" />
     <Compile Include="OneSyncLogic\OneSync\Base Objects\BaseSyncAgent.cs" />
+    <Compile Include="OneSyncLogic\OneSync\Base Objects\MetaDataProvider.cs" />
+    <Compile Include="OneSyncLogic\OneSync\Base Objects\ProfileManager.cs" />
     <Compile Include="OneSyncLogic\OneSync\Base Objects\SyncAction.cs" />
+    <Compile Include="OneSyncLogic\OneSync\Base Objects\SyncActionsProvider.cs" />
+    <Compile Include="OneSyncLogic\OneSync\Base Objects\SyncSourceProvider.cs" />
     <Compile Include="OneSyncLogic\OneSync\Common Interfaces\IActionProvider.cs" />
     <Compile Include="OneSyncLogic\OneSync\Common Interfaces\IMetaDataProvider.cs" />
     <Compile Include="OneSyncLogic\OneSync\Common Interfaces\IProfileManager.cs" />
@@ -114,6 +118,7 @@
     <Compile Include="OneSyncLogic\OneSync\Common Interfaces\ISyncSourceProvider.cs" />
     <Compile Include="OneSyncLogic\OneSync\Common Interfaces\ISyncVerifier.cs" />
     <Compile Include="OneSyncLogic\OneSync\Configuration\Configuration.cs" />
+    <Compile Include="OneSyncLogic\OneSync\Data\SQLiteAccess.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\ActionGenerator.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\Actions\CreateAction.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\Actions\DeleteAction.cs" />
@@ -129,6 +134,7 @@
     <Compile Include="OneSyncLogic\OneSync\Domain\SQLiteActionProvider.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\SQLiteMetaDataProvider.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\SQLiteProfileManager.cs" />
+    <Compile Include="OneSyncLogic\OneSync\Domain\SQLiteSyncActionsProvider.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\SQLiteSyncSourceProvider.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\SyncSource.cs" />
     <Compile Include="OneSyncLogic\OneSync\Exceptions\DatabaseException.cs" />
@@ -158,14 +164,6 @@
     <None Include="Application.ico">
       <Visible>false</Visible>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="completed_icon.gif" />
-    <Resource Include="conflicting_icon.gif" />
-    <Resource Include="OneSync Transparent Logo %28Inactive%29.png" />
-    <Resource Include="OneSync Transparent Logo.gif" />
-    <Resource Include="OneSync Transparent Logo.png" />
-    <Resource Include="processing_icon.gif" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Application.ico" />
