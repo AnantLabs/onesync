@@ -19,6 +19,7 @@ using OneSync.Synchronization;
 //The following two are imported for Aero Glass effect (Aero Glass Part 1/3).
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
+using System.Windows.Input;
 
 
 
