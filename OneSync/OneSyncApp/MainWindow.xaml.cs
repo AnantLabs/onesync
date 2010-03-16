@@ -334,14 +334,21 @@ namespace OneSync
 
                                 SyncPreviewResult preview = currentAgent.PreviewSync();
                                 BackgroundWorker syncWorker = new BackgroundWorker();
-                                syncWorker.DoWork += (o, e) => { currentAgent.Synchronize(preview); };
-                                syncWorker.RunWorkerAsync();
+                                DoWorkAsymc((MethodInvoker)delegate
+                                {
+                                    currentAgent.Synchronize(preview);
+                                });
                             }
                         }
                     }
                 }
             }
 			
+        }
+
+        private void DoWorkAsymc(MethodInvoker d) 
+        {
+            IAsyncResult result = d.BeginInvoke(null, d);
         }
 
         void SyncProcessNowStarted(object sender, Synchronization.SyncStartsEventArgs args) 
@@ -372,7 +379,15 @@ namespace OneSync
 
         void SyncProcessOngoing(object sender, Synchronization.SyncProgressChangedEventArgs args) 
         {
-            pbSync.Value = args.Value;
+            if (this.Dispatcher.CheckAccess())
+            {
+                pbSync.Value = args.Value;
+            }
+            else 
+            {
+                pbSync.Dispatcher.Invoke((MethodInvoker)delegate { SyncProcessOngoing(sender, args); });
+                
+            }
         }
 
         void SyncProcessOngoingStatus(object sender, Synchronization.SyncStatusChangedEventArgs args) 
