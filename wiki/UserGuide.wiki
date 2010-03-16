@@ -12,16 +12,16 @@ This guide allows you to learn the features of OneSync. Just follow through the 
     * [UserGuide#New_Features_in_Version_0.9 New features in version 0.9]
     * [UserGuide#Downloading_and_Installing Downloading and installing]
     * [UserGuide#Getting_Around Getting around]
-  * [UserGuide#Syncing_my_folders Syncing my folders]
-    * [UserGuide#Syncing_through_portable_drive Syncing through portable drive]
-    * [UserGuide#Syncing_through_DropBox Syncing through DropBox]
-    * [UserGuide#Syncing_through_Windows_Shared_Folders Syncing through Windows Shared Folders]
+  * [UserGuide#Syncing_My_Folders Syncing my folders]
+    * [UserGuide#Syncing_Through_portable_drive Syncing through portable drive]
+    * [UserGuide#Syncing_Through_DropBox Syncing through DropBox]
+    * [UserGuide#Syncing_Through_Windows_Shared_Folders Syncing through Windows Shared Folders]
   * [UserGuide#Managing_Sync_Jobs Managing *Sync Jobs*]
     * [UserGuide#Creating_A_New_Sync_Job Creating a new sync job]
     * [UserGuide#Modifying_My_Existing_Sync_Job Modifying my existing sync job]
     * [UserGuide#Deleting_Existing_Sync_Job Deleting existing sync job]
   * [UserGuide#View_The_Logs View the logs]
-  * [UserGuide#Feedback Feedback]
+  * [UserGuide#Contact_Us Contact us]
 
 ==Getting Started==
 ===New Features in Version 0.9===
@@ -97,14 +97,14 @@ Now, the program will navigate to a new screen (aka *Sync Page*) where you can e
 
 Now, you just need to sit in front of your computer to wait for the sync job to be completely done.
 
-===Syncing through DropBox===
+===Syncing Through DropBox===
 Firstly, please install DropBox. You can find the installer at https://www.dropbox.com/downloading.
 
 The steps are same as the steps mentioned in Syncing Through Portable Drive. However, please remember that the intermediate storage path has to be your DropBox folder directory. If you do not know what is your DropBox folder, double click on the DropBox icon on your system tray.
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_06.jpg]
 
-===Syncing through Windows Shared Folders===
+===Syncing Through Windows Shared Folders===
 If you do not bring your portable drive and you do not want to install DropBox, you can actually use a Windows Share Folder as your intermediate storage as well. Of course, the steps to do this are same as the steps mentioned in Syncing Through Portable Drive.
 
 Of course, you need to setup a Windows Shared Folder in your LAN first.
@@ -136,6 +136,6 @@ To view the logs, just press on the "Show Log" button in the *Sync Page*.
 
 The logs will be shown in your default browser.
 
-== Feedback ==
+== Contact Us ==
 
-Tell us how we're doing: Please email us feedback ([my3215group@googlegroups.com]) about your experience to help us improve our product.
+Tell us how we're doing: Please email us feedback ([mailto:my3215group@googlegroups.com]) about your experience to help us improve our product.
