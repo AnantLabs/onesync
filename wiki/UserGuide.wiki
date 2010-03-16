@@ -7,8 +7,8 @@ Welcome to the OneSync User guide - a place to know more about OneSync and find 
 This guide allows you to learn the features of OneSync. Just follow through the handy guide below, and enjoy the journey! =)
 
 == Content ==
-[WikiSyntax#Wiki-style_markup]
-  * Getting Started
+[https://code.google.com/p/onesync/w/edit/UserGuide#Getting_Started]
+  * Getting started
     * New features in version 0.9
     * Downloading and installing
     * Getting around
