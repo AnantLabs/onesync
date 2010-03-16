@@ -2,7 +2,7 @@
 
 This user guide describes OneSync Version 0.9.
 
-Welcome to the OneSync User guide - a place to know more about OneSync and find out how to make your life more organized! With OneSync, your personal files stored in your computer will be easily shared and synced with another computer in two ways: either through portable drive, thumb drive, Windows Shared Folders or even DropBox (Online Sync)!
+Welcome to the OneSync User guide - a place to know more about OneSync and find out how to make your life more organized! With OneSync, your personal files stored in your computer will be easily shared and synced with another computer in sevaral ways: syncing through portable drive, thumb drive, Windows Shared Folders and even DropBox (Online Sync)!
 
 This guide allows you to learn the features of OneSync. Just follow through the handy guide below, and enjoy the journey! =)
 
@@ -22,4 +22,4 @@ This guide allows you to learn the features of OneSync. Just follow through the 
 
 == Feedback ==
 
-Tell us how we're doing: Please email us feedback (my3215group@googlegroups.com) about your experience to help us improve our product.
+Tell us how we're doing: Please email us feedback ([my3215group@googlegroups.com]) about your experience to help us improve our product.
