@@ -24,13 +24,6 @@ namespace OneSync.Synchronization
         /// </summary>
         private string path = "";
 
-        /// <summary>
-        /// column names for sync source table
-        /// </summary>
-        public const string SOURCE_ABSOLUTE_PATH = "SOURCE_ABSOLUTE_PATH";
-        public const string SOURCE_ID = "SOURCE_ID";
-        public const string DATASOURCE_INFO_TABLE = "DATASOURCE_INFO_TABLE";
-
 
         public SyncSource(string id, string path)
         {

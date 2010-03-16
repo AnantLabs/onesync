@@ -1,7 +1,4 @@
-﻿/*
- $Id$
- */
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,8 +7,7 @@ using System.Xml.Serialization;
 
 namespace OneSync.Synchronization
 {
-    public class FileMetaDataItem: IComparable<FileMetaDataItem>, IEqualityComparer<FileMetaDataItem>
-
+    public class FileMetaDataItem : IComparable<FileMetaDataItem>, IEqualityComparer<FileMetaDataItem>
     {
         private string source_id = "";
         private string fullName = "";
@@ -19,29 +15,34 @@ namespace OneSync.Synchronization
         private string hashCode = "";
         private DateTime lastModifiedTime;
         private uint ntfs1 = 0;
-        private uint ntfs2 = 0;        
+        private uint ntfs2 = 0;
 
         public FileMetaDataItem()
         {
-            
+
         }
-        
-        public FileMetaDataItem(string source_id , string fullName, string relativePath , string hashCode, DateTime lastModifiedTime, uint ntfs1, uint ntfs2)
+
+        public FileMetaDataItem(string source_id, string fullName, string relativePath, string hashCode, DateTime lastModifiedTime, uint ntfs1, uint ntfs2)
         {
             this.source_id = source_id;
             this.fullName = fullName;
-            this.relativePath = relativePath;            
+            this.relativePath = relativePath;
             this.hashCode = hashCode;
             this.lastModifiedTime = lastModifiedTime;
             this.ntfs1 = ntfs1;
-            this.ntfs2 = ntfs2;            
+            this.ntfs2 = ntfs2;
+        }
+
+        public FileMetaDataItem(string relativePath)
+        {
+            this.relativePath = relativePath;
         }
 
         public string SourceId
         {
             get
             {
-                return this.source_id; 
+                return this.source_id;
             }
         }
 
@@ -94,7 +95,7 @@ namespace OneSync.Synchronization
             }
         }
         public int CompareTo(FileMetaDataItem item)
-        {            
+        {
             return this.RelativePath.CompareTo(item.RelativePath);
         }
 
@@ -109,7 +110,7 @@ namespace OneSync.Synchronization
         }
 
         public int GetHashCode(FileMetaDataItem item)
-        {            
+        {
             return item.RelativePath.GetHashCode();
         }
     }
