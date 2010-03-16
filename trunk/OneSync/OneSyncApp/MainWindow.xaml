@@ -165,11 +165,11 @@ $Id$
 					<TranslateTransform X="0" Y="0"/>
 				</TransformGroup>
 			</Canvas.RenderTransform>
-			<Image x:Name="btnSync" Stretch="Fill" Cursor="Hand" ToolTip="Sync this folder now!" VerticalAlignment="Bottom" Width="104" Canvas.Left="595.988" Canvas.Top="40" Height="104" MouseLeave="btnSync_MouseLeave" Source="Resource/OneSync Transparent Logo.png" Visibility="Hidden" />
+			<Image x:Name="btnSync" Stretch="Fill" Cursor="Hand" ToolTip="Sync this folder now!" VerticalAlignment="Bottom" Width="104" Canvas.Left="595.988" Canvas.Top="40" Height="104" Source="Resource/OneSync Transparent Logo.png" Visibility="Hidden" />
 			<Label Width="165" Height="23" Content="Intermediate Storage Location:" FontSize="10.667" Canvas.Left="60" Canvas.Top="62" x:Name="label_storage_message" />
 			<TextBlock x:Name="txtBlkShowLog" Width="61" Text="Show Log " TextWrapping="Wrap" TextDecorations="Underline" FontWeight="Bold" FontFamily="Times New Roman" FontSize="13.333" Cursor="Hand" Foreground="#FF3000FF" MouseDown="txtBlkShowLog_MouseDown" Height="18" Canvas.Left="12" Canvas.Top="136" />
 			<ProgressBar x:Name="pbSync" Value="20" Width="571" Height="18" Canvas.Left="12" Canvas.Top="95"/>
-			<Image x:Name="button_sync" Stretch="Fill" Cursor="Hand" MouseDown="Image_MouseDown" ToolTip="Sync this folder now!" VerticalAlignment="Bottom" Width="104" Canvas.Left="595.988" Canvas.Top="40" Height="104" MouseEnter="btnSync_MouseEnter" MouseLeave="btnSync_MouseLeave" Source="Resource/OneSync Transparent Logo (Inactive).png" />
+			<Image x:Name="button_sync" Stretch="Fill" Cursor="Hand" MouseDown="Image_MouseDown" ToolTip="Sync this folder now!" VerticalAlignment="Bottom" Width="104" Canvas.Left="595.988" Canvas.Top="40" Height="104" MouseEnter="button_sync_MouseEnter" MouseLeave="button_sync_MouseLeave" Source="Resource/OneSync Transparent Logo (Inactive).png" />
 			<Expander x:Name="Expander" VerticalAlignment="Top" Width="697" Height="243" Header="Show details" Canvas.Left="8" Canvas.Top="161" Collapsed="Expander_Collapsed" Expanded="Expander_Expanded">
 				<Grid>
 					<ListView x:Name="listview_current_situation" ItemsSource="{Binding LogsCollection}" Margin="8">
