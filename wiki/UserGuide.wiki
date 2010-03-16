@@ -97,7 +97,7 @@ Now, the program will navigate to a new screen (aka *Sync Page*) where you can e
 
 Now, you just need to sit in front of your computer to wait for the sync job to be completely done.
 
-===Syncing Through DropBox===
+===Syncing Through DropBox!===
 Firstly, please install DropBox. You can find the installer at https://www.dropbox.com/downloading.
 
 The steps are same as the steps mentioned in Syncing Through Portable Drive. However, please remember that the intermediate storage path has to be your DropBox folder directory. If you do not know what is your DropBox folder, double click on the DropBox icon on your system tray.
