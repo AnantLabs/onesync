@@ -1,13 +1,25 @@
-#User Guide
+=== Introduction ===
 
-= Introduction =
+This user guide describes OneSync Version 0.9.
 
-This is a user guide.
+Welcome to the OneSync User guide - a place to know more about OneSync and find out how to make your life more organized! With OneSync, your personal files stored in your computer will be easily shared and synced with another computer in two ways: either through portable drive, thumb drive, Windows Shared Folders or even DropBox (Online Sync)!
 
+This guide allows you to learn the features of OneSync. Just follow through the handy guide below, and enjoy the journey! =)
 
-= Details =
+== Content ==
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+  * Getting started
+    * Downloading and installing
+    * Getting around
+  * Syncing my folders
+    * Syncing through portable drive
+    * Syncing through DropBox
+    * Syncing through Windows Shared Folders
+  * Managing Sync Jobs
+    * Creating a new sync job
+    * Modifying my existing sync job
+    * Deleting current sync job
+
+== Feedback ==
+
+Tell us how we're doing: Please email us feedback (my3215group@googlegroups.com) about your experience to help us improve our product.
