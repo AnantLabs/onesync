@@ -73,15 +73,12 @@ namespace OneSync.Synchronization
 
                     db.ExecuteReader(cmdText, reader =>
                     {
-                        while (reader.Read())
-                        {
-                            // TODO: constructor of Profile takes in more arguments to remove dependency on IntermediaryStorage and SyncSource class.
-                            SyncSource source = new SyncSource((string)reader[Configuration.COL_SYNC_SOURCE_ID], (string)reader[Configuration.COL_SOURCE_ABS_PATH]);
-                            IntermediaryStorage mdSource = new IntermediaryStorage((string)reader[Configuration.COL_METADATA_SOURCE_LOCATION]);
-                            Profile p = new Profile((string)reader[Configuration.COL_PROFILE_ID],
-                                (string)reader[Configuration.COL_PROFILE_NAME], source, mdSource);
-                            profiles.Add(p);
-                        }
+                        // TODO: constructor of Profile takes in more arguments to remove dependency on IntermediaryStorage and SyncSource class.
+                        SyncSource source = new SyncSource((string)reader[Configuration.COL_SYNC_SOURCE_ID], (string)reader[Configuration.COL_SOURCE_ABS_PATH]);
+                        IntermediaryStorage mdSource = new IntermediaryStorage((string)reader[Configuration.COL_METADATA_SOURCE_LOCATION]);
+                        Profile p = new Profile((string)reader[Configuration.COL_PROFILE_ID],
+                            (string)reader[Configuration.COL_PROFILE_NAME], source, mdSource);
+                        profiles.Add(p);
                     }
                     );
                 }
