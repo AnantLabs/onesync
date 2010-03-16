@@ -50,9 +50,26 @@ Installation steps are as follows
 
 Should you encounter any difficulties installing, please contact us.
 
+===Getting Around===
+The following diagram describes some of the things that you will see in the first window, aka Sync Job Page, of OneSync:
 [http://my3215group.googlegroups.com/web/OneSync(V0.9)%20Profile%20Page.jpg?gda=Nz4GX1UAAACRSoH-dUzKCIDIj_A27jHoSgueRTKdpBqpsWqF0na7uBxuHfjBRRDTtC0Di67UESI9kVd0hmk4E0r3CaF7ho6Pc5ap1mUA98uo2agjH0hUOhrtYix3qocOGWUY90Yyf_g&gsc=rr_4FgsAAACuXtB3Z7IC5Kzpcmr3n-O1&nonsense=something_that_ends_with.jpg]
 
+ # *Directory of Sync Source Folder* - The directory shown there is the directory of the folder that you are going to sync later. Hence, the folder is your Sync Source Folder.
+ # *Sync Job Name* - The name of your new/existing sync job.
+ # *Do Job* - Setup the sync job.
+ # *Delete This Job* - Only available if you are choosing an existing sync job. You can delete any existing sync job from here.
+ # *New Name* - Only available if you are choosing an existing sync job. You can give your existing sync job a new name here.
+ # *Rename Job* - Only available if you are choosing an existing sync job. Click here to confirm the rename action.
+
+The following diagram describes some of the things that you will see in the next window, aka Sync Page, of OneSync:
 [http://my3215group.googlegroups.com/web/OneSync(V0.9)%20Sync%20Page.jpg?gda=cuY-klIAAACRSoH-dUzKCIDIj_A27jHopT04W5fOfAB7BlXCbuZVaRxuHfjBRRDTtC0Di67UESIrE4xa4Qk0XXQXdJWqcGqhVeLt2muIgCMmECKmxvZ2j4IeqPHHCwbz-gobneSjMyE&gsc=rr_4FgsAAACuXtB3Z7IC5Kzpcmr3n-O1&nonsense=something_that_ends_with.jpg]
+
+ # *Directory of Sync Source Folder* - The directory shown there is the directory of the folder that you are going to sync later. Hence, the folder is your Sync Source Folder.
+ # *Sync Job Name* - The name of your new/existing sync job.
+ # *Do Job* - Setup the sync job.
+ # *Delete This Job* - Only available if you are choosing an existing sync job. You can delete any existing sync job from here.
+ # *New Name* - Only available if you are choosing an existing sync job. You can give your existing sync job a new name here.
+ # *Rename Job* - Only available if you are choosing an existing sync job. Click here to confirm the rename action.
 
 == Feedback ==
 
