@@ -1,8 +1,6 @@
-#summary A place to learn how to explore the OneSync.
+#summary A place to learn how to explore the OneSync. This user guide describes OneSync Version 0.9.
 
 === Introduction ===
-
-This user guide describes OneSync Version 0.9.
 
 Welcome to the OneSync User guide - a place to know more about OneSync and find out how to make your life more organized! With OneSync, your personal files stored in your computer will be easily shared and synced with another computer in sevaral ways: syncing through portable drive, thumb drive, Windows Shared Folders and even DropBox (Online Sync)!
 
