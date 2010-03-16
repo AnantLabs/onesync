@@ -20,6 +20,7 @@ using OneSync.Synchronization;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Windows.Input;
+using System.ComponentModel;
 
 
 
@@ -70,7 +71,8 @@ namespace OneSync
         string storage_dir; //The storage directory.
         bool is_sync_job_created_previously = false; //The value is true if the sync job is not created currently, but previously.
         bool is_sync_job_ongoing = false; //This value is true if the sync job is being done now.
-		DoubleAnimation instantNotificationAnimation = new DoubleAnimation(); //The animation of label_notification.
+        FileSyncAgent currentAgent; //The file sync agent.
+        DoubleAnimation instantNotificationAnimation = new DoubleAnimation(); //The animation of label_notification.
         Storyboard myStoryboard = new Storyboard(); //The storyboard of label_notification.
         //End: Global variables.
 		
@@ -319,7 +321,6 @@ namespace OneSync
                     }
                     if (should_i_sync)
                     {
-                        FileSyncAgent currentAgent;
                         //foreach (Synchronization.Profile item in (Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath)))
                         foreach (Profile item in (SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles()))
                         {
@@ -332,7 +333,9 @@ namespace OneSync
                                 currentAgent.OnCompleted += new OneSync.Synchronization.SyncCompletesHandler(SyncProcessCompleted);
 
                                 SyncPreviewResult preview = currentAgent.PreviewSync();
-                                currentAgent.Synchronize(preview);
+                                BackgroundWorker syncWorker = new BackgroundWorker();
+                                syncWorker.DoWork += (o, e) => { currentAgent.Synchronize(preview); };
+                                syncWorker.RunWorkerAsync();
                             }
                         }
                     }
@@ -670,8 +673,8 @@ namespace OneSync
         {
             if (is_sync_job_ongoing)
             {
-                InstantNotification("Sorry, please close this application only after the sync is done.");
-                e.Cancel = true; //The user cannot close the app if the sync progress is ongoing.
+                //InstantNotification("Sorry, please close this application only after the sync is done.");
+                //e.Cancel = true; //The user cannot close the app if the sync progress is ongoing.
             }
         }
 
