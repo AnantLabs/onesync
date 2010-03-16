@@ -13,16 +13,17 @@ This guide allows you to learn the features of OneSync. Just follow through the 
     * Downloading and installing
     * Getting around
   * Syncing my folders
-    * Syncing through portable drive
+    * Syncing through portable drive 
     * Syncing through DropBox
     * Syncing through Windows Shared Folders
   * Managing Sync Jobs
     * Creating a new sync job
     * Modifying my existing sync job
     * Deleting current sync job
+  * View the logs
   * Feedback
 
-== Getting started ==
+== Getting Started ==
 ===New Features in Version 0.9===
 
 This version of OneSync has a number of exciting new features, including:
@@ -72,6 +73,29 @@ The following diagram describes some of the things that you will see in the next
  # *Show Log* - Only available if you synced this job before. You are able to view the logs in your browser.
  # *Sync Process* - Only available when you are doing the sync.
  # *Sync* - The only one button that you need to click to start syncing.
+
+==Syncing My Folders==
+Why put your files in different PCs and keep doing copy-and-paste when you update the files? Keep them synchronized between your two computers, so you always have the most up-to-date versions at hand.
+===Syncing Through Portable Drive===
+*Step 1*
+
+Make sure you have plugged in the portable drive (or thumb drive) to your computer. From your PC, right-click the folder you want to sync, and then click "Sync This Folder with OneSync". Depends on the version you use, the name will be a bit different.
+
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_03.jpg]
+
+*Step 2*
+
+The OneSync Window will pop up. Enter your profile name and click on the "Do Job" button.
+
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_04.jpg]
+
+*Step 3*
+
+Now, the program will navigate to a new screen where you can enter the FULL path to your intermediate storage. After that, just click on the 'Sync' button to start syncing.
+
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_05.jpg]
+
+After that, you just need to sit in front of your computer to wait for the sync job to be completely done.
 
 == Feedback ==
 
