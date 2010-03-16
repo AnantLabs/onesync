@@ -138,4 +138,4 @@ The logs will be shown in your default browser.
 
 == Contact Us ==
 
-Tell us how we're doing: Please email us feedback ([mailto:my3215group@googlegroups.com]) about your experience to help us improve our product.
+Tell us how we are doing: Please email us feedback ([mailto:my3215group@googlegroups.com]) about your experience to help us improve our product.
