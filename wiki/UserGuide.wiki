@@ -1,3 +1,5 @@
+#summary A place to learn how to explore the OneSync.
+
 === Introduction ===
 
 This user guide describes OneSync Version 0.9.
