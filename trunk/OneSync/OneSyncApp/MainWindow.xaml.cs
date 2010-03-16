@@ -94,20 +94,7 @@ namespace OneSync
 			myStoryboard.Begin(this);
 			//End: Initiate the animation of label_notification.
 			
-			//Testing code (No.: 001) starts here.
-			_LogsCollection.Add(new UILogEntry{
-				ImageSrc = "completed_icon.gif",
-				FileName = "CS3215.txt",
-				Status = "Completely processed",
-				Message = "CS3215.txt has been uploaded to the intermediate storage."
-			});
-			_LogsCollection.Add(new UILogEntry{
-				ImageSrc = "conflicting_icon.gif",
-				FileName = "Proposal.pdf",
-				Status = "Conflict",
-				Message = "There is another different copy of Proposal.pdf found in the patch."
-			});
-			//Testing code (No.: 001) ends here.
+			testingCode(0); //Testing code number 0.
 
             //The following line of code is to handle the problem of running this OneSync without using Windows Shell.
             //If the user runs the .exe file directly in the installtion folder of OneSync, then basically when the
@@ -246,8 +233,8 @@ namespace OneSync
 			InstantNotification(""); //Empty the notification message (if any).
 			
             //Controls to be hidden/displayed before a sync job profile is created and displayed after the profile is created.
-            //txtBlkNext.Visibility = sideVisibility;
-			//cmbProfiles.Visibility = sideVisibility;
+            txtBlkNext.Visibility = sideVisibility;
+			cmbProfiles.Visibility = sideVisibility;
 
             //Reset control's content.
             txtIntStorage.Text = "";
@@ -590,7 +577,7 @@ namespace OneSync
         /// <param name="e">The event arguments.</param>
         private void textblock_back_to_home_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-        	//ProfileCreationControlsVisibility(Visibility.Hidden, Visibility.Visible);
+        	ProfileCreationControlsVisibility(Visibility.Hidden, Visibility.Visible);
 			Window.Title = "OneSync"; //Change back the menu title.
 			cmbProfiles.Text = "";
 
@@ -689,6 +676,18 @@ namespace OneSync
 				//Delete the profile.
                 try
                 {
+					//Find out the current profile.
+					foreach (Profile item in (SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles()))
+					{
+						//Check to see if the profile is an existing profile or not.
+						//If yes, then it will show the rename profile link.
+						if (item.Name.Equals(cmbProfiles.Text))
+						{
+							current_profile = item;
+							break;
+						}
+					}
+					
                     //Synchronization.SyncClient.ProfileProcess.DeleteProfile(System.Windows.Forms.Application.StartupPath, current_profile.ID);
                     SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).Delete(current_profile);
                     
@@ -745,13 +744,13 @@ namespace OneSync
         
 		private void showHideProfileEditting(Visibility visibility)
 		{
-			//txtBlkRenJob_label.Visibility = visibility;
-            //txtRenJob.Visibility = visibility;
-            //txtBlkRenJob.Visibility = visibility;
-			//textblock_delete_profile.Visibility = visibility;
-			//path_profile_operations_1.Visibility = visibility;
-			//path_profile_operations_2.Visibility = visibility;
-			//path_profile_operations_3.Visibility = visibility;
+			txtBlkRenJob_label.Visibility = visibility;
+            txtRenJob.Visibility = visibility;
+            txtBlkRenJob.Visibility = visibility;
+			txtBlkDelJob.Visibility = visibility;
+			path_profile_operations_1.Visibility = visibility;
+			path_profile_operations_2.Visibility = visibility;
+			path_profile_operations_3.Visibility = visibility;
 		}
         
 		
@@ -773,11 +772,11 @@ namespace OneSync
             {
 				InstantNotification(""); //Empty the notification message (if any).
                 profile_name = cmbProfiles.Text.Trim();
-                //ProfileCreationControlsVisibility(Visibility.Visible, Visibility.Hidden);
+                ProfileCreationControlsVisibility(Visibility.Visible, Visibility.Hidden);
                 Window.Title = profile_name + " - OneSync";
                 //Hide the progress bar.
-                //pbSync.Visibility = Visibility.Hidden;
-                //lblStatus.Visibility = Visibility.Hidden;
+                pbSync.Visibility = Visibility.Hidden;
+                lblStatus.Visibility = Visibility.Hidden;
                 current_profile = null;
                 try
                 {
@@ -810,17 +809,41 @@ namespace OneSync
 		private void cmbProfiles_DropDownClosed(object sender, System.EventArgs e)
 		{
 			showHideProfileEditting(Visibility.Hidden);
-            foreach (String item in cmbProfiles.Items)
+            foreach (Profile item in (SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles()))
             {
                 //Check to see if the profile is an existing profile or not.
                 //If yes, then it will show the rename profile link.
-                if (item.Equals(cmbProfiles.Text))
+                if (item.Name.Equals(cmbProfiles.Text))
                 {
                     showHideProfileEditting(Visibility.Visible);
                     txtRenJob.Text = cmbProfiles.Text;
                     break;
                 }
             }
+		}
+		
+		private void testingCode(int testingNumber)
+		{
+			switch(testingNumber)
+			{
+				case 0:
+					_LogsCollection.Add(new UILogEntry{
+						ImageSrc = "completed_icon.gif",
+						FileName = "CS3215.txt",
+						Status = "Completely processed",
+						Message = "CS3215.txt has been uploaded to the intermediate storage."
+					});
+					_LogsCollection.Add(new UILogEntry{
+						ImageSrc = "conflicting_icon.gif",
+						FileName = "Proposal.pdf",
+						Status = "Conflict",
+						Message = "There is another different copy of Proposal.pdf found in the patch."
+					});
+					break;
+				case 1:
+					
+					break;
+			}
 		}
 	}
 }
