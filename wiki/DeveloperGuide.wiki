@@ -1,13 +1,22 @@
-#Developer Guide
+=== Introduction ===
 
-= Introduction =
+The purpose of this developer guide is to explain the functionality and design of OneSync. It starts with the 
 
-This is a developer guide for programmers.
+architecture and then progresses to more and more detailed information about the design towards the later part of the guide.
 
+---
 
-= Details =
+== Content ==
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+  * What OneSync does
+  * Architecture Design
+  * Domain Model / Class Diagram
+  * Classes
+    * Profile
+    * FileSyncAgent
+    * Intermediary Storage
+    * Patch
+    * ProfileManager
+    * SyncActionsProvider
+    * SyncSourceProvider
+    * MetaDataProvider
