@@ -20,8 +20,9 @@ namespace OneSync.Synchronization
          * Table Names
          ***************/
         public const string TBL_ACTION = "ACTION_TABLE";
-        public const string TBL_DATASOURCE_INFO = "SYNCSOURCE_INFO_TABLE";
+        public const string TBL_SYNCSOURCE_INFO = "SYNCSOURCE_INFO_TABLE";
         public const string TBL_METADATA = "METADATA_TABLE";
+        public const string TBL_PROFILE = "PROFILE";
 
 
         /***************
@@ -46,5 +47,13 @@ namespace OneSync.Synchronization
         public const string COL_LAST_MODIFIED_TIME = "LAST_MODIFIED_TIME";
         public const string COL_NTFS_ID1 = "NTFS_ID1";
         public const string COL_NTFS_ID2 = "NTFS_ID2";
+
+        // TBL_PROFILE Columns
+        public const string COL_PROFILE_ID = "PROFILE_ID";
+        public const string COL_PROFILE_NAME = "PROFILE_NAME";
+        public const string COL_METADATA_SOURCE_LOCATION = "METADATA_SOURCE_LOCATION";
+        public const string COL_SYNC_SOURCE_ID = "SYNC_SOURCE_ID";
+        public const string COL_SOURCE_ABS_PATH = "SOURCE_ABSOLUTE_PATH";
+        //public const string COL_SOURCE_ID = "SOURCE_ID";
     }
 }

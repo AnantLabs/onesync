@@ -233,7 +233,7 @@ namespace OneSync.Synchronization
                                                 Configuration.COL_LAST_MODIFIED_TIME + " DATETIME, " +
                                                 Configuration.COL_NTFS_ID1 + " INT, " +
                                                 Configuration.COL_NTFS_ID2 + " INT," +
-                                                "FOREIGN KEY (" + Configuration.COL_SOURCE_ID + ") REFERENCES " + Configuration.TBL_DATASOURCE_INFO + "(" + Configuration.COL_SOURCE_ID + ")" +
+                                                "FOREIGN KEY (" + Configuration.COL_SOURCE_ID + ") REFERENCES " + Configuration.TBL_SYNCSOURCE_INFO + "(" + Configuration.COL_SOURCE_ID + ")" +
                                                 "PRIMARY KEY (" + Configuration.COL_SOURCE_ID + "," + Configuration.COL_RELATIVE_PATH + ")" +
                                                 ")";
 

@@ -31,7 +31,7 @@ namespace OneSync.Synchronization
         {
             using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)))
             {
-                string cmdText = "INSERT INTO " + Configuration.TBL_DATASOURCE_INFO +
+                string cmdText = "INSERT INTO " + Configuration.TBL_SYNCSOURCE_INFO +
                                  "(" + Configuration.COL_SOURCE_ID + "," + Configuration.COL_SOURCE_ABSOLUTE_PATH + 
                                  ") VALUES (@id, @path)";
 
@@ -51,7 +51,7 @@ namespace OneSync.Synchronization
 
             using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)))
             {
-                string cmdText = "SELECT * FROM  " + Configuration.TBL_DATASOURCE_INFO;
+                string cmdText = "SELECT * FROM  " + Configuration.TBL_SYNCSOURCE_INFO;
 
                 db.ExecuteReader(cmdText, reader =>
                     {
@@ -68,7 +68,7 @@ namespace OneSync.Synchronization
         {
             using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)))
             {
-                string cmdText = "UPDATE " + Configuration.TBL_DATASOURCE_INFO +
+                string cmdText = "UPDATE " + Configuration.TBL_SYNCSOURCE_INFO +
                         " SET " + Configuration.COL_SOURCE_ABSOLUTE_PATH + " = @path WHERE "
                         + Configuration.COL_SOURCE_ID + " = @id";
 
@@ -88,7 +88,7 @@ namespace OneSync.Synchronization
                 using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)))
                 {
                     string cmdText = "SELECT COUNT (DISTINCT " + Configuration.COL_SOURCE_ID + ") AS num" +
-                            " FROM " + Configuration.TBL_DATASOURCE_INFO;
+                            " FROM " + Configuration.TBL_SYNCSOURCE_INFO;
 
 
                     return Convert.ToInt32(db.ExecuteScalar(cmdText, null));
@@ -106,7 +106,7 @@ namespace OneSync.Synchronization
         {
             using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)))
             {
-                string cmdText = "CREATE TABLE IF NOT EXISTS " + Configuration.TBL_DATASOURCE_INFO +
+                string cmdText = "CREATE TABLE IF NOT EXISTS " + Configuration.TBL_SYNCSOURCE_INFO +
                                  " ( " + Configuration.COL_SOURCE_ABSOLUTE_PATH + " TEXT, " +
                                  Configuration.COL_SOURCE_ID + " TEXT PRIMARY KEY)";
 
