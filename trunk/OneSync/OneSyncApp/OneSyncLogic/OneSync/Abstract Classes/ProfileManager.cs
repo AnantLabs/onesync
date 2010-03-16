@@ -67,7 +67,7 @@ namespace OneSync.Synchronization
 
         // TODO: delete profile requires only the profile id?
         /// <summary>
-        /// Delete a profile requires delete data from 2 tables DATASOURCE_INFO and PROFILE
+        /// Delete a profile requires delete data from 2 tables SYNCSOURCE_INFO and PROFILE
         /// If deletion action on one table fails, the total action must fail too.
         /// </summary>
         /// <param name="profile"></param>

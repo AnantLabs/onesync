@@ -28,7 +28,7 @@ namespace OneSync.Synchronization
         /***************
          * Column Names
          ***************/
-        // TBL_DATASOURCE_INFO Columns
+        // TBL_SYNCSOURCE_INFO Columns
         public const string COL_SOURCE_ABSOLUTE_PATH = "SOURCE_ABSOLUTE_PATH";
         public const string COL_SOURCE_ID = "SOURCE_ID";
 
