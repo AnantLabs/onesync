@@ -66,11 +66,11 @@ The following diagram describes some of the things that you will see in the next
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync(V0.9)%20Sync%20Page.jpg]
 
  # *Directory of Sync Source Folder* - The directory shown there is the directory of the folder that you are going to sync later. Hence, the folder is your Sync Source Folder.
- # *Sync Job Name* - The name of your new/existing sync job.
- # *Do Job* - Setup the sync job.
- # *Delete This Job* - Only available if you are choosing an existing sync job. You can delete any existing sync job from here.
- # *New Name* - Only available if you are choosing an existing sync job. You can give your existing sync job a new name here.
- # *Rename Job* - Only available if you are choosing an existing sync job. Click here to confirm the rename action.
+ # *Directory of Intermediate Storage* - The location of intermediate storage folder, for example a folder in your thumb drive or DropBox.
+ # *Open Folder Browser* - Cannot locate your intermediate storage folder? Never mind, use the Folder Browser to help you locate the folder.
+ # *Show Log* - Only available if you synced this job before. You are able to view the logs in your browser.
+ # *Sync Process* - Only available when you are doing the sync.
+ # *Sync* - The only one button that you need to click to start syncing.
 
 == Feedback ==
 
