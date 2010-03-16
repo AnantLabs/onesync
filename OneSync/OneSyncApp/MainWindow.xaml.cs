@@ -139,8 +139,8 @@ namespace OneSync
 				displaying_current_syncing_dir = displaying_current_syncing_dir.Substring(0, DIR_STRING_PREFIX_LENGTH) + "..."
 					+ displaying_current_syncing_dir.Substring(displaying_current_syncing_dir.Length - (MAX_DIR_STRING_LENGTH - DIR_STRING_PREFIX_LENGTH), (MAX_DIR_STRING_LENGTH - DIR_STRING_PREFIX_LENGTH));
 			}
-			label_current_syncing_dir.Content = displaying_current_syncing_dir;
-			label_current_syncing_dir_frontpage.Content = displaying_current_syncing_dir;
+			lblSyncDir.Content = displaying_current_syncing_dir;
+			//label_current_syncing_dir_frontpage.Content = displaying_current_syncing_dir;
 
             //Import all the previous created existing sync job profiles.
             //Note that only the profile having the directory which is the current directory will be imported.
@@ -155,7 +155,7 @@ namespace OneSync
                     //Retrieve.
                     if(profileItem.SyncSource.Path.Equals(current_syncing_dir))
                     {
-                        combobox_profile_name.Items.Add(profileItem.Name);
+                        cmbProfiles.Items.Add(profileItem.Name);
                     }
                     //TODO: Delete no longer exist profile.
                     //NOTE: Only not existing profile will be deleted.
@@ -167,10 +167,10 @@ namespace OneSync
             }
 			
             //Show the log of current/just-finished sync job.
-            textblock_show_log.Visibility = Visibility.Hidden;
+            txtBlkShowLog.Visibility = Visibility.Hidden;
 			if(File.Exists(Log.returnLogReportPath(current_syncing_dir, false))) //To be changed. Depends on Naing.
 			{
-				textblock_show_log.Visibility = Visibility.Visible;
+				txtBlkShowLog.Visibility = Visibility.Visible;
 			}
             OneSyncStartingControlsVisibility();
 		}
@@ -227,8 +227,8 @@ namespace OneSync
         private void OneSyncStartingControlsVisibility() 
         {
             //Controls to be hidden when the program first starts.
-            label_current_processing_file.Visibility = Visibility.Hidden;
-            progressbar_sync_progress.Visibility = Visibility.Hidden;
+            lblStatus.Visibility = Visibility.Hidden;
+            pbSync.Visibility = Visibility.Hidden;
             Expander.Visibility = Visibility.Hidden;
 
             ProfileCreationControlsVisibility(Visibility.Hidden, Visibility.Visible);
@@ -244,15 +244,11 @@ namespace OneSync
 			InstantNotification(""); //Empty the notification message (if any).
 			
             //Controls to be hidden/displayed before a sync job profile is created and displayed after the profile is created.
-            textblock_new_profile.Visibility = sideVisibility;
-			label_message_frontpage.Visibility = sideVisibility;
-			label_current_syncing_dir_frontpage.Visibility = sideVisibility;
-			label_profile_message.Visibility = sideVisibility;
-			combobox_profile_name.Visibility = sideVisibility;
-			rectangle_shadow.Visibility = sideVisibility;
+            //txtBlkNext.Visibility = sideVisibility;
+			//cmbProfiles.Visibility = sideVisibility;
 
             //Reset control's content.
-            textbox_storage_path.Text = "";
+            txtIntStorage.Text = "";
 
             //Always hidden.
 			showHideProfileEditting(Visibility.Hidden);
@@ -265,9 +261,9 @@ namespace OneSync
         private void SyncProcessStarted() 
         {
 			//Set the storage path.
-			storage_dir = textbox_storage_path.Text.Trim();
+			storage_dir = txtIntStorage.Text.Trim();
 
-            label_message.Content = "You are now syncing";
+            lblStatus.Content = "You are now syncing";
             if(storage_dir.Length > 0)
             {
                 if (current_syncing_dir.Equals(storage_dir))
@@ -334,7 +330,9 @@ namespace OneSync
                                 currentAgent.OnProgressChanged += new OneSync.Synchronization.SyncProgressChangedHandler(SyncProcessOngoing);
                                 currentAgent.OnStatusChanged += new OneSync.Synchronization.SyncStatusChangedHandler(SyncProcessOngoingStatus);
                                 currentAgent.OnCompleted += new OneSync.Synchronization.SyncCompletesHandler(SyncProcessCompleted);
-                                currentAgent.Synchronize();
+
+                                SyncPreviewResult preview = currentAgent.PreviewSync();
+                                currentAgent.Synchronize(preview);
                             }
                         }
                     }
@@ -348,7 +346,7 @@ namespace OneSync
             is_sync_job_ongoing = true; //Yes, the sync process starts from here!
 
             //Rotate the OneSync Logo on the button.
-            button_sync_copy.Visibility = Visibility.Visible;
+            btnSync.Visibility = Visibility.Visible;
             button_sync.Visibility = Visibility.Hidden;
             DoubleAnimation da = new DoubleAnimation();
             da.From = 0;
@@ -356,28 +354,28 @@ namespace OneSync
             da.Duration = new Duration(TimeSpan.FromMilliseconds(1500));
             da.RepeatBehavior = RepeatBehavior.Forever;
             RotateTransform rt = new RotateTransform();
-            button_sync_copy.RenderTransform = rt;
-            button_sync_copy.RenderTransformOrigin = new Point(0.5, 0.5);
+            btnSync.RenderTransform = rt;
+            btnSync.RenderTransformOrigin = new Point(0.5, 0.5);
             rt.BeginAnimation(RotateTransform.AngleProperty, da);
 
             //Show/hide some controls and enable/disable some of them.
             button_sync.IsEnabled = false;
-            textbox_storage_path.IsEnabled = false;
-            button_file_browser.IsEnabled = false;
+            txtIntStorage.IsEnabled = false;
+            btnBrowse.IsEnabled = false;
             textblock_back_to_home.IsEnabled = false;
-            progressbar_sync_progress.Visibility = Visibility.Visible;
-            label_current_processing_file.Visibility = Visibility.Visible;
+            pbSync.Visibility = Visibility.Visible;
+            lblStatus.Visibility = Visibility.Visible;
         }
 
         void SyncProcessOngoing(object sender, Synchronization.SyncProgressChangedEventArgs args) 
         {
-            progressbar_sync_progress.Value = args.Value;
+            pbSync.Value = args.Value;
         }
 
         void SyncProcessOngoingStatus(object sender, Synchronization.SyncStatusChangedEventArgs args) 
         {
             //Display some text so that the user knows that what OneSync is doing during the synchronization.
-            label_message.Content = args.Status.ToString();
+            //label_message.Content = args.Status.ToString();
         }
 
         void SyncProcessCompleted(object sender, Synchronization.SyncCompletesEventArgs args)
@@ -393,23 +391,23 @@ namespace OneSync
 		{
             is_sync_job_ongoing = false; //Okay, the sync job is done.
 
-            label_message.Content = "You are now selecting";
+            //label_message.Content = "You are now selecting";
 
             //Stop the rotating of the sync logo button.
-            button_sync_copy.Visibility = Visibility.Hidden;
+            btnSync.Visibility = Visibility.Hidden;
             button_sync.Visibility = Visibility.Visible;
 
             //Show/hide some controls and enable/disable some of them.
             button_sync.IsEnabled = true;
-            textbox_storage_path.IsEnabled = true;
-            button_file_browser.IsEnabled = true;
+            txtIntStorage.IsEnabled = true;
+            btnBrowse.IsEnabled = true;
             textblock_back_to_home.IsEnabled = true;
             Expander.Visibility = Visibility.Hidden;
-            label_current_processing_file.Content = "Sync process successfully is done.";
+            lblStatus.Content = "Sync process successfully is done.";
 
             if (File.Exists(Log.returnLogReportPath(current_syncing_dir, false))) //To be changed. Depends on Naing.
 			{
-				textblock_show_log.Visibility = Visibility.Visible;
+				txtBlkShowLog.Visibility = Visibility.Visible;
 			}
 		}
 		
@@ -454,6 +452,7 @@ namespace OneSync
 			AeroGlass();
 		}
 
+        /*
         /// <summary>
         /// When the user mouse-overs the label displaying the source folder directory, a tool tip will appear.
         /// </summary>
@@ -464,6 +463,7 @@ namespace OneSync
             label_current_syncing_dir_frontpage.ToolTip = current_syncing_dir;
 			label_current_syncing_dir.ToolTip = current_syncing_dir;
 		}
+        */
 
         /// <summary>
         /// When the user clicks on the Sync button, the sync job will be run.
@@ -473,7 +473,7 @@ namespace OneSync
         /// <param name="e">The event arguments.</param>
 		private void Image_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
-            if(textbox_storage_path.Text.Length > 0)
+            if(txtIntStorage.Text.Length > 0)
             {
 				InstantNotification(""); //Empty the notification message (if any).
                 SyncProcessStarted();
@@ -491,7 +491,7 @@ namespace OneSync
         /// </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event arguments.</param>
-		private void textblock_show_log_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		private void txtBlkShowLog_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
 			//View log file (The extension of the file should be .html).
             Process.Start(Log.returnLogReportPath(current_syncing_dir, false));
@@ -526,7 +526,7 @@ namespace OneSync
         /// </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event arguments.</param>
-		private void button_file_browser_Click(object sender, System.Windows.RoutedEventArgs e)
+		private void btnBrowse_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
 			System.Windows.Forms.FolderBrowserDialog dlg = new System.Windows.Forms.FolderBrowserDialog();
 			
@@ -534,8 +534,8 @@ namespace OneSync
 			
 			if(result == System.Windows.Forms.DialogResult.OK)
             {
-                textbox_storage_path.Text = dlg.SelectedPath;
-				textbox_storage_path.Focus();
+                txtIntStorage.Text = dlg.SelectedPath;
+				txtIntStorage.Focus();
             }
 		}
 
@@ -546,47 +546,51 @@ namespace OneSync
         /// <param name="e">The event arguments.</param>
         private void textblock_back_to_home_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-        	ProfileCreationControlsVisibility(Visibility.Hidden, Visibility.Visible);
+        	//ProfileCreationControlsVisibility(Visibility.Hidden, Visibility.Visible);
 			Window.Title = "OneSync"; //Change back the menu title.
-			combobox_profile_name.Text = "";
+			cmbProfiles.Text = "";
+
+            Storyboard sb = (Storyboard)Window.Resources["sbHome"];
+            sb.Begin(this);
+            
         }
 
-        private void button_sync_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        private void btnSync_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
-        	button_sync.Source = new BitmapImage(new Uri("Resource/OneSync Transparent Logo.png", UriKind.Relative));
+            btnSync.Source = new BitmapImage(new Uri("Resource/OneSync Transparent Logo.png", UriKind.Relative));
         }
 
-        private void button_sync_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        private void btnSync_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            button_sync.Source = new BitmapImage(new Uri("Resource/OneSync Transparent Logo (Inactive).png", UriKind.Relative));
+            btnSync.Source = new BitmapImage(new Uri("Resource/OneSync Transparent Logo (Inactive).png", UriKind.Relative));
         }
 
-        private void textblock_rename_profile_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void txtBlkRenJob_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
         	//Rename a profile.
-            if(textbox_rename_profile.Text.Trim().Length > 0)
+            if(txtRenJob.Text.Trim().Length > 0)
             {
                 ProfileCreationControlsVisibility(Visibility.Visible, Visibility.Hidden);
 
                 //foreach (Synchronization.Profile item in (Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath)))
                 foreach (Profile item in (SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles()))
                 {
-                    if (item.Name.Equals(combobox_profile_name.Text))
+                    if (item.Name.Equals(cmbProfiles.Text))
                     {
                         is_sync_job_created_previously = true;
                         current_profile = item;
-                        profile_name = textbox_rename_profile.Text.Trim();
-                        textbox_storage_path.Text = current_profile.IntermediaryStorage.Path;
+                        profile_name = txtRenJob.Text.Trim();
+                        txtIntStorage.Text = current_profile.IntermediaryStorage.Path;
                         break;
                     }
                 }
                 Window.Title = profile_name + " - OneSync";
                 //Hide the progress bar.
-                progressbar_sync_progress.Visibility = Visibility.Hidden;
-                label_current_processing_file.Visibility = Visibility.Hidden;
+                pbSync.Visibility = Visibility.Hidden;
+                lblStatus.Visibility = Visibility.Hidden;
                 try
                 {
-                    current_profile.Name = textbox_rename_profile.Text.Trim();
+                    current_profile.Name = txtRenJob.Text.Trim();
                     //SyncClient.ProfileProcess.UpdateProfile(System.Windows.Forms.Application.StartupPath, current_profile);
                     SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).Update(current_profile);
 
@@ -609,7 +613,7 @@ namespace OneSync
 		/// </summary>
 		/// <param name="sender">The event sender.</param>
 		/// <param name="e">The event arguments.</param>
-        private void combobox_profile_name_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        private void cmbProfiles_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
 			if (e.Key == Key.Return)
 			{
@@ -618,21 +622,21 @@ namespace OneSync
 			else
 			{
 				showHideProfileEditting(Visibility.Hidden);
-				foreach (String item in combobox_profile_name.Items)
+				foreach (String item in cmbProfiles.Items)
 				{
 					//Check to see if the profile is an existing profile or not.
 					//If yes, then it will show the rename profile link.
-					if (item.Equals(combobox_profile_name.Text))
+					if (item.Equals(cmbProfiles.Text))
 					{
 						showHideProfileEditting(Visibility.Visible);
-						textbox_rename_profile.Text = combobox_profile_name.Text;
+						txtRenJob.Text = cmbProfiles.Text;
 						break;
 					}
 				}
 			}
         }
 
-        private void textblock_delete_profile_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void txtBlkDelJob_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
         	DialogResult result
 			= System.Windows.Forms.MessageBox.Show("Are you sure you want to delete " + profile_name + "?", "Job Profile Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -647,7 +651,7 @@ namespace OneSync
                     //Go back to the home page.
                     ProfileCreationControlsVisibility(Visibility.Hidden, Visibility.Visible);
                     Window.Title = "OneSync"; //Change back the menu title.
-                    combobox_profile_name.Text = "";
+                    cmbProfiles.Text = "";
                     reloadProfileComboBox();
                     
                 }
@@ -674,7 +678,7 @@ namespace OneSync
         private void reloadProfileComboBox() 
         {
             //Reload the profile combobox.
-            combobox_profile_name.Items.Clear();
+            cmbProfiles.Items.Clear();
             try
             {
                 //IList<Synchronization.Profile> profileItemsCollection = OneSync.Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath);
@@ -684,7 +688,7 @@ namespace OneSync
                     //Retrieve.
                     if (profileItem.SyncSource.Path.Equals(current_syncing_dir))
                     {
-                        combobox_profile_name.Items.Add(profileItem.Name);
+                        cmbProfiles.Items.Add(profileItem.Name);
                     }
                 }
             }
@@ -694,38 +698,42 @@ namespace OneSync
             }
         }
 		
+        
 		private void showHideProfileEditting(Visibility visibility)
 		{
-			textblock_rename_profile_label.Visibility = visibility;
-            textbox_rename_profile.Visibility = visibility;
-            textblock_rename_profile.Visibility = visibility;
-			textblock_delete_profile.Visibility = visibility;
-			path_profile_operations_1.Visibility = visibility;
-			path_profile_operations_2.Visibility = visibility;
-			path_profile_operations_3.Visibility = visibility;
+			//txtBlkRenJob_label.Visibility = visibility;
+            //txtRenJob.Visibility = visibility;
+            //txtBlkRenJob.Visibility = visibility;
+			//textblock_delete_profile.Visibility = visibility;
+			//path_profile_operations_1.Visibility = visibility;
+			//path_profile_operations_2.Visibility = visibility;
+			//path_profile_operations_3.Visibility = visibility;
 		}
+        
 		
 		/// <summary>
         /// This method will be called when the user clicks on the New Job link.
         /// </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event arguments.</param>
-		private void textblock_new_profile_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		private void txtBlkNext_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
 			do_job();
+            //canvasHome.Visibility = Visibility.Hidden;
+            //canvasSync.Visibility = Visibility.Visible;
 		}
 		
 		private void do_job()
 		{
-			if (combobox_profile_name.Text.Trim().Length > 0)
+			if (cmbProfiles.Text.Trim().Length > 0)
             {
 				InstantNotification(""); //Empty the notification message (if any).
-                profile_name = combobox_profile_name.Text.Trim();
-                ProfileCreationControlsVisibility(Visibility.Visible, Visibility.Hidden);
+                profile_name = cmbProfiles.Text.Trim();
+                //ProfileCreationControlsVisibility(Visibility.Visible, Visibility.Hidden);
                 Window.Title = profile_name + " - OneSync";
                 //Hide the progress bar.
-                progressbar_sync_progress.Visibility = Visibility.Hidden;
-                label_current_processing_file.Visibility = Visibility.Hidden;
+                //pbSync.Visibility = Visibility.Hidden;
+                //lblStatus.Visibility = Visibility.Hidden;
                 current_profile = null;
                 try
                 {
@@ -738,10 +746,11 @@ namespace OneSync
                         {
                             is_sync_job_created_previously = true;
                             current_profile = item;
-                            textbox_storage_path.Text = item.IntermediaryStorage.Path;
+                            txtIntStorage.Text = item.IntermediaryStorage.Path;
                             break;
                         }
                     }
+                    ((Storyboard)Resources["sbNext"]).Begin(this);
                 }
                 catch (Exception) 
                 {
@@ -754,17 +763,17 @@ namespace OneSync
             }
 		}
 
-		private void combobox_profile_name_DropDownClosed(object sender, System.EventArgs e)
+		private void cmbProfiles_DropDownClosed(object sender, System.EventArgs e)
 		{
 			showHideProfileEditting(Visibility.Hidden);
-            foreach (String item in combobox_profile_name.Items)
+            foreach (String item in cmbProfiles.Items)
             {
                 //Check to see if the profile is an existing profile or not.
                 //If yes, then it will show the rename profile link.
-                if (item.Equals(combobox_profile_name.Text))
+                if (item.Equals(cmbProfiles.Text))
                 {
                     showHideProfileEditting(Visibility.Visible);
-                    textbox_rename_profile.Text = combobox_profile_name.Text;
+                    txtRenJob.Text = cmbProfiles.Text;
                     break;
                 }
             }
