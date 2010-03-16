@@ -7,7 +7,7 @@ Welcome to the OneSync User guide - a place to know more about OneSync and find 
 This guide allows you to learn the features of OneSync. Just follow through the handy guide below, and enjoy the journey! =)
 
 == Content ==
-[https://code.google.com/p/onesync/w/edit/UserGuide#Getting_Started]
+[WikiSyntax#Getting_Starter]
   * Getting started
     * New features in version 0.9
     * Downloading and installing
@@ -23,7 +23,7 @@ This guide allows you to learn the features of OneSync. Just follow through the 
   * View the logs
   * Feedback
 
-== Getting Started ==
+==Getting Started==
 ===New Features in Version 0.9===
 
 This version of OneSync has a number of exciting new features, including:
