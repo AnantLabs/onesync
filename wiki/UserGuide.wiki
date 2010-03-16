@@ -34,7 +34,7 @@ This version of OneSync has a number of exciting new features, including:
 
 ===Downloading and Installing===
 
-*WARNING* Please disable your *User Accounts Control (UAC)* before installing and running OneSync. CodeDroids and its members will not be held responsible for any loss due to not doing this.
+*WARNING* Please disable your *User Account Control (UAC)* before installing and running OneSync. CodeDroids and its members will not be held responsible for any loss due to not doing this.
 
 *NOTE* Make sure you are running an Windows operating system (either Windows Vista or Windows 7) and that you have uninstalled any previous version of OneSync. The previous versions of OneSync are:
  # OneSync V-0.5
