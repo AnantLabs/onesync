@@ -76,6 +76,11 @@ namespace OneSync
         Storyboard myStoryboard = new Storyboard(); //The storyboard of label_notification.
         //End: Global variables.
 		
+		
+		/*========================================================
+		PART 1: MAIN WINDOW GUI SETUP WHEN THE PROGRAM RUNS
+		========================================================*/
+		
         /// <summary>
         /// This is the code responsible for displaying the main window.
         /// </summary>
@@ -129,14 +134,12 @@ namespace OneSync
 					+ displaying_current_syncing_dir.Substring(displaying_current_syncing_dir.Length - (MAX_DIR_STRING_LENGTH - DIR_STRING_PREFIX_LENGTH), (MAX_DIR_STRING_LENGTH - DIR_STRING_PREFIX_LENGTH));
 			}
 			lblSyncDir.Content = displaying_current_syncing_dir;
-			//label_current_syncing_dir_frontpage.Content = displaying_current_syncing_dir;
 
             //Import all the previous created existing sync job profiles.
             //Note that only the profile having the directory which is the current directory will be imported.
 			//TO BE DISCUSSED: Note that for those profile has Sync Source Directory not exist anymore will be deleted.
             try
             {
-                //IList<Synchronization.Profile> profileItemsCollection = OneSync.Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath);
                 IList<Synchronization.Profile> profileItemsCollection = SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles();
 
                 foreach (Synchronization.Profile profileItem in profileItemsCollection)
@@ -146,9 +149,6 @@ namespace OneSync
                     {
                         cmbProfiles.Items.Add(profileItem.Name);
                     }
-                    //TODO: Delete no longer exist profile.
-                    //NOTE: Only not existing profile will be deleted.
-                    //WAIT: Thuat is implementing the Delete function in OneSync.Synchronization.SQLiteProfileManager.
                 }
             }catch(Exception ex)
             {
@@ -157,92 +157,41 @@ namespace OneSync
 			
             //Show the log of current/just-finished sync job.
             txtBlkShowLog.Visibility = Visibility.Hidden;
-			if(File.Exists(Log.returnLogReportPath(current_syncing_dir, false))) //To be changed. Depends on Naing.
+			if(File.Exists(Log.returnLogReportPath(current_syncing_dir, false)))
 			{
 				txtBlkShowLog.Visibility = Visibility.Visible;
 			}
             OneSyncStartingControlsVisibility();
 		}
 		
-        /// <summary>
-        /// Get a collection of log entries.
+		/*========================================================
+		PART 1 ENDS HERE
+		========================================================*/
+		
+		
+		/*========================================================
+		PART 2: SYNC FROM START TO END
+		========================================================*/
+		/// <summary>
+        /// When the user clicks on the Sync button, the sync job will be run.
+        /// It will show/hide some controls and enable/disable some of them.
         /// </summary>
-		public ObservableCollection<UILogEntry> LogsCollection
-    	{
-			get
-			{
-				return _LogsCollection;
-			}
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+		private void Image_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+            if(txtIntStorage.Text.Length > 0)
+            {
+				InstantNotification(""); //Empty the notification message (if any).
+                SyncProcessStarted();
+            }
+            else
+            {
+                InstantNotification("Please provide the path to your intermediate storage.");
+            }
+            
 		}
 		
-        /// <summary>
-        /// Once a file in the source/storage directory is processed, a new log will be added.
-        /// </summary>
-        /// <param name="fileName">The name of the processed file.</param>
-        /// <param name="status">The status of the process: 0 - Completely processed; 1 - Conflict.</param>
-        /// <param name="message">A detailed message.</param>
-		private void AddNewCurrentLog(string fileName, int status, string message)
-		{
-			string imageSrc = ""; //The source of the small icon appearing next to the filename in each log entry.
-			string statusMessage = "";
-			switch(status)
-			{
-                case ((int)LogStatus.Completed):
-					imageSrc = "completed_icon.gif";
-					statusMessage = "Completely processed";
-					break;
-                case ((int)LogStatus.Conflict):
-					imageSrc = "conflicting_icon.gif";
-					statusMessage = "Conflict";
-					break;
-				default:
-                    Debug.Assert(true, "The value cannot be find in the enum LogStatus. Please ask Chun Lin for more info.");
-					break;
-			}
-
-            //Add a new log entry to the log collection.
-			_LogsCollection.Add(new UILogEntry{
-				ImageSrc = imageSrc,
-				FileName = fileName,
-				Status = statusMessage,
-				Message = message
-			});
-		}
-
-        /// <summary>
-        /// This methods handle the visibility of some controls in order to make sure that
-        /// those controls will not be shown when the program first starts.
-        /// </summary>
-        private void OneSyncStartingControlsVisibility() 
-        {
-            //Controls to be hidden when the program first starts.
-            lblStatus.Visibility = Visibility.Hidden;
-            pbSync.Visibility = Visibility.Hidden;
-            Expander.Visibility = Visibility.Hidden;
-
-            ProfileCreationControlsVisibility(Visibility.Hidden, Visibility.Visible);
-        }
-
-        /// <summary>
-        /// This methods control the visibility of some controls before and after a new sync
-        /// job profile is created.
-        /// </summary>
-        /// <param name="visibility">Can be either visible, hidden or collapsed.</param>
-        private void ProfileCreationControlsVisibility(Visibility visibility, Visibility sideVisibility) 
-        {
-			InstantNotification(""); //Empty the notification message (if any).
-			
-            //Controls to be hidden/displayed before a sync job profile is created and displayed after the profile is created.
-            txtBlkNext.Visibility = sideVisibility;
-			cmbProfiles.Visibility = sideVisibility;
-
-            //Reset control's content.
-            txtIntStorage.Text = "";
-
-            //Always hidden.
-			showHideProfileEditting(Visibility.Hidden);
-        }
-
         /// <summary>
         /// This one will be called internally after the user clicks on the Sync button and before the sync process begins.
         /// It will show/hide some controls and enable/disable some of them.
@@ -255,11 +204,7 @@ namespace OneSync
             lblStatus.Content = "You are now syncing";
             if(storage_dir.Length > 0)
             {
-                if (current_syncing_dir.Equals(storage_dir))
-                {
-                    InstantNotification("Oops...  Your source folder and intermediate storage have the same directory. This is not allowed.");
-                }
-                else
+                if (directoryVerifier(current_syncing_dir, storage_dir))
                 {
                     InstantNotification("");
                     bool should_i_sync = true;
@@ -335,12 +280,6 @@ namespace OneSync
             SyncPreviewResult previewResult =  currentAgent.PreviewSync();
             currentAgent.Synchronize(previewResult);
         }
-
-        /*
-        private void DoWorkAsymc(MethodInvoker d) 
-        {
-            IAsyncResult result = d.BeginInvoke(null, d);
-        }*/
 
         void SyncProcessNowStarted(object sender, Synchronization.SyncStartsEventArgs args) 
         {
@@ -442,80 +381,30 @@ namespace OneSync
 			}
 		}
 		
+		/*========================================================
+		PART 2 ENDS HERE
+		========================================================*/
+		
+		/*========================================================
+		PART 3: SHOW NOTIFICATION MESSAGE TO THE USER
+		========================================================*/
+		
+		/// <summary>
+		/// Show the notification message to the user.
+		/// </summary>
+		/// <param name="message">The notification message</param>
 		private void InstantNotification(string message)
 		{
 			label_notification.Content = message;
 		}
 		
-        /// <summary>
-        /// For Aero Glass effect (Part 3/3).
-        /// </summary>
-		private void AeroGlass()
-		{
-			var originalBackground = this.Background;
-
-			try
-			{
-				/*IntPtr hwnd = new WindowInteropHelper(this).Handle;
-				HwndSource mainWindowSrc = (HwndSource)HwndSource.FromHwnd(hwnd);
-				if (!(mainWindowSrc == null || !DwmIsCompositionEnabled()))
-				{
-					var margins = new Margins { cxLeftWidth = -1, cxRightWidth = -1, cyTopHeight = -1, cyBottomHeight = -1 };
-					
-					this.Background = Brushes.Transparent;
-					mainWindowSrc.CompositionTarget.BackgroundColor = Color.FromArgb(0, 0, 0, 0);
-					DwmExtendFrameIntoClientArea(mainWindowSrc.Handle, ref margins);
-				}*/
-			}
-			catch (Exception) //If not Vista, paint background normally.
-			{
-				this.Background = originalBackground;
-			}
-		}
-
-        /// <summary>
-        /// When the window is ready, the Aero Glass effect will be triggered.
-        /// </summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event arguments.</param>
-		private void Window_SourceInitialized(object sender, System.EventArgs e)
-		{
-			AeroGlass();
-		}
-
-        /*
-        /// <summary>
-        /// When the user mouse-overs the label displaying the source folder directory, a tool tip will appear.
-        /// </summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event arguments.</param>
-		private void label_current_syncing_dir_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-		{
-            label_current_syncing_dir_frontpage.ToolTip = current_syncing_dir;
-			label_current_syncing_dir.ToolTip = current_syncing_dir;
-		}
-        */
-
-        /// <summary>
-        /// When the user clicks on the Sync button, the sync job will be run.
-        /// It will show/hide some controls and enable/disable some of them.
-        /// </summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event arguments.</param>
-		private void Image_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-		{
-            if(txtIntStorage.Text.Length > 0)
-            {
-				InstantNotification(""); //Empty the notification message (if any).
-                SyncProcessStarted();
-            }
-            else
-            {
-                InstantNotification("Please provide the path to your intermediate storage.");
-            }
-            
-		}
-
+        /*========================================================
+		PART 3 ENDS HERE
+		========================================================*/
+		
+		/*========================================================
+		PART 4: LOGS
+		========================================================*/
         /// <summary>
         /// When the user clicks on the Show Log button, the .html version of log will be executed.
         /// User is then able to view the log file in the browser.
@@ -527,7 +416,14 @@ namespace OneSync
 			//View log file (The extension of the file should be .html).
             Process.Start(Log.returnLogReportPath(current_syncing_dir, false));
 		}
-
+		
+		/*========================================================
+		PART 4 ENDS HERE
+		========================================================*/
+		
+		/*========================================================
+		PART 5: EXPANDER
+		========================================================*/
         /// <summary>
         /// This method will be called when the user clicks on the Expander expand button.
         /// </summary>
@@ -551,7 +447,14 @@ namespace OneSync
 			this.Height -= 220;
 			Expander.Header = "Show details";
 		}
-
+		
+		/*========================================================
+		PART 5 ENDS HERE
+		========================================================*/
+		
+		/*========================================================
+		PART 6: OTHER BUTTONS
+		========================================================*/
         /// <summary>
         /// This method will be called when the user clicks on the File Browser "..." button.
         /// </summary>
@@ -578,6 +481,7 @@ namespace OneSync
         private void textblock_back_to_home_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
         	ProfileCreationControlsVisibility(Visibility.Hidden, Visibility.Visible);
+			reloadProfileComboBox();
 			Window.Title = "OneSync"; //Change back the menu title.
 			cmbProfiles.Text = "";
 
@@ -708,51 +612,24 @@ namespace OneSync
                 }
 			}
         }
-
+		
+		/// <summary>
+		/// This method will be called when the user tries to close the OneSync program.
+		/// </summary>
+		/// <param name="sender">The event sender.</param>
+		/// <param name="e">The event arguments.</param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (is_sync_job_ongoing)
             {
-                //InstantNotification("Sorry, please close this application only after the sync is done.");
-                //e.Cancel = true; //The user cannot close the app if the sync progress is ongoing.
+				DialogResult result
+				= System.Windows.Forms.MessageBox.Show("Are you sure you want to close the program now? The synchronization is still ongoing.", "Goodbye OneSync", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+				if(result == System.Windows.Forms.DialogResult.No)
+				{
+                	e.Cancel = true; //The user cancel the close action.
+				}
             }
         }
-
-        private void reloadProfileComboBox() 
-        {
-            //Reload the profile combobox.
-            cmbProfiles.Items.Clear();
-            try
-            {
-                //IList<Synchronization.Profile> profileItemsCollection = OneSync.Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath);
-                IList<Synchronization.Profile> profileItemsCollection = SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles();
-                foreach (Synchronization.Profile profileItem in profileItemsCollection)
-                {
-                    //Retrieve.
-                    if (profileItem.SyncSource.Path.Equals(current_syncing_dir))
-                    {
-                        cmbProfiles.Items.Add(profileItem.Name);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                InstantNotification("Oops... " + ex.Message);
-            }
-        }
-		
-        
-		private void showHideProfileEditting(Visibility visibility)
-		{
-			txtBlkRenJob_label.Visibility = visibility;
-            txtRenJob.Visibility = visibility;
-            txtBlkRenJob.Visibility = visibility;
-			txtBlkDelJob.Visibility = visibility;
-			path_profile_operations_1.Visibility = visibility;
-			path_profile_operations_2.Visibility = visibility;
-			path_profile_operations_3.Visibility = visibility;
-		}
-        
 		
 		/// <summary>
         /// This method will be called when the user clicks on the New Job link.
@@ -766,6 +643,38 @@ namespace OneSync
             //canvasSync.Visibility = Visibility.Visible;
 		}
 		
+		/// <summary>
+		/// This event is triggered when the drop-down list of the profiles combobox is closed.
+		/// </summary>
+		/// <param name="sender">The event sender.</param>
+		/// <param name="e">The event arguments.</param>
+		private void cmbProfiles_DropDownClosed(object sender, System.EventArgs e)
+		{
+			showHideProfileEditting(Visibility.Hidden);
+            foreach (Profile item in (SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles()))
+            {
+                //Check to see if the profile is an existing profile or not.
+                //If yes, then it will show the rename profile link.
+                if (item.Name.Equals(cmbProfiles.Text))
+                {
+                    showHideProfileEditting(Visibility.Visible);
+                    txtRenJob.Text = cmbProfiles.Text;
+                    break;
+                }
+            }
+		}
+		
+		/*========================================================
+		PART 6 ENDS HERE
+		========================================================*/
+		
+		/*========================================================================================
+		PART 7: FROM SYNC JOB PAGE TO SYNC PAGE AND PROFILE RELOADING
+		========================================================================================*/
+		
+		/// <summary>
+		/// This method will be called when the "Do Job" (Chun Lin version) or "Next" (Desmond version) button is clicked.
+		/// </summary>
 		private void do_job()
 		{
 			if (cmbProfiles.Text.Trim().Length > 0)
@@ -805,23 +714,184 @@ namespace OneSync
                 InstantNotification("Please provide the name of your sync job.");
             }
 		}
-
-		private void cmbProfiles_DropDownClosed(object sender, System.EventArgs e)
-		{
-			showHideProfileEditting(Visibility.Hidden);
-            foreach (Profile item in (SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles()))
+		
+		/// <summary>
+		/// Reload the profiles list in the combo box.
+		/// </summary>
+		private void reloadProfileComboBox() 
+        {
+            //Reload the profile combobox.
+            cmbProfiles.Items.Clear();
+            try
             {
-                //Check to see if the profile is an existing profile or not.
-                //If yes, then it will show the rename profile link.
-                if (item.Name.Equals(cmbProfiles.Text))
+                //IList<Synchronization.Profile> profileItemsCollection = OneSync.Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath);
+                IList<Synchronization.Profile> profileItemsCollection = SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles();
+                foreach (Synchronization.Profile profileItem in profileItemsCollection)
                 {
-                    showHideProfileEditting(Visibility.Visible);
-                    txtRenJob.Text = cmbProfiles.Text;
-                    break;
+                    //Retrieve.
+                    if (profileItem.SyncSource.Path.Equals(current_syncing_dir))
+                    {
+                        cmbProfiles.Items.Add(profileItem.Name);
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                InstantNotification("Oops... " + ex.Message);
+            }
+        }
+		
+		/*========================================================
+		PART 7 ENDS HERE
+		========================================================*/
+		
+		/*========================================================
+		PART 8: VISIBILITY HANDLING
+		========================================================*/
+		
+		/// <summary>
+		/// Change the visibility of the related controls.
+		/// </summary>
+		/// <param name="visibility">Can be either Visibility.Visible or Visibility.Hidden</param>
+		private void showHideProfileEditting(Visibility visibility)
+		{
+			txtBlkRenJob_label.Visibility = visibility;
+            txtRenJob.Visibility = visibility;
+            txtBlkRenJob.Visibility = visibility;
+			txtBlkDelJob.Visibility = visibility;
+			path_profile_operations_1.Visibility = visibility;
+			path_profile_operations_2.Visibility = visibility;
+			path_profile_operations_3.Visibility = visibility;
 		}
 		
+		 /// <summary>
+        /// This methods handle the visibility of some controls in order to make sure that
+        /// those controls will not be shown when the program first starts.
+        /// </summary>
+        private void OneSyncStartingControlsVisibility() 
+        {
+            //Controls to be hidden when the program first starts.
+            lblStatus.Visibility = Visibility.Hidden;
+            pbSync.Visibility = Visibility.Hidden;
+            Expander.Visibility = Visibility.Hidden;
+
+            ProfileCreationControlsVisibility(Visibility.Hidden, Visibility.Visible);
+        }
+
+        /// <summary>
+        /// This methods control the visibility of some controls before and after a new sync
+        /// job profile is created.
+        /// </summary>
+        /// <param name="visibility">Can be either visible, hidden or collapsed.</param>
+        private void ProfileCreationControlsVisibility(Visibility visibility, Visibility sideVisibility) 
+        {
+			InstantNotification(""); //Empty the notification message (if any).
+			
+            //Controls to be hidden/displayed before a sync job profile is created and displayed after the profile is created.
+            txtBlkNext.Visibility = sideVisibility;
+			cmbProfiles.Visibility = sideVisibility;
+
+            //Reset control's content.
+            txtIntStorage.Text = "";
+
+            //Always hidden.
+			showHideProfileEditting(Visibility.Hidden);
+        }
+		
+		/*========================================================
+		PART 8 ENDS HERE
+		========================================================*/
+		
+		/*========================================================
+		PART 9: DIRECTORY VERIFIER
+		========================================================*/
+		
+		/// <summary>
+		/// Verify and see whether the directories of Sync Source Folder and Intermediate Storage Folder are valid.
+		/// </summary>
+		/// <param name="sync_source_dir">Directory of Sync Source Folder</param>
+		/// <param name="intermediate_storage_dir">Directory of Intermediate Storage Folder</param>
+		/// <returns>True if the both directories are valid.</returns>
+		private bool directoryVerifier(string sync_source_dir, string intermediate_storage_dir)
+		{
+			//Check #1: Check whether the Sync Source Folder and the Intermediate Storage Folder having the same directory.
+			if(sync_source_dir.Equals(intermediate_storage_dir))
+			{
+				InstantNotification("Oops... Your source folder and intermediate storage have the same directory.");
+				return false;
+			}
+			//Check #2a: Check whether the Sync Source Folder exists or not.
+			if(Directory.Exists(sync_source_dir))
+			{
+				InstantNotification("Oops... I cannot find your Sync Source Folder. You should close this program.");
+				return false;
+			}
+			//Check #2b: Check whether the Intermediate Storage Folder exists or not.
+			if(Directory.Exists(intermediate_storage_dir))
+			{
+				InstantNotification("Oops... I cannot find your intermediate storage.");
+				return false;
+			}
+			//Check #3: Check whether the Sync Source Folder and the Intermediate Storage Folder are the subdirectory of each other.
+			if(sync_source_dir.IndexOf(intermediate_storage_dir) > -1 || intermediate_storage_dir.IndexOf(sync_source_dir) > -1)
+			{
+				InstantNotification("Oops... Are you doing recursive syncing? Please do not do it here. Thanks.");
+				return false;
+			}
+			
+			return true;
+		}
+		
+		/*========================================================
+		PART 9 ENDS HERE
+		========================================================*/
+		
+		
+		/*========================================================
+		PART 10: OTHER CODES FOR FUTURE VERSIONS
+		========================================================*/
+		/// <summary>
+        /// When the window is ready, the Aero Glass effect will be triggered.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+		private void Window_SourceInitialized(object sender, System.EventArgs e)
+		{
+			//Comment out the following line to hide the Aero Glass effect because
+			//the user does not like the Aero Glass effect.
+			//AeroGlass();
+		}
+		
+		/// <summary>
+        /// For Aero Glass effect (Part 3/3).
+        /// </summary>
+		private void AeroGlass()
+		{
+			var originalBackground = this.Background;
+
+			try
+			{
+				IntPtr hwnd = new WindowInteropHelper(this).Handle;
+				HwndSource mainWindowSrc = (HwndSource)HwndSource.FromHwnd(hwnd);
+				if (!(mainWindowSrc == null || !DwmIsCompositionEnabled()))
+				{
+					var margins = new Margins { cxLeftWidth = -1, cxRightWidth = -1, cyTopHeight = -1, cyBottomHeight = -1 };
+					
+					this.Background = Brushes.Transparent;
+					mainWindowSrc.CompositionTarget.BackgroundColor = Color.FromArgb(0, 0, 0, 0);
+					DwmExtendFrameIntoClientArea(mainWindowSrc.Handle, ref margins);
+				}
+			}
+			catch (Exception) //If not Vista, paint background normally.
+			{
+				this.Background = originalBackground;
+			}
+		}
+		
+		/// <summary>
+		/// This method is for the GUI Designer to test the program.
+		/// </summary>
+		/// <param name="testingNumber">The number of the testing code.</param>
 		private void testingCode(int testingNumber)
 		{
 			switch(testingNumber)
@@ -840,10 +910,56 @@ namespace OneSync
 						Message = "There is another different copy of Proposal.pdf found in the patch."
 					});
 					break;
-				case 1:
-					
-					break;
 			}
 		}
+		
+		/// <summary>
+        /// Get a collection of log entries.
+        /// </summary>
+		public ObservableCollection<UILogEntry> LogsCollection
+    	{
+			get
+			{
+				return _LogsCollection;
+			}
+		}
+		
+        /// <summary>
+        /// Once a file in the source/storage directory is processed, a new log will be added.
+        /// </summary>
+        /// <param name="fileName">The name of the processed file.</param>
+        /// <param name="status">The status of the process: 0 - Completely processed; 1 - Conflict.</param>
+        /// <param name="message">A detailed message.</param>
+		private void AddNewCurrentLog(string fileName, int status, string message)
+		{
+			string imageSrc = ""; //The source of the small icon appearing next to the filename in each log entry.
+			string statusMessage = "";
+			switch(status)
+			{
+                case ((int)LogStatus.Completed):
+					imageSrc = "completed_icon.gif";
+					statusMessage = "Completely processed";
+					break;
+                case ((int)LogStatus.Conflict):
+					imageSrc = "conflicting_icon.gif";
+					statusMessage = "Conflict";
+					break;
+				default:
+                    Debug.Assert(true, "The value cannot be find in the enum LogStatus. Please ask Chun Lin for more info.");
+					break;
+			}
+
+            //Add a new log entry to the log collection.
+			_LogsCollection.Add(new UILogEntry{
+				ImageSrc = imageSrc,
+				FileName = fileName,
+				Status = statusMessage,
+				Message = message
+			});
+		}
+		
+		/*========================================================
+		PART 10 ENDS HERE
+		========================================================*/
 	}
 }
