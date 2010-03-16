@@ -1,13 +1,11 @@
 #summary Explains how OneSync works
 
-= Introduction =
+== Introduction ==
 
-Add your content here.
+OneSync allows 2 folders to be synchronized through an common intermediary storage such as a flashdrive. Therefore, it enables the user to perform synchronization between 2 different PCs. The common intermediary storage is not limited to flashdrive but could be any location from both PCs such as shared folder over LAN and even synchronized DropBox folder.
 
+----
 
-= Details =
+== Lightweight Sync ==
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+OneSync only stores modified/newly created files on the intermediary storage in order to maximize storage efficiency.
