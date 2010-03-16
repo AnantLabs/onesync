@@ -373,7 +373,7 @@ namespace OneSync
             btnBrowse.IsEnabled = true;
             textblock_back_to_home.IsEnabled = true;
             Expander.Visibility = Visibility.Hidden;
-            lblStatus.Content = "Sync process successfully is done.";
+            lblStatus.Content = "Sync process is successfully done.";
 
             if (File.Exists(Log.returnLogReportPath(current_syncing_dir, false))) //To be changed. Depends on Naing.
 			{
@@ -490,14 +490,14 @@ namespace OneSync
             
         }
 
-        private void btnSync_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        private void button_sync_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            btnSync.Source = new BitmapImage(new Uri("Resource/OneSync Transparent Logo.png", UriKind.Relative));
+            button_sync.Source = new BitmapImage(new Uri("Resource/OneSync Transparent Logo.png", UriKind.Relative));
         }
 
-        private void btnSync_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        private void button_sync_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            btnSync.Source = new BitmapImage(new Uri("Resource/OneSync Transparent Logo (Inactive).png", UriKind.Relative));
+            button_sync.Source = new BitmapImage(new Uri("Resource/OneSync Transparent Logo (Inactive).png", UriKind.Relative));
         }
 
         private void txtBlkRenJob_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

@@ -18,8 +18,8 @@ namespace OneSync
     [RunInstaller(true)]
     public partial class OneSyncInstaller : Installer
     {
-        private const string MenuName = "Folder\\shell\\OneSyncMenuOption-v0.0";
-        private const string Command = "Folder\\shell\\OneSyncMenuOption-v0.0\\command";
+        private const string MenuName = "Folder\\shell\\OneSyncMenuOption-v0.9";
+        private const string Command = "Folder\\shell\\OneSyncMenuOption-v0.9\\command";
 
         public OneSyncInstaller()
         {
@@ -40,7 +40,7 @@ namespace OneSync
             {
                 regmenu = Registry.ClassesRoot.CreateSubKey(MenuName);
                 if(regmenu != null)
-                    regmenu.SetValue("", "Sync this folder with OneSync Zero");
+                    regmenu.SetValue("", "Sync this folder with OneSync V0.9");
                 regcmd = Registry.ClassesRoot.CreateSubKey(Command);
                 if(regcmd != null)
                     regcmd.SetValue("", "\"" + Assembly.GetExecutingAssembly().Location + "\" \"%1\"");
@@ -86,10 +86,10 @@ namespace OneSync
             }
 
             //Delete the installation dir because there is a data.md file stored inside.
-            //if(File.Exists(System.Windows.Forms.Application.StartupPath + @"\data.md"))
-            //{
-                //Directory.Delete(System.Windows.Forms.Application.StartupPath + @"\data.md", true);
-            //}
+            if(File.Exists(System.Windows.Forms.Application.StartupPath + @"\data.md"))
+            {
+                File.Delete(System.Windows.Forms.Application.StartupPath + @"\data.md");
+            }
         }
     }
 }

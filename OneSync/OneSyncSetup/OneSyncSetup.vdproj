@@ -21,8 +21,44 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_2B5E60944B6A82080AB180018250BE75"
+        "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_2B5E60944B6A82080AB180018250BE75"
+        "OwnerKey" = "8:_3B3A7A79FE2B838F64FE3AF6AC04B08D"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_3B3A7A79FE2B838F64FE3AF6AC04B08D"
+        "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_2B5E60944B6A82080AB180018250BE75"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_3B3A7A79FE2B838F64FE3AF6AC04B08D"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -178,6 +214,68 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2B5E60944B6A82080AB180018250BE75"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Community.CsharpSqlite, Version=3.6.22.1, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_2B5E60944B6A82080AB180018250BE75"
+                    {
+                    "Name" = "8:Community.CsharpSqlite.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Community.CsharpSqlite.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_E017F1941B1444CBBF2A995811C34F54"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3B3A7A79FE2B838F64FE3AF6AC04B08D"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Community.CsharpSqlite.SQLiteClient, Version=3.6.22.3, Culture=neutral, processorArchitecture=x86"
+                "ScatterAssemblies"
+                {
+                    "_3B3A7A79FE2B838F64FE3AF6AC04B08D"
+                    {
+                    "Name" = "8:Community.CsharpSqlite.SQLiteClient.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Community.CsharpSqlite.SQLiteClient.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_E017F1941B1444CBBF2A995811C34F54"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -233,19 +331,19 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:OneSync Zero"
-        "ProductCode" = "8:{F8A1CBEA-E109-4200-8A3F-C96EE80C203F}"
-        "PackageCode" = "8:{7017CAE1-11D1-4E50-BBC8-D40C43696127}"
+        "ProductName" = "8:OneSync V0.9"
+        "ProductCode" = "8:{F64B2795-4F80-4311-BA05-19F741B3E6D0}"
+        "PackageCode" = "8:{EAADC456-EB14-48AF-8881-7F6C962D3651}"
         "UpgradeCode" = "8:{268160E3-0323-49E7-8B23-E33489420389}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.0.0"
+        "ProductVersion" = "8:3.0.0"
         "Manufacturer" = "8:CodeDroids 2009"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:OneSync Zero Setup"
+        "Title" = "8:OneSync V0.9 Setup"
         "Subject" = "8:"
         "ARPCONTACT" = "8:CodeDroids"
         "Keywords" = "8:"
@@ -760,7 +858,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
             {
-            "SourcePath" = "8:..\\OneSyncWPF\\obj\\Debug\\OneSync.exe"
+            "SourcePath" = "8:..\\OneSyncApp\\obj\\Debug\\OneSync.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_E017F1941B1444CBBF2A995811C34F54"
