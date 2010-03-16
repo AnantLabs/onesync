@@ -332,12 +332,9 @@ namespace OneSync
                                 currentAgent.OnStatusChanged += new OneSync.Synchronization.SyncStatusChangedHandler(SyncProcessOngoingStatus);
                                 currentAgent.OnCompleted += new OneSync.Synchronization.SyncCompletesHandler(SyncProcessCompleted);
 
-                                SyncPreviewResult preview = currentAgent.PreviewSync();
                                 BackgroundWorker syncWorker = new BackgroundWorker();
-                                DoWorkAsymc((MethodInvoker)delegate
-                                {
-                                    currentAgent.Synchronize(preview);
-                                });
+                                syncWorker.DoWork += new DoWorkEventHandler(syncWorker_DoWork);
+                                syncWorker.RunWorkerAsync();
                             }
                         }
                     }
@@ -346,35 +343,49 @@ namespace OneSync
 			
         }
 
+        void syncWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            SyncPreviewResult previewResult =  currentAgent.PreviewSync();
+            currentAgent.Synchronize(previewResult);
+        }
+
+        /*
         private void DoWorkAsymc(MethodInvoker d) 
         {
             IAsyncResult result = d.BeginInvoke(null, d);
-        }
+        }*/
 
         void SyncProcessNowStarted(object sender, Synchronization.SyncStartsEventArgs args) 
         {
-            is_sync_job_ongoing = true; //Yes, the sync process starts from here!
+            if (this.Dispatcher.CheckAccess())
+            {
+                is_sync_job_ongoing = true; //Yes, the sync process starts from here!
 
-            //Rotate the OneSync Logo on the button.
-            btnSync.Visibility = Visibility.Visible;
-            button_sync.Visibility = Visibility.Hidden;
-            DoubleAnimation da = new DoubleAnimation();
-            da.From = 0;
-            da.To = 360;
-            da.Duration = new Duration(TimeSpan.FromMilliseconds(1500));
-            da.RepeatBehavior = RepeatBehavior.Forever;
-            RotateTransform rt = new RotateTransform();
-            btnSync.RenderTransform = rt;
-            btnSync.RenderTransformOrigin = new Point(0.5, 0.5);
-            rt.BeginAnimation(RotateTransform.AngleProperty, da);
+                //Rotate the OneSync Logo on the button.
+                btnSync.Visibility = Visibility.Visible;
+                button_sync.Visibility = Visibility.Hidden;
+                DoubleAnimation da = new DoubleAnimation();
+                da.From = 0;
+                da.To = 360;
+                da.Duration = new Duration(TimeSpan.FromMilliseconds(1500));
+                da.RepeatBehavior = RepeatBehavior.Forever;
+                RotateTransform rt = new RotateTransform();
+                btnSync.RenderTransform = rt;
+                btnSync.RenderTransformOrigin = new Point(0.5, 0.5);
+                rt.BeginAnimation(RotateTransform.AngleProperty, da);
 
-            //Show/hide some controls and enable/disable some of them.
-            button_sync.IsEnabled = false;
-            txtIntStorage.IsEnabled = false;
-            btnBrowse.IsEnabled = false;
-            textblock_back_to_home.IsEnabled = false;
-            pbSync.Visibility = Visibility.Visible;
-            lblStatus.Visibility = Visibility.Visible;
+                //Show/hide some controls and enable/disable some of them.
+                button_sync.IsEnabled = false;
+                txtIntStorage.IsEnabled = false;
+                btnBrowse.IsEnabled = false;
+                textblock_back_to_home.IsEnabled = false;
+                pbSync.Visibility = Visibility.Visible;
+                lblStatus.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                pbSync.Dispatcher.Invoke((MethodInvoker)delegate { SyncProcessNowStarted(sender, args); });
+            }
         }
 
         void SyncProcessOngoing(object sender, Synchronization.SyncProgressChangedEventArgs args) 
