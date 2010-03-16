@@ -8,7 +8,7 @@ architecture and then progresses to more and more detailed information about the
 
 == Content ==
 
-  * What OneSync does
+  * [[How OneSync works]]
   * Architecture Design
   * Domain Model / Class Diagram
   * Classes
