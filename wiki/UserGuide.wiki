@@ -9,7 +9,7 @@ This guide allows you to learn the features of OneSync. Just follow through the 
 == Content ==
 
   * Getting started
-    * New Features in Version 0.9
+    * New features in version 0.9
     * Downloading and installing
     * Getting around
   * Syncing my folders
@@ -23,12 +23,25 @@ This guide allows you to learn the features of OneSync. Just follow through the 
   * Feedback
 
 == Getting started ==
-*New Features in Version 0.9*
+===New Features in Version 0.9===
+
 This version of OneSync has a number of exciting new features, including:
  # DropBox Integration - You now can select your DropBox folder as the intermediate storage in your sync job profile. The another computer linked to the DropBox will be updated in a few seconds.
  # Sync Job Management - You can create and manage your sync job. You do not have to memorize the long, long folder directory anymore.
  # Right-click and Sync - Just right click any reasonable folder, then you will be able to sync it in just three clicks!
  # Logs Viewing - Want to know what are files affected in the sync process? Just view the logs in your web browser.
+
+===Downloading and installing===
+
+*Note* Make sure you are running an Windows operating system (either Windows Vista or Windows 7) and that you have uninstalled any previous version of OneSync. The previous versions of OneSync are:
+ # OneSync V-0.5
+ # OneSync Zero
+
+If you would like to install the latest version of OneSync, you can download the application at https://code.google.com/p/onesync/downloads/list
+
+If you experience issues installing OneSync through the Google Code Project Hosting, you can directly download the latest version of OneSync here: http://onesync.googlecode.com/files/OneSyncZero.msi
+
+Should you encounter any difficulties installing, please contact us.
 
 == Feedback ==
 
