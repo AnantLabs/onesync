@@ -52,7 +52,8 @@ Should you encounter any difficulties installing, please contact us.
 
 ===Getting Around===
 The following diagram describes some of the things that you will see in the first window, aka *Sync Job Page*, of OneSync:
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync(V0.9)%20%Profile%20%Page.jpg]
+
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync(V0.9)%20Profile%20Page.jpg]
 
  # *Directory of Sync Source Folder* - The directory shown there is the directory of the folder that you are going to sync later. Hence, the folder is your Sync Source Folder.
  # *Sync Job Name* - The name of your new/existing sync job.
@@ -62,7 +63,7 @@ The following diagram describes some of the things that you will see in the firs
  # *Rename Job* - Only available if you are choosing an existing sync job. Click here to confirm the rename action.
 
 The following diagram describes some of the things that you will see in the next window, aka *Sync Page*, of OneSync:
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync(V0.9)%20%Sync%20%Page.jpg]
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync(V0.9)%20Sync%20Page.jpg]
 
  # *Directory of Sync Source Folder* - The directory shown there is the directory of the folder that you are going to sync later. Hence, the folder is your Sync Source Folder.
  # *Sync Job Name* - The name of your new/existing sync job.
