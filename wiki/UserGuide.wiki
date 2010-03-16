@@ -16,7 +16,7 @@ This guide allows you to learn the features of OneSync. Just follow through the 
     * [UserGuide#Syncing_Through_Portable_Drive Syncing through portable drive]
     * [UserGuide#Syncing_Through_Drop_Box Syncing through DropBox]
     * [UserGuide#Syncing_Through_Windows_Shared_Folders Syncing through Windows Shared Folders]
-  * [UserGuide#Managing_Sync_Jobs Managing *Sync Jobs*]
+  * [UserGuide#Managing_Sync_Jobs Managing Sync Jobs]
     * [UserGuide#Creating_A_New_Sync_Job Creating a new sync job]
     * [UserGuide#Modifying_My_Existing_Sync_Job Modifying my existing sync job]
     * [UserGuide#Deleting_Existing_Sync_Job Deleting existing sync job]
