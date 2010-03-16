@@ -39,7 +39,7 @@ namespace OneSync.Synchronization
                 paramList.Add(new SqliteParameter("@id", DbType.String) { Value = s.ID });
                 paramList.Add(new SqliteParameter("@path", DbType.String) { Value = s.Path });
 
-                db.ExecuteNonQuery(cmdText, paramList, false);
+                db.ExecuteNonQuery(cmdText, paramList);
 
             }
             return true;

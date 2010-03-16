@@ -169,7 +169,7 @@ namespace OneSync.Synchronization
                 paramList.Add(new SqliteParameter("@path", System.Data.DbType.String) { Value = profile.SyncSource.Path });
                 paramList.Add(new SqliteParameter("@gid", System.Data.DbType.String) { Value = profile.SyncSource.ID });
 
-                db.ExecuteNonQuery(cmdText, paramList, true);
+                db.ExecuteNonQuery(cmdText, paramList);
             }
 
             return true;
@@ -191,7 +191,7 @@ namespace OneSync.Synchronization
 
                 paramList.Add(new SqliteParameter("@pid", System.Data.DbType.String) { Value = profile.ID });
 
-                db.ExecuteNonQuery(cmdText, paramList, true);
+                db.ExecuteNonQuery(cmdText, paramList);
             }
 
             return true;
@@ -215,7 +215,7 @@ namespace OneSync.Synchronization
                 paramList.Add(new SqliteParameter("@meta", System.Data.DbType.String) { Value = profile.IntermediaryStorage.Path });
                 paramList.Add(new SqliteParameter("@source", System.Data.DbType.String) { Value = profile.SyncSource.ID });
 
-                db.ExecuteNonQuery(cmdText, paramList, false);
+                db.ExecuteNonQuery(cmdText, paramList);
             }
 
             return true;

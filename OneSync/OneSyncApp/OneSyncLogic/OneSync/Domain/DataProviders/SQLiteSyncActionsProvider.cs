@@ -125,7 +125,7 @@ namespace OneSync.Synchronization
                 SqliteParameterCollection paramList = new SqliteParameterCollection();
                 paramList.Add(new SqliteParameter("@id", DbType.Int32) { Value = action.ActionId });
 
-                db.ExecuteNonQuery(cmdText, paramList, false);
+                db.ExecuteNonQuery(cmdText, paramList);
             }
 
             return true;
@@ -144,7 +144,7 @@ namespace OneSync.Synchronization
                 {
                     paramList.Clear();
                     paramList.Add(new SqliteParameter("@id", DbType.Int32) { Value = action.ActionId });
-                    db.ExecuteNonQuery(cmdText, paramList, false);
+                    db.ExecuteNonQuery(cmdText, paramList);
                 }
             }
             return true;
@@ -162,7 +162,7 @@ namespace OneSync.Synchronization
                 SqliteParameterCollection paramList = new SqliteParameterCollection();
                 paramList.Add(new SqliteParameter("@id", System.Data.DbType.Int32) { Value = sourceID });
 
-                db.ExecuteNonQuery(cmdText, paramList, false);
+                db.ExecuteNonQuery(cmdText, paramList);
             }
 
             return true;
@@ -181,7 +181,7 @@ namespace OneSync.Synchronization
                                  Configuration.COL_NEW_HASH + " TEXT, " +
                                  Configuration.COL_OLD_HASH + " TEXT)";
 
-                db.ExecuteNonQuery(cmdText, null, false);
+                db.ExecuteNonQuery(cmdText, null);
             }
 
         }
@@ -204,7 +204,7 @@ namespace OneSync.Synchronization
                 paramList.Add(new SqliteParameter("@newPath", DbType.String) { Value = renameAction.RelativeFilePath });
                 paramList.Add(new SqliteParameter("@oldHash", DbType.String) { Value = renameAction.FileHash });
 
-                db.ExecuteNonQuery(cmdText, paramList, false);
+                db.ExecuteNonQuery(cmdText, paramList);
             }
 
             return true;
@@ -226,7 +226,7 @@ namespace OneSync.Synchronization
                 paramList.Add(new SqliteParameter("@newPath", System.Data.DbType.String) { Value = createAction.RelativeFilePath });
                 paramList.Add(new SqliteParameter("@newHash", System.Data.DbType.String) { Value = createAction.FileHash });
 
-                db.ExecuteNonQuery(cmdText, paramList, false);
+                db.ExecuteNonQuery(cmdText, paramList);
             }
 
             return true;
@@ -248,7 +248,7 @@ namespace OneSync.Synchronization
                 paramList.Add(new SqliteParameter("@oldPath", DbType.String) { Value = deleteAction.RelativeFilePath });
                 paramList.Add(new SqliteParameter("@oldHash", DbType.String) { Value = deleteAction.FileHash });
 
-                db.ExecuteNonQuery(cmdText, paramList, false);
+                db.ExecuteNonQuery(cmdText, paramList);
             }
 
             return true;

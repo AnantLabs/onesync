@@ -93,7 +93,7 @@ namespace OneSync.Synchronization
         /// </returns>
         public int ExecuteNonQuery(string cmdText, bool atomic)
         {
-            return ExecuteNonQuery(cmdText, null, atomic);
+            return ExecuteNonQuery(cmdText, null);
         }
 
         /// <summary>
@@ -108,10 +108,9 @@ namespace OneSync.Synchronization
         /// number of rows affected by the command.
         /// For all other types of statements, the return value is -1.
         /// </returns>
-        public int ExecuteNonQuery(string cmdText, SqliteParameterCollection paramsList, bool atomic)
+        public int ExecuteNonQuery(string cmdText, SqliteParameterCollection paramsList)
         {
             int affectedRows = 0;
-            SqliteTransaction transaction = null;
             
             SqliteCommand cmd = GetCommand(cmdText, paramsList);
 
@@ -119,20 +118,10 @@ namespace OneSync.Synchronization
             {
                 cmd.Connection.Open();
 
-                if (atomic)
-                {
-                    transaction = (SqliteTransaction)cmd.Connection.BeginTransaction();
-                    cmd.Transaction = transaction;
-                }
-
-                affectedRows = cmd.ExecuteNonQuery(); // TODO: guarateed atomic if commandText has more than 1 statement??
-                
-                if (transaction != null) transaction.Commit();
-                 
+                affectedRows = cmd.ExecuteNonQuery();
             }
             catch (Exception)
             {
-                if (transaction != null) transaction.Rollback();
                 throw;
             }
             finally
@@ -333,8 +322,8 @@ namespace OneSync.Synchronization
                 if (disposing)
                 {
                     // Dispose managed resources.
-                    if (conn.State != ConnectionState.Closed) conn.Close();
-                    conn.Dispose();
+                    //if (conn.State != ConnectionState.Closed) conn.Close();
+                    if (conn != null) conn.Dispose();
                 }
 
                 // Call the appropriate methods to clean up unmanaged resources here.
