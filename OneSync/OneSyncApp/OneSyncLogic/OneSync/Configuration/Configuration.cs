@@ -20,7 +20,7 @@ namespace OneSync.Synchronization
          * Table Names
          ***************/
         public const string TBL_ACTION = "ACTION_TABLE";
-        public const string TBL_DATASOURCE_INFO = "DATASOURCE_INFO_TABLE";
+        public const string TBL_DATASOURCE_INFO = "SYNCSOURCE_INFO_TABLE";
         public const string TBL_METADATA = "METADATA_TABLE";
 
 
