@@ -95,7 +95,19 @@ Now, the program will navigate to a new screen where you can enter the FULL path
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_05.jpg]
 
-After that, you just need to sit in front of your computer to wait for the sync job to be completely done.
+Now, you just need to sit in front of your computer to wait for the sync job to be completely done.
+
+===Syncing through DropBox===
+Firstly, please install DropBox. You can find the installer at https://www.dropbox.com/downloading.
+
+The steps are same as the steps mentioned in Syncing Through Portable Drive. However, please remember that the intermediate storage path has to be your DropBox folder directory. If you do not know what is your DropBox folder, double click on the DropBox icon on your system tray.
+
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_06.jpg]
+
+===Syncing through Windows Shared Folders===
+If you do not bring your portable drive and you do not want to install DropBox, you can actually use a Windows Share Folder as your intermediate storage as well. Of course, the steps to do this are same as the steps mentioned in Syncing Through Portable Drive.
+
+Of course, you need to setup a Windows Shared Folder in your LAN.
 
 == Feedback ==
 
