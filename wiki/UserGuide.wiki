@@ -7,7 +7,7 @@ Welcome to the OneSync User guide - a place to know more about OneSync and find 
 This guide allows you to learn the features of OneSync. Just follow through the handy guide below, and enjoy the journey! =)
 
 == Content ==
-[UserGuide#Getting_Started]
+[UserGuide#Getting_Started Google]
   * Getting started
     * New features in version 0.9
     * Downloading and installing
