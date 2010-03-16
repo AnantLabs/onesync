@@ -13,7 +13,7 @@ This guide allows you to learn the features of OneSync. Just follow through the 
     * [UserGuide#Downloading_and_Installing Downloading and installing]
     * [UserGuide#Getting_Around Getting around]
   * [UserGuide#Syncing_My_Folders Syncing my folders]
-    * [UserGuide#Syncing_Through_portable_drive Syncing through portable drive]
+    * [UserGuide#Syncing_Through_Portable_Drive Syncing through portable drive]
     * [UserGuide#Syncing_Through_DropBox Syncing through DropBox]
     * [UserGuide#Syncing_Through_Windows_Shared_Folders Syncing through Windows Shared Folders]
   * [UserGuide#Managing_Sync_Jobs Managing *Sync Jobs*]
