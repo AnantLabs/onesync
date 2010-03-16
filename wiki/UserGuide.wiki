@@ -10,18 +10,18 @@ This guide allows you to learn the features of OneSync. Just follow through the 
 
   * [UserGuide#Getting_Started Getting started]
     * [UserGuide#New_Features_in_Version_0.9 New features in version 0.9]
-    * Downloading and installing
-    * Getting around
-  * Syncing my folders
-    * Syncing through portable drive 
-    * Syncing through DropBox
-    * Syncing through Windows Shared Folders
-  * Managing *Sync Jobs*
-    * Creating a new sync job
-    * Modifying my existing sync job
-    * Deleting existing sync job
-  * View the logs
-  * Feedback
+    * [UserGuide#Downloading_and_Installing Downloading and installing]
+    * [UserGuide#Getting_Around Getting around]
+  * [UserGuide#Syncing_my_folders Syncing my folders]
+    * [UserGuide#Syncing_through_portable_drive Syncing through portable drive]
+    * [UserGuide#Syncing_through_DropBox Syncing through DropBox]
+    * [UserGuide#Syncing_through_Windows_Shared_Folders Syncing through Windows Shared Folders]
+  * [UserGuide#Managing_Sync_Jobs Managing *Sync Jobs*]
+    * [UserGuide#Creating_A_New_Sync_Job Creating a new sync job]
+    * [UserGuide#Modifying_My_Existing_Sync_Job Modifying my existing sync job]
+    * [UserGuide#Deleting_Existing_Sync_Job Deleting existing sync job]
+  * [UserGuide#View_The_Logs View the logs]
+  * [UserGuide#Feedback Feedback]
 
 ==Getting Started==
 ===New Features in Version 0.9===
