@@ -8,7 +8,7 @@ This guide allows you to learn the features of OneSync. Just follow through the 
 
 == Content ==
 
-  * Getting started
+  * [Tralala#Getting_started]
     * New features in version 0.9
     * Downloading and installing
     * Getting around
