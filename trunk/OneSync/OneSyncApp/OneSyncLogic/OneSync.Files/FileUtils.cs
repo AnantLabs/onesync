@@ -8,6 +8,7 @@ using System.Text;
 using System.Security.Cryptography;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace OneSync.Files
 {
@@ -16,6 +17,8 @@ namespace OneSync.Files
     /// </summary>
     public class FileUtils
     {
+        private const int MEGABYTES_TO_BYTES_FACTOR = 1024 * 1024;
+        private const int STREAM_LIMIT = 50 * MEGABYTES_TO_BYTES_FACTOR;
 
         [DllImport("kernel32.dll", SetLastError = true)]
         static extern bool GetFileInformationByHandle(IntPtr hFile,
@@ -56,6 +59,53 @@ namespace OneSync.Files
             }
             return hashString;
         }
+
+        /// <summary>
+        /// Delete a file given absolute path
+        /// If the folder contains this file is empty after the file is deleted, the folder is deleted as well.
+        /// </summary>
+        /// <param name="absolutePath"></param>
+        public static void DeleteFileAndFolderIfEmpty(string baseFolder, string absolutePath)
+        {
+            FileInfo info = new FileInfo(absolutePath);
+            info.Delete();
+
+            DeleteEmptyFolderRecursively(baseFolder, info.Directory);
+
+        }
+
+        private static void DeleteEmptyFolderRecursively(string baseFolder, DirectoryInfo dir)
+        {
+            if (dir.GetFiles().Length == 0 && !dir.FullName.Equals(baseFolder) && dir.GetDirectories().Length == 0)
+            {
+                Console.WriteLine("Delete: " + dir.FullName);
+                dir.Delete();
+                DeleteEmptyFolderRecursively(baseFolder, dir.Parent);
+            }
+        }
+
+        private static string GetDoubleHash(string path)
+        {
+            long fileSize = new FileInfo(path).Length;
+            int numberOfThreads = Convert.ToInt32((fileSize % STREAM_LIMIT) + 1);
+            int startIndex = 0;
+            for (int x = 0; x < numberOfThreads && startIndex <= fileSize; x++)
+            {
+                PartialFileStream stream = new PartialFileStream(path, FileMode.Open, startIndex, STREAM_LIMIT - 1);
+
+
+                startIndex += STREAM_LIMIT - 1;
+            }
+            return "";
+        }
+
+        public static void PartialHash(Stream stream)
+        {
+            StringBuilder builder = new StringBuilder();
+            MD5 md5Hasher = new MD5CryptoServiceProvider();
+            byte[] hashBytes = md5Hasher.ComputeHash(stream);
+            foreach (byte b in hashBytes) builder.Append(String.Format("{0:x2}", b));
+        }
         /// <summary>
         /// Print information of any given fileinfo object
         /// </summary>
@@ -81,6 +131,13 @@ namespace OneSync.Files
             else return "";
         }
 
+        public static void LockFile(string fileName)
+        {
+            FileStream stream = new FileStream(fileName, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+            stream.Lock(0, stream.Length);
+
+        }
+
         /// <summary>
         /// copy one file to another location
         /// source and destination is the full path
@@ -93,6 +150,31 @@ namespace OneSync.Files
             string directory = destination.Substring(0, destination.LastIndexOf('\\'));
             if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
             //overwriten on exist
+            File.Copy(source, destination, true);
+        }
+
+        public static void DuplicateRename(string source, string destination)
+        {
+            int lastSlashIndex = destination.LastIndexOf('\\');
+            int lastDotIndex = destination.LastIndexOf('.');
+            string fileName = "";
+            string directory = "";
+            string extension = "";
+            directory = destination.Substring(0, lastSlashIndex);
+            if (lastSlashIndex > 0 && lastDotIndex > 0)
+            {
+                fileName = destination.Substring(lastSlashIndex + 1, lastDotIndex - lastSlashIndex - 1);
+                extension = destination.Substring(lastDotIndex, destination.Length - lastDotIndex);
+            }
+            else
+            {
+                fileName = destination.Substring(lastSlashIndex + 1, destination.Length - 1 - lastSlashIndex);
+                extension = destination.Substring(lastSlashIndex + 1, destination.Length - lastSlashIndex - 1 - fileName.Length);
+            }
+
+            fileName += "[conflicted-copy-" + string.Format("{0:yyyy-MM-dd-hh-mm-ss}", DateTime.Now) + "]";
+            destination = directory + "\\" + fileName + extension;
+            if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
             File.Copy(source, destination, true);
         }
 
