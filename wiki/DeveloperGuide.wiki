@@ -9,7 +9,7 @@ architecture and then progresses to more and more detailed information about the
 == Content ==
 
   * [http://code.google.com/p/onesync/wiki/HowOneSyncWorks How OneSync works]
-  * Architecture Design
+  * [http://code.google.com/p/onesync/wiki/Architecture Architecture]
   * Domain Model / Class Diagram
   * Classes
     * Profile
