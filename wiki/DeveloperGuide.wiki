@@ -4,7 +4,7 @@ The purpose of this developer guide is to explain the functionality and design o
 
 architecture and then progresses to more and more detailed information about the design towards the later part of the guide.
 
----
+----
 
 == Content ==
 
