@@ -821,13 +821,13 @@ namespace OneSync
 				return false;
 			}
 			//Check #2a: Check whether the Sync Source Folder exists or not.
-			if(Directory.Exists(sync_source_dir))
+			if(!Directory.Exists(sync_source_dir))
 			{
 				InstantNotification("Oops... I cannot find your Sync Source Folder. You should close this program.");
 				return false;
 			}
 			//Check #2b: Check whether the Intermediate Storage Folder exists or not.
-			if(Directory.Exists(intermediate_storage_dir))
+			if(!Directory.Exists(intermediate_storage_dir))
 			{
 				InstantNotification("Oops... I cannot find your intermediate storage.");
 				return false;
