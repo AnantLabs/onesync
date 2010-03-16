@@ -393,12 +393,27 @@ namespace OneSync
         void SyncProcessOngoingStatus(object sender, Synchronization.SyncStatusChangedEventArgs args) 
         {
             //Display some text so that the user knows that what OneSync is doing during the synchronization.
-            //label_message.Content = args.Status.ToString();
+            if (this.Dispatcher.CheckAccess())
+            {
+                lblStatus.Content = args.Status.ToString();
+            }
+            else
+            {
+                lblStatus.Dispatcher.Invoke((MethodInvoker)delegate { SyncProcessOngoingStatus(sender, args); });
+
+            }
         }
 
         void SyncProcessCompleted(object sender, Synchronization.SyncCompletesEventArgs args)
         {
-            SyncProcessDone();
+            if (this.Dispatcher.CheckAccess())
+            {
+                SyncProcessDone();
+            }
+            else
+            {
+                this.Dispatcher.Invoke((MethodInvoker)delegate { SyncProcessCompleted(sender, args); });
+            }
         }
 		
         /// <summary>
