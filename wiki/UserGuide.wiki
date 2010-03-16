@@ -16,10 +16,10 @@ This guide allows you to learn the features of OneSync. Just follow through the 
     * Syncing through portable drive 
     * Syncing through DropBox
     * Syncing through Windows Shared Folders
-  * Managing Sync Jobs
+  * Managing *Sync Jobs*
     * Creating a new sync job
     * Modifying my existing sync job
-    * Deleting current sync job
+    * Deleting existing sync job
   * View the logs
   * Feedback
 
@@ -56,7 +56,7 @@ The following diagram describes some of the things that you will see in the firs
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync(V0.9)%20Profile%20Page.jpg]
 
- # *Directory of Sync Source Folder* - The directory shown there is the directory of the folder that you are going to sync later. Hence, the folder is your Sync Source Folder.
+ # *Directory of Sync Source Folder* - The directory shown there is the directory of the folder that you are going to sync later. Hence, the folder is your *Sync Source Folder*.
  # *Sync Job Name* - The name of your new/existing sync job.
  # *Do Job* - Setup the sync job.
  # *Delete This Job* - Only available if you are choosing an existing sync job. You can delete any existing sync job from here.
@@ -66,7 +66,7 @@ The following diagram describes some of the things that you will see in the firs
 The following diagram describes some of the things that you will see in the next window, aka *Sync Page*, of OneSync:
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync(V0.9)%20Sync%20Page.jpg]
 
- # *Directory of Sync Source Folder* - The directory shown there is the directory of the folder that you are going to sync later. Hence, the folder is your Sync Source Folder.
+ # *Directory of Sync Source Folder* - The directory shown there is the directory of the folder that you are going to sync later. Hence, the folder is your *Sync Source Folder*.
  # *Directory of Intermediate Storage* - The location of intermediate storage folder, for example a folder in your thumb drive or DropBox.
  # *Open Folder Browser* - Cannot locate your intermediate storage folder? Never mind, use the Folder Browser to help you locate the folder.
  # *Quit Job* - Back to the *Sync Job Page* without doing the sync.
@@ -91,7 +91,7 @@ The OneSync Window will pop up. Enter your profile name and click on the "Do Job
 
 *Step 3*
 
-Now, the program will navigate to a new screen where you can enter the FULL path to your intermediate storage. After that, just click on the 'Sync' button to start syncing.
+Now, the program will navigate to a new screen (aka *Sync Page*) where you can enter the FULL path to your intermediate storage. After that, just click on the 'Sync' button to start syncing.
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_05.jpg]
 
@@ -108,6 +108,33 @@ The steps are same as the steps mentioned in Syncing Through Portable Drive. How
 If you do not bring your portable drive and you do not want to install DropBox, you can actually use a Windows Share Folder as your intermediate storage as well. Of course, the steps to do this are same as the steps mentioned in Syncing Through Portable Drive.
 
 Of course, you need to setup a Windows Shared Folder in your LAN first.
+
+==Managing Sync Jobs==
+===Creating A New Sync Job===
+In the *Sync Job Page*, you can create a new sync job by entering the name for your new sync job and press the "Do Job" button. However, please remember that the sync job is meaningless if there is no intermediate storage assigned to it. Hence, the sync job is only created when you do the sync, i.e. pressing the "Sync" button on the *Sync Page*.
+
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_04.jpg]
+
+Next time, when you are going to sync the same folder again, then you can just select the profile from the drop-down list in the *Sync Job Page*.
+
+===Modifying My Existing Sync Job===
+In the *Sync Job Page*, select existing sync job by either keying in the name (our system will auto-complete the name for you if the profile exists) or selecting the profile from the drop-down list.
+
+After that, you will see that there will be a few options appearing below. From there, you can either edit the name of the selected existing profile by keying in the new name and pressing the "Rename Job".
+
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_07.jpg]
+
+===Deleting Existing Sync Job===
+You can permanently delete any existing sync job easily by selecting an existing sync job and pressing the "Delete This Job".
+
+==View The Logs==
+After you sync or when you are going to sync an existing profile, you will be able to view the logs of past sync process. The logs include the records from all profiles which are attached to the *Sync Source Folder*.
+
+To view the logs, just press on the "Show Log" button in the *Sync Page*.
+
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_08.jpg]
+
+The logs will be shown in your default browser.
 
 == Feedback ==
 
