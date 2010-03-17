@@ -651,17 +651,24 @@ namespace OneSync
 		private void cmbProfiles_DropDownClosed(object sender, System.EventArgs e)
 		{
 			showHideProfileEditting(Visibility.Hidden);
-            foreach (Profile item in (SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles()))
-            {
-                //Check to see if the profile is an existing profile or not.
-                //If yes, then it will show the rename profile link.
-                if (item.Name.Equals(cmbProfiles.Text))
-                {
-                    showHideProfileEditting(Visibility.Visible);
-                    txtRenJob.Text = cmbProfiles.Text;
-                    break;
-                }
-            }
+			try
+			{
+				foreach (Profile item in (SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles()))
+				{
+					//Check to see if the profile is an existing profile or not.
+					//If yes, then it will show the rename profile link.
+					if (item.Name.Equals(cmbProfiles.Text))
+					{
+						showHideProfileEditting(Visibility.Visible);
+						txtRenJob.Text = cmbProfiles.Text;
+						break;
+					}
+				}
+			}
+			catch(Exception)
+			{
+				//Do nothing.
+			}
 		}
 		
 		/*========================================================
