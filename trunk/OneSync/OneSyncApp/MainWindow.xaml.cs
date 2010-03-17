@@ -701,13 +701,13 @@ namespace OneSync
                     {
                         //Check to see if the profile is an existing profile or not.
                         //If yes, then it will import the storage directory to the program.
-                        if (item.Name.Equals(profile_name))
-                        {
-                            is_sync_job_created_previously = true;
+						if(item.SyncSource.Path.Equals(current_syncing_dir) && item.Name.Equals(profile_name))
+						{
+							is_sync_job_created_previously = true;
                             current_profile = item;
                             txtIntStorage.Text = item.IntermediaryStorage.Path;
                             break;
-                        }
+						}
                     }
                     ((Storyboard)Resources["sbNext"]).Begin(this);
                 }
