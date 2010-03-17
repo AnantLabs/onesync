@@ -9,10 +9,10 @@
     * [ClassInfo#SyncSource SyncSource]
     * [ClassInfo#SQLiteSyncSourceProvider SQLiteSyncSourceProvider]
   * [ClassInfo#SyncActions_Related_Classes SyncActions Related Classes]
-    * [ClassInfo#SyncActions SyncActions]
-    * [ClassInfo#SyncActions CreateActions]
-    * [ClassInfo#SyncActions DeleteActions]
-    * [ClassInfo#SyncActions RenameActions]
+    * [ClassInfo#SyncActions SyncAction]
+    * [ClassInfo#SyncActions CreateAction]
+    * [ClassInfo#SyncActions DeleteAction]
+    * [ClassInfo#SyncActions RenameAction]
   * [ClassInfo#Metadata_Related_Classes Metadata Related Classes]
     * [ClassInfo#FileMetadata FileMetadata]
     * [ClassInfo#FileMetadataItem FileMetadataItem]
@@ -32,7 +32,7 @@ SyncJobManager is used to manage SyncJob object. This includes saving and restor
 [http://www.comp.nus.edu.sg/~deskoh/devGuide/syncjob01.png]
 
 
-=== !SQLiteSyncJobManager ===
+=== SQLiteSyncJobManager ===
 
 The SQLiteSyncJobManager inherits from SyncJobManager abstract class. On instantiation, it will check if the database schema is created and creates it if necessary.
 
@@ -40,9 +40,9 @@ The SQLiteSyncJobManager inherits from SyncJobManager abstract class. On instant
 
 ----
 
-== !SyncSource Related Classes ==
+== SyncSource Related Classes ==
 
-=== [!SyncSource] ===
+=== SyncSource ===
 
 SyncSource encapsulates information about the folder being synchronized and possibly other information regarding the PC where the folder is. Each SyncSource has a unique GUID. It should be noted that there can be 2 different SyncSource object that represents the same folder on a PC. This is to allow a folder to be part of 2 different SyncJob.
 
