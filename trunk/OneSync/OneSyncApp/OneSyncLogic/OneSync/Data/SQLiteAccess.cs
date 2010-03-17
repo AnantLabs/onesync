@@ -10,11 +10,12 @@ namespace OneSync.Synchronization
         public delegate void DataReaderCallbackDelegate(SqliteDataReader reader);
 
         private const string CONN_STRING_FORMAT = "Version=3,uri=file:{0}";
-        private SqliteConnection conn;
+        private SqliteConnection conn = null;
 
         // Track whether Dispose has been called.
         private bool disposed = false;
 
+        private string connectionString = "";
         /// <summary>
         /// Creates a SQLiteAccess object of specified database file.
         /// Throws an exception if database connection cannot be opened.
@@ -29,21 +30,36 @@ namespace OneSync.Synchronization
             FileInfo fi = new FileInfo(dbFilePath);
             if (!fi.Directory.Exists) fi.Directory.Create();
 
-
-            string connStr = connStr = String.Format(CONN_STRING_FORMAT, dbFilePath);
+            connectionString = String.Format(CONN_STRING_FORMAT, dbFilePath);
 
             // TEST: What if no access to file, security permissions, invalid path format, path too long, db cannot be created?
 
             if (dbFilePath == null)
                 throw new ArgumentNullException("dbFilePath");
-
-            // Creates a connection to Sqlite Database
-            conn = new SqliteConnection(connStr);
-
+            
             // Exception thrown if connection cannot be opened.
-            TestConnection();
+            //TestConnection();
         }
 
+        /// <summary>
+        /// Create a new connection based on parameters
+        /// </summary>
+        /// <returns></returns>
+                
+        public SqliteConnection NewSQLiteConnection()
+        {     
+            conn = new SqliteConnection(connectionString);
+            conn.Open();
+            return conn;           
+        }
+        /// <summary>
+        /// Get the current connection
+        /// </summary>
+        /// <returns></returns>
+        public SqliteConnection GetCurrentConnection()
+        {
+            return conn;
+        }
         /// <summary>
         /// Executes specified SQL query and return query results in a DataTable.
         /// Throws an exception if query cannot be executed.
@@ -51,31 +67,17 @@ namespace OneSync.Synchronization
         /// <param name="cmdText">SQL select query string</param>
         /// <returns></returns>
         public DataTable ExecuteSelectCmd(string cmdText)
-        {
-
-            SqliteCommand cmd = GetCommand(cmdText, null);
+        {            
             DataTable resultsTable = null;
-
-            try
+           
+            using (SqliteCommand cmd = GetCommand(cmdText, null))
             {
-                cmd.Connection.Open();
                 using (SqliteDataReader reader = cmd.ExecuteReader())
                 {
                     resultsTable = new DataTable();
-                    resultsTable.Load(reader);
-                    reader.Close();
+                    resultsTable.Load(reader);                   
                 }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                cmd.Connection.Close();
-                cmd.Dispose();
-            }
-
+            }                     
             return resultsTable;
         }
 
@@ -112,39 +114,15 @@ namespace OneSync.Synchronization
         {
             int affectedRows = 0;
             
-            SqliteCommand cmd = GetCommand(cmdText, paramsList);
-
-            try
+            using (SqliteCommand cmd = GetCommand(cmdText, paramsList))
             {
-                cmd.Connection.Open();
-
                 affectedRows = cmd.ExecuteNonQuery();
             }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                cmd.Connection.Close();
-                cmd.Dispose();
-            }
-
             return affectedRows;
         }
 
-
-        /// <summary>
-        /// Executes data reader of command object with specified SQL query
-        /// </summary>
-        /// <param name="cmdText">SQL query text.</param>
-        /// <param name="callback">Callback method while moving through the records.</param>
-        /// <returns></returns>
-        public void ExecuteReader(string cmdText, DataReaderCallbackDelegate callback)
-        {
-            ExecuteReader(cmdText, null, callback);
-        }
-
+               
+       
         /// <summary>
         /// Executes data reader of command object with specified SQL query
         /// </summary>
@@ -154,29 +132,17 @@ namespace OneSync.Synchronization
         /// <returns></returns>
         public void ExecuteReader(string cmdText, SqliteParameterCollection paramsList, DataReaderCallbackDelegate callback)
         {
-            SqliteCommand cmd = GetCommand(cmdText, paramsList);
-
-            try
+            using (SqliteCommand cmd = GetCommand(cmdText, paramsList))
             {
-                cmd.Connection.Open();
                 using (SqliteDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
-                    {
+                    {                        
                         // Need to check if callback is null?
-                        callback(reader);
+                        if (callback != null) callback(reader);
                     }
                 }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                cmd.Connection.Close();
-                cmd.Dispose();
-            }
+            }         
         }
 
 
@@ -190,23 +156,10 @@ namespace OneSync.Synchronization
         public string ExecuteScalar(string cmdText, SqliteParameterCollection paramsList)
         {
             string retStr = null;
-            SqliteCommand cmd = GetCommand(cmdText, paramsList);
-
-            try
+            using (SqliteCommand cmd = GetCommand(cmdText, paramsList))
             {
-                cmd.Connection.Open();
                 retStr = cmd.ExecuteScalar().ToString();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                cmd.Connection.Close();
-                cmd.Dispose();
-            }
-
+            }         
             return retStr;
         }
 
@@ -246,7 +199,6 @@ namespace OneSync.Synchronization
             SqliteTransaction transaction = (SqliteTransaction)cmd.Connection.BeginTransaction();
 
             cmd.Transaction = transaction;
-
             return cmd;
         }
 
@@ -256,27 +208,6 @@ namespace OneSync.Synchronization
         /// </summary>
         /// <param name="cmdText">SQL query string</param>
         /// <returns>The first column of the first row in the result set.</returns>
-
-        /// <summary>
-        /// Test whether database connection is successful and throws an exception if
-        /// it is not.
-        /// </summary>
-        private void TestConnection()
-        {
-            try
-            {
-                if (conn.State != ConnectionState.Open)
-                    conn.Open();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                conn.Close();
-            }
-        }
 
         /// <summary>
         /// Gets Command object with specified command text of current Sqlite connection

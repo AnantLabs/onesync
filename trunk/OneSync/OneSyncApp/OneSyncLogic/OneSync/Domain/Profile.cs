@@ -15,6 +15,12 @@ namespace OneSync.Synchronization
     /// </summary>
     public class Profile
     {
+        public const string PROFILE_TABLE =  "PROFILE";
+        public const string PROFILE_ID = "PROFILE_ID";
+        public const string PROFILE_NAME = "PROFILE_NAME";
+        public const string METADATA_SOURCE_LOCATION = "METADATA_SOURCE_LOCATION";
+        public const string SYNC_SOURCE_ID = "SYNC_SOURCE_ID";
+        
         private string _profileId;
         private string _profileName;
         

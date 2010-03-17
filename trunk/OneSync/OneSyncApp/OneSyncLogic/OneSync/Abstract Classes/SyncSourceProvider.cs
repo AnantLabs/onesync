@@ -52,6 +52,11 @@ namespace OneSync.Synchronization
         /// <returns></returns>
         public abstract int GetSyncSourceCount();
 
+        /// <summary>
+        /// Create default schema
+        /// </summary>
+        public abstract void CreateSchema();
+
 
         #region Public Properties
 

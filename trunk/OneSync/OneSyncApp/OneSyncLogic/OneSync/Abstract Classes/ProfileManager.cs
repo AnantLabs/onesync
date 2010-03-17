@@ -90,7 +90,7 @@ namespace OneSync.Synchronization
         /// <returns>true if profile with specified name already exists.</returns>
         public abstract bool ProfileExists(string profileName);
 
-
+        public abstract void CreateSchema();
         #region Public Properties
 
         /// <summary>

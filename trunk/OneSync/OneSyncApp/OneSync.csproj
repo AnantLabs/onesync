@@ -130,6 +130,7 @@
     <Compile Include="OneSyncLogic\OneSync\Domain\DataProviders\SQLiteProfileManager.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\DataProviders\SQLiteSyncSourceProvider.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\SyncActionComparer.cs" />
+    <Compile Include="OneSyncLogic\OneSync\Domain\SyncExecutor.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\SyncPreviewResult.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\SyncResult.cs" />
     <Compile Include="OneSyncLogic\OneSync\Domain\SyncSource.cs" />

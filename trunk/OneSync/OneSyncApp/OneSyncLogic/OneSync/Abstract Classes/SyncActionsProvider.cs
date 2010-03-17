@@ -32,7 +32,7 @@ namespace OneSync.Synchronization
         /// true to load Actions with different SourceID as argument.
         /// false to load all Actions with same SourceID as argument.</param>
         /// <returns></returns>
-        public abstract IList<SyncAction> Load(string sourceID, bool loadOther);
+        public abstract IList<SyncAction> Load(string sourceID, SourceOption option);
 
 
         /// <summary>
@@ -76,7 +76,12 @@ namespace OneSync.Synchronization
         /// false to delete actions with srcActionID as argument.
         /// </param>
         /// <returns></returns>
-        public abstract bool Delete(string sourceID, bool deleteOther);
+        public abstract bool Delete(string sourceID, SourceOption option);
+
+        /// <summary>
+        /// Create default schema
+        /// </summary>
+        public abstract void CreateSchema();
 
         #region Public Properties
 
@@ -89,6 +94,7 @@ namespace OneSync.Synchronization
         }
 
         #endregion
+
 
     }
 }

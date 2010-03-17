@@ -91,7 +91,7 @@ namespace OneSync.Files
             int startIndex = 0;
             for (int x = 0; x < numberOfThreads && startIndex <= fileSize; x++)
             {
-                PartialFileStream stream = new PartialFileStream(path, FileMode.Open, startIndex, STREAM_LIMIT - 1);
+                //PartialFileStream stream = new PartialFileStream(path, FileMode.Open, startIndex, STREAM_LIMIT - 1);
 
 
                 startIndex += STREAM_LIMIT - 1;

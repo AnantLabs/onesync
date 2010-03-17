@@ -9,6 +9,6 @@ namespace OneSync.Synchronization
 {
     public interface ISyncAgent
     {        
-
+        
     }
 }

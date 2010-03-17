@@ -14,6 +14,6 @@ namespace OneSync.Synchronization
     /// </summary>
     public interface ISyncVerifier
     {
-        bool Verify(Patch patch);
+        
     }
 }

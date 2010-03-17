@@ -8,8 +8,7 @@ namespace OneSync.Synchronization
 {
     
     public class SQLiteSyncSourceProvider : SyncSourceProvider
-    {        
-
+    {       
         public SQLiteSyncSourceProvider(string storagePath)
             : base(storagePath)
         {
@@ -24,51 +23,69 @@ namespace OneSync.Synchronization
             }
 
             // Create table if it does not exist
-            this.CreateSchema();
+            
         }
-
-        public override bool Add(SyncSource s)
+        
+        /// <summary>
+        /// This method takes in SQLiteConnection object as a parameter
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="con"></param>
+        /// <returns></returns>
+        public  bool Add(SyncSource s, SqliteConnection con)
         {
-            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)))
-            {
-                string cmdText = "INSERT INTO " + Configuration.TBL_SYNCSOURCE_INFO +
-                                 "(" + Configuration.COL_SOURCE_ID + "," + Configuration.COL_SOURCE_ABSOLUTE_PATH + 
-                                 ") VALUES (@id, @path)";
-
-                SqliteParameterCollection paramList = new SqliteParameterCollection();
-                paramList.Add(new SqliteParameter("@id", DbType.String) { Value = s.ID });
-                paramList.Add(new SqliteParameter("@path", DbType.String) { Value = s.Path });
-
-                db.ExecuteNonQuery(cmdText, paramList);
-
-            }
-            return true;
+            if (GetSyncSourceCount() == 2) throw new SyncSourcesNumberExceededException("Only 2 sync sources can be added");
+             using (SqliteCommand cmd = con.CreateCommand())
+             {
+                 cmd.CommandText = "INSERT INTO " + Configuration.TBL_DATASOURCE_INFO +
+                                 "(" + Configuration.COL_SOURCE_ID + "," + Configuration.COL_SOURCE_ABSOLUTE_PATH +
+                                 ") VALUES (@id, @path)";               
+                 cmd.Parameters.Add(new SqliteParameter("@id", DbType.String) { Value = s.ID });
+                 cmd.Parameters.Add(new SqliteParameter("@path", DbType.String) { Value = s.Path });
+                 cmd.ExecuteNonQuery();                               
+             }
+             return true;
         }
 
+        /// <summary>
+        /// Load all the sync sources objects
+        /// </summary>
+        /// <returns></returns>
         public override IList<SyncSource> LoadAll()
         {
             IList<SyncSource> syncSources = new List<SyncSource>();
 
-            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)))
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            using (SqliteConnection con = db.NewSQLiteConnection ())
             {
-                string cmdText = "SELECT * FROM  " + Configuration.TBL_SYNCSOURCE_INFO;
-
-                db.ExecuteReader(cmdText, reader =>
+                using (SqliteCommand cmd = con.CreateCommand ())
+                {
+                    cmd.CommandText = "SELECT * FROM  " + Configuration.TBL_DATASOURCE_INFO;
+                    using (SqliteDataReader reader = cmd.ExecuteReader())
                     {
-                        syncSources.Add(new SyncSource((string)reader[Configuration.COL_SOURCE_ID],
+                        while (reader.Read())
+                        {
+                            syncSources.Add(new SyncSource((string)reader[Configuration.COL_SOURCE_ID],
                                                        (string)reader[Configuration.COL_SOURCE_ABSOLUTE_PATH]));
+                        }
                     }
-                );
+                }       
             }
 
             return syncSources;
         }
 
+        /// <summary>
+        /// Update details of a sync source
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
         public override bool Update(SyncSource source)
         {
-            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)))
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            using (SqliteConnection con = db.NewSQLiteConnection ())
             {
-                string cmdText = "UPDATE " + Configuration.TBL_SYNCSOURCE_INFO +
+                string cmdText = "UPDATE " + Configuration.TBL_DATASOURCE_INFO +
                         " SET " + Configuration.COL_SOURCE_ABSOLUTE_PATH + " = @path WHERE "
                         + Configuration.COL_SOURCE_ID + " = @id";
 
@@ -81,15 +98,42 @@ namespace OneSync.Synchronization
             return true;
         }
 
+        /// <summary>
+        /// Update details of sync source
+        /// Pass SQLiteConnection object to make atomic action
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="con"></param>
+        /// <returns></returns>
+        public  bool Update(SyncSource source, SqliteConnection con )
+        {          
+            using (SqliteCommand cmd = con.CreateCommand())
+            {
+                cmd.CommandText = "UPDATE " + Configuration.TBL_DATASOURCE_INFO +
+                        " SET " + Configuration.COL_SOURCE_ABSOLUTE_PATH + " = @path WHERE "
+                        + Configuration.COL_SOURCE_ID + " = @id";
+                cmd.Parameters.Add(new SqliteParameter("@id", DbType.String) { Value = source.ID });
+                cmd.Parameters.Add(new SqliteParameter("@path", DbType.String) { Value = source.Path });
+                cmd.ExecuteNonQuery();
+                return true;
+            }
+            
+        }
+
+        /// <summary>
+        /// Get number of sync sources in intermediate storage
+        /// Maximum numbers of sync sources can be added is 2
+        /// </summary>
+        /// <returns></returns>
         public override int GetSyncSourceCount()
         {
             try
             {
-                using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)))
+                SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+                using (SqliteConnection con = db.NewSQLiteConnection ())
                 {
                     string cmdText = "SELECT COUNT (DISTINCT " + Configuration.COL_SOURCE_ID + ") AS num" +
-                            " FROM " + Configuration.TBL_SYNCSOURCE_INFO;
-
+                            " FROM " + Configuration.TBL_DATASOURCE_INFO;
 
                     return Convert.ToInt32(db.ExecuteScalar(cmdText, null));
                 }
@@ -102,16 +146,63 @@ namespace OneSync.Synchronization
             }
         }
 
-        private void CreateSchema()
+        /// <summary>
+        /// Create schema of sync source table
+        /// No transaction supported
+        /// </summary>
+        public override void CreateSchema()
         {
-            using (SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)))
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            using (SqliteConnection con =  db.NewSQLiteConnection ())
             {
-                string cmdText = "CREATE TABLE IF NOT EXISTS " + Configuration.TBL_SYNCSOURCE_INFO +
+                string cmdText = "CREATE TABLE IF NOT EXISTS " + Configuration.TBL_DATASOURCE_INFO +
                                  " ( " + Configuration.COL_SOURCE_ABSOLUTE_PATH + " TEXT, " +
                                  Configuration.COL_SOURCE_ID + " TEXT PRIMARY KEY)";
 
                 db.ExecuteNonQuery(cmdText, false);
             }
+        }
+
+        /// <summary>
+        /// Create schema of sync source table
+        /// supports transaction
+        /// </summary>
+        /// <param name="con"></param>
+        public void CreateSchema(SqliteConnection con)
+        {
+            using (SqliteCommand cmd = con.CreateCommand())
+            {
+                cmd.CommandText = "CREATE TABLE IF NOT EXISTS " + Configuration.TBL_DATASOURCE_INFO +
+                                 " ( " + Configuration.COL_SOURCE_ABSOLUTE_PATH + " TEXT, " +
+                                 Configuration.COL_SOURCE_ID + " TEXT PRIMARY KEY)";
+                cmd.ExecuteNonQuery();
+            }
+        }
+               
+        /// <summary>
+        /// Add sync source to database
+        /// no transaction supports
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public override bool Add(SyncSource s)
+        {
+            if (GetSyncSourceCount() == 2) throw new SyncSourcesNumberExceededException("Only 2 sync sources can be added");
+
+            string insertText =  "INSERT INTO " + Configuration.TBL_DATASOURCE_INFO +
+                                 "(" + Configuration.COL_SOURCE_ID + "," + Configuration.COL_SOURCE_ABSOLUTE_PATH +
+                                 ") VALUES (@id, @path)";
+            
+            SqliteParameterCollection paramList = new SqliteParameterCollection ();
+            paramList.Add( new SqliteParameter("@id", DbType.String) { Value = s.ID } );
+            paramList.Add( new SqliteParameter("@path", DbType.String) { Value = s.Path });
+
+            SQLiteAccess dbAccess = new SQLiteAccess(Path.Combine (this.StoragePath, Configuration.DATABASE_NAME));
+            using (SqliteConnection con = dbAccess.NewSQLiteConnection())
+            {
+                dbAccess.ExecuteNonQuery(insertText, paramList);
+            }
+            return true;
         }
     }
 }
