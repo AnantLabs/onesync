@@ -144,6 +144,7 @@
     <Compile Include="OneSyncLogic\OneSync\SyncEvents\SyncProgressChangedEventArgs.cs" />
     <Compile Include="OneSyncLogic\OneSync\SyncEvents\SyncStartsEventArgs.cs" />
     <Compile Include="OneSyncLogic\OneSync\SyncEvents\SyncStatusChangedEventArgs.cs" />
+    <Compile Include="OneSyncLogic\OneSync\UIProcess\ActionProcess.cs" />
     <Compile Include="OneSyncLogic\OneSync\UIProcess\SyncClient.cs" />
     <Compile Include="UILogEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
