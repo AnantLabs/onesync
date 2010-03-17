@@ -25,9 +25,9 @@
 
 === !SyncJob ===
 
-SyncJob represents information about a synchronization job. It stores information about the folder being synchronized (SyncSource) and the intermediary storage (IntermediaryStorage). A SyncJob is uniquely identified by its name on a PC. Internally, it also uses a unique id.
+Represents information about a synchronization job. It stores information about the folder being synchronized ([ClassInfo#SyncSource SyncSource]) and the intermediary storage ([ClassInfo#IntermediaryStorage IntermediaryStorage]). A SyncJob is uniquely identified by its name on a PC. Internally, it also uses a unique id.
 
-SyncJobManager is used to manage SyncJob object. This includes saving and restoring a SyncJob to storage as well as modifying SyncJob information.
+!SyncJobManager is used to manage SyncJob object. This includes saving and restoring a SyncJob to storage as well as modifying SyncJob information.
 
 [http://www.comp.nus.edu.sg/~deskoh/devGuide/syncjob01.png]
 
@@ -73,6 +73,8 @@ A !DeleteAction represents a file to be deleted. This action generated if a file
 === !RenameAction ===
 
 !RenameAction is currently not implemented yet.
+
+[http://www.comp.nus.edu.sg/~deskoh/devGuide/actions.png]
 
 ----
 
