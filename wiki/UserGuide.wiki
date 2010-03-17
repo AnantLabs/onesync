@@ -33,6 +33,13 @@ This version of OneSync has a number of exciting new features, including:
  # Right-click and Sync - Just right click any reasonable folder, then you will be able to sync it in just three clicks!
  # Logs Viewing - Want to know what are files affected in the sync process? Just view the logs in your web browser.
 
+===The OneSync Concepts===
+There are two concepts that actually makes OneSync different from most of the popular sync tools.
+
+The first concept is known as "Cloud Sync". Let's see what it means in syncing two PCs case. Instead of directly syncing two PCs, OneSync actually does a "half-way" sync on both PC and links both of the PCs together by the intermediate storage (or the "Cloud Storage"). For each sync done in a PC, the files (or the *Patch*) only uploaded to or downloaded from the intermediate storage. Hence, the user needs to perform the sync again in another PC in order to download the patch from the intermediate storage and complete the sync process.
+
+The intermediate storage can be your portable drive, thumb-drive, Windows Shared Folder or your local DropBox folder.
+
 ===Downloading and Installing===
 
 *WARNING* Please disable your *User Account Control (UAC)* before installing and running OneSync. CodeDroids and its members will not be held responsible for any loss of data if you fail to do so.
@@ -74,6 +81,15 @@ The following diagram describes some of the things that you will see in the next
  # *Show Log* - Only available if you synced this job before. You are able to view the logs in your browser.
  # *Sync Process* - Only available when you are doing the sync. You can see what the program is doing now.
  # *Sync* - The only one button that you need to click to start syncing.
+
+===The OneSync Concepts===
+OneSync is working based on two important concepts. They are the two concepts that make OneSync to be different from other sync tools, such as Live Mesh, Sync Toy and so on.
+
+The first concept is known as *Cloud Sync*. Instead of doing synchronization directly between two PCs, there is an intermediate storage (or "Cloud Storage") playing an important role during the sync process.
+
+When a user sync his folder, his must first choose the location of his intermediate storage. The storage can be his portable drive, Windows Shared Folders or DropBox local folder that stored on his computer. When he does the sync on one PC, his files (or *patch*) will be sent to the intermediate storage. So, for each sync, the another computer will not be updated automatically. Hence, he has to do the sync again in the another computer to download the *patch* from the intermediate storage and complete the sync process.
+
+The second concept is called the *Light-weight Sync*. OneSync is using your
 
 ==Syncing My Folders==
 Why put your files in different PCs and keep doing copy-and-paste when you update the files? Keep them synchronized between your two computers, so you always have the most up-to-date versions at hand.
@@ -145,7 +161,7 @@ To view the logs, just press on the "Show Log" button in the *Sync Page*.
 
 The logs will be shown in your default browser.
 
-== I Saw Error ==
+==I Saw Error==
 Sometimes, you will see an error message displayed on the top of the window (see the screenshot below). It is highly possible that due to one of these problems:
  * There are more than one profile which have the same intermediate storage (Do not use back the same intermediate storage for different profile).
  * The data.md file is missing (Please uninstall and re-install).
@@ -153,6 +169,6 @@ Sometimes, you will see an error message displayed on the top of the window (see
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_09.jpg]
 
-== Contact Us ==
+==Contact Us==
 
 Tell us how we are doing: Please email us feedback ([mailto:my3215group@googlegroups.com]) about your experience to help us improve our product.
