@@ -1,12 +1,8 @@
 #summary Architecture of OneSync
 
-== Architecture ==
+== Overview ==
 
-The UI will with interact with SyncClient and SyncAgent. SyncClient is a 
-
-controller class which manages all providers for business objects. 
-
-SyncAgent is the class that does the synchronization.
+The UI will with interact with SyncClient and SyncAgent. SyncClient is a controller class which manages all providers for business objects and SyncAgent is the class that handles the synchronization.
 
 The business objects are
   * SyncJob
@@ -14,6 +10,16 @@ The business objects are
   * SyncActions
   * Metadata
 
+
+[http://www.comp.nus.edu.sg/~deskoh/devGuide/architecture01.png]
+
 ----
 
-[http://www.comp.nus.edu.sg/~deskoh/devGuide/architecture.png]
+
+== Provider Class ==
+
+All the providers i.e. SyncSourceProvider, SyncActionsProvider, MetadataProvider as well as SyncJobManager are abtract classes. These classes are responsible for persisting objects that they manage to storage.
+
+In current implementation. SQLite database is for data persistence, and classes that inherits from them these abstract classes are prefixed with 'SQLite'.
+
+[http://www.comp.nus.edu.sg/~deskoh/devGuide/architecture02.png]
