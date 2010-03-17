@@ -58,9 +58,11 @@ Inherits from !SyncSourceProvider abstract class. On instantiation, it will chec
 
 == !SyncActions Related Classes ==
 
+[http://www.comp.nus.edu.sg/~deskoh/devGuide/actions.png]
+
 === !SyncAction ===
 
-SyncAction is an abstract class. It represents actions to be taken during synchronization. Each action is associated with at least a file (to be either copied, deleted). Hence, an action contains fields related to the file it is associated with (e.g. file hash) and which id of SyncSource where the file originates from.
+SyncAction is an abstract class. It represents actions to be taken during synchronization. Each action is associated with at least a file (to be either copied, deleted). Hence, an action contains fields (e.g. file hash) related to the file it is associated with and the id of [ClassInfo#SyncSource SyncSource] where the file originates from.
 
 === !CreateAction ===
 
@@ -74,11 +76,11 @@ A !DeleteAction represents a file to be deleted. This action generated if a file
 
 !RenameAction is currently not implemented yet.
 
-[http://www.comp.nus.edu.sg/~deskoh/devGuide/actions.png]
-
 ----
 
 == !FileMetadata Related Classes ==
+
+[http://www.comp.nus.edu.sg/~deskoh/devGuide/md.png]
 
 === !FileMetadata ===
 
@@ -86,7 +88,7 @@ Stores selected information about the file system of a folder to be synchronized
 
 === !FileMetadataItem ===
 
-Contains specific information regarding a file like its hash code, relative file path as well as the id of [ClassInfo#SyncSource SyncSource] it originates from. It should be noted that the absolute root path of a !FileMetadataItem can be obtained by combining it with the rootFolder property of the [#ClassInfo#FileMetaData FileMetaData] it belongs to.
+Contains specific information regarding a file like its hash code, relative file path as well as the id of [ClassInfo#SyncSource SyncSource] it originates from. It should be noted that the absolute root path of a !FileMetadataItem can be obtained by combining it with the rootFolder property of the [ClassInfo#FileMetaData FileMetaData] it belongs to.
 
 === SQLiteMetadataProvider ===
 
@@ -97,3 +99,5 @@ SQLiteMetadataProvider inherits from MetadataProvider abstract class to persist 
 === !IntermediaryStorage ===
 
 This class represents information about the intermediary storage used for synchronization, in particular, the file path of the storage, and where the dirty files are kept.
+
+[http://www.comp.nus.edu.sg/~deskoh/devGuide/is.png]
