@@ -543,9 +543,10 @@ namespace OneSync
                 try
                 {
                     current_profile.Name = txtRenJob.Text.Trim();
+					cmbProfiles.Text = txtRenJob.Text.Trim();
                     //SyncClient.ProfileProcess.UpdateProfile(System.Windows.Forms.Application.StartupPath, current_profile);
                     SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).Update(current_profile);
-
+					do_job();
                 }
                 catch (Synchronization.DatabaseException de)
                 {
