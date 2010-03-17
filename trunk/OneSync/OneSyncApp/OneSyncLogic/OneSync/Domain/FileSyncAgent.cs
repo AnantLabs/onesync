@@ -146,6 +146,7 @@ namespace OneSync.Synchronization
                     count++;
                 }
             }
+			
             foreach (SyncAction action in result.ItemsToDelete)
             {
                 if (action.ChangeType == ChangeType.DELETED)
@@ -166,6 +167,7 @@ namespace OneSync.Synchronization
                     count++;
                 }
             }
+			
             foreach (SyncAction action in result.ConflictItems)
             {
                 if (action.ConflictResolution == ConflictResolution.SKIP)
