@@ -12,4 +12,4 @@ A synchronization job with a unique name (to a PC) that is created by a user to 
 It is also known as *Profile* or *Sync Job Profile* in the CodeDroids team.
 
 == !SyncSource ==
-A folder on a PC that is being synchronized. Note that 
+A folder on a PC that is being synchronized. Note that this folder and the intermediate storage cannot be empty at the same time. If it's empty, the intermediate storage must have the data.md file.
