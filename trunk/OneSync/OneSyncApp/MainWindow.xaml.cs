@@ -167,6 +167,7 @@ namespace OneSync
             if(txtIntStorage.Text.Length > 0)
             {
 				InstantNotification(""); //Empty the notification message (if any).
+				button_sync.IsEnabled = false;
                 SyncProcessStarted();
             }
             else
@@ -207,6 +208,7 @@ namespace OneSync
                         {
                             //Synchronization.SyncClient.ProfileProcess.CreateProfile(System.Windows.Forms.Application.StartupPath, profile_name, current_syncing_dir, storage_dir);
                             SyncClient.Initialize(System.Windows.Forms.Application.StartupPath, profile_name, current_syncing_dir, storage_dir);
+							is_sync_job_created_previously = true;
                         }
                         catch (Exception ee)
                         {
@@ -255,17 +257,31 @@ namespace OneSync
                             }
                         }
                     }
+					else
+					{
+						button_sync.IsEnabled = true;
+					}
                 }
             }
 			
         }
 
+		/// <summary>
+		/// This will be called to really start the sync.
+		/// </summary>
+		/// <param name="sender">The event sender.</param>
+        /// <param name="args">The event arguments.</param>
         void syncWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             SyncPreviewResult previewResult =  currentAgent.PreviewSync();
             currentAgent.Synchronize(previewResult);
         }
 
+		/// <summary>
+		/// When the sync is started, the properties of each control will be modified.
+		/// </summary>
+		/// <param name="sender">The event sender.</param>
+        /// <param name="args">The event arguments.</param>
         void SyncProcessNowStarted(object sender, Synchronization.SyncStartsEventArgs args) 
         {
             if (this.Dispatcher.CheckAccess())
@@ -286,7 +302,6 @@ namespace OneSync
                 rt.BeginAnimation(RotateTransform.AngleProperty, da);
 
                 //Show/hide some controls and enable/disable some of them.
-                button_sync.IsEnabled = false;
                 txtIntStorage.IsEnabled = false;
                 btnBrowse.IsEnabled = false;
                 textblock_back_to_home.IsEnabled = false;
@@ -300,6 +315,11 @@ namespace OneSync
             }
         }
 
+		/// <summary>
+		/// Update the progress bar.
+		/// </summary>
+		/// <param name="sender">The event sender.</param>
+        /// <param name="args">The event arguments.</param>
         void SyncProcessOngoing(object sender, Synchronization.SyncProgressChangedEventArgs args) 
         {
             if (this.Dispatcher.CheckAccess())
@@ -313,6 +333,11 @@ namespace OneSync
             }
         }
 
+		/// <summary>
+		/// Update the status message.
+		/// </summary>
+		/// <param name="sender">The event sender.</param>
+        /// <param name="args">The event arguments.</param>
         void SyncProcessOngoingStatus(object sender, Synchronization.SyncStatusChangedEventArgs args) 
         {
             //Display some text so that the user knows that what OneSync is doing during the synchronization.
@@ -326,19 +351,12 @@ namespace OneSync
 
             }
         }
-
-        void SyncProcessCompleted(object sender, Synchronization.SyncCompletesEventArgs args)
-        {
-            if (this.Dispatcher.CheckAccess())
-            {
-                SyncProcessDone();
-            }
-            else
-            {
-                this.Dispatcher.Invoke((MethodInvoker)delegate { SyncProcessCompleted(sender, args); });
-            }
-        }
-
+		
+		/// <summary>
+		/// Tell the user which file is being processed now.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
         void SyncingFile(object sender, Synchronization.FileSyncedChangedEventArgs args)
         {
 			if (this.Dispatcher.CheckAccess())
@@ -348,6 +366,23 @@ namespace OneSync
             else
             {
                 lblSyncingFileName.Dispatcher.Invoke((MethodInvoker)delegate { SyncingFile(sender, args); });
+            }
+        }
+
+		/// <summary>
+		/// Trigerred when the sync process is done.
+		/// </summary>
+		/// <param name="sender">The event sender.</param>
+        /// <param name="args">The event arguments.</param>
+        void SyncProcessCompleted(object sender, Synchronization.SyncCompletesEventArgs args)
+        {
+            if (this.Dispatcher.CheckAccess())
+            {
+                SyncProcessDone();
+            }
+            else
+            {
+                this.Dispatcher.Invoke((MethodInvoker)delegate { SyncProcessCompleted(sender, args); });
             }
         }
 		
@@ -489,16 +524,31 @@ namespace OneSync
             
         }
 
+		/// <summary>
+		/// When the cursor overs the sync button, the image of the button will be changed.
+		/// </summary>
+		/// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
         private void button_sync_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             button_sync.Source = new BitmapImage(new Uri("Resource/OneSync Transparent Logo.png", UriKind.Relative));
         }
 
+		/// <summary>
+		/// When the cursor leaves the sync button, the image of the button will be changed.
+		/// </summary>
+		/// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
         private void button_sync_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
             button_sync.Source = new BitmapImage(new Uri("Resource/OneSync Transparent Logo (Inactive).png", UriKind.Relative));
         }
 
+		/// <summary>
+		/// When the rename button is clicked.
+		/// </summary>
+		/// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
         private void txtBlkRenJob_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
         	//Rename a profile.
@@ -571,6 +621,11 @@ namespace OneSync
 			}
         }
 
+		/// <summary>
+		/// When the "Delete This Job" button is clicked.
+		/// </summary>
+		/// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
         private void txtBlkDelJob_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
         	DialogResult result
@@ -690,7 +745,7 @@ namespace OneSync
 		========================================================================================*/
 		
 		/// <summary>
-		/// This method will be called when the "Do Job" (Chun Lin version) or "Next" (Desmond version) button is clicked.
+		/// This method will be called when the "Proceed" button is clicked.
 		/// </summary>
 		private void do_job()
 		{
