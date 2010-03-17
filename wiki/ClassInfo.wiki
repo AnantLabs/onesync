@@ -4,7 +4,20 @@
 
   * [ClassInfo#SyncJob_Related_Classes SyncJob Related Classes]
     * [ClassInfo#SyncJob SyncJob]
-    * [ClassInfo#SQLiteSyncJobManager SQLiteSyncJobManager ]
+    * [ClassInfo#SQLiteSyncJobManager SQLiteSyncJobManager]
+  * [ClassInfo#SyncSource_Related_Classes SyncSource Related Classes]
+    * [ClassInfo#SyncSource SyncSource]
+    * [ClassInfo#SQLiteSyncSourceProvider SQLiteSyncSourceProvider]
+  * [ClassInfo#SyncActions_Related_Classes SyncActions Related Classes]
+    * [ClassInfo#SyncActions SyncActions]
+    * [ClassInfo#SyncActions CreateActions]
+    * [ClassInfo#SyncActions DeleteActions]
+    * [ClassInfo#SyncActions RenameActions]
+  * [ClassInfo#Metadata_Related_Classes Metadata Related Classes]
+    * [ClassInfo#FileMetadata FileMetadata]
+    * [ClassInfo#FileMetadataItem FileMetadataItem]
+    * [ClassInfo#SQLiteMetadataProvider SQLiteMetadataProvider]
+  * [ClassInfo#Intermediary_Storage Intermediary Storage]
 
 ----
 
@@ -26,3 +39,45 @@ The SQLiteSyncJobManager implements the abstract class SyncJobManager. On instan
 [http://www.comp.nus.edu.sg/~deskoh/devGuide/syncjob02.png]
 
 ----
+
+== SyncSource Related Classes ==
+
+=== SyncSource ===
+
+=== SQLiteSyncSourceProvider ===
+
+----
+
+== SyncActions Related Classes ==
+
+=== SyncAction ===
+
+=== CreateAction ===
+
+=== DeleteAction ===
+
+=== RenameAction ===
+
+----
+
+== Metadata Related Classes ==
+
+=== FileMetadata ===
+
+=== FileMetadataItem ===
+
+=== SQLiteMetadataProvider ===
+
+----
+
+== Metadata Related Classes ==
+
+=== FileMetadata ===
+
+=== FileMetadataItem ===
+
+=== SQLiteMetadataProvider ===
+
+----
+
+=== IntermediaryStorage ===
