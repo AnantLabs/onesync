@@ -122,7 +122,7 @@ $Id$
 				</TransformGroup>
 			</Canvas.RenderTransform>
 			<Label x:Name="lblSyncJob" Width="52" Height="25" Content="Sync Job:" FontSize="10.667" Canvas.Left="57" Canvas.Top="83.002" Foreground="#FF0000B9"/>
-			<ComboBox x:Name="cmbProfiles" Height="22" IsEditable="True" Width="443" Canvas.Left="135" Canvas.Top="86.002" KeyUp="cmbProfiles_KeyUp" DropDownClosed="cmbProfiles_DropDownClosed"/>
+			<ComboBox x:Name="cmbProfiles" Height="22" IsEditable="True" Width="443" Canvas.Left="135" Canvas.Top="86.002" KeyUp="cmbProfiles_KeyUp" DropDownClosed="cmbProfiles_DropDownClosed" DropDownOpened="cmbProfiles_DropDownOpened"/>
 			<TextBlock x:Name="txtBlkRenJob_label" Width="85.988" Text="Rename This Job:" TextWrapping="Wrap" FontSize="10.667" Cursor="Hand" Foreground="#FF0000B9" MouseDown="txtBlkRenJob_MouseDown" Height="21.043" Canvas.Left="135" Canvas.Top="122.478" d:LayoutOverrides="VerticalAlignment" />
 		<TextBox x:Name="txtRenJob" Width="280.012" Height="22" Canvas.Left="224.988" Canvas.Top="114.56" TextWrapping="Wrap" />
         <TextBlock x:Name="txtBlkRenJob" Width="69" Text="Rename Job" TextWrapping="Wrap" TextDecorations="Underline" FontWeight="Bold" FontSize="10.667" Cursor="Hand" Foreground="#FF0000B9" MouseDown="txtBlkRenJob_MouseDown" Height="18" Canvas.Left="509" Canvas.Top="120" d:LayoutOverrides="VerticalAlignment, Height"/>

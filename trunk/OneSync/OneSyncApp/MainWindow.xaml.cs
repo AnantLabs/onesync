@@ -137,23 +137,7 @@ namespace OneSync
 
             //Import all the previous created existing sync job profiles.
             //Note that only the profile having the directory which is the current directory will be imported.
-			//TO BE DISCUSSED: Note that for those profile has Sync Source Directory not exist anymore will be deleted.
-            try
-            {
-                IList<Synchronization.Profile> profileItemsCollection = SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles();
-
-                foreach (Synchronization.Profile profileItem in profileItemsCollection)
-                {
-                    //Retrieve.
-                    if(profileItem.SyncSource.Path.Equals(current_syncing_dir))
-                    {
-                        cmbProfiles.Items.Add(profileItem.Name);
-                    }
-                }
-            }catch(Exception ex)
-            {
-                InstantNotification("Oops... " + ex.Message);
-            }
+			reloadProfileComboBox();
 			
             //Show the log of current/just-finished sync job.
             txtBlkShowLog.Visibility = Visibility.Hidden;
@@ -496,7 +480,6 @@ namespace OneSync
         private void textblock_back_to_home_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
         	ProfileCreationControlsVisibility(Visibility.Hidden, Visibility.Visible);
-			reloadProfileComboBox();
 			Window.Title = "OneSync"; //Change back the menu title.
 			cmbProfiles.Text = "";
             Expander.Visibility = Visibility.Hidden;
@@ -556,7 +539,6 @@ namespace OneSync
                 {
                     InstantNotification("Can't update: " + ex.Message);
                 }
-                reloadProfileComboBox();
             }
         }
 
@@ -617,8 +599,6 @@ namespace OneSync
                     ProfileCreationControlsVisibility(Visibility.Hidden, Visibility.Visible);
                     Window.Title = "OneSync"; //Change back the menu title.
                     cmbProfiles.Text = "";
-                    reloadProfileComboBox();
-                    
                 }
                 catch (Synchronization.DatabaseException de)
                 {
@@ -659,6 +639,18 @@ namespace OneSync
 			do_job();
             //canvasHome.Visibility = Visibility.Hidden;
             //canvasSync.Visibility = Visibility.Visible;
+		}
+		
+		
+		/// <summary>
+		/// This event is triggered when the drop-down list of the profiles combobox is opened.
+		/// The profile list will then reload.
+		/// </summary>
+		/// <param name="sender">The event sender.</param>
+		/// <param name="e">The event arguments.</param>
+		private void cmbProfiles_DropDownOpened(object sender, System.EventArgs e)
+		{
+			reloadProfileComboBox();
 		}
 		
 		/// <summary>
