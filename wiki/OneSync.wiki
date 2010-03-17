@@ -2,7 +2,7 @@
 
 * What is _OneSync_? *
 
-*_OneSync_* is a sync tool which makes use of free online storage such as [http://wiki.dropbox.com/ DropBox], [http://en.wikipedia.org/wiki/File_Transfer_Protocol FTP] effectively utilizes online disk space to synchronize files/folders between computers.
+*_OneSync_* is a sync tool which makes use of free online storage such as [http://wiki.dropbox.com/ DropBox] effectively utilizes online disk space to synchronize files/folders between computers.
 
 * Is _OneSync_ easy to use? *
 
