@@ -62,7 +62,7 @@ Inherits from !SyncSourceProvider abstract class. On instantiation, it will chec
 
 === !SyncAction ===
 
-SyncAction is an abstract class. It represents actions to be taken during synchronization. Each action is associated with at least a file (to be either copied, deleted). Hence, an action contains fields (e.g. file hash) related to the file it is associated with and the id of [ClassInfo#SyncSource SyncSource] where the file originates from.
+An abstract class to represent actions to be taken during synchronization. Each action is associated with at least a file (to be either copied, deleted). Hence, an action contains fields (e.g. file hash) related to the file it is associated with and the id of [ClassInfo#SyncSource SyncSource] where the file originates from.
 
 === !CreateAction ===
 
@@ -88,7 +88,7 @@ Stores selected information about the file system of a folder to be synchronized
 
 === !FileMetadataItem ===
 
-Contains specific information regarding a file like its hash code, relative file path as well as the id of [ClassInfo#SyncSource SyncSource] it originates from. It should be noted that the absolute root path of a !FileMetadataItem can be obtained by combining it with the rootFolder property of the [ClassInfo#FileMetaData FileMetaData] it belongs to.
+Contains specific information regarding a file like its hash code, relative file path as well as the id of [ClassInfo#SyncSource SyncSource] it originates from. It should be noted that the absolute root path of a !FileMetadataItem can be obtained by combining it with the rootFolder property of the [ClassInfo#FileMetadata FileMetadata] it belongs to.
 
 === SQLiteMetadataProvider ===
 
