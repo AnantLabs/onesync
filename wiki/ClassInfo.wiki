@@ -2,8 +2,8 @@
 
 = Classes =
   * [ClassInfo#SyncJob_Related_Classes SyncJob Related Classes
-    *[ClassInfo#SyncJob SyncJob]
-    *[ClassInfo#SQLiteSyncJobManager SQLiteSyncJobManager ]
+    * [ClassInfo#SyncJob SyncJob]
+    * [ClassInfo#SQLiteSyncJobManager SQLiteSyncJobManager ]
 
 ----
 
