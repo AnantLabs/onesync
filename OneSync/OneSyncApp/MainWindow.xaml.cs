@@ -195,8 +195,6 @@ namespace OneSync
                     bool should_i_sync = true;
 
                     //Thuat and Desmond's sync logic takes actions!
-                    //Generate a Global Unique Identifier.
-                    string name = profile_name;
                     SyncSource syncSource = new SyncSource(System.Guid.NewGuid().ToString(), current_syncing_dir);
                     IntermediaryStorage metaDataSource = new IntermediaryStorage(storage_dir);
 
@@ -208,7 +206,15 @@ namespace OneSync
                         {
                             //Synchronization.SyncClient.ProfileProcess.CreateProfile(System.Windows.Forms.Application.StartupPath, profile_name, current_syncing_dir, storage_dir);
                             SyncClient.Initialize(System.Windows.Forms.Application.StartupPath, profile_name, current_syncing_dir, storage_dir);
-							is_sync_job_created_previously = true;
+							foreach (Profile item in (SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles()))
+							{
+								if (item.Name.Equals(profile_name))
+								{
+									is_sync_job_created_previously = true;
+									current_profile = item;
+									break;
+								}
+							}
                         }
                         catch (Exception ee)
                         {
@@ -518,6 +524,7 @@ namespace OneSync
 			Window.Title = "OneSync"; //Change back the menu title.
 			cmbProfiles.Text = "";
             Expander.Visibility = Visibility.Hidden;
+			reloadProfileComboBox();
 
             Storyboard sb = (Storyboard)Window.Resources["sbHome"];
             sb.Begin(this);
@@ -545,18 +552,17 @@ namespace OneSync
         }
 
 		/// <summary>
-		/// When the rename button is clicked.
+		/// When the sync job rename button is clicked.
 		/// </summary>
 		/// <param name="sender">The event sender.</param>
         /// <param name="e">The event arguments.</param>
         private void txtBlkRenJob_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
         	//Rename a profile.
-            if(txtRenJob.Text.Trim().Length > 0)
+            if(txtRenJob.Text.Trim().Length > 0 && txtRenJob.Text.Trim().Length < 50)
             {
                 ProfileCreationControlsVisibility(Visibility.Visible, Visibility.Hidden);
 
-                //foreach (Synchronization.Profile item in (Synchronization.SyncClient.ProfileProcess.GetProfiles(System.Windows.Forms.Application.StartupPath)))
                 foreach (Profile item in (SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles()))
                 {
                     if (item.Name.Equals(cmbProfiles.Text))
@@ -590,6 +596,10 @@ namespace OneSync
                     InstantNotification("Can't update: " + ex.Message);
                 }
             }
+			else
+			{
+				InstantNotification("Please provide nonempty and shorter new name (less than 50 characters) for your sync job.");
+			}
         }
 
 		/// <summary>
