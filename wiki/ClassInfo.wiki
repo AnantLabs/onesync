@@ -40,7 +40,7 @@ The SQLiteSyncJobManager inherits from SyncJobManager abstract class. On instant
 
 ----
 
-== SyncSource Related Classes ==
+== !SyncSource Related Classes ==
 
 === SyncSource ===
 
@@ -60,9 +60,15 @@ SyncAction is an abstract class. It represents actions to be taken during synchr
 
 === !CreateAction ===
 
+A CreateAction represents a file to be copied. This action is generated when a file is modified or created.
+
 === !DeleteAction ===
 
+A DeleteAction represents a file to be deleted. This action generated if a file that previously used to exist (by reading the metadata) no logner exist now.
+
 === !RenameAction ===
+
+RenameAction is currently not implemented yet.
 
 ----
 
@@ -72,7 +78,7 @@ SyncAction is an abstract class. It represents actions to be taken during synchr
 
 === !FileMetadataItem ===
 
-=== !SQLiteMetadataProvider ===
+=== SQLiteMetadataProvider ===
 
 ----
 
