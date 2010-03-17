@@ -1,6 +1,7 @@
 * [OneSync OneSync]
   * [DropBox What is DropBox?]
 * [UserGuide User Guide]
+
 * [DeveloperGuide Developer Guide]
   * [HowOneSyncWorks How OneSync works?]
   * [Architecture Architecture of OneSync]
