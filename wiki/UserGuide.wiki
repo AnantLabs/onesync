@@ -1,4 +1,5 @@
 #summary A place to learn how to explore the OneSync. This user guide describes OneSync Version 0.9.
+#labels Featured,Phase-Deploy
 
 == Introduction ==
 
