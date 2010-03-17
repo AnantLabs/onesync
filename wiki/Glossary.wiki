@@ -1,0 +1,13 @@
+#summary Defines common terms used in OneSync.
+
+== Dirty Files ==
+Files that were modified since last synchronization. i.e. It refers to files that are out-of-sync. Note that a deleted files can considered as a dirty file as well (though it no longer exist on 1 PC, it could exist on another PC).
+
+== Intermediary Storage ==
+A folder (e.g. on a flashdrive) that !OneSync use to perform synchronization. [Glossary#Dirty_Files Dirty files] are stored here as well.
+
+== !SyncJob ==
+A synchronization job with a unique name (to a PC) that is created by a user to perform synchronization. A !SyncJob is associated with a folder to be synchronized and the path to [Glossary#intermediary_storage intermediary storage]. It is possible for a folder on a PC can be part of several !SyncJob.
+
+== !SyncSource ==
+A folder on a PC that is being synchronized. Note that 
