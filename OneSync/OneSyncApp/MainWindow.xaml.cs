@@ -201,7 +201,7 @@ namespace OneSync
 			//Set the storage path.
 			storage_dir = txtIntStorage.Text.Trim();
 
-            lblStatus.Content = "You are now syncing";
+            //lblStatus.Content = "You are now syncing";
             if(storage_dir.Length > 0)
             {
                 if (directoryVerifier(current_syncing_dir, storage_dir))
@@ -263,7 +263,8 @@ namespace OneSync
                                 currentAgent.OnProgressChanged += new OneSync.Synchronization.SyncProgressChangedHandler(SyncProcessOngoing);
                                 currentAgent.OnStatusChanged += new OneSync.Synchronization.SyncStatusChangedHandler(SyncProcessOngoingStatus);
                                 currentAgent.OnCompleted += new OneSync.Synchronization.SyncCompletesHandler(SyncProcessCompleted);
-
+                                currentAgent.OnFileChanged +=new OneSync.Synchronization.FileSyncChangedHandler(SyncingFile);
+								
                                 BackgroundWorker syncWorker = new BackgroundWorker();
                                 syncWorker.DoWork += new DoWorkEventHandler(syncWorker_DoWork);
                                 syncWorker.RunWorkerAsync();
@@ -307,6 +308,7 @@ namespace OneSync
                 textblock_back_to_home.IsEnabled = false;
                 pbSync.Visibility = Visibility.Visible;
                 lblStatus.Visibility = Visibility.Visible;
+				lblSyncingFileName.Visibility = Visibility.Visible;
             }
             else
             {
@@ -352,6 +354,18 @@ namespace OneSync
                 this.Dispatcher.Invoke((MethodInvoker)delegate { SyncProcessCompleted(sender, args); });
             }
         }
+
+        void SyncingFile(object sender, Synchronization.FileSyncedChangedEventArgs args)
+        {
+			if (this.Dispatcher.CheckAccess())
+            {
+                lblSyncingFileName.Content = "File being processed now: " + args.RelativePath;
+            }
+            else
+            {
+                lblSyncingFileName.Dispatcher.Invoke((MethodInvoker)delegate { SyncingFile(sender, args); });
+            }
+        }
 		
         /// <summary>
         /// This one will be called internally after the sync process is done.
@@ -374,6 +388,7 @@ namespace OneSync
             textblock_back_to_home.IsEnabled = true;
             Expander.Visibility = Visibility.Hidden;
             lblStatus.Content = "Sync process is successfully done.";
+			lblSyncingFileName.Content = "";
 
             if (File.Exists(Log.returnLogReportPath(current_syncing_dir, false))) //To be changed. Depends on Naing.
 			{
@@ -484,6 +499,7 @@ namespace OneSync
 			reloadProfileComboBox();
 			Window.Title = "OneSync"; //Change back the menu title.
 			cmbProfiles.Text = "";
+            Expander.Visibility = Visibility.Hidden;
 
             Storyboard sb = (Storyboard)Window.Resources["sbHome"];
             sb.Begin(this);
@@ -523,6 +539,7 @@ namespace OneSync
                 //Hide the progress bar.
                 pbSync.Visibility = Visibility.Hidden;
                 lblStatus.Visibility = Visibility.Hidden;
+				lblSyncingFileName.Visibility = Visibility.Hidden;
                 try
                 {
                     current_profile.Name = txtRenJob.Text.Trim();
@@ -693,6 +710,7 @@ namespace OneSync
                 //Hide the progress bar.
                 pbSync.Visibility = Visibility.Hidden;
                 lblStatus.Visibility = Visibility.Hidden;
+				lblSyncingFileName.Visibility = Visibility.Hidden;
                 current_profile = null;
                 try
                 {
@@ -779,6 +797,7 @@ namespace OneSync
         {
             //Controls to be hidden when the program first starts.
             lblStatus.Visibility = Visibility.Hidden;
+			lblSyncingFileName.Visibility = Visibility.Hidden;
             pbSync.Visibility = Visibility.Hidden;
             Expander.Visibility = Visibility.Hidden;
 
@@ -951,9 +970,10 @@ namespace OneSync
 					imageSrc = "conflicting_icon.gif";
 					statusMessage = "Conflict";
 					break;
-				default:
-                    Debug.Assert(true, "The value cannot be find in the enum LogStatus. Please ask Chun Lin for more info.");
-					break;
+				default: //Will be improved in V1.0.
+                    imageSrc = "completed_icon.gif";
+                    statusMessage = "Completely processed";
+                    break;
 			}
 
             //Add a new log entry to the log collection.
