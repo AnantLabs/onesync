@@ -74,7 +74,7 @@ namespace OneSync.Synchronization
             string absolutePathInIntermediateStorage = profile.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
             string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
 
-            SQLiteAccess access = new SQLiteAccess(profile.IntermediaryStorage.Path);
+            SQLiteAccess access = new SQLiteAccess(Path.Combine(profile.IntermediaryStorage.Path, Configuration.DATABASE_NAME));
             SqliteConnection con = access.NewSQLiteConnection();
             SqliteTransaction trasaction = (SqliteTransaction)con.BeginTransaction();
             try
@@ -129,7 +129,7 @@ namespace OneSync.Synchronization
             string oldAbsolutePathInSyncSource = profile.SyncSource.Path + action.PreviousRelativeFilePath;
             string newAbsolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
 
-            SQLiteAccess access = new SQLiteAccess(profile.IntermediaryStorage.Path);
+            SQLiteAccess access = new SQLiteAccess(Path.Combine(profile.IntermediaryStorage.Path, Configuration.DATABASE_NAME));
             SqliteConnection con = access.NewSQLiteConnection();
             SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
 

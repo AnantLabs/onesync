@@ -171,6 +171,7 @@ namespace OneSync.Synchronization
                     count++;
                 }
             }
+
             foreach (SyncAction action in result.ConflictItems)
             {
                 if (action.ConflictResolution == ConflictResolution.SKIP)
