@@ -20,6 +20,16 @@ namespace OneSync.Synchronization
         /// <summary>
         /// Collection of attributes
         /// </summary>
+        #region list of column names in METADATA TABLE
+        public const string METADATA_TABLE = "METADATA_TABLE";
+        public const string SOURCE_ID = "SOURCE_ID";
+        public const string FULL_NAME = "FULL_NAME";
+        public const string RELATIVE_PATH = "RELATIVE_PATH";
+        public const string HASH_CODE = "HASH_CODE";
+        public const string LAST_MODIFIED_TIME = "LAST_MODIFIED_TIME";
+        public const string NTFS_ID1 = "NTFS_ID1";
+        public const string NTFS_ID2 = "NTFS_ID2";
+        #endregion list of column names in METADATA TABLE
 
         protected IList<FileMetaDataItem> items = new List<FileMetaDataItem>();              
         
@@ -28,11 +38,6 @@ namespace OneSync.Synchronization
         {
             this.sourceId = sourceId;
             this.sourcePath = sourcePath;
-        }
-
-        public FileMetaData(IList<FileMetaDataItem> items)
-        {
-            this.items = items;
         }
 
         /// <summary>

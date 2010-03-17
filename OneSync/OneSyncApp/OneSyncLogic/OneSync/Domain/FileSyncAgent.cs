@@ -49,7 +49,7 @@ namespace OneSync.Synchronization
         {
             //actions = (List<SyncAction>)new SQLiteActionProvider(profile).Load(profile.SyncSource, SourceOption.NOT_EQUAL_SOURCE_ID);
             SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
-            actions = (List<SyncAction>)actProvider.Load(profile.SyncSource.ID, true);
+            actions = (List<SyncAction>)actProvider.Load(profile.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
         }
 
         public void Synchronize(SyncPreviewResult preview)
@@ -74,11 +74,11 @@ namespace OneSync.Synchronization
             //Load current folder metadata from database
             MetaDataProvider mdProvider = SyncClient.GetMetaDataProvider(profile.IntermediaryStorage.Path, profile.SyncSource.ID);
             //FileMetaData oldCurrentItems = (FileMetaData)new SQLiteMetaDataProvider(profile).Load(profile.SyncSource, SourceOption.EQUAL_SOURCE_ID);
-            FileMetaData oldCurrentItems = mdProvider.Load(profile.SyncSource.ID, false);
+            FileMetaData oldCurrentItems = mdProvider.Load(profile.SyncSource.ID, SourceOption.SOURCE_ID_EQUALS);
 
             //Load the other folder metadata from database
             //FileMetaData oldOtherItems = (FileMetaData)new SQLiteMetaDataProvider(profile).Load(profile.SyncSource, SourceOption.NOT_EQUAL_SOURCE_ID);
-            FileMetaData oldOtherItems = mdProvider.Load(profile.SyncSource.ID, true);
+            FileMetaData oldOtherItems = mdProvider.Load(profile.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
 
 
             //By comparing current metadata and the old metadata from previous sync of a sync folder
@@ -119,6 +119,11 @@ namespace OneSync.Synchronization
             return result;
         }
 
+        /// <summary>
+        /// Carry out the sync actions
+        /// </summary>
+        /// <returns></returns>
+
         public SyncResult Apply()
         {
             // Logging
@@ -134,7 +139,7 @@ namespace OneSync.Synchronization
                     if (OnFileChanged != null) OnFileChanged(this, new FileSyncedChangedEventArgs(ChangeType.NEWLY_CREATED, action.RelativeFilePath));
                     try
                     {
-                        CopyToSyncFolderAndUpdateActionTable((CreateAction)action, profile);
+                        SyncExecutor.CopyToSyncFolderAndUpdateActionTable((CreateAction)action, profile);
                         syncResult.Ok.Add(action);
                         applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "SUCCESS"));
                     }
@@ -146,7 +151,6 @@ namespace OneSync.Synchronization
                     count++;
                 }
             }
-			
             foreach (SyncAction action in result.ItemsToDelete)
             {
                 if (action.ChangeType == ChangeType.DELETED)
@@ -154,7 +158,7 @@ namespace OneSync.Synchronization
                     if (OnFileChanged != null) OnFileChanged(this, new FileSyncedChangedEventArgs(ChangeType.DELETED, action.RelativeFilePath));
                     try
                     {
-                        DeleteInSyncFolderAndUpdateActionTable((DeleteAction)action, profile);
+                        SyncExecutor.DeleteInSyncFolderAndUpdateActionTable((DeleteAction)action, profile);
                         syncResult.Ok.Add(action);
                         applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "SUCCESS"));
                     }
@@ -167,7 +171,6 @@ namespace OneSync.Synchronization
                     count++;
                 }
             }
-			
             foreach (SyncAction action in result.ConflictItems)
             {
                 if (action.ConflictResolution == ConflictResolution.SKIP)
@@ -181,7 +184,7 @@ namespace OneSync.Synchronization
                     if (OnFileChanged != null) OnFileChanged(this, new FileSyncedChangedEventArgs(ChangeType.NEWLY_CREATED, action.RelativeFilePath));
                     try
                     {
-                        DuplicateRenameToSyncFolderAndUpdateActionTable((CreateAction)action, profile);
+                        SyncExecutor.DuplicateRenameToSyncFolderAndUpdateActionTable((CreateAction)action, profile);
                         syncResult.Ok.Add(action);
                         applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString() + "_SUCCESS"));
                     }
@@ -197,7 +200,7 @@ namespace OneSync.Synchronization
                     if (OnFileChanged != null) OnFileChanged(this, new FileSyncedChangedEventArgs(ChangeType.MODIFIED, action.RelativeFilePath));
                     try
                     {
-                        CopyToSyncFolderAndUpdateActionTable((CreateAction)action, profile);
+                        SyncExecutor.CopyToSyncFolderAndUpdateActionTable((CreateAction)action, profile);
                         syncResult.Ok.Add(action);
                         applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString() + "_SUCCESS"));
                     }
@@ -229,7 +232,7 @@ namespace OneSync.Synchronization
             //read metadata of the current folder stored in the database
             MetaDataProvider mdProvider = SyncClient.GetMetaDataProvider(profile.IntermediaryStorage.Path, profile.SyncSource.Path);
             //FileMetaData storedItems = new SQLiteMetaDataProvider(profile).Load(profile.SyncSource, SourceOption.EQUAL_SOURCE_ID);
-            FileMetaData storedItems = mdProvider.Load(profile.SyncSource.ID, false);
+            FileMetaData storedItems = mdProvider.Load(profile.SyncSource.ID, SourceOption.SOURCE_ID_EQUALS);
 
 
             //Update metadata 
@@ -237,7 +240,7 @@ namespace OneSync.Synchronization
             mdProvider.Update(storedItems, currentItems);
 
             //storedItems = (FileMetaData)new SQLiteMetaDataProvider(profile).Load(profile.SyncSource, SourceOption.NOT_EQUAL_SOURCE_ID);
-            storedItems = mdProvider.Load(profile.SyncSource.ID, true);
+            storedItems = mdProvider.Load(profile.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
             FileMetaDataComparer actionGenerator = new FileMetaDataComparer(currentItems, storedItems);
 
             //generate list of sync actions by comparing 2 metadata
@@ -247,7 +250,7 @@ namespace OneSync.Synchronization
             //delete actions of previous sync
             //ActionProcess.DeleteBySourceId(profile, SourceOption.EQUAL_SOURCE_ID);
             SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
-            actProvider.Delete(profile.SyncSource.ID, true);
+            actProvider.Delete(profile.SyncSource.ID, SourceOption.SOURCE_ID_EQUALS);
 
             // Logging
             List<LogActivity> generateActivities = new List<LogActivity>();
@@ -261,11 +264,10 @@ namespace OneSync.Synchronization
                 {
                     if (action.ChangeType == ChangeType.NEWLY_CREATED)
                     {
-                        CopyToDirtyFolderAndUpdateActionTable(action, profile);
+                        SyncExecutor.CopyToDirtyFolderAndUpdateActionTable(action, profile);
                     }
                     else if (action.ChangeType == ChangeType.DELETED || action.ChangeType == ChangeType.RENAMED)
-                    {
-                        //ActionProcess.InsertAction(action, profile);
+                    {                        
                         actProvider.Add(action);
                     }
 
@@ -284,170 +286,6 @@ namespace OneSync.Synchronization
                 profile.Name, generateActivities, Log.to, count, starttime, DateTime.Now);
         }
 
-        #region Carryout actions
-        public void CopyToDirtyFolderAndUpdateActionTable(SyncAction action, Profile profile)
-        {
-            // TODO: make it atomic??
-            string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
-            string absolutePathInImediateStorage = profile.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
-
-            SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
-            actProvider.Add(action);
-            Files.FileUtils.Copy(absolutePathInSyncSource, absolutePathInImediateStorage);
-
-            /*
-            string connectionString = string.Format("Version=3,uri=file:{0}", profile.IntermediaryStorage.Path + Configuration.METADATA_RELATIVE_PATH);
-            string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
-            string absolutePathInImediateStorage = profile.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
-            using (SqliteConnection con = new SqliteConnection(connectionString))
-            {
-                con.Open();
-                SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
-                try
-                {
-                    new SQLiteActionProvider(profile).Insert(action, con);
-                    Files.FileUtils.Copy(absolutePathInSyncSource, absolutePathInImediateStorage);
-                    transaction.Commit();
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    throw new DatabaseException();
-                }
-            }*/
-        }
-
-        public void CopyToSyncFolderAndUpdateActionTable(SyncAction action, Profile profile)
-        {
-            // TODO: atomic....
-            string absolutePathInIntermediateStorage = profile.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
-            string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
-
-            SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
-            actProvider.Delete(action);
-            
-            Files.FileUtils.Copy(absolutePathInIntermediateStorage, absolutePathInSyncSource);
-            Files.FileUtils.DeleteFileAndFolderIfEmpty(profile.IntermediaryStorage.DirtyFolderPath, absolutePathInIntermediateStorage);
-            
-            /*
-            string absolutePathInIntermediateStorage = profile.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
-            string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
-            string conString1 = string.Format("Version=3,uri=file:{0}", profile.IntermediaryStorage.Path + Configuration.METADATA_RELATIVE_PATH);
-            using (SqliteConnection con = new SqliteConnection(conString1))
-            {
-                con.Open();
-                SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
-                try
-                {
-                    new SQLiteActionProvider(profile).Delete(action, con);
-                    Files.FileUtils.Copy(absolutePathInIntermediateStorage, absolutePathInSyncSource);
-                    Files.FileUtils.DeleteFileAndFolderIfEmpty(profile.IntermediaryStorage.DirtyFolderPath, absolutePathInIntermediateStorage);
-                    transaction.Commit();
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    throw new DatabaseException();
-                }
-            }*/
-        }
-
-        public void DuplicateRenameToSyncFolderAndUpdateActionTable(SyncAction action, Profile profile)
-        {
-            string absolutePathInIntermediateStorage = profile.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
-            string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
-
-            SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
-            actProvider.Delete(action);
-
-            Files.FileUtils.DuplicateRename(absolutePathInIntermediateStorage, absolutePathInSyncSource);
-            Files.FileUtils.DeleteFileAndFolderIfEmpty(profile.IntermediaryStorage.DirtyFolderPath, absolutePathInIntermediateStorage);
-
-            /*
-            string absolutePathInIntermediateStorage = profile.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
-            string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
-            string conString1 = string.Format("Version=3,uri=file:{0}", profile.IntermediaryStorage.Path + Configuration.METADATA_RELATIVE_PATH);
-            using (SqliteConnection con = new SqliteConnection(conString1))
-            {
-                con.Open();
-                SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
-                try
-                {
-                    new SQLiteActionProvider(profile).Delete(action, con);
-                    Files.FileUtils.DuplicateRename(absolutePathInIntermediateStorage, absolutePathInSyncSource);
-                    Files.FileUtils.DeleteFileAndFolderIfEmpty(profile.IntermediaryStorage.DirtyFolderPath, absolutePathInIntermediateStorage);
-                    transaction.Commit();
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    throw new DatabaseException();
-                }
-            }*/
-        }
-
-        public void DeleteInSyncFolderAndUpdateActionTable(SyncAction action, Profile profile)
-        {
-            string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
-
-            SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
-            actProvider.Delete(action);
-
-            Files.FileUtils.DeleteFileAndFolderIfEmpty(profile.SyncSource.Path, absolutePathInSyncSource);
-
-            /*
-            string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
-            string conString1 = string.Format("Version=3,uri=file:{0}", profile.IntermediaryStorage.Path + Configuration.METADATA_RELATIVE_PATH);
-            using (SqliteConnection con = new SqliteConnection(conString1))
-            {
-                con.Open();
-                SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
-                try
-                {
-                    new SQLiteActionProvider(profile).Delete(action, con);
-                    Files.FileUtils.DeleteFileAndFolderIfEmpty(profile.SyncSource.Path, absolutePathInSyncSource);
-                    transaction.Commit();
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    throw new DatabaseException();
-                }
-            }*/
-        }
-
-        public void RenameInSyncFolderAndUpdateActionTable(RenameAction action, Profile profile)
-        {
-            string oldAbsolutePathInSyncSource = profile.SyncSource.Path + action.PreviousRelativeFilePath;
-            string newAbsolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
-
-            SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
-            actProvider.Delete(action);
-
-            Files.FileUtils.Copy(oldAbsolutePathInSyncSource, newAbsolutePathInSyncSource);
-
-            /*
-            string oldAbsolutePathInSyncSource = profile.SyncSource.Path + action.PreviousRelativeFilePath;
-            string newAbsolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
-            string conString1 = string.Format("Version=3,uri=file:{0}", profile.IntermediaryStorage.Path + Configuration.METADATA_RELATIVE_PATH);
-            using (SqliteConnection con = new SqliteConnection(conString1))
-            {
-                con.Open();
-                SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
-                try
-                {
-                    new SQLiteActionProvider(profile).Delete(action, con);
-                    Files.FileUtils.Copy(oldAbsolutePathInSyncSource, newAbsolutePathInSyncSource);
-                    transaction.Commit();
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    throw new DatabaseException();
-                }
-            }
-             */
-        }
-        #endregion Carryout actions
+       
     }
 }

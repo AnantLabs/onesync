@@ -11,7 +11,7 @@ namespace OneSync.Synchronization
     
     public abstract class BaseSyncAgent:ISyncAgent
     {
-
+     
         protected ISyncProvider provider;
         protected Profile profile;
 
@@ -49,5 +49,6 @@ namespace OneSync.Synchronization
             }
         }
 
+        
     }
 }

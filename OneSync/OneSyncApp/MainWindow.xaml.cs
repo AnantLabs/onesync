@@ -205,7 +205,8 @@ namespace OneSync
                         try
                         {
                             //Synchronization.SyncClient.ProfileProcess.CreateProfile(System.Windows.Forms.Application.StartupPath, profile_name, current_syncing_dir, storage_dir);
-                            SyncClient.Initialize(System.Windows.Forms.Application.StartupPath, profile_name, current_syncing_dir, storage_dir);
+                            //SyncClient.Initialize(System.Windows.Forms.Application.StartupPath, profile_name, current_syncing_dir, storage_dir);
+                            SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).CreateProfile(profile_name, current_syncing_dir, storage_dir);
 							foreach (Profile item in (SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles()))
 							{
 								if (item.Name.Equals(profile_name))
@@ -563,17 +564,27 @@ namespace OneSync
             {
                 ProfileCreationControlsVisibility(Visibility.Visible, Visibility.Hidden);
 
-                foreach (Profile item in (SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles()))
+                SQLiteProfileManager pManager = (SQLiteProfileManager) SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath);
+                
+                Profile profile = pManager.GetProfileByName(cmbProfiles.SelectedItem.ToString());
+
+                if (profile != null)
                 {
-                    if (item.Name.Equals(cmbProfiles.Text))
+                    profile.Name = txtRenJob.Text.Trim();
+                    try
                     {
-                        is_sync_job_created_previously = true;
-                        current_profile = item;
-                        profile_name = txtRenJob.Text.Trim();
+                        //update successfully
+                        pManager.Update(profile);
+                        current_profile = profile;
                         txtIntStorage.Text = current_profile.IntermediaryStorage.Path;
-                        break;
+                        is_sync_job_created_previously = true;
+                    }
+                    catch (Exception)
+                    {
+                        InstantNotification("Oops... Can't update profile");
                     }
                 }
+                
                 Window.Title = profile_name + " - OneSync";
                 //Hide the progress bar.
                 pbSync.Visibility = Visibility.Hidden;

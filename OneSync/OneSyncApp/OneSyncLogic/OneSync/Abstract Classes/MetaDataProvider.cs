@@ -7,6 +7,8 @@ using System.IO;
 namespace OneSync.Synchronization
 {
 
+    
+
     /// <summary>
     /// Class to manage MetaData.
     /// </summary>
@@ -17,7 +19,6 @@ namespace OneSync.Synchronization
 
         // Root dir of files referenced by relative paths.
         protected string _rootPath;
-        
         
         /// <summary>
         /// Creates a MetaDataProvider.
@@ -37,7 +38,7 @@ namespace OneSync.Synchronization
         /// <param name="currId">Id of MetaData.</param>
         /// <param name="loadOther">false to load metadata with currId. true to load other metadata with id different from currId.</param>
         /// <returns></returns>
-        public abstract FileMetaData Load(string currId, bool loadOther);
+        public abstract FileMetaData Load(string currId, SourceOption option);
 
 
         /// <summary>
@@ -80,7 +81,10 @@ namespace OneSync.Synchronization
         /// <returns>true if update successful.</returns>
         public abstract bool Update(FileMetaData oldMetadata, FileMetaData newMetada);
 
-
+        /// <summary>
+        /// Create default schema
+        /// </summary>
+        public abstract void CreateSchema();
 
         /// <summary>
         /// Generates MetaData of all files in specified path and its subdirectories.
@@ -90,7 +94,6 @@ namespace OneSync.Synchronization
         /// <returns>MetaData of all files specified in root path.</returns>
         public static FileMetaData Generate(string fromPath, string id)
         {
-            
             FileMetaData metaData = new FileMetaData(id, fromPath);
 
             DirectoryInfo di = new DirectoryInfo(fromPath);
@@ -107,6 +110,7 @@ namespace OneSync.Synchronization
 
             return metaData;
         }
+
 
 
         #region Public Properties
