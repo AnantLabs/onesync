@@ -9,5 +9,7 @@ A folder (e.g. on a flashdrive) that !OneSync use to perform synchronization. [G
 == !SyncJob ==
 A synchronization job with a unique name (to a PC) that is created by a user to perform synchronization. A !SyncJob is associated with a folder to be synchronized and the path to [Glossary#intermediary_storage intermediary storage]. It is possible for a folder on a PC can be part of several !SyncJob.
 
+It is also known as *Profile* or *Sync Job Profile* in the CodeDroids team.
+
 == !SyncSource ==
 A folder on a PC that is being synchronized. Note that 
