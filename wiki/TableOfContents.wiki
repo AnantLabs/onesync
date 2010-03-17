@@ -4,5 +4,6 @@
   * [HowOneSyncWorks How OneSync works?]
   * [Architecture Architecture of OneSync]
   * [ClassInfo Class Information]
-  * [FileSyncAgent What FileSyncAgent does?]
+  * [FileSyncAgent Synchronization - FileSyncAgent]
+  * [Glossary Glossary]
 * [UserGuide User Guide]
