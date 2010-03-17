@@ -7,5 +7,5 @@
   * [HowOneSyncWorks How OneSync works?]
   * [Architecture Architecture of OneSync]
   * [ClassInfo Class Information]
-  * [FileSyncAgent Synchronization - FileSyncAgent]
+  * [KnownIssues Known Issues]
   * [Glossary Glossary]
