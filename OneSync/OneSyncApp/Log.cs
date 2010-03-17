@@ -212,7 +212,16 @@ namespace OneSync
 
             try
             {
-                string log = "<html><body style='FONT-FAMILY: arial'>";
+                string log = "<html><body style='FONT-FAMILY: arial'>\r\n";
+                log += "<style type='text/css'>\r\n";
+                log += "table.t1 { background-color: #FEFEF2; }";
+                log += "tr.da { background-color: #E0ECF8; }\r\n";
+                log += "tr.db { background-color: #EFFBEF; }\r\n";
+                log += "tr.f { background-color: #F5A9A9; }\r\n";
+                log += "tr.dh th { background-color: #FCF6CF; }\r\n";
+                log += "tr.d0 td { background-color: #FCF6CF; }\r\n";
+                log += "tr.d1 td { background-color: #FEFEF2; }\r\n";
+                log += "</style>\r\n";
                 Hashtable pairs = loadSyncDirAndLogFilePairs();
 
                 if (pairs.ContainsKey(syncDirPath))
@@ -225,8 +234,8 @@ namespace OneSync
 
                     // Folder directory first
                     XmlElement root = doc.DocumentElement;
-                    log += "<table width=800><tr><td width='30%'>" + root.GetAttribute("description") + "</td>";
-                    log += "<td>: " + root.GetAttribute("value") + "</td></tr></table></br></br>";
+                    log += "<table width='100%'>\r\n<tr class='da'><td width='20%'>" + root.GetAttribute("description") + "</td>\r\n";
+                    log += "<td>: " + root.GetAttribute("value") + "</td></tr></table></br></br>\r\n";
 
                     XmlNodeList syncSessionsNodesList = root.SelectNodes("syncsession");
 
@@ -331,45 +340,56 @@ namespace OneSync
         {
             string log = "";
 
-            log += "<table width=800><tr><td width='30%'>" + syncSessionNode["profilename"].GetAttribute("description") + "</td>";
-            log += "<td>: " + syncSessionNode["profilename"].InnerText + "</td></tr>";
-            log += "<tr><td width='30%'>" + syncSessionNode["syncdate"].GetAttribute("description") + "</td>";
-            log += "<td>: " + syncSessionNode["syncdate"].InnerText + "</td></tr>";
-            log += "<tr><td width='30%'>" + syncSessionNode["storagedirectory"].GetAttribute("description") + "</td>";
-            log += "<td>: " + syncSessionNode["storagedirectory"].InnerText + "</td></tr>";
-            log += "<tr><td width='30%'>" + syncSessionNode["syncdirection"].GetAttribute("description") + "</td>";
-            log += "<td>: " + syncSessionNode["syncdirection"].InnerText + "</td></td>";
+            log += "<table class='t1' width='100%'>\r\n<tr'>\r\n<td width='20%'>" + syncSessionNode["profilename"].GetAttribute("description") + "</td>\r\n";
+            log += "<td>: " + syncSessionNode["profilename"].InnerText + "</td>\r\n</tr>\r\n";
+            log += "<tr>\r\n<td width='20%'>" + syncSessionNode["syncdate"].GetAttribute("description") + "</td>\r\n";
+            log += "<td>: " + syncSessionNode["syncdate"].InnerText + "</td>\r\n</tr>\r\n";
+            log += "<tr>\r\n<td width='20%'>" + syncSessionNode["storagedirectory"].GetAttribute("description") + "</td>\r\n";
+            log += "<td>: " + syncSessionNode["storagedirectory"].InnerText + "</td>\r\n</tr>\r\n";
+            log += "<tr>\r\n<td width='20%'>" + syncSessionNode["syncdirection"].GetAttribute("description") + "</td>\r\n";
+            log += "<td>: " + syncSessionNode["syncdirection"].InnerText + "</td>\r\n</td>\r\n";
 
             int numberOfFilesProcessed = Int32.Parse(syncSessionNode["numberoffilesprocessed"].InnerText);
 
-            log += "<tr><td width='30%'>" + syncSessionNode["numberoffilesprocessed"].GetAttribute("description") + "</td>";
+            log += "<tr>\r\n<td width='20%'>" + syncSessionNode["numberoffilesprocessed"].GetAttribute("description") + "</td>\r\n";
 
             if (numberOfFilesProcessed == 0)
             {
-                log += "<td>: No files were transferred</td></td>";
+                log += "<td>: No files were transferred</td>\r\n</tr>\r\n";
             }
             else
             {
-                log += "<td>: " + syncSessionNode["numberoffilesprocessed"].InnerText + "</td></td>";
-                log += "<tr><td width='30%'>" + syncSessionNode["starttime"].GetAttribute("description") + "</td>";
-                log += "<td>: " + syncSessionNode["starttime"].InnerText + "</td></td>";
-                log += "<tr><td width='30%'>" + syncSessionNode["endtime"].GetAttribute("description") + "</td>";
-                log += "<td>: " + syncSessionNode["endtime"].InnerText + "</td></td>";
+                log += "<td>: " + syncSessionNode["numberoffilesprocessed"].InnerText + "</td>\r\n</tr>\r\n";
+                log += "<tr>\r\n<td width='20%'>" + syncSessionNode["starttime"].GetAttribute("description") + "</td>\r\n";
+                log += "<td>: " + syncSessionNode["starttime"].InnerText + "</td>\r\n</tr>\r\n";
+                log += "<tr>\r\n<td width='20%'>" + syncSessionNode["endtime"].GetAttribute("description") + "</td>\r\n";
+                log += "<td>: " + syncSessionNode["endtime"].InnerText + "</td>\r\n</tr>\r\n";
 
                 XmlNodeList syncRecordsNodesList = syncSessionNode.SelectNodes("syncrecord");
 
-                log += "<table width=800 cellpadding=3><tr align=left><th>File</th><th>Action</th><th>Status</th></tr>";
+                log += "<table width='100%' cellpadding=3>\r\n<tr class='dh' align=left><th>File</th><th>Action</th><th>Status</th></tr>\r\n";
 
+                int count = 0;
+                string altColor;
                 foreach (XmlNode syncRecordNode in syncRecordsNodesList)
                 {
-                    log += "<tr><td width='75%'>" + syncRecordNode["file"].InnerText + "</td>";
-                    log += "<td>" + syncRecordNode["action"].InnerText + "</td>";
-                    log += "<td>" + syncRecordNode["status"].InnerText + "</td>";
+                    string file = syncRecordNode["file"].InnerText;
+                    string action = syncRecordNode["action"].InnerText;
+                    string status = syncRecordNode["status"].InnerText;
+
+                    if (status.ToUpper().IndexOf("FAIL") >= 0) altColor = "class='f'";
+                    else if (count++ % 2 == 0) altColor = "class='d1'";
+                    else altColor = "class='d0'";
+
+
+                    log += "<tr " + altColor + ">\r\n<td width='75%'>" + file + "</td>\r\n";
+                    log += "<td>" + action + "</td>\r\n";
+                    log += "<td>" + status + "</td>\r\n</tr>\r\n";
                 }
             }
 
-            log += "</table>";
-            log += "</br></br>";
+            log += "</table>\r\n";
+            log += "</br></br></br></br>";
 
             return log;
         }
