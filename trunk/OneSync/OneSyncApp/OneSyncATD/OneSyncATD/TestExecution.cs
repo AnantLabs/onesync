@@ -35,7 +35,7 @@ namespace OneSyncATD
                 }
                 catch (Exception exception)
                 {
-                    throw exception;
+                    //throw exception;
                     oneCase.testActual = "false";
                 }
                 finally
@@ -71,7 +71,7 @@ namespace OneSyncATD
 
                 string[] checkDirs = System.IO.Directory.GetDirectories(enumFolder(comParameters[0]));
 
-                if (checkDirs.Length == 0)
+                if (checkDirs.Length == 0 && int.Parse(comParameters[2]) > 0)
                 {
                     oneCase.testActual = "false";
                 }
@@ -235,6 +235,7 @@ namespace OneSyncATD
                 if (SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).ProfileExists(comParameters[0]))
                 {
                     passRFlag = true;
+                    oneCase.testComment = oneCase.testComment + "//Profiles--" + comParameters[0] + "is created before.//";
                 }
                 else
                 {
@@ -244,6 +245,7 @@ namespace OneSyncATD
                 if (SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).ProfileExists(comParameters[1]))
                 {
                     passLFlag = true;
+                    oneCase.testComment = oneCase.testComment + "//Profiles--" + comParameters[1] + "is created before.//";
                 }
                 else
                 {
@@ -261,6 +263,11 @@ namespace OneSyncATD
                 if (passRFlag && passLFlag)
                 {
                     oneCase.testActual = "true";
+                }
+                else
+                {
+                    oneCase.testActual = "false";
+                    oneCase.testComment = oneCase.testComment + "//Profiles are not created successfully.//";
                 }
             }
             else if (oneCase.testMethod.Equals("rightsyncfirst"))
@@ -328,7 +335,7 @@ namespace OneSyncATD
 
                 DirectoryInfo diRight = new DirectoryInfo(rightFolder);
                 DirectoryInfo diLeft = new DirectoryInfo(leftFolder);
-                if (compareAll(diRight, diLeft))
+                if (compareAll(diLeft, diRight))
                 {
                     oneCase.testActual = "true";
                 }
@@ -446,6 +453,10 @@ namespace OneSyncATD
                         }
                     }
                 }
+            }
+            else
+            {
+                oneCase.testActual = "Invalid command.";
             }
         } 
 
