@@ -2,7 +2,7 @@
 
 == Introduction ==
 
-Welcome to the OneSync User guide - a place to know more about OneSync and find out how to make your life more organized! With OneSync, your personal files stored in your computer will be easily shared and synced with another computer in sevaral ways: syncing through portable drive, thumb drive, Windows Shared Folders and even DropBox (Online Sync)!
+Welcome to the OneSync User guide - a place to know more about OneSync and find out how to make your life more organized! With OneSync, your personal files stored in your computer will be easily shared and synced with another computer in several ways: syncing through portable drive, thumb drive, Windows Shared Folders and even DropBox (Online Sync)!
 
 This guide allows you to learn the features of OneSync. Just follow through the handy guide below, and enjoy the journey! =)
 
@@ -27,16 +27,16 @@ This guide allows you to learn the features of OneSync. Just follow through the 
 ===New Features in Version 0.9===
 
 This version of OneSync has a number of exciting new features, including:
- # DropBox Integration - You now can select your DropBox folder as the intermediate storage in your sync job profile. The another computer linked to the DropBox will be updated in a few seconds.
- # Sync Job Management - You can create and manage your sync job. You do not have to memorize the long, long folder directory anymore.
+ # DropBox Integration - You now can select your DropBox folder as the intermediate storage in your sync job profile. Another computer linked to the DropBox will be updated in a few seconds.
+ # Sync Job Management - You can create and manage your sync job. You do not have to memorize the long directories anymore.
  # Right-click and Sync - Just right click any reasonable folder, then you will be able to sync it in just three clicks!
  # Logs Viewing - Want to know what are files affected in the sync process? Just view the logs in your web browser.
 
 ===Downloading and Installing===
 
-*WARNING* Please disable your *User Account Control (UAC)* before installing and running OneSync. CodeDroids and its members will not be held responsible for any loss due to not doing this.
+*WARNING* Please disable your *User Account Control (UAC)* before installing and running OneSync. CodeDroids and its members will not be held responsible for any loss of data if you fail to do so.
 
-*NOTE* Make sure you are running an Windows operating system (either Windows Vista or Windows 7) and that you have uninstalled any previous version of OneSync. The previous versions of OneSync are:
+*NOTE* Make sure you are running an Windows operating system (either Windows Vista or Windows 7) and that you have uninstalled any previous versions of OneSync. The previous versions of OneSync are:
  # OneSync V-0.5
  # OneSync Zero
 
@@ -44,7 +44,7 @@ If you would like to install the latest version of OneSync, you can download the
 
 If you experience issues installing OneSync through the Google Code Project Hosting, you can directly download the latest version of OneSync here: http://onesync.googlecode.com/files/OneSyncZero.msi
 
-Installation steps are as follows
+Installation steps are as follows:
  # Run the OneSync Installer
  # Follow Setup Instructions
  # Done, OneSync Is Successfully Installed
