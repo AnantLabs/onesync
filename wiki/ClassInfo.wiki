@@ -42,7 +42,7 @@ The SQLiteSyncJobManager inherits from SyncJobManager abstract class. On instant
 
 == SyncSource Related Classes ==
 
-=== Sync Source ===
+=== SyncSource ===
 
 SyncSource encapsulates information about the folder being synchronized and possibly other information regarding the PC where the folder is. Each SyncSource has a unique GUID. It should be noted that there can be 2 different SyncSource object that represents the same folder on a PC. This is to allow a folder to be part of 2 different SyncJob.
 
@@ -63,16 +63,6 @@ SyncAction is an abstract class. It represents actions to be taken during synchr
 === DeleteAction ===
 
 === RenameAction ===
-
-----
-
-== Metadata Related Classes ==
-
-=== FileMetadata ===
-
-=== FileMetadataItem ===
-
-=== SQLiteMetadataProvider ===
 
 ----
 
