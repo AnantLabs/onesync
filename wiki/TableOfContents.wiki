@@ -1,7 +1,7 @@
 * [OneSync OneSync]
-  * [HowOneSyncWorks How OneSync works?]
   * [DropBox What is DropBox?]
 * [DeveloperGuide Developer Guide]
+  * [HowOneSyncWorks How OneSync works?]
   * [Architecture Architecture of OneSync]
   * [ClassInfo Class Information]
   * [FileSyncAgent What FileSyncAgent does?]
