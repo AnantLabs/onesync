@@ -33,13 +33,6 @@ This version of OneSync has a number of exciting new features, including:
  # Right-click and Sync - Just right click any reasonable folder, then you will be able to sync it in just three clicks!
  # Logs Viewing - Want to know what are files affected in the sync process? Just view the logs in your web browser.
 
-===The OneSync Concepts===
-There are two concepts that actually makes OneSync different from most of the popular sync tools.
-
-The first concept is known as "Cloud Sync". Let's see what it means in syncing two PCs case. Instead of directly syncing two PCs, OneSync actually does a "half-way" sync on both PC and links both of the PCs together by the intermediate storage (or the "Cloud Storage"). For each sync done in a PC, the files (or the *Patch*) only uploaded to or downloaded from the intermediate storage. Hence, the user needs to perform the sync again in another PC in order to download the patch from the intermediate storage and complete the sync process.
-
-The intermediate storage can be your portable drive, thumb-drive, Windows Shared Folder or your local DropBox folder.
-
 ===Downloading and Installing===
 
 *WARNING* Please disable your *User Account Control (UAC)* before installing and running OneSync. CodeDroids and its members will not be held responsible for any loss of data if you fail to do so.
@@ -89,7 +82,11 @@ The first concept is known as *Cloud Sync*. Instead of doing synchronization dir
 
 When a user sync his folder, his must first choose the location of his intermediate storage. The storage can be his portable drive, Windows Shared Folders or DropBox local folder that stored on his computer. When he does the sync on one PC, his files (or *patch*) will be sent to the intermediate storage. So, for each sync, the another computer will not be updated automatically. Hence, he has to do the sync again in the another computer to download the *patch* from the intermediate storage and complete the sync process.
 
-The second concept is called the *Light-weight Sync*. OneSync is using your
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_1.bmp]
+
+The second concept is called the *Light-weight Sync*. OneSync is trying to make optimal use of the intermediate storage. Hence, only your modified files will actually be uploaded to or downloaded from the intermediate storage. This will not only prevent storing duplicated copies of your files on the intermediate storage, but also make the whole sync process faster.
+
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_2.bmp]
 
 ==Syncing My Folders==
 Why put your files in different PCs and keep doing copy-and-paste when you update the files? Keep them synchronized between your two computers, so you always have the most up-to-date versions at hand.
