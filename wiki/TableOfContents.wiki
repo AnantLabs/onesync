@@ -5,5 +5,4 @@
   * [Architecture Architecture of OneSync]
   * [ClassInfo Class Information]
   * [FileSyncAgent What FileSyncAgent does?]
-  * [SyncJob Class SynJob information] 
 * [UserGuide User Guide]
