@@ -97,6 +97,14 @@ Now, the program will navigate to a new screen (aka *Sync Page*) where you can e
 
 Now, you just need to sit in front of your computer to wait for the sync job to be done completely.
 
+The files are being transferred. Hold on...
+
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_06A.jpg]
+
+Sync process is successfully done. =)
+
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_06B.jpg]
+
 ===Syncing Through Drop Box===
 Firstly, please install DropBox. You can find the installer at https://www.dropbox.com/downloading.
 
