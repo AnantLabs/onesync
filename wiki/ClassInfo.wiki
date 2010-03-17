@@ -6,7 +6,7 @@
     * [ClassInfo#SyncJob SyncJob]
     * [ClassInfo#SQLiteSyncJobManager SQLiteSyncJobManager]
   * [ClassInfo#SyncSource_Related_Classes SyncSource Related Classes]
-    * [ClassInfo#Sync_Source Sync_Source]
+    * [ClassInfo#SyncSource SyncSource]
     * [ClassInfo#SQLiteSyncSourceProvider SQLiteSyncSourceProvider]
   * [ClassInfo#SyncActions_Related_Classes SyncActions Related Classes]
     * [ClassInfo#SyncActions SyncActions]
