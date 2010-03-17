@@ -1,4 +1,5 @@
-#Introduction of OneSync
+#summary Introduction of OneSync
+#sidebar TableOfContents
 
 * What is _OneSync_? *
 
