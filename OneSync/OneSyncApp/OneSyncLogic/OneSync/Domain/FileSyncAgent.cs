@@ -121,6 +121,11 @@ namespace OneSync.Synchronization
 
         public SyncResult Apply()
         {
+            // Logging
+            List<LogActivity> applyActivities = new List<LogActivity>();
+            int count = 0;
+            DateTime starttime = DateTime.Now;
+
             SyncResult syncResult = new SyncResult();
             foreach (SyncAction action in result.ItemsToCopyOver)
             {
@@ -131,8 +136,14 @@ namespace OneSync.Synchronization
                     {
                         CopyToSyncFolderAndUpdateActionTable((CreateAction)action, profile);
                         syncResult.Ok.Add(action);
+                        applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "SUCCESS"));
                     }
-                    catch (Exception) { }
+                    catch (Exception)
+                    {
+                        applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "FAIL"));
+                    }
+
+                    count++;
                 }
             }
             foreach (SyncAction action in result.ItemsToDelete)
@@ -144,11 +155,15 @@ namespace OneSync.Synchronization
                     {
                         DeleteInSyncFolderAndUpdateActionTable((DeleteAction)action, profile);
                         syncResult.Ok.Add(action);
+                        applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "SUCCESS"));
                     }
                     catch (Exception)
                     {
                         syncResult.Errors.Add(action);
+                        applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "FAIL"));
                     }
+
+                    count++;
                 }
             }
             foreach (SyncAction action in result.ConflictItems)
@@ -156,6 +171,8 @@ namespace OneSync.Synchronization
                 if (action.ConflictResolution == ConflictResolution.SKIP)
                 {
                     syncResult.Skipped.Add(action);
+                    applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString()));
+                    count++;
                 }
                 else if (action.ConflictResolution == ConflictResolution.DUPLICATE_RENAME)
                 {
@@ -164,11 +181,14 @@ namespace OneSync.Synchronization
                     {
                         DuplicateRenameToSyncFolderAndUpdateActionTable((CreateAction)action, profile);
                         syncResult.Ok.Add(action);
+                        applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString() + "SUCCESS"));
                     }
                     catch (Exception)
                     {
                         syncResult.Errors.Add(action);
+                        applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString() + "FAIL"));
                     }
+                    count++;
                 }
                 else if (action.ConflictResolution == ConflictResolution.OVERWRITE)
                 {
@@ -177,13 +197,21 @@ namespace OneSync.Synchronization
                     {
                         CopyToSyncFolderAndUpdateActionTable((CreateAction)action, profile);
                         syncResult.Ok.Add(action);
+                        applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString() + "SUCCESS"));
                     }
                     catch (Exception)
                     {
                         syncResult.Errors.Add(action);
+                        applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString() + "FAIL"));
                     }
+                    count++;
                 }
             }
+
+            // Add to log
+            Log.addToLog(profile.SyncSource.Path, profile.IntermediaryStorage.Path,
+                    profile.Name, applyActivities, Log.from, count, starttime, DateTime.Now);
+
             return syncResult;
             // TODO:
             // Update metadata after patch is applied
@@ -219,21 +247,39 @@ namespace OneSync.Synchronization
             SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
             actProvider.Delete(profile.SyncSource.ID, true);
 
+            // Logging
+            List<LogActivity> generateActivities = new List<LogActivity>();
+            int count = 0;
+            DateTime starttime = DateTime.Now;
 
             if (Directory.Exists(profile.IntermediaryStorage.DirtyFolderPath)) Directory.Delete(profile.IntermediaryStorage.DirtyFolderPath, true);
             foreach (SyncAction action in newActions)
             {
-                if (action.ChangeType == ChangeType.NEWLY_CREATED)
+                try
                 {
-                    CopyToDirtyFolderAndUpdateActionTable(action, profile);
+                    if (action.ChangeType == ChangeType.NEWLY_CREATED)
+                    {
+                        CopyToDirtyFolderAndUpdateActionTable(action, profile);
+                    }
+                    else if (action.ChangeType == ChangeType.DELETED || action.ChangeType == ChangeType.RENAMED)
+                    {
+                        //ActionProcess.InsertAction(action, profile);
+                        actProvider.Add(action);
+                    }
+
+                    generateActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "SUCCESS"));
                 }
-                else if (action.ChangeType == ChangeType.DELETED || action.ChangeType == ChangeType.RENAMED)
+                catch (Exception)
                 {
-                    //ActionProcess.InsertAction(action, profile);
-                    actProvider.Add(action);
+                    generateActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "FAIL"));
                 }
+
+                count++;
             }
 
+            // Add to log
+            Log.addToLog(profile.SyncSource.Path, profile.IntermediaryStorage.Path,
+                profile.Name, generateActivities, Log.to, count, starttime, DateTime.Now);
         }
 
         #region Carryout actions
