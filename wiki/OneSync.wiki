@@ -1,4 +1,4 @@
-#summary Introduction of OneSync
+#summary FAQ of OneSync
 
 * What is _OneSync_? *
 
@@ -22,3 +22,7 @@ You can get your DropBox application and account from [http://www.dropbox.com Dr
 * Well, how do I know that OneSync is suitable for me? *
 
 If you are a DropBox user, OneSync is 100% suitable for you. OneSync can be an add-on for DropBox to enhance online sync experience. Don't worry if you are a normal user. OneSync provides portable media storage synchronization too. 
+
+* I have some more questions for OneSync. Who can I ask for? *
+
+Please email to ([mailto:my3215group@googlegroups.com]) if you have queries. Also, we welcome your opinions towards OneSync. Our motto is "*Customers' Satisfaction is Our Vision and Driving Force*".
