@@ -209,7 +209,7 @@ namespace OneSync
                             SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).CreateProfile(profile_name, current_syncing_dir, storage_dir);
 							foreach (Profile item in (SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles()))
 							{
-								if (item.Name.Equals(profile_name))
+                                if (item.Name.Equals(profile_name) && item.SyncSource.Path.Equals(current_syncing_dir))
 								{
 									is_sync_job_created_previously = true;
 									current_profile = item;
