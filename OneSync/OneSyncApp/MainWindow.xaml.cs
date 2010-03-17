@@ -749,7 +749,7 @@ namespace OneSync
 		/// </summary>
 		private void do_job()
 		{
-			if (cmbProfiles.Text.Trim().Length > 0)
+			if (cmbProfiles.Text.Trim().Length > 0 && cmbProfiles.Text.Trim().Length < 50)
             {
 				InstantNotification(""); //Empty the notification message (if any).
                 profile_name = cmbProfiles.Text.Trim();
@@ -784,7 +784,7 @@ namespace OneSync
             }
             else 
             {
-                InstantNotification("Please provide the name of your sync job.");
+                InstantNotification("Please provide nonempty and shorter name (less than 50 characters) for your sync job.");
             }
 		}
 		
