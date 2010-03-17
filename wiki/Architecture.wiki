@@ -1,0 +1,19 @@
+#summary Architecture of OneSync
+
+== Architecture ==
+
+The UI will with interact with SyncClient and SyncAgent. SyncClient is a 
+
+controller class which manages all providers for business objects. 
+
+SyncAgent is the class that does the synchronization.
+
+The business objects are
+  * SyncJob
+  * SyncSource
+  * SyncActions
+  * Metadata
+
+----
+
+[http://www.comp.nus.edu.sg/~deskoh/devGuide/architecture.png]
