@@ -17,4 +17,4 @@ Of course, *_OneSync_* is free for all.
 Recommended Operating Systems: Windows Vista and Windows 7
 Other things to note: Microsoft .NET framework 3.5 must be ready in your computers.
 And you may have DropBox application and DropBox account.
-You can get your DropBox application and account from [http://www.dropbox.com DropBox]DropBox Official Website
+You can get your DropBox application and account from [http://www.dropbox.com DropBox Official Website]
