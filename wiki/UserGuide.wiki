@@ -82,7 +82,7 @@ The first concept is known as *Cloud Sync*. Instead of doing synchronization dir
 
 When a user sync his folder, his must first choose the location of his intermediate storage. The storage can be his portable drive, Windows Shared Folders or DropBox local folder that stored on his computer. When he does the sync on one PC, his files (or *patch*) will be sent to the intermediate storage. So, for each sync, the another computer will not be updated automatically. Hence, he has to do the sync again in the another computer to download the *patch* from the intermediate storage and complete the sync process.
 
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_1.bmp]
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_1.jpg]
 
 The second concept is called the *Light-weight Sync*. OneSync is trying to make optimal use of the intermediate storage. Hence, only your modified files will actually be uploaded to or downloaded from the intermediate storage. This will not only prevent storing duplicated copies of your files on the intermediate storage, but also make the whole sync process faster.
 
