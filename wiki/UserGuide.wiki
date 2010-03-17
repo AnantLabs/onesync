@@ -21,6 +21,7 @@ This guide allows you to learn the features of OneSync. Just follow through the 
     * [UserGuide#Modifying_My_Existing_Sync_Job Modifying my existing sync job]
     * [UserGuide#Deleting_Existing_Sync_Job Deleting existing sync job]
   * [UserGuide#View_The_Logs View the logs]
+  * [UserGuide#I_Saw_Error I saw error]
   * [UserGuide#Contact_Us Contact us]
 
 ==Getting Started==
@@ -143,6 +144,14 @@ To view the logs, just press on the "Show Log" button in the *Sync Page*.
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_08.jpg]
 
 The logs will be shown in your default browser.
+
+== I Saw Error ==
+Sometimes, you will see an error message displayed on the top of the window (see the screenshot below). It is highly possible that due to one of this problems:
+ - There are more than one profile which have the same intermediate storage (Do not use back the same intermediate storage for different profile).
+ - The data.md file is missing (Please uninstall and re-install).
+ - A problem that the CodeDroids members do not even know (Please tell us).
+
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_09.jpg]
 
 == Contact Us ==
 
