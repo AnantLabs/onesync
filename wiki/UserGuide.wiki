@@ -85,7 +85,7 @@ Make sure you have plugged in the portable drive (or thumb drive) to your comput
 
 *Step 2*
 
-The OneSync Window will pop up. Enter your profile name and click on the "Do Job" button.
+The OneSync Window will pop up. Enter your profile name and click on the "Proceed" button.
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_04.jpg]
 
@@ -95,7 +95,7 @@ Now, the program will navigate to a new screen (aka *Sync Page*) where you can e
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_05.jpg]
 
-Now, you just need to sit in front of your computer to wait for the sync job to be completely done.
+Now, you just need to sit in front of your computer to wait for the sync job to be done completely.
 
 ===Syncing Through Drop Box===
 Firstly, please install DropBox. You can find the installer at https://www.dropbox.com/downloading.
@@ -111,7 +111,7 @@ Of course, you need to setup a Windows Shared Folder in your LAN first.
 
 ==Managing Sync Jobs==
 ===Creating A New Sync Job===
-In the *Sync Job Page*, you can create a new sync job by entering the name for your new sync job and press the "Do Job" button. However, please remember that the sync job is meaningless if there is no intermediate storage assigned to it. Hence, the sync job is only created when you do the sync, i.e. pressing the "Sync" button on the *Sync Page*.
+In the *Sync Job Page*, you can create a new sync job by entering the name for your new sync job and press the "Proceed" button. However, please remember that the sync job is meaningless if there is no intermediate storage assigned to it. Hence, the sync job is only created when you do the sync, i.e. pressing the "Sync" button on the *Sync Page*.
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_04.jpg]
 
