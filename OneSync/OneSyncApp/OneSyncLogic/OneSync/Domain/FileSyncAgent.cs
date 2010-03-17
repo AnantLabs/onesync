@@ -183,12 +183,12 @@ namespace OneSync.Synchronization
                     {
                         DuplicateRenameToSyncFolderAndUpdateActionTable((CreateAction)action, profile);
                         syncResult.Ok.Add(action);
-                        applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString() + "SUCCESS"));
+                        applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString() + "_SUCCESS"));
                     }
                     catch (Exception)
                     {
                         syncResult.Errors.Add(action);
-                        applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString() + "FAIL"));
+                        applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString() + "_FAIL"));
                     }
                     count++;
                 }
@@ -199,12 +199,12 @@ namespace OneSync.Synchronization
                     {
                         CopyToSyncFolderAndUpdateActionTable((CreateAction)action, profile);
                         syncResult.Ok.Add(action);
-                        applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString() + "SUCCESS"));
+                        applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString() + "_SUCCESS"));
                     }
                     catch (Exception)
                     {
                         syncResult.Errors.Add(action);
-                        applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString() + "FAIL"));
+                        applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString() + "_FAIL"));
                     }
                     count++;
                 }
