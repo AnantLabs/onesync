@@ -86,7 +86,7 @@ When a user sync his folder, his must first choose the location of his intermedi
 
 The second concept is called the *Light-weight Sync*. OneSync is trying to make optimal use of the intermediate storage. Hence, only your modified files will actually be uploaded to or downloaded from the intermediate storage. This will not only prevent storing duplicated copies of your files on the intermediate storage, but also make the whole sync process faster.
 
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_2.bmp]
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_2.jpg]
 
 ==Syncing My Folders==
 Why put your files in different PCs and keep doing copy-and-paste when you update the files? Keep them synchronized between your two computers, so you always have the most up-to-date versions at hand.
