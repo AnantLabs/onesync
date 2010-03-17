@@ -11,3 +11,10 @@ We are on user side. *_OneSync_* will be the one of the easiest-to-use sync tool
 * Is *_OneSync_* free? *
 
 Of course, *_OneSync_* is free for all. 
+
+* OneSync is very interesting. What are the requirements for OneSync? *
+
+Recommended Operating Systems: Windows Vista and Windows 7
+Other things to note: Microsoft .NET framework 3.5 must be ready in your computers.
+And you may have DropBox application and DropBox account.
+You can get your DropBox application and account from [http://www.dropbox.com DropBox]DropBox Official Website
