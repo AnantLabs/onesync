@@ -42,13 +42,17 @@ The SQLiteSyncJobManager inherits from SyncJobManager abstract class. On instant
 
 == !SyncSource Related Classes ==
 
-=== SyncSource ===
+=== !SyncSource ===
 
-SyncSource encapsulates information about the folder being synchronized and possibly other information regarding the PC where the folder is. Each SyncSource has a unique GUID. It should be noted that there can be 2 different SyncSource object that represents the same folder on a PC. This is to allow a folder to be part of 2 different SyncJob.
+Encapsulates information about the folder being synchronized and possibly other information regarding the PC where the folder is. Each !SyncSource has a unique GUID. It should be noted that there can be 2 different !SyncSource object that represents the same folder on a PC. This is to allow a folder to be part of 2 different !SyncJobs.
 
-=== !SQLiteSyncSourceProvider ===
+[http://www.comp.nus.edu.sg/~deskoh/devGuide/syncsource01.png]
 
-SQLiteSyncSourceProvider inherits from SyncSourceProvider abstract class. On instantiation, it will check if the database schema is created and creates it if necessary.
+=== SQLiteSyncSourceProvider ===
+
+Inherits from !SyncSourceProvider abstract class. On instantiation, it will check if the database schema is created and creates it if necessary.
+
+[http://www.comp.nus.edu.sg/~deskoh/devGuide/syncsource02.png]
 
 ----
 
@@ -72,15 +76,15 @@ A !DeleteAction represents a file to be deleted. This action generated if a file
 
 ----
 
-== FileMetadata Related Classes ==
+== !FileMetadata Related Classes ==
 
 === !FileMetadata ===
 
-A FileMetaData store selected information about the file system of a folder to be synchronized. Information includes the root folder, the id of the [ClassInfo#SyncSource SyncSource] and a list of [ClassInfo#FileMetadataItem FileMetadataItem].
+Stores selected information about the file system of a folder to be synchronized. Information includes the root folder, the id of the [ClassInfo#SyncSource SyncSource] and a list of [ClassInfo#FileMetadataItem FileMetadataItem].
 
 === !FileMetadataItem ===
 
-A FileMetadataItem contains specific information regarding a file like its hash code, relative file path as well as the id of [ClassInfo#SyncSource SyncSource] it originates from. It should be noted that the absolute root path of a !FileMetadataItem can be obtained by combining it with the rootFolder property of the [#ClassInfo#FileMetaData FileMetaData] it belongs to.
+Contains specific information regarding a file like its hash code, relative file path as well as the id of [ClassInfo#SyncSource SyncSource] it originates from. It should be noted that the absolute root path of a !FileMetadataItem can be obtained by combining it with the rootFolder property of the [#ClassInfo#FileMetaData FileMetaData] it belongs to.
 
 === SQLiteMetadataProvider ===
 
