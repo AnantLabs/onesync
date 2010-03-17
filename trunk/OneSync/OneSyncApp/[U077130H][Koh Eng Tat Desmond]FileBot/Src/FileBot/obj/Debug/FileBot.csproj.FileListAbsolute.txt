@@ -1,9 +1,0 @@
-C:\Users\ZandyJack\Documents\Visual Studio 2008\Projects\OneSyncATD\[U077130H][Koh Eng Tat Desmond]FileBot\Src\FileBot\bin\Debug\FileBot.exe.config
-C:\Users\ZandyJack\Documents\Visual Studio 2008\Projects\OneSyncATD\[U077130H][Koh Eng Tat Desmond]FileBot\Src\FileBot\bin\Debug\FileBot.exe
-C:\Users\ZandyJack\Documents\Visual Studio 2008\Projects\OneSyncATD\[U077130H][Koh Eng Tat Desmond]FileBot\Src\FileBot\bin\Debug\FileBot.pdb
-C:\Users\ZandyJack\Documents\Visual Studio 2008\Projects\OneSyncATD\[U077130H][Koh Eng Tat Desmond]FileBot\Src\FileBot\obj\Debug\ResolveAssemblyReference.cache
-C:\Users\ZandyJack\Documents\Visual Studio 2008\Projects\OneSyncATD\[U077130H][Koh Eng Tat Desmond]FileBot\Src\FileBot\obj\Debug\CodeDroids.FileBot.FormMain.resources
-C:\Users\ZandyJack\Documents\Visual Studio 2008\Projects\OneSyncATD\[U077130H][Koh Eng Tat Desmond]FileBot\Src\FileBot\obj\Debug\CodeDroids.FileBot.Properties.Resources.resources
-C:\Users\ZandyJack\Documents\Visual Studio 2008\Projects\OneSyncATD\[U077130H][Koh Eng Tat Desmond]FileBot\Src\FileBot\obj\Debug\FileBot.csproj.GenerateResource.Cache
-C:\Users\ZandyJack\Documents\Visual Studio 2008\Projects\OneSyncATD\[U077130H][Koh Eng Tat Desmond]FileBot\Src\FileBot\obj\Debug\FileBot.exe
-C:\Users\ZandyJack\Documents\Visual Studio 2008\Projects\OneSyncATD\[U077130H][Koh Eng Tat Desmond]FileBot\Src\FileBot\obj\Debug\FileBot.pdb
