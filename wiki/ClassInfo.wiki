@@ -34,7 +34,7 @@ SyncJobManager is used to manage SyncJob object. This includes saving and restor
 
 === SQLiteSyncJobManager ===
 
-The SQLiteSyncJobManager implements the abstract class SyncJobManager. On instantiation, it will check if the database schema is created and creates it if necessary.
+The SQLiteSyncJobManager inherits from SyncJobManager abstract class. On instantiation, it will check if the database schema is created and creates it if necessary.
 
 [http://www.comp.nus.edu.sg/~deskoh/devGuide/syncjob02.png]
 
@@ -44,13 +44,19 @@ The SQLiteSyncJobManager implements the abstract class SyncJobManager. On instan
 
 === SyncSource ===
 
+SyncSource encapsulates information about the folder being synchronized and possibly other information regarding the PC where the folder is. Each SyncSource has a unique GUID. It should be noted that there can be 2 different SyncSource object that represents the same folder on a PC. This is to allow a folder to be part of 2 different SyncJob.
+
 === SQLiteSyncSourceProvider ===
+
+The SQLiteSyncSourceProvider inherits from SyncSourceProvider abstract class. On instantiation, it will check if the database schema is created and creates it if necessary.
 
 ----
 
 == SyncActions Related Classes ==
 
 === SyncAction ===
+
+SyncAction is an abstract class. It represents actions to be taken during synchronization. Each action is associated with at least a file (to be either copied, deleted). Hence, an action contains fields related to the file it is associated with (e.g. file hash) and which id of SyncSource where the file originates from.
 
 === CreateAction ===
 
