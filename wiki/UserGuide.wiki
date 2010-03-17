@@ -162,6 +162,7 @@ The logs will be shown in your default browser.
 Sometimes, you will see an error message displayed on the top of the window (see the screenshot below). It is highly possible that due to one of these problems:
  * There are more than one profile which have the same intermediate storage (Do not use back the same intermediate storage for different profile).
  * The data.md file is missing (Please uninstall and re-install).
+ * The data.md file is not updated because of the IO problem (Please try run the program later).
  * A problem that the CodeDroids members do not even know (Please tell us).
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_09.jpg]
