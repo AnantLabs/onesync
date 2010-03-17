@@ -58,7 +58,7 @@ The following diagram describes some of the things that you will see in the firs
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync(V0.9)%20Profile%20Page.jpg]
 
- # *Directory of Sync Source Folder* - The directory shown there is the directory of the folder that you are going to sync later. Hence, the folder is your *Sync Source Folder*.
+ # *Directory of Sync Source Folder* - The directory shown above is the directory of the folder that you are going to sync later. Hence, the folder is your *Sync Source Folder*.
  # *Sync Job Name* - The name of your new/existing sync job.
  # *Delete This Job* - Only available if you are choosing an existing sync job. You can delete any existing sync job from here.
  # *New Name* - Only available if you are choosing an existing sync job. You can give your existing sync job a new name here.
@@ -68,7 +68,7 @@ The following diagram describes some of the things that you will see in the firs
 The following diagram describes some of the things that you will see in the next window, aka *Sync Page*, of OneSync:
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync(V0.9)%20Sync%20Page.jpg]
 
- # *Directory of Sync Source Folder* - The directory shown there is the directory of the folder that you are going to sync later. Hence, the folder is your *Sync Source Folder*.
+ # *Directory of Sync Source Folder* - The directory shown above is the directory of the folder that you are going to sync later. Hence, the folder is your *Sync Source Folder*.
  # *Directory of Intermediate Storage* - The location of intermediate storage folder, for example a folder in your thumb drive or DropBox.
  # *Open Folder Browser* - Cannot locate your intermediate storage folder? Never mind, use the Folder Browser to help you locate the folder.
  # *Quit Job* - Back to the *Sync Job Page* without doing the sync.
@@ -77,24 +77,24 @@ The following diagram describes some of the things that you will see in the next
  # *Sync* - The only one button that you need to click to start syncing.
 
 ===The OneSync Concepts===
-OneSync is working based on two important concepts. They are the two concepts that make OneSync to be different from other sync tools, such as Live Mesh, Sync Toy and so on.
+OneSync is working based on two important concepts. These are the two concepts that make OneSync different from other sync tools such as Live Mesh, Sync Toy and so on.
 
 The first concept is known as *Cloud Sync*. Instead of doing synchronization directly between two PCs, there is an intermediate storage (or "Cloud Storage") playing an important role during the sync process.
 
-When a user sync his folder, his must first choose the location of his intermediate storage. The storage can be his portable drive, Windows Shared Folders or DropBox local folder that stored on his computer. When he does the sync on one PC, his files (or *patch*) will be sent to the intermediate storage. So, for each sync, the another computer will not be updated automatically. Hence, he has to do the sync again in the another computer to download the *patch* from the intermediate storage and complete the sync process.
+When a user sync his folder, he must first choose the location of his intermediate storage. The storage can be his portable drive, Windows Shared Folder or DropBox local folder that is stored on his computer. When he does the sync on one PC, his files (or *patch*) will be sent to the intermediate storage. So, for each sync, another computer will not be updated automatically. Hence, he has to do the sync again in the other computer to download the *patch* from the intermediate storage and complete the sync process.
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_1.jpg]
 
-The second concept is called the *Light-weight Sync*. OneSync is trying to make optimal use of the intermediate storage. Hence, only your modified files will actually be uploaded to or downloaded from the intermediate storage. This will not only prevent storing duplicated copies of your files on the intermediate storage, but also make the whole sync process faster.
+The second concept is called the *Light-weight Sync*. OneSync is trying to make optimal use of the intermediate storage. Hence, only your modified files will actually be uploaded to or downloaded from the intermediate storage. This will not only prevent storing duplicated copies of your files on the intermediate storage but also make the whole sync process faster.
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_2.jpg]
 
 ==Syncing My Folders==
-Why put your files in different PCs and keep doing copy-and-paste when you update the files? Keep them synchronized between your two computers, so you always have the most up-to-date versions at hand.
+Why put your files in different PCs and keep doing copy-and-paste whenever you update the files? Keep them synchronized between your two computers and you will always have the most up-to-date versions at hand.
 ===Syncing Through Portable Drive===
 *Step 1*
 
-Make sure you have plugged in the portable drive (or thumb drive) to your computer. From your PC, right-click the folder you want to sync, and then click "Sync This Folder with OneSync". Depends on the version you use, the name will be a bit different.
+Make sure you have plugged in the portable drive (or thumb drive) to your computer. From your PC, right-click the folder you want to sync, and then click "Sync This Folder with OneSync". Depending on the version you use, the name will be a bit different.
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_03.jpg]
 
@@ -128,7 +128,7 @@ The steps are same as the steps mentioned in Syncing Through Portable Drive. How
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_06.jpg]
 
 ===Syncing Through Windows Shared Folders===
-If you do not bring your portable drive and you do not want to install DropBox, you can actually use a Windows Share Folder as your intermediate storage as well. Of course, the steps to do this are same as the steps mentioned in Syncing Through Portable Drive.
+If you do not bring your portable drive and also do not want to install DropBox, you may want to use a Windows Share Folder as your intermediate storage as well. Of course, the steps to do this are same as those mentioned in Syncing Through Portable Drive.
 
 Of course, you need to setup a Windows Shared Folder in your LAN first.
 
