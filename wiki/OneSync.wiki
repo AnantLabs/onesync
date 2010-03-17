@@ -10,11 +10,15 @@ We are on user side. *_OneSync_* will be the one of the easiest-to-use sync tool
 
 * Is *_OneSync_* free? *
 
-Of course, *_OneSync_* is free for all. 
+Of course, *_OneSync_* is free for all. Also, DropBox account is also free. You can get 2GB online storage for a free DropBox account.
 
 * OneSync is very interesting. What are the requirements for OneSync? *
 
-Recommended Operating Systems: Windows Vista and Windows 7
-Other things to note: Microsoft .NET framework 3.5 must be ready in your computers.
+  * Recommended Operating Systems: Windows Vista and Windows 7
+  * Other things to note: Microsoft .NET framework 3.5 must be ready in your computers.
 And you may have DropBox application and DropBox account.
 You can get your DropBox application and account from [http://www.dropbox.com DropBox Official Website]
+
+* Well, how do I know that OneSync is suitable for me? *
+
+If you are a DropBox user, OneSync is 100% suitable for you. OneSync can be an add-on for DropBox to enhance online sync experience. Don't worry if you are a normal user. OneSync provides portable media storage synchronization too. 
