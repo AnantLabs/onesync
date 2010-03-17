@@ -23,7 +23,7 @@
 
 == SyncJob Related Classes ==
 
-=== [SyncJob] ===
+=== !SyncJob ===
 
 SyncJob represents information about a synchronization job. It stores information about the folder being synchronized (SyncSource) and the intermediary storage (IntermediaryStorage). A SyncJob is uniquely identified by its name on a PC. Internally, it also uses a unique id.
 
