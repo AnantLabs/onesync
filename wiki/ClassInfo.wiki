@@ -17,7 +17,7 @@
     * [ClassInfo#FileMetadata FileMetadata]
     * [ClassInfo#FileMetadataItem FileMetadataItem]
     * [ClassInfo#SQLiteMetadataProvider SQLiteMetadataProvider]
-  * [ClassInfo#Intermediary_Storage Intermediary Storage]
+  * [ClassInfo#IntermediaryStorage IntermediaryStorage]
 
 ----
 
@@ -48,7 +48,7 @@ SyncSource encapsulates information about the folder being synchronized and poss
 
 === !SQLiteSyncSourceProvider ===
 
-The SQLiteSyncSourceProvider inherits from SyncSourceProvider abstract class. On instantiation, it will check if the database schema is created and creates it if necessary.
+SQLiteSyncSourceProvider inherits from SyncSourceProvider abstract class. On instantiation, it will check if the database schema is created and creates it if necessary.
 
 ----
 
@@ -60,26 +60,34 @@ SyncAction is an abstract class. It represents actions to be taken during synchr
 
 === !CreateAction ===
 
-A CreateAction represents a file to be copied. This action is generated when a file is modified or created.
+A !CreateAction represents a file to be copied. This action is generated when a file is modified or created.
 
 === !DeleteAction ===
 
-A DeleteAction represents a file to be deleted. This action generated if a file that previously used to exist (by reading the metadata) no logner exist now.
+A !DeleteAction represents a file to be deleted. This action generated if a file that previously used to exist (by reading the metadata) no logner exist now.
 
 === !RenameAction ===
 
-RenameAction is currently not implemented yet.
+!RenameAction is currently not implemented yet.
 
 ----
 
-== Metadata Related Classes ==
+== FileMetadata Related Classes ==
 
 === !FileMetadata ===
 
+A FileMetaData store selected information about the file system of a folder to be synchronized. Information includes the root folder, the id of the [ClassInfo#SyncSource SyncSource] and a list of [ClassInfo#FileMetadataItem FileMetadataItem].
+
 === !FileMetadataItem ===
+
+A FileMetadataItem contains specific information regarding a file like its hash code, relative file path as well as the id of [ClassInfo#SyncSource SyncSource] it originates from. It should be noted that the absolute root path of a !FileMetadataItem can be obtained by combining it with the rootFolder property of the [#ClassInfo#FileMetaData FileMetaData] it belongs to.
 
 === SQLiteMetadataProvider ===
 
+SQLiteMetadataProvider inherits from MetadataProvider abstract class to persist FileMetadata to an SQLite database.
+
 ----
 
-=== Intermediary Storage ===
+=== !IntermediaryStorage ===
+
+This class represents information about the intermediary storage used for synchronization, in particular, the file path of the storage, and where the dirty files are kept.
