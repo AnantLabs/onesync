@@ -1,22 +1,12 @@
 #Introduction of OneSync
 
-= What is *_OneSync_*? =
+* What is _OneSync_? *
 
 *_OneSync_* is a sync tool which makes use of free online storage such as [http://wiki.dropbox.com/ DropBox], [http://en.wikipedia.org/wiki/File_Transfer_Protocol FTP] effectively utilizes online disk space to synchronize files/folders between computers.
 
-= Is *_OneSync_* easy to use? =
+* Is _OneSync_ easy to use? *
 
 We are on user side. *_OneSync_* will be the one of the easiest-to-use sync tool that will do everything without complex configuration. We hope that users will have great experience using *_OneSync_*.
 
-= Will *_OneSync_* screw up my PCs? =
-Well, if you are a normal user and use our sync tool correctly, you are assured that *_OneSync_* will not harm your PCs. However, if you use our sync tool in illegal ways, your PCs may be screwed up due to God's Will. 
-
-= Is *_OneSync_* free? =
-Of course, *_OneSync_* is free for all. However, if you feel our sync tool is good and intend to support us, you may make donation to us. 
-
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+* Is *_OneSync_* free? *
+Of course, *_OneSync_* is free for all. 
