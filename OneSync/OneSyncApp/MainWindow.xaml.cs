@@ -570,22 +570,23 @@ namespace OneSync
             {
                 SQLiteProfileManager pManager = (SQLiteProfileManager) SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath);
                 
-                Profile profile = pManager.GetProfileByName(cmbProfiles.SelectedItem.ToString());
+                Profile profile = pManager.GetProfileByName(cmbProfiles.Text);
 
                 if (profile != null)
                 {
                     profile.Name = txtRenJob.Text.Trim();
                     try
                     {
-                        //update successfully
-                        ProfileCreationControlsVisibility(Visibility.Visible, Visibility.Hidden);
+                        //Update successfully
                         pManager.Update(profile);
                         current_profile = profile;
                         txtIntStorage.Text = current_profile.IntermediaryStorage.Path;
                         is_sync_job_created_previously = true;
+                        cmbProfiles.Text = current_profile.Name;
 
+                        //UI controls hiding and showing.
+                        ProfileCreationControlsVisibility(Visibility.Visible, Visibility.Hidden);
                         Window.Title = profile_name + " - OneSync";
-                        //Hide the progress bar.
                         pbSync.Visibility = Visibility.Hidden;
                         lblStatus.Visibility = Visibility.Hidden;
                         lblSyncingFileName.Visibility = Visibility.Hidden;
@@ -594,7 +595,7 @@ namespace OneSync
                     }
                     catch (Exception)
                     {
-                        InstantNotification("Oops... Can't update profile");
+                        InstantNotification("Oops... Can't update this profile. Please try again later.");
                     }
                 }
             }
