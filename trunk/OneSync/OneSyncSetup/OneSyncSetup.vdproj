@@ -306,7 +306,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_E017F1941B1444CBBF2A995811C34F54"
             {
-            "DefaultLocation" = "8:[Manufacturer]\\[ProductName]"
+            "DefaultLocation" = "8:C:\\[Manufacturer]\\[ProductName]"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
@@ -333,7 +333,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:OneSync V0.9"
         "ProductCode" = "8:{F64B2795-4F80-4311-BA05-19F741B3E6D0}"
-        "PackageCode" = "8:{EAADC456-EB14-48AF-8881-7F6C962D3651}"
+        "PackageCode" = "8:{5CC4746A-8B6C-40B2-AB35-D32583381205}"
         "UpgradeCode" = "8:{268160E3-0323-49E7-8B23-E33489420389}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
