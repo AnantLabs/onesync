@@ -667,6 +667,9 @@ namespace OneSync
                     ProfileCreationControlsVisibility(Visibility.Hidden, Visibility.Visible);
                     Window.Title = "OneSync"; //Change back the menu title.
                     cmbProfiles.Text = "";
+
+                    //Reload the list of profiles
+                    reloadProfileComboBox();
                 }
                 catch (Synchronization.DatabaseException de)
                 {
