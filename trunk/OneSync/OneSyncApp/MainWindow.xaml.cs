@@ -641,45 +641,40 @@ namespace OneSync
         /// <param name="e">The event arguments.</param>
         private void txtBlkDelJob_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-        	DialogResult result
-			= System.Windows.Forms.MessageBox.Show("Are you sure you want to delete " + profile_name + "?", "Job Profile Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-			if(result == System.Windows.Forms.DialogResult.Yes)
-			{
-				//Delete the profile.
-                try
-                {
-					//Find out the current profile.
-					foreach (Profile item in (SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).LoadAllProfiles()))
-					{
-						//Check to see if the profile is an existing profile or not.
-						//If yes, then it will show the rename profile link.
-						if (item.Name.Equals(cmbProfiles.Text))
-						{
-							current_profile = item;
-							break;
-						}
-					}
-					
-                    //Synchronization.SyncClient.ProfileProcess.DeleteProfile(System.Windows.Forms.Application.StartupPath, current_profile.ID);
-                    SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).Delete(current_profile);
-                    
-                    //Go back to the home page.
-                    ProfileCreationControlsVisibility(Visibility.Hidden, Visibility.Visible);
-                    Window.Title = "OneSync"; //Change back the menu title.
-                    cmbProfiles.Text = "";
+            SQLiteProfileManager pManager = (SQLiteProfileManager)SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath);
+            Profile profile = pManager.GetProfileByName(cmbProfiles.Text);
 
-                    //Reload the list of profiles
-                    reloadProfileComboBox();
-                }
-                catch (Synchronization.DatabaseException de)
+            if (profile != null)
+            {
+                DialogResult result
+                = System.Windows.Forms.MessageBox.Show("Are you sure you want to delete " + profile.Name + "?", "Job Profile Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == System.Windows.Forms.DialogResult.Yes)
                 {
-                    InstantNotification(de.Message);
+                    //Delete the profile.
+                    try
+                    {
+                        SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).Delete(profile);
+
+                        current_profile = null;
+
+                        //Go back to the home page.
+                        ProfileCreationControlsVisibility(Visibility.Hidden, Visibility.Visible);
+                        Window.Title = "OneSync"; //Change back the menu title.
+                        cmbProfiles.Text = "";
+
+                        //Reload the list of profiles
+                        reloadProfileComboBox();
+                    }
+                    catch (Synchronization.DatabaseException de)
+                    {
+                        InstantNotification(de.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        InstantNotification(ex.Message);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    InstantNotification(ex.Message);
-                }
-			}
+            }
         }
 		
 		/// <summary>
