@@ -127,7 +127,7 @@ $Id$
 		<TextBox x:Name="txtRenJob" Width="280.012" Height="22" Canvas.Left="224.988" Canvas.Top="114.56" TextWrapping="Wrap" />
         <TextBlock x:Name="txtBlkRenJob" Width="69" Text="Rename Job" TextWrapping="Wrap" TextDecorations="Underline" FontWeight="Bold" FontSize="10.667" Cursor="Hand" Foreground="#FF0000B9" MouseDown="txtBlkRenJob_MouseDown" Height="18" Canvas.Left="509" Canvas.Top="120" d:LayoutOverrides="VerticalAlignment, Height"/>
         <TextBlock x:Name="txtBlkDelJob" Width="112" Text="Delete This Job" TextWrapping="Wrap" TextDecorations="Underline" FontWeight="Bold" FontSize="10.667" Cursor="Hand" Foreground="#FFFF0030" MouseDown="txtBlkDelJob_MouseDown" Height="18" Canvas.Left="135" Canvas.Top="145" d:LayoutOverrides="VerticalAlignment, Height"/>
-        <TextBlock x:Name="txtBlkNext" Width="52" Text="Proceed" TextWrapping="Wrap" TextDecorations="Underline" FontWeight="Bold" FontSize="13.333" Cursor="Hand" Foreground="#FF0000B9" MouseDown="txtBlkNext_MouseDown" Height="18" Canvas.Left="650" Canvas.Top="163.002" d:LayoutOverrides="VerticalAlignment, Height"/>
+        <TextBlock x:Name="txtBlkNext" Width="73" Text="Proceed" TextWrapping="Wrap" TextDecorations="Underline" FontWeight="Bold" FontSize="13.333" Cursor="Hand" Foreground="#FF0000B9" MouseDown="txtBlkNext_MouseDown" Height="29.002" Canvas.Left="629" Canvas.Top="152" d:LayoutOverrides="VerticalAlignment"/>
 			<Path x:Name="path_profile_operations_1" Stretch="Fill" Width="1" Height="36.44" Canvas.Left="68" Canvas.Top="116.56" Data="M53,108.56 L53,157" RenderTransformOrigin="0.5,0.5" Stroke="#FF0100FF">
 			<Path.Fill>
 				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
