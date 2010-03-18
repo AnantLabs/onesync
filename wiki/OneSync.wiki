@@ -15,8 +15,8 @@ Of course, *_OneSync_* is free for all. Also, DropBox account is also free. You 
 
 ==*_OneSync_* is very interesting. What are the requirements for *_OneSync_*?==
 
-  * Recommended Operating Systems: Windows Vista and Windows 7 (OneSync installation package will install for you if you don't have)
-  * Other things to note: Microsoft .NET framework 3.5 must be ready in your computers.
+  * Recommended Operating Systems: Windows Vista and Windows 7 
+  * Other things to note: Microsoft .NET framework 3.5 (OneSync installation package will install for you if you don't have)
 And you may have DropBox application and DropBox account.
 You can get your DropBox application and account from [http://www.dropbox.com DropBox Official Website]
 
