@@ -168,6 +168,7 @@ namespace OneSync
             {
 				InstantNotification(""); //Empty the notification message (if any).
 				button_sync.IsEnabled = false;
+                textblock_back_to_home.IsEnabled = false; //Once you click the Sync button, you cannot back to the Job Profile page anymore.
                 SyncProcessStarted();
             }
             else
@@ -267,7 +268,13 @@ namespace OneSync
 					else
 					{
 						button_sync.IsEnabled = true;
+                        textblock_back_to_home.IsEnabled = true;
 					}
+                }
+                else
+                {
+                    button_sync.IsEnabled = true;
+                    textblock_back_to_home.IsEnabled = true;
                 }
             }
 			
@@ -311,7 +318,6 @@ namespace OneSync
                 //Show/hide some controls and enable/disable some of them.
                 txtIntStorage.IsEnabled = false;
                 btnBrowse.IsEnabled = false;
-                textblock_back_to_home.IsEnabled = false;
                 pbSync.Visibility = Visibility.Visible;
                 lblStatus.Visibility = Visibility.Visible;
 				lblSyncingFileName.Visibility = Visibility.Visible;
