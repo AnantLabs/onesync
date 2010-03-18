@@ -43,7 +43,7 @@ This version of OneSync has a number of exciting new features, including:
 
 If you would like to install the latest version of OneSync, you can download the application at https://code.google.com/p/onesync/downloads/list
 
-If you experience issues installing OneSync through the Google Code Project Hosting, you can directly download the latest version of OneSync here: http://onesync.googlecode.com/files/OneSyncZero.msi
+If you experience issues installing OneSync through the Google Code Project Hosting, you can directly download the latest version of OneSync here: http://onesync.googlecode.com/files/OneSyncSetup.msi
 
 Installation steps are as follows:
  # Run the OneSync Installer
