@@ -1,0 +1,13 @@
+C:\Users\u0707373\Documents\Expression\Blend 3\Projects\OneSync\OneSyncApp\bin\Debug\OneSync.exe
+C:\Users\u0707373\Documents\Expression\Blend 3\Projects\OneSync\OneSyncApp\bin\Debug\OneSync.pdb
+C:\Users\u0707373\Documents\Expression\Blend 3\Projects\OneSync\OneSyncApp\bin\Debug\Community.CsharpSqlite.dll
+C:\Users\u0707373\Documents\Expression\Blend 3\Projects\OneSync\OneSyncApp\bin\Debug\Community.CsharpSqlite.SQLiteClient.dll
+C:\Users\u0707373\Documents\Expression\Blend 3\Projects\OneSync\OneSyncApp\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\u0707373\Documents\Expression\Blend 3\Projects\OneSync\OneSyncApp\obj\Debug\MainWindow.baml
+C:\Users\u0707373\Documents\Expression\Blend 3\Projects\OneSync\OneSyncApp\obj\Debug\MainWindow.g.cs
+C:\Users\u0707373\Documents\Expression\Blend 3\Projects\OneSync\OneSyncApp\obj\Debug\App.g.cs
+C:\Users\u0707373\Documents\Expression\Blend 3\Projects\OneSync\OneSyncApp\obj\Debug\OneSync_Content.g.cs
+C:\Users\u0707373\Documents\Expression\Blend 3\Projects\OneSync\OneSyncApp\obj\Debug\OneSync_MarkupCompile.cache
+C:\Users\u0707373\Documents\Expression\Blend 3\Projects\OneSync\OneSyncApp\obj\Debug\OneSync.g.resources
+C:\Users\u0707373\Documents\Expression\Blend 3\Projects\OneSync\OneSyncApp\obj\Debug\OneSync.exe
+C:\Users\u0707373\Documents\Expression\Blend 3\Projects\OneSync\OneSyncApp\obj\Debug\OneSync.pdb
