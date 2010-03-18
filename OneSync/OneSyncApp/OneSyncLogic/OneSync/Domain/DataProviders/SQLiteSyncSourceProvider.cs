@@ -34,7 +34,7 @@ namespace OneSync.Synchronization
         /// <returns></returns>
         public  bool Add(SyncSource s, SqliteConnection con)
         {
-            if (GetSyncSourceCount() == 2) throw new SyncSourcesNumberExceededException("Only 2 sync sources can be added");
+            if (GetSyncSourceCount() == 2) throw new SyncSourcesNumberExceededException("The intermediate storage can only be attached to one profile");
              using (SqliteCommand cmd = con.CreateCommand())
              {
                  cmd.CommandText = "INSERT INTO " + Configuration.TBL_DATASOURCE_INFO +
@@ -187,7 +187,7 @@ namespace OneSync.Synchronization
         /// <returns></returns>
         public override bool Add(SyncSource s)
         {
-            if (GetSyncSourceCount() == 2) throw new SyncSourcesNumberExceededException("Only 2 sync sources can be added");
+            if (GetSyncSourceCount() == 2) throw new SyncSourcesNumberExceededException("The intermediate storage can only be attached to one profile");
 
             string insertText =  "INSERT INTO " + Configuration.TBL_DATASOURCE_INFO +
                                  "(" + Configuration.COL_SOURCE_ID + "," + Configuration.COL_SOURCE_ABSOLUTE_PATH +
