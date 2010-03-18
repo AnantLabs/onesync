@@ -568,8 +568,6 @@ namespace OneSync
         	//Rename a profile.
             if(txtRenJob.Text.Trim().Length > 0 && txtRenJob.Text.Trim().Length < 50)
             {
-                ProfileCreationControlsVisibility(Visibility.Visible, Visibility.Hidden);
-
                 SQLiteProfileManager pManager = (SQLiteProfileManager) SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath);
                 
                 Profile profile = pManager.GetProfileByName(cmbProfiles.SelectedItem.ToString());
@@ -580,37 +578,24 @@ namespace OneSync
                     try
                     {
                         //update successfully
+                        ProfileCreationControlsVisibility(Visibility.Visible, Visibility.Hidden);
                         pManager.Update(profile);
                         current_profile = profile;
                         txtIntStorage.Text = current_profile.IntermediaryStorage.Path;
                         is_sync_job_created_previously = true;
+
+                        Window.Title = profile_name + " - OneSync";
+                        //Hide the progress bar.
+                        pbSync.Visibility = Visibility.Hidden;
+                        lblStatus.Visibility = Visibility.Hidden;
+                        lblSyncingFileName.Visibility = Visibility.Hidden;
+
+                        do_job();
                     }
                     catch (Exception)
                     {
                         InstantNotification("Oops... Can't update profile");
                     }
-                }
-                
-                Window.Title = profile_name + " - OneSync";
-                //Hide the progress bar.
-                pbSync.Visibility = Visibility.Hidden;
-                lblStatus.Visibility = Visibility.Hidden;
-				lblSyncingFileName.Visibility = Visibility.Hidden;
-                try
-                {
-                    current_profile.Name = txtRenJob.Text.Trim();
-					cmbProfiles.Text = txtRenJob.Text.Trim();
-                    //SyncClient.ProfileProcess.UpdateProfile(System.Windows.Forms.Application.StartupPath, current_profile);
-                    SyncClient.GetProfileManager(System.Windows.Forms.Application.StartupPath).Update(current_profile);
-					do_job();
-                }
-                catch (Synchronization.DatabaseException de)
-                {
-                    InstantNotification("Can't update: " + de.Message);
-                }
-                catch (Exception ex)
-                {
-                    InstantNotification("Can't update: " + ex.Message);
                 }
             }
 			else
