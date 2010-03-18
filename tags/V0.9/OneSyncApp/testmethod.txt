@@ -1,6 +1,0 @@
-id:createfolders:right or left,unicode or letters or letterssymbols,folderdepth,maxsubdir:true or false:comment
-id:generatefiles:right or left,unicode or letters or letterssymbols,numberoffiles,fileminsize,filemaxsize:true or false:comment
-id:copyfrom::true:comment
-id:createprofile:profile1,profile2:true or false:comment
-id:sync:profile1,profile2:true or false:comment
-id:clearall::true or false:comment
