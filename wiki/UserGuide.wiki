@@ -18,6 +18,7 @@ This guide allows you to learn the features of OneSync. Just follow through the 
     * [UserGuide#Syncing_Through_Portable_Drive Syncing through portable drive]
     * [UserGuide#Syncing_Through_Drop_Box Syncing through DropBox (BETA)]
     * [UserGuide#Syncing_Through_Windows_Shared_Folders Syncing through Windows Shared Folders]
+    * [UserGuide#Handling_conflicts Handling conflicts]
   * [UserGuide#Managing_Sync_Jobs Managing Sync Jobs]
     * [UserGuide#Creating_A_New_Sync_Job Creating a new sync job]
     * [UserGuide#Modifying_My_Existing_Sync_Job Modifying my existing sync job]
@@ -132,6 +133,9 @@ The steps are same as the steps mentioned in Syncing Through Portable Drive. How
 If you do not bring your portable drive and also do not want to install DropBox, you may want to use a Windows Share Folder as your intermediate storage as well. Of course, the steps to do this are same as those mentioned in Syncing Through Portable Drive.
 
 Of course, you need to setup a Windows Shared Folder in your LAN first.
+
+===Handling Conflicts===
+If there is a file conflict detected, OneSync will keep both old and new version of the conflict file so that you can choose which version to keep. Please remember to deleted the version that you do not want to keep so that there is no "recursive conflicts".
 
 ==Managing Sync Jobs==
 ===Creating A New Sync Job===
