@@ -135,7 +135,7 @@ If you do not bring your portable drive and also do not want to install DropBox,
 Of course, you need to setup a Windows Shared Folder in your LAN first.
 
 ===Handling Conflicts===
-If there is a file conflict detected, OneSync will keep both old and new version of the conflict file so that you can choose which version to keep. Please remember to deleted the version that you do not want to keep so that there is no "recursive conflicts".
+If there is a file conflict detected, OneSync will keep both old and new version of the conflict file so that you can choose which version to keep. Please remember to deleted the version that you do not want to keep so that there are no "recursive conflicts".
 
 ==Managing Sync Jobs==
 ===Creating A New Sync Job===
