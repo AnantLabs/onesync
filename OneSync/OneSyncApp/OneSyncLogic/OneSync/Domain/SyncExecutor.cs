@@ -29,7 +29,7 @@ namespace OneSync.Synchronization
                 Files.FileUtils.Copy(absolutePathInSyncSource, absolutePathInImediateStorage);
                 transaction.Commit();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 transaction.Rollback();
                 throw;

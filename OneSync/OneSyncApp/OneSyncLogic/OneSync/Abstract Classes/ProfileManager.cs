@@ -47,14 +47,14 @@ namespace OneSync.Synchronization
         /// <returns>Profile with specified id. null if profile not found.</returns>
         public abstract Profile Load(string profileId);
 
-
         /// <summary>
         /// Create a new profile. Newly created profile will be saved
         /// </summary>
         /// <param name="profileName">Name of profile.</param>
         /// <param name="absoluteSyncPath">Absolute path to folder which is to be synchronized.</param>
         /// <param name="absoluteIntermediatePath">Absolute path to intermediary storage location used for synchronization.</param>
-        public abstract bool CreateProfile(string profileName, string absoluteSyncPath, string absoluteIntermediatePath);
+        /// <returns>Newly create Profile. null if Profile cannot be created.</returns>
+        public abstract Profile CreateProfile(string profileName, string absoluteSyncPath, string absoluteIntermediatePath);
 
 
         /// <summary>
