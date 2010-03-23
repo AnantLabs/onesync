@@ -13,7 +13,7 @@ namespace OneSync.Synchronization
     public class SyncExecutor
     {
         #region Carryout actions
-        public static void CopyToDirtyFolderAndUpdateActionTable(SyncAction action, Profile profile)
+        public static void CopyToDirtyFolderAndUpdateActionTable(SyncAction action, SyncJob profile)
         {
             // TODO: make it atomic??
             string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
@@ -40,7 +40,7 @@ namespace OneSync.Synchronization
             }
         }
 
-        public static void CopyToSyncFolderAndUpdateActionTable(SyncAction action, Profile profile)
+        public static void CopyToSyncFolderAndUpdateActionTable(SyncAction action, SyncJob profile)
         {
             // TODO: atomic....
             string absolutePathInIntermediateStorage = profile.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
@@ -69,7 +69,7 @@ namespace OneSync.Synchronization
         }
                
 
-        public static void DuplicateRenameToSyncFolderAndUpdateActionTable(SyncAction action, Profile profile)
+        public static void DuplicateRenameToSyncFolderAndUpdateActionTable(SyncAction action, SyncJob profile)
         {
             string absolutePathInIntermediateStorage = profile.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
             string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
@@ -98,7 +98,7 @@ namespace OneSync.Synchronization
             }
         }
 
-        public static void DeleteInSyncFolderAndUpdateActionTable(SyncAction action, Profile profile)
+        public static void DeleteInSyncFolderAndUpdateActionTable(SyncAction action, SyncJob profile)
         {
             string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
 
@@ -124,7 +124,7 @@ namespace OneSync.Synchronization
             }
         }
 
-        public static void RenameInSyncFolderAndUpdateActionTable(RenameAction action, Profile profile)
+        public static void RenameInSyncFolderAndUpdateActionTable(RenameAction action, SyncJob profile)
         {
             string oldAbsolutePathInSyncSource = profile.SyncSource.Path + action.PreviousRelativeFilePath;
             string newAbsolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;

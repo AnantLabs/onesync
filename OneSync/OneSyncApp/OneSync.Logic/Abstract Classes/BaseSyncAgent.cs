@@ -13,19 +13,19 @@ namespace OneSync.Synchronization
     {
      
         protected ISyncProvider provider;
-        protected Profile profile;
+        protected SyncJob profile;
 
         public BaseSyncAgent()
         {
         }
 
 
-        public BaseSyncAgent(Profile profile)
+        public BaseSyncAgent(SyncJob profile)
         {
             this.profile = profile;
         }
         
-        public Profile Profile
+        public SyncJob Profile
         {
             set
             {

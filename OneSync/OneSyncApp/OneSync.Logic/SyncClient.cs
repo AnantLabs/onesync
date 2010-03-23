@@ -18,14 +18,14 @@ namespace OneSync.Synchronization
     {
 
         /// <summary>
-        /// Gets a new ProfileManager instance.
+        /// Gets a new SyncJobManager instance.
         /// </summary>
-        /// <param name="storagePath">Location where all profiles are saved to or loaded from.</param>
+        /// <param name="storagePath">Location where all SyncJobs are saved to or loaded from.</param>
         /// <returns></returns>
-        public static ProfileManager GetProfileManager(string storagePath)
+        public static SyncJobManager GetSyncJobManager(string storagePath)
         {
-            // Returns any objects derived from ProfileManager abstract class.
-            return new SQLiteProfileManager(storagePath);
+            // Returns any objects derived from SyncJobManager abstract class.
+            return new SQLiteSyncJobManager(storagePath);
         }    
       
 
