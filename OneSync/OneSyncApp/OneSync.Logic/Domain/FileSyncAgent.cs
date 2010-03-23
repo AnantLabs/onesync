@@ -11,6 +11,7 @@ namespace OneSync.Synchronization
     public delegate void SyncCompletedHandler(object sender, SyncCompletedEventArgs eventArgs);
     public delegate void SyncCancelledHandler(object sender, SyncCancelledEventArgs eventArgs);
     public delegate void SyncStageChangedHandler(object sender, SyncStageChangedEventArgs args);
+    public delegate void SyncStatusChangedHandler(object sender, SyncStatusChangedEventArgs args);
     public delegate void SyncProgressChangedHandler(object sender, SyncProgressChangedEventArgs args);
     public delegate void SyncFileChangedHandler(object sender, SyncFileChangedEventArgs args);
 
@@ -24,6 +25,7 @@ namespace OneSync.Synchronization
         public event SyncStageChangedHandler StageChanged;
         public event SyncProgressChangedHandler ProgressChanged;
         public event SyncFileChangedHandler SyncFileChanged;
+        public event SyncStatusChangedHandler SyncStatusChanged;
 
         List<SyncAction> actions = new List<SyncAction>();
 
@@ -53,37 +55,41 @@ namespace OneSync.Synchronization
             OnSyncCompleted(new SyncCompletedEventArgs());
         }
 
-        public SyncPreviewResult PreviewSync()
+        public SyncPreviewResult GenerateSyncPreview()
         {
             //Generate current folder's metadata
             //FileMetaData currentItems = (FileMetaData)new SQLiteMetaDataProvider().FromPath(profile.SyncSource);
+            OnSyncStatusChanged(new SyncStatusChangedEventArgs("Generating current metadata..."));
             FileMetaData currentItems = MetaDataProvider.Generate(profile.SyncSource.Path, profile.SyncSource.ID);
 
             //Load current folder metadata from database
+            OnSyncStatusChanged(new SyncStatusChangedEventArgs("Loading saved metadata..."));
             MetaDataProvider mdProvider = SyncClient.GetMetaDataProvider(profile.IntermediaryStorage.Path, profile.SyncSource.ID);
-            //FileMetaData oldCurrentItems = (FileMetaData)new SQLiteMetaDataProvider(profile).Load(profile.SyncSource, SourceOption.EQUAL_SOURCE_ID);
             FileMetaData oldCurrentItems = mdProvider.Load(profile.SyncSource.ID, SourceOption.SOURCE_ID_EQUALS);
 
+            // TODO: Not used??
+            /*
             //Load the other folder metadata from database
             //FileMetaData oldOtherItems = (FileMetaData)new SQLiteMetaDataProvider(profile).Load(profile.SyncSource, SourceOption.NOT_EQUAL_SOURCE_ID);
             FileMetaData oldOtherItems = mdProvider.Load(profile.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
-
+            */
 
             //By comparing current metadata and the old metadata from previous sync of a sync folder
             //we could know the dirty items of the folder.
+            OnSyncStatusChanged(new SyncStatusChangedEventArgs("Comaparing metadata for changes..."));
             FileMetaDataComparer comparerCurrent = new FileMetaDataComparer(currentItems, oldCurrentItems);
             List<FileMetaDataItem> dirtyItemsInCurrent = new List<FileMetaDataItem>();
             dirtyItemsInCurrent.AddRange(comparerCurrent.LeftOnly);
             dirtyItemsInCurrent.AddRange(comparerCurrent.BothModified);
 
             //Compare the actions and dirty items in current folder. Collision is detected when 
-            //2 items in 2 collection have same relative path but different hashes. 
-            IEnumerable<SyncAction> conflictItems = from action in actions
+            //2 items in 2 collection have same relative path but different hashes.
+            IEnumerable<SyncAction> conflictItems = from a in actions
                                                     from dirtyInCurrent in dirtyItemsInCurrent
-                                                    where action.RelativeFilePath.Equals(dirtyInCurrent.RelativePath)
-                                                    && action.ChangeType == ChangeType.NEWLY_CREATED
-                                                    && !action.FileHash.Equals(dirtyInCurrent.HashCode)
-                                                    select action;
+                                                    where a.RelativeFilePath.Equals(dirtyInCurrent.RelativePath)
+                                                    && a.ChangeType == ChangeType.NEWLY_CREATED
+                                                    && !a.FileHash.Equals(dirtyInCurrent.HashCode)
+                                                    select a;
 
             foreach (SyncAction action in conflictItems)
             {
@@ -93,7 +99,6 @@ namespace OneSync.Synchronization
             IEnumerable<SyncAction> itemsToDelete = from action in actions
                                                     where action.ChangeType == ChangeType.DELETED
                                                     select action;
-
 
             IEnumerable<SyncAction> itemsToCopyOver = from action in actions
                                                       where action.ChangeType == ChangeType.NEWLY_CREATED
@@ -106,11 +111,6 @@ namespace OneSync.Synchronization
             result.ItemsToDelete = itemsToDelete.ToList();
             return result;
         }
-
-        /// <summary>
-        /// Carry out the sync actions
-        /// </summary>
-        /// <returns></returns>
 
         public SyncResult Apply()
         {
@@ -246,7 +246,9 @@ namespace OneSync.Synchronization
             int count = 0;
             DateTime starttime = DateTime.Now;
 
-            if (Directory.Exists(profile.IntermediaryStorage.DirtyFolderPath)) Directory.Delete(profile.IntermediaryStorage.DirtyFolderPath, true);
+            if (Directory.Exists(profile.IntermediaryStorage.DirtyFolderPath))
+                Directory.Delete(profile.IntermediaryStorage.DirtyFolderPath, true);
+
             foreach (SyncAction action in newActions)
             {
                 try
@@ -277,13 +279,11 @@ namespace OneSync.Synchronization
 
         #region Event-Raising
 
-
         protected virtual void OnSyncCompleted(SyncCompletedEventArgs e)
         {
             if (SyncCompleted != null)
                 SyncCompleted(this, new SyncCompletedEventArgs());   
         }
-
 
         protected virtual void OnStageChanged(SyncStageChangedEventArgs e)
         {
@@ -303,8 +303,13 @@ namespace OneSync.Synchronization
                 SyncFileChanged(this, e);
         }
 
-        #endregion
+        protected virtual void OnSyncStatusChanged(SyncStatusChangedEventArgs e)
+        {
+            if (SyncStatusChanged != null)
+                SyncStatusChanged(this, e);
+        }
 
+        #endregion
 
     }
 }
