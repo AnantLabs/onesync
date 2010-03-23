@@ -69,15 +69,15 @@ namespace OneSync.Synchronization
         private void Compare()
         {
             IEnumerable<FileMetaDataItem> leftOnly = from curr in left.MetaDataItems
-                                                        where !right.MetaDataItems.Contains(curr, new FileMetaDataItemComparer())
-                                                        select curr;
+                                                     where !right.MetaDataItems.Contains(curr, new FileMetaDataItemComparer())
+                                                     select curr;
 
             this.leftOnly.AddRange(leftOnly);
             
             //Get deleted items 
             IEnumerable<FileMetaDataItem> rightOnly = from store in right.MetaDataItems
-                                                       where !left.MetaDataItems.Contains(store, new FileMetaDataItemComparer())
-                                                       select store;
+                                                      where !left.MetaDataItems.Contains(store, new FileMetaDataItemComparer())
+                                                      select store;
             this.rightOnly.AddRange(rightOnly);
 
 

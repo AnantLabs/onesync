@@ -136,6 +136,7 @@
     <Compile Include="OneSync.Logic\Exceptions\ProfileNameExistsException.cs" />
     <Compile Include="OneSync.Logic\Exceptions\SyncSourcesNumberExceededException.cs" />
     <Compile Include="OneSync.Logic\SyncClient.cs" />
+    <Compile Include="OneSync.Logic\SyncEvents\SyncStatusChangedEventArgs.cs" />
     <Compile Include="OneSync.Logic\SyncEvents\SyncFileChangedEventArgs.cs" />
     <Compile Include="OneSync.Logic\SyncEvents\SyncCancelledEventArgs.cs" />
     <Compile Include="OneSync.Logic\SyncEvents\SyncCompletedEventArgs.cs" />

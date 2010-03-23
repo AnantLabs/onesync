@@ -361,11 +361,11 @@ namespace OneSync.UI
         {
             syncAgent = new FileSyncAgent(p);
 
-            //currAgent.Start += new SyncStartsHandler(currAgent_Start);
             syncAgent.ProgressChanged += new SyncProgressChangedHandler(currAgent_ProgressChanged);
             syncAgent.StageChanged += new SyncStageChangedHandler(currAgent_StatusChanged);
             syncAgent.SyncCompleted += new SyncCompletedHandler(currAgent_SyncCompleted);
             syncAgent.SyncFileChanged += new SyncFileChangedHandler(currAgent_FileChanged);
+            syncAgent.SyncStatusChanged += new SyncStatusChangedHandler(syncAgent_SyncStatusChanged);
 
             UpdateSyncUI(true, true);
 
@@ -374,7 +374,7 @@ namespace OneSync.UI
 
         void syncWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            SyncPreviewResult previewResult = syncAgent.PreviewSync();
+            SyncPreviewResult previewResult = syncAgent.GenerateSyncPreview();
             syncAgent.Synchronize(previewResult);
         }
 
@@ -398,42 +398,53 @@ namespace OneSync.UI
         /// <summary>
         /// Update the progress bar.
         /// </summary>
-        void currAgent_ProgressChanged(object sender, Synchronization.SyncProgressChangedEventArgs args)
+        void currAgent_ProgressChanged(object sender, Synchronization.SyncProgressChangedEventArgs e)
         {
             if (this.Dispatcher.CheckAccess())
-                pbSync.Value = args.Value;
+                pbSync.Value = e.Value;
             else
-                pbSync.Dispatcher.Invoke((MethodInvoker)delegate { currAgent_ProgressChanged(sender, args); });
+                pbSync.Dispatcher.Invoke((MethodInvoker)delegate { currAgent_ProgressChanged(sender, e); });
         }
 
         /// <summary>
         /// Update the status message.
         /// </summary>
-        void currAgent_StatusChanged(object sender, Synchronization.SyncStageChangedEventArgs args)
+        void currAgent_StatusChanged(object sender, Synchronization.SyncStageChangedEventArgs e)
         {
             //Display some text so that the user knows that what OneSync is doing during the synchronization.
             if (this.Dispatcher.CheckAccess())
-                lblStatus.Content = args.Stage.ToString();
+            {
+                switch (e.SyncStage)
+                {
+                    case SyncStageChangedEventArgs.Stage.APPLY_PATCH:
+                        lblStatus.Content = "Applying Patch"; break;
+                    case SyncStageChangedEventArgs.Stage.GENERATE_PATCH:
+                        lblStatus.Content = "Generating Patch"; break;
+                    case SyncStageChangedEventArgs.Stage.UPDATE_DATA:
+                        lblStatus.Content = "Updating Data"; break;
+                    case SyncStageChangedEventArgs.Stage.VERIFY_PATCH:
+                        lblStatus.Content = "Verifying Patch"; break;
+                }
+            }
             else
-                lblStatus.Dispatcher.Invoke((MethodInvoker)delegate { currAgent_StatusChanged(sender, args); });
+                lblStatus.Dispatcher.Invoke((MethodInvoker)delegate { currAgent_StatusChanged(sender, e); });
         }
-
 
         /// <summary>
         /// Tell the user which file is being processed now.
         /// </summary>
-        void currAgent_FileChanged(object sender, Synchronization.SyncFileChangedEventArgs args)
+        void currAgent_FileChanged(object sender, Synchronization.SyncFileChangedEventArgs e)
         {
             if (this.Dispatcher.CheckAccess())
-                lblStatus.Content = "Synchronizing: " + args.RelativePath;
+                lblStatus.Content = "Synchronizing: " + e.RelativePath;
             else
-                lblStatus.Dispatcher.Invoke((MethodInvoker)delegate { currAgent_FileChanged(sender, args); });
+                lblStatus.Dispatcher.Invoke((MethodInvoker)delegate { currAgent_FileChanged(sender, e); });
         }
 
         /// <summary>
         /// Trigerred when the sync process is done.
         /// </summary>
-        void currAgent_SyncCompleted(object sender, Synchronization.SyncCompletedEventArgs args)
+        void currAgent_SyncCompleted(object sender, Synchronization.SyncCompletedEventArgs e)
         {
             if (this.Dispatcher.CheckAccess())
             {
@@ -448,8 +459,16 @@ namespace OneSync.UI
             }
             else
             {
-                this.Dispatcher.Invoke((MethodInvoker)delegate { currAgent_SyncCompleted(sender, args); });
+                this.Dispatcher.Invoke((MethodInvoker)delegate { currAgent_SyncCompleted(sender, e); });
             }
+        }
+
+        void syncAgent_SyncStatusChanged(object sender, SyncStatusChangedEventArgs e)
+        {
+            if (this.Dispatcher.CheckAccess())
+                lblStatus.Content = e.Message;
+            else
+                this.Dispatcher.Invoke((MethodInvoker)delegate { syncAgent_SyncStatusChanged(sender, e); });
         }
 
         #endregion		

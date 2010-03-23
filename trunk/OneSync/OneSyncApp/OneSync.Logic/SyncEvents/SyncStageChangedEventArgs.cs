@@ -10,7 +10,7 @@ namespace OneSync.Synchronization
 {
     public class SyncStageChangedEventArgs:EventArgs
     {
-        private Stage stage;
+        private Stage _stage;
 
         public enum Stage
         {
@@ -22,12 +22,12 @@ namespace OneSync.Synchronization
 
         public SyncStageChangedEventArgs(Stage stage):base()
         {
-            this.stage = stage;
+            this._stage = stage;
         }
 
-        public Stage Stage
+        public Stage SyncStage
         {
-            get { return this.stage; }
+            get { return this._stage; }
         }
     }
 }
