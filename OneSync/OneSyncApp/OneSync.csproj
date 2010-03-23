@@ -138,9 +138,9 @@
     <Compile Include="OneSync.Logic\SyncClient.cs" />
     <Compile Include="OneSync.Logic\SyncEvents\SyncFileChangedEventArgs.cs" />
     <Compile Include="OneSync.Logic\SyncEvents\SyncCancelledEventArgs.cs" />
-    <Compile Include="OneSync.Logic\SyncEvents\SyncCompletesEventArgs.cs" />
+    <Compile Include="OneSync.Logic\SyncEvents\SyncCompletedEventArgs.cs" />
     <Compile Include="OneSync.Logic\SyncEvents\SyncProgressChangedEventArgs.cs" />
-    <Compile Include="OneSync.Logic\SyncEvents\SyncStatusChangedEventArgs.cs" />
+    <Compile Include="OneSync.Logic\SyncEvents\SyncStageChangedEventArgs.cs" />
     <Compile Include="OneSyncInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
