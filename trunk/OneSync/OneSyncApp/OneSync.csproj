@@ -103,7 +103,7 @@
     <Compile Include="OneSync.Logic\Abstract Classes\BaseSQLiteProvider.cs" />
     <Compile Include="OneSync.Logic\Abstract Classes\BaseSyncAgent.cs" />
     <Compile Include="OneSync.Logic\Abstract Classes\MetaDataProvider.cs" />
-    <Compile Include="OneSync.Logic\Abstract Classes\ProfileManager.cs" />
+    <Compile Include="OneSync.Logic\Abstract Classes\SyncJobManager.cs" />
     <Compile Include="OneSync.Logic\Abstract Classes\SyncAction.cs" />
     <Compile Include="OneSync.Logic\Abstract Classes\SyncActionsProvider.cs" />
     <Compile Include="OneSync.Logic\Abstract Classes\SyncSourceProvider.cs" />
@@ -116,7 +116,7 @@
     <Compile Include="OneSync.Logic\Domain\Actions\DeleteAction.cs" />
     <Compile Include="OneSync.Logic\Domain\Actions\RenameAction.cs" />
     <Compile Include="OneSync.Logic\Domain\DataProviders\SQLiteMetaDataProvider.cs" />
-    <Compile Include="OneSync.Logic\Domain\DataProviders\SQLiteProfileManager.cs" />
+    <Compile Include="OneSync.Logic\Domain\DataProviders\SQLiteSyncJobManager.cs" />
     <Compile Include="OneSync.Logic\Domain\DataProviders\SQLiteSyncActionsProvider.cs" />
     <Compile Include="OneSync.Logic\Domain\DataProviders\SQLiteSyncSourceProvider.cs" />
     <Compile Include="OneSync.Logic\Domain\FileMetaData.cs" />
@@ -125,7 +125,7 @@
     <Compile Include="OneSync.Logic\Domain\FileMetaDataItemComparer.cs" />
     <Compile Include="OneSync.Logic\Domain\FileSyncAgent.cs" />
     <Compile Include="OneSync.Logic\Domain\IntermediaryStorage.cs" />
-    <Compile Include="OneSync.Logic\Domain\Profile.cs" />
+    <Compile Include="OneSync.Logic\Domain\SyncJob.cs" />
     <Compile Include="OneSync.Logic\Domain\SyncActionComparer.cs" />
     <Compile Include="OneSync.Logic\Domain\SyncExecutor.cs" />
     <Compile Include="OneSync.Logic\Domain\SyncPreviewResult.cs" />
@@ -136,11 +136,10 @@
     <Compile Include="OneSync.Logic\Exceptions\ProfileNameExistsException.cs" />
     <Compile Include="OneSync.Logic\Exceptions\SyncSourcesNumberExceededException.cs" />
     <Compile Include="OneSync.Logic\SyncClient.cs" />
-    <Compile Include="OneSync.Logic\SyncEvents\FileSyncedChangedEventArgs.cs" />
+    <Compile Include="OneSync.Logic\SyncEvents\SyncFileChangedEventArgs.cs" />
     <Compile Include="OneSync.Logic\SyncEvents\SyncCancelledEventArgs.cs" />
     <Compile Include="OneSync.Logic\SyncEvents\SyncCompletesEventArgs.cs" />
     <Compile Include="OneSync.Logic\SyncEvents\SyncProgressChangedEventArgs.cs" />
-    <Compile Include="OneSync.Logic\SyncEvents\SyncStartsEventArgs.cs" />
     <Compile Include="OneSync.Logic\SyncEvents\SyncStatusChangedEventArgs.cs" />
     <Compile Include="OneSyncInstaller.cs">
       <SubType>Component</SubType>

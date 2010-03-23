@@ -3,40 +3,30 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.Linq;
-using Community.CsharpSqlite.SQLiteClient;
-using Community.CsharpSqlite;
 
 namespace OneSync.Synchronization
 {
-    public delegate void SyncStartsHandler(object sender, SyncStartsEventArgs eventArgs);
-    public delegate void SyncCompletesHandler(object sender, SyncCompletesEventArgs eventArgs);
+    public delegate void SyncCompletedHandler(object sender, SyncCompletedEventArgs eventArgs);
     public delegate void SyncCancelledHandler(object sender, SyncCancelledEventArgs eventArgs);
-    public delegate void SyncStatusChangedHandler(object sender, SyncStatusChangedEventArgs args);
+    public delegate void SyncStageChangedHandler(object sender, SyncStageChangedEventArgs args);
     public delegate void SyncProgressChangedHandler(object sender, SyncProgressChangedEventArgs args);
-    public delegate void FileSyncChangedHandler(object sender, FileSyncedChangedEventArgs args);
+    public delegate void SyncFileChangedHandler(object sender, SyncFileChangedEventArgs args);
 
-    public enum SyncStatus
-    {
-        VERIFY_PATCH,
-        APPLY_PATCH,
-        GENERATE_PATCH,
-        UPDATE_DATA
-    }
 
     /// <summary>
     /// 
     /// </summary>    
     public class FileSyncAgent : BaseSyncAgent
     {
-        public event SyncStartsHandler Start;
-        public event SyncCompletesHandler SyncCompleted;
-        public event SyncStatusChangedHandler StatusChanged;
+        public event SyncCompletedHandler SyncCompleted;
+        public event SyncStageChangedHandler StageChanged;
         public event SyncProgressChangedHandler ProgressChanged;
-        public event FileSyncChangedHandler FileChanged;
+        public event SyncFileChangedHandler SyncFileChanged;
+
         List<SyncAction> actions = new List<SyncAction>();
+
         private SyncPreviewResult result = null;
 
         public FileSyncAgent()
@@ -44,25 +34,23 @@ namespace OneSync.Synchronization
         {
         }
 
-        public FileSyncAgent(Profile profile)
+        public FileSyncAgent(SyncJob profile)
             : base(profile)
         {
-            //actions = (List<SyncAction>)new SQLiteActionProvider(profile).Load(profile.SyncSource, SourceOption.NOT_EQUAL_SOURCE_ID);
             SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
             actions = (List<SyncAction>)actProvider.Load(profile.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
         }
 
         public void Synchronize(SyncPreviewResult preview)
         {
-            if (Start != null) Start(this, new SyncStartsEventArgs());
-            if (ProgressChanged != null) ProgressChanged(this, new SyncProgressChangedEventArgs(0));
-            if (StatusChanged != null) StatusChanged(this, new SyncStatusChangedEventArgs(SyncStatus.APPLY_PATCH));
+            OnProgressChanged(new SyncProgressChangedEventArgs(0));
+            OnStageChanged(new SyncStageChangedEventArgs(SyncStageChangedEventArgs.Stage.APPLY_PATCH));
             Apply();
-            if (ProgressChanged != null) ProgressChanged(this, new SyncProgressChangedEventArgs(50));
-            if (StatusChanged != null) StatusChanged(this, new SyncStatusChangedEventArgs(SyncStatus.GENERATE_PATCH));
+            OnProgressChanged(new SyncProgressChangedEventArgs(50));
+            OnStageChanged(new SyncStageChangedEventArgs(SyncStageChangedEventArgs.Stage.GENERATE_PATCH));
             Generate();
-            if (ProgressChanged != null) ProgressChanged(this, new SyncProgressChangedEventArgs(100));
-            if (SyncCompleted != null) SyncCompleted(this, new SyncCompletesEventArgs());
+            OnProgressChanged(new SyncProgressChangedEventArgs(100));
+            OnSyncCompleted(new SyncCompletedEventArgs());
         }
 
         public SyncPreviewResult PreviewSync()
@@ -136,7 +124,7 @@ namespace OneSync.Synchronization
             {
                 if (action.ChangeType == ChangeType.NEWLY_CREATED)
                 {
-                    if (FileChanged != null) FileChanged(this, new FileSyncedChangedEventArgs(ChangeType.NEWLY_CREATED, action.RelativeFilePath));
+                    OnSyncFileChanged(new SyncFileChangedEventArgs(ChangeType.NEWLY_CREATED, action.RelativeFilePath));
                     try
                     {
                         SyncExecutor.CopyToSyncFolderAndUpdateActionTable((CreateAction)action, profile);
@@ -155,7 +143,7 @@ namespace OneSync.Synchronization
             {
                 if (action.ChangeType == ChangeType.DELETED)
                 {
-                    if (FileChanged != null) FileChanged(this, new FileSyncedChangedEventArgs(ChangeType.DELETED, action.RelativeFilePath));
+                    OnSyncFileChanged(new SyncFileChangedEventArgs(ChangeType.DELETED, action.RelativeFilePath));
                     try
                     {
                         SyncExecutor.DeleteInSyncFolderAndUpdateActionTable((DeleteAction)action, profile);
@@ -182,7 +170,7 @@ namespace OneSync.Synchronization
                 }
                 else if (action.ConflictResolution == ConflictResolution.DUPLICATE_RENAME)
                 {
-                    if (FileChanged != null) FileChanged(this, new FileSyncedChangedEventArgs(ChangeType.NEWLY_CREATED, action.RelativeFilePath));
+                    OnSyncFileChanged(new SyncFileChangedEventArgs(ChangeType.NEWLY_CREATED, action.RelativeFilePath));
                     try
                     {
                         SyncExecutor.DuplicateRenameToSyncFolderAndUpdateActionTable((CreateAction)action, profile);
@@ -198,7 +186,7 @@ namespace OneSync.Synchronization
                 }
                 else if (action.ConflictResolution == ConflictResolution.OVERWRITE)
                 {
-                    if (FileChanged != null) FileChanged(this, new FileSyncedChangedEventArgs(ChangeType.MODIFIED, action.RelativeFilePath));
+                    OnSyncFileChanged(new SyncFileChangedEventArgs(ChangeType.MODIFIED, action.RelativeFilePath));
                     try
                     {
                         SyncExecutor.CopyToSyncFolderAndUpdateActionTable((CreateAction)action, profile);
@@ -287,6 +275,38 @@ namespace OneSync.Synchronization
                 profile.Name, generateActivities, Log.to, count, starttime, DateTime.Now);
         }
 
-       
+        #region Event-Raising
+
+
+        protected virtual void OnSyncCompleted(SyncCompletedEventArgs e)
+        {
+            if (SyncCompleted != null)
+                SyncCompleted(this, new SyncCompletedEventArgs());   
+        }
+
+
+        protected virtual void OnStageChanged(SyncStageChangedEventArgs e)
+        {
+            if (StageChanged != null)
+                StageChanged(this, e);
+        }
+
+        protected virtual void OnProgressChanged(SyncProgressChangedEventArgs e)
+        {
+            if (ProgressChanged != null)
+                ProgressChanged(this, e);
+        }
+
+        protected virtual void OnSyncFileChanged(SyncFileChangedEventArgs e)
+        {
+            if (SyncFileChanged != null)
+                SyncFileChanged(this, e);
+        }
+
+        #endregion
+
+
     }
 }
+
+
