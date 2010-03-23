@@ -83,77 +83,78 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Log.cs" />
+    <Compile Include="OneSync.Files.XCopy\Class1.cs" />
+    <Compile Include="OneSync.Files.XCopy\ICopy.cs" />
+    <Compile Include="OneSync.Files.XCopy\IFilter.cs" />
+    <Compile Include="OneSync.Files.XCopy\JobDetails.cs" />
+    <Compile Include="OneSync.Files.XCopy\XCopy.cs" />
+    <Compile Include="OneSync.Files.XCopy\XCopyFailedEvent.cs" />
+    <Compile Include="OneSync.Files.XCopy\XError.cs" />
+    <Compile Include="OneSync.Files.XCopy\XFilter.cs" />
+    <Compile Include="OneSync.Files\DirectoryInfoComparer.cs" />
+    <Compile Include="OneSync.Files\DriveUtil.cs" />
+    <Compile Include="OneSync.Files\FileChangeDetection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="OneSync.Files\FileInfoComparer.cs" />
+    <Compile Include="OneSync.Files\FileUtils.cs" />
+    <Compile Include="OneSync.Files\FolderComparer.cs" />
+    <Compile Include="OneSync.Files\PartialFileStream.cs" />
+    <Compile Include="OneSync.Logic\Abstract Classes\BaseSQLiteProvider.cs" />
+    <Compile Include="OneSync.Logic\Abstract Classes\BaseSyncAgent.cs" />
+    <Compile Include="OneSync.Logic\Abstract Classes\MetaDataProvider.cs" />
+    <Compile Include="OneSync.Logic\Abstract Classes\ProfileManager.cs" />
+    <Compile Include="OneSync.Logic\Abstract Classes\SyncAction.cs" />
+    <Compile Include="OneSync.Logic\Abstract Classes\SyncActionsProvider.cs" />
+    <Compile Include="OneSync.Logic\Abstract Classes\SyncSourceProvider.cs" />
+    <Compile Include="OneSync.Logic\Common Interfaces\ISyncAgent.cs" />
+    <Compile Include="OneSync.Logic\Common Interfaces\ISyncProvider.cs" />
+    <Compile Include="OneSync.Logic\Common Interfaces\ISyncVerifier.cs" />
+    <Compile Include="OneSync.Logic\Configuration\Configuration.cs" />
+    <Compile Include="OneSync.Logic\Data\SQLiteAccess.cs" />
+    <Compile Include="OneSync.Logic\Domain\Actions\CreateAction.cs" />
+    <Compile Include="OneSync.Logic\Domain\Actions\DeleteAction.cs" />
+    <Compile Include="OneSync.Logic\Domain\Actions\RenameAction.cs" />
+    <Compile Include="OneSync.Logic\Domain\DataProviders\SQLiteMetaDataProvider.cs" />
+    <Compile Include="OneSync.Logic\Domain\DataProviders\SQLiteProfileManager.cs" />
+    <Compile Include="OneSync.Logic\Domain\DataProviders\SQLiteSyncActionsProvider.cs" />
+    <Compile Include="OneSync.Logic\Domain\DataProviders\SQLiteSyncSourceProvider.cs" />
+    <Compile Include="OneSync.Logic\Domain\FileMetaData.cs" />
+    <Compile Include="OneSync.Logic\Domain\FileMetaDataComparer.cs" />
+    <Compile Include="OneSync.Logic\Domain\FileMetaDataItem.cs" />
+    <Compile Include="OneSync.Logic\Domain\FileMetaDataItemComparer.cs" />
+    <Compile Include="OneSync.Logic\Domain\FileSyncAgent.cs" />
+    <Compile Include="OneSync.Logic\Domain\IntermediaryStorage.cs" />
+    <Compile Include="OneSync.Logic\Domain\Profile.cs" />
+    <Compile Include="OneSync.Logic\Domain\SyncActionComparer.cs" />
+    <Compile Include="OneSync.Logic\Domain\SyncExecutor.cs" />
+    <Compile Include="OneSync.Logic\Domain\SyncPreviewResult.cs" />
+    <Compile Include="OneSync.Logic\Domain\SyncResult.cs" />
+    <Compile Include="OneSync.Logic\Domain\SyncSource.cs" />
+    <Compile Include="OneSync.Logic\Exceptions\DatabaseException.cs" />
+    <Compile Include="OneSync.Logic\Exceptions\MetaDataAlreadyExistsException.cs" />
+    <Compile Include="OneSync.Logic\Exceptions\ProfileNameExistsException.cs" />
+    <Compile Include="OneSync.Logic\Exceptions\SyncSourcesNumberExceededException.cs" />
+    <Compile Include="OneSync.Logic\SyncClient.cs" />
+    <Compile Include="OneSync.Logic\SyncEvents\FileSyncedChangedEventArgs.cs" />
+    <Compile Include="OneSync.Logic\SyncEvents\SyncCancelledEventArgs.cs" />
+    <Compile Include="OneSync.Logic\SyncEvents\SyncCompletesEventArgs.cs" />
+    <Compile Include="OneSync.Logic\SyncEvents\SyncProgressChangedEventArgs.cs" />
+    <Compile Include="OneSync.Logic\SyncEvents\SyncStartsEventArgs.cs" />
+    <Compile Include="OneSync.Logic\SyncEvents\SyncStatusChangedEventArgs.cs" />
     <Compile Include="OneSyncInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="OneSyncInstaller.Designer.cs">
       <DependentUpon>OneSyncInstaller.cs</DependentUpon>
     </Compile>
-    <Compile Include="OneSyncLogic\OneSync.Files.XCopy\Class1.cs" />
-    <Compile Include="OneSyncLogic\OneSync.Files.XCopy\ICopy.cs" />
-    <Compile Include="OneSyncLogic\OneSync.Files.XCopy\IFilter.cs" />
-    <Compile Include="OneSyncLogic\OneSync.Files.XCopy\JobDetails.cs" />
-    <Compile Include="OneSyncLogic\OneSync.Files.XCopy\XCopy.cs" />
-    <Compile Include="OneSyncLogic\OneSync.Files.XCopy\XCopyFailedEvent.cs" />
-    <Compile Include="OneSyncLogic\OneSync.Files.XCopy\XError.cs" />
-    <Compile Include="OneSyncLogic\OneSync.Files.XCopy\XFilter.cs" />
-    <Compile Include="OneSyncLogic\OneSync.Files\DirectoryInfoComparer.cs" />
-    <Compile Include="OneSyncLogic\OneSync.Files\DriveUtil.cs" />
-    <Compile Include="OneSyncLogic\OneSync.Files\FileChangeDetection.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="OneSyncLogic\OneSync.Files\FileInfoComparer.cs" />
-    <Compile Include="OneSyncLogic\OneSync.Files\FileUtils.cs" />
-    <Compile Include="OneSyncLogic\OneSync.Files\FolderComparer.cs" />
-    <Compile Include="OneSyncLogic\OneSync.Files\PartialFileStream.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Abstract Classes\SyncActionsProvider.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Abstract Classes\BaseSyncAgent.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Abstract Classes\MetaDataProvider.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Abstract Classes\SyncAction.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Abstract Classes\SyncSourceProvider.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Abstract Classes\ProfileManager.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Common Interfaces\ISyncAgent.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Common Interfaces\ISyncProvider.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Configuration\Configuration.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Data\SQLiteAccess.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Domain\Actions\CreateAction.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Domain\Actions\DeleteAction.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Domain\Actions\RenameAction.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Domain\FileMetaData.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Domain\FileMetaDataComparer.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Domain\FileMetaDataItem.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Domain\FileMetaDataItemComparer.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Domain\FileSyncAgent.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Domain\IntermediaryStorage.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Domain\Profile.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Domain\DataProviders\SQLiteSyncActionsProvider.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Domain\DataProviders\SQLiteMetaDataProvider.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Domain\DataProviders\SQLiteProfileManager.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Domain\DataProviders\SQLiteSyncSourceProvider.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Domain\SyncActionComparer.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Domain\SyncExecutor.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Domain\SyncPreviewResult.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Domain\SyncResult.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Domain\SyncSource.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Exceptions\DatabaseException.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Exceptions\MetaDataAlreadyExistsException.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Exceptions\ProfileNameExistsException.cs" />
-    <Compile Include="OneSyncLogic\OneSync\Exceptions\SyncSourcesNumberExceededException.cs" />
-    <Compile Include="OneSyncLogic\OneSync\SyncEvents\FileSyncedChangedEventArgs.cs" />
-    <Compile Include="OneSyncLogic\OneSync\SyncEvents\SyncCancelledEventArgs.cs" />
-    <Compile Include="OneSyncLogic\OneSync\SyncEvents\SyncCompletesEventArgs.cs" />
-    <Compile Include="OneSyncLogic\OneSync\SyncEvents\SyncProgressChangedEventArgs.cs" />
-    <Compile Include="OneSyncLogic\OneSync\SyncEvents\SyncStartsEventArgs.cs" />
-    <Compile Include="OneSyncLogic\OneSync\SyncEvents\SyncStatusChangedEventArgs.cs" />
-    <Compile Include="OneSyncLogic\OneSync\UIProcess\ActionProcess.cs" />
-    <Compile Include="OneSyncLogic\OneSync\UIProcess\SyncClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\MainWindow.xaml.cs">
+    <Compile Include="OneSync.UI\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\UILog.cs" />
-    <Compile Include="UI\Validator.cs" />
-    <Page Include="UI\MainWindow.xaml">
+    <Compile Include="OneSync.UI\UILog.cs" />
+    <Compile Include="OneSync.UI\Validator.cs" />
+    <Page Include="OneSync.UI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -166,15 +167,18 @@
     <Resource Include="Application.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="OneSyncLogic\OneSync.Lib\Community.CsharpSqlite.dll" />
-    <Content Include="OneSyncLogic\OneSync.Lib\Community.CsharpSqlite.SQLiteClient.dll" />
-    <Content Include="OneSyncLogic\OneSync.Lib\FSync.Files.dll" />
-    <Resource Include="UI\Resource\completed_icon.gif" />
-    <Resource Include="UI\Resource\conflicting_icon.gif" />
-    <Resource Include="UI\Resource\OneSync Transparent Logo %28Inactive%29.png" />
-    <Resource Include="UI\Resource\OneSync Transparent Logo.gif" />
-    <Resource Include="UI\Resource\OneSync Transparent Logo.png" />
-    <Resource Include="UI\Resource\processing_icon.gif" />
+    <Content Include="OneSync.Lib\Community.CsharpSqlite.dll" />
+    <Content Include="OneSync.Lib\Community.CsharpSqlite.SQLiteClient.dll" />
+    <Content Include="OneSync.Lib\FSync.Files.dll" />
+    <Resource Include="OneSync.UI\Resource\completed_icon.gif" />
+    <Resource Include="OneSync.UI\Resource\conflicting_icon.gif" />
+    <Resource Include="OneSync.UI\Resource\OneSync Transparent Logo %28Inactive%29.png" />
+    <Resource Include="OneSync.UI\Resource\OneSync Transparent Logo.gif" />
+    <Resource Include="OneSync.UI\Resource\OneSync Transparent Logo.png" />
+    <Resource Include="OneSync.UI\Resource\processing_icon.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="OneSync.Logic\UIProcess\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
