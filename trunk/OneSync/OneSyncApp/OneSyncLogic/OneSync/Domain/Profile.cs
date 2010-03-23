@@ -107,6 +107,11 @@ namespace OneSync.Synchronization
             {
                 return this._iStorage;
             }
-        }        
+        }
+
+        public override string ToString()
+        {
+            return this.Name;
+        }
     }
 }

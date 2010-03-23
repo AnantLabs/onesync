@@ -31,11 +31,11 @@ namespace OneSync.Synchronization
     /// </summary>    
     public class FileSyncAgent : BaseSyncAgent
     {
-        public event SyncStartsHandler OnStarted;
-        public event SyncCompletesHandler OnCompleted;
-        public event SyncStatusChangedHandler OnStatusChanged;
-        public event SyncProgressChangedHandler OnProgressChanged;
-        public event FileSyncChangedHandler OnFileChanged;
+        public event SyncStartsHandler Start;
+        public event SyncCompletesHandler SyncCompleted;
+        public event SyncStatusChangedHandler StatusChanged;
+        public event SyncProgressChangedHandler ProgressChanged;
+        public event FileSyncChangedHandler FileChanged;
         List<SyncAction> actions = new List<SyncAction>();
         private SyncPreviewResult result = null;
 
@@ -54,15 +54,15 @@ namespace OneSync.Synchronization
 
         public void Synchronize(SyncPreviewResult preview)
         {
-            if (OnStarted != null) OnStarted(this, new SyncStartsEventArgs());
-            if (OnProgressChanged != null) OnProgressChanged(this, new SyncProgressChangedEventArgs(0));
-            if (OnStatusChanged != null) OnStatusChanged(this, new SyncStatusChangedEventArgs(SyncStatus.APPLY_PATCH));
+            if (Start != null) Start(this, new SyncStartsEventArgs());
+            if (ProgressChanged != null) ProgressChanged(this, new SyncProgressChangedEventArgs(0));
+            if (StatusChanged != null) StatusChanged(this, new SyncStatusChangedEventArgs(SyncStatus.APPLY_PATCH));
             Apply();
-            if (OnProgressChanged != null) OnProgressChanged(this, new SyncProgressChangedEventArgs(50));
-            if (OnStatusChanged != null) OnStatusChanged(this, new SyncStatusChangedEventArgs(SyncStatus.GENERATE_PATCH));
+            if (ProgressChanged != null) ProgressChanged(this, new SyncProgressChangedEventArgs(50));
+            if (StatusChanged != null) StatusChanged(this, new SyncStatusChangedEventArgs(SyncStatus.GENERATE_PATCH));
             Generate();
-            if (OnProgressChanged != null) OnProgressChanged(this, new SyncProgressChangedEventArgs(100));
-            if (OnCompleted != null) OnCompleted(this, new SyncCompletesEventArgs());
+            if (ProgressChanged != null) ProgressChanged(this, new SyncProgressChangedEventArgs(100));
+            if (SyncCompleted != null) SyncCompleted(this, new SyncCompletesEventArgs());
         }
 
         public SyncPreviewResult PreviewSync()
@@ -136,7 +136,7 @@ namespace OneSync.Synchronization
             {
                 if (action.ChangeType == ChangeType.NEWLY_CREATED)
                 {
-                    if (OnFileChanged != null) OnFileChanged(this, new FileSyncedChangedEventArgs(ChangeType.NEWLY_CREATED, action.RelativeFilePath));
+                    if (FileChanged != null) FileChanged(this, new FileSyncedChangedEventArgs(ChangeType.NEWLY_CREATED, action.RelativeFilePath));
                     try
                     {
                         SyncExecutor.CopyToSyncFolderAndUpdateActionTable((CreateAction)action, profile);
@@ -155,7 +155,7 @@ namespace OneSync.Synchronization
             {
                 if (action.ChangeType == ChangeType.DELETED)
                 {
-                    if (OnFileChanged != null) OnFileChanged(this, new FileSyncedChangedEventArgs(ChangeType.DELETED, action.RelativeFilePath));
+                    if (FileChanged != null) FileChanged(this, new FileSyncedChangedEventArgs(ChangeType.DELETED, action.RelativeFilePath));
                     try
                     {
                         SyncExecutor.DeleteInSyncFolderAndUpdateActionTable((DeleteAction)action, profile);
@@ -182,7 +182,7 @@ namespace OneSync.Synchronization
                 }
                 else if (action.ConflictResolution == ConflictResolution.DUPLICATE_RENAME)
                 {
-                    if (OnFileChanged != null) OnFileChanged(this, new FileSyncedChangedEventArgs(ChangeType.NEWLY_CREATED, action.RelativeFilePath));
+                    if (FileChanged != null) FileChanged(this, new FileSyncedChangedEventArgs(ChangeType.NEWLY_CREATED, action.RelativeFilePath));
                     try
                     {
                         SyncExecutor.DuplicateRenameToSyncFolderAndUpdateActionTable((CreateAction)action, profile);
@@ -198,7 +198,7 @@ namespace OneSync.Synchronization
                 }
                 else if (action.ConflictResolution == ConflictResolution.OVERWRITE)
                 {
-                    if (OnFileChanged != null) OnFileChanged(this, new FileSyncedChangedEventArgs(ChangeType.MODIFIED, action.RelativeFilePath));
+                    if (FileChanged != null) FileChanged(this, new FileSyncedChangedEventArgs(ChangeType.MODIFIED, action.RelativeFilePath));
                     try
                     {
                         SyncExecutor.CopyToSyncFolderAndUpdateActionTable((CreateAction)action, profile);

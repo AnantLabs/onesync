@@ -187,15 +187,28 @@ namespace OneSync.Synchronization
             return p;
         }
 
-
-        public override bool CreateProfile(string profileName, string absoluteSyncPath, string absoluteIntermediatePath)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="profileName"></param>
+        /// <param name="absoluteSyncPath"></param>
+        /// <param name="absoluteIntermediatePath"></param>
+        /// <returns></returns>
+        /// <exception cref="ProfileNameExistException">if profile name already exists.</exception>
+        public override Profile CreateProfile(string profileName, string absoluteSyncPath, string absoluteIntermediatePath)
         {            
             SyncSource syncSource = new SyncSource(System.Guid.NewGuid().ToString(), absoluteSyncPath);
             IntermediaryStorage iStorage = new IntermediaryStorage(absoluteIntermediatePath);
             Profile profile = new Profile(System.Guid.NewGuid().ToString(),
                 profileName, syncSource, iStorage);
-            CreateDataStore(this.StoragePath, syncSource, iStorage); 
-            return Add(profile);
+            
+            CreateDataStore(this.StoragePath, syncSource, iStorage);
+
+            // Returns profile if it is successfully added.
+            if (Add(profile))
+                return profile;
+            else
+                return null;
         }
 
         public static void CreateDataStore(string pathToProfileFolder, SyncSource syncSource, IntermediaryStorage metaDataSource)
