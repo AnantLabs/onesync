@@ -45,7 +45,6 @@ namespace OneSync.Synchronization
         /// Create a new connection based on parameters
         /// </summary>
         /// <returns></returns>
-                
         public SqliteConnection NewSQLiteConnection()
         {     
             conn = new SqliteConnection(connectionString);
