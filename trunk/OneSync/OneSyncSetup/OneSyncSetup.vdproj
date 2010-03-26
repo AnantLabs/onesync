@@ -15,25 +15,19 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_06818968A3B1405D852FE40980CCE19E"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_2B5E60944B6A82080AB180018250BE75"
+        "MsmKey" = "8:_6ACFB0F10014E1330113E9E759FBCFD4"
         "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_2B5E60944B6A82080AB180018250BE75"
-        "OwnerKey" = "8:_3B3A7A79FE2B838F64FE3AF6AC04B08D"
+        "MsmKey" = "8:_6ACFB0F10014E1330113E9E759FBCFD4"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_3B3A7A79FE2B838F64FE3AF6AC04B08D"
+        "MsmKey" = "8:_AFC484BCCB68A0A0280E2EE6AD185C47"
         "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -52,13 +46,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3B3A7A79FE2B838F64FE3AF6AC04B08D"
+        "OwnerKey" = "8:_AFC484BCCB68A0A0280E2EE6AD185C47"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2B5E60944B6A82080AB180018250BE75"
+        "OwnerKey" = "8:_AFC484BCCB68A0A0280E2EE6AD185C47"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_6ACFB0F10014E1330113E9E759FBCFD4"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -194,34 +194,14 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_06818968A3B1405D852FE40980CCE19E"
-            {
-            "SourcePath" = "8:..\\..\\..\\..\\..\\Modules Material\\A Is The Only Option, A+ Otherwise\\CS3215\\Graphic Design\\Installation Setup Logo.bmp"
-            "TargetName" = "8:Installation Setup Logo.bmp"
-            "Tag" = "8:"
-            "Folder" = "8:_E017F1941B1444CBBF2A995811C34F54"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2B5E60944B6A82080AB180018250BE75"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6ACFB0F10014E1330113E9E759FBCFD4"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Community.CsharpSqlite, Version=3.6.22.1, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Community.CsharpSqlite, Version=3.6.22.1, Culture=neutral, PublicKeyToken=9ae8498fe54c7621, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_2B5E60944B6A82080AB180018250BE75"
+                    "_6ACFB0F10014E1330113E9E759FBCFD4"
                     {
                     "Name" = "8:Community.CsharpSqlite.dll"
                     "Attributes" = "3:512"
@@ -245,14 +225,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3B3A7A79FE2B838F64FE3AF6AC04B08D"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_AFC484BCCB68A0A0280E2EE6AD185C47"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Community.CsharpSqlite.SQLiteClient, Version=3.6.22.3, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:Community.CsharpSqlite.SQLiteClient, Version=3.6.22.3, Culture=neutral, PublicKeyToken=9ae8498fe54c7621, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
-                    "_3B3A7A79FE2B838F64FE3AF6AC04B08D"
+                    "_AFC484BCCB68A0A0280E2EE6AD185C47"
                     {
                     "Name" = "8:Community.CsharpSqlite.SQLiteClient.dll"
                     "Attributes" = "3:512"
@@ -479,8 +459,7 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:2"
-                            "Value" = "8:_06818968A3B1405D852FE40980CCE19E"
+                            "Setting" = "3:0"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "UpdateText"
@@ -706,8 +685,7 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:2"
-                            "Value" = "8:_06818968A3B1405D852FE40980CCE19E"
+                            "Setting" = "3:0"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "ShowProgress"
@@ -757,8 +735,7 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:2"
-                            "Value" = "8:_06818968A3B1405D852FE40980CCE19E"
+                            "Setting" = "3:0"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "InstallAllUsersVisible"
@@ -793,8 +770,7 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:2"
-                            "Value" = "8:_06818968A3B1405D852FE40980CCE19E"
+                            "Setting" = "3:0"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "CopyrightWarning"
@@ -842,8 +818,7 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:2"
-                            "Value" = "8:_06818968A3B1405D852FE40980CCE19E"
+                            "Setting" = "3:0"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
