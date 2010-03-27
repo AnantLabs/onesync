@@ -19,7 +19,7 @@ namespace OneSync.UI
 	public partial class MainWindow : Window
 	{
 		// Start: Global variables.        
-        private string syncDir; //The directory of the chosen source folder.
+        private string syncDir = ""; //The directory of the chosen source folder.
         private string STARTUP_PATH = System.Windows.Forms.Application.StartupPath;
         
         private SyncJobManager profileManager;
@@ -27,6 +27,7 @@ namespace OneSync.UI
         private BackgroundWorker syncWorker;
 
         private UILog uiLog = new UILog();
+        private UISyncJob uiSyncJob = new UISyncJob();
         // End: Global variables.
 		
 		
@@ -45,18 +46,14 @@ namespace OneSync.UI
             // Get current synchronization directory from command line arguments.
             // Default sync directory is current directory of app.
             string[] args = System.Environment.GetCommandLineArgs();
-            if (args.Length > 1)
-            {
-                if (Validator.validateDirPath(args[1]) == null)
-                    syncDir = args[1];
-                else
-                    syncDir = Directory.GetCurrentDirectory().ToString();
-            }
 
             profileManager = SyncClient.GetSyncJobManager(STARTUP_PATH);
-            lblSyncDir.Content = normalizeString(syncDir, 20, 50);
-            reloadProfileComboBox();
-            listLog.ItemsSource = uiLog.LogEntries;
+
+            if (args.Length > 1 && Validator.validateDirPath(args[1]) == null)
+            {
+                txtSource.Text = args[1];
+                reloadProfile();
+            }
 
             // Intialize syncWorker 
             syncWorker = new BackgroundWorker();
@@ -64,101 +61,116 @@ namespace OneSync.UI
             syncWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(syncWorker_RunWorkerCompleted);
         }
 
-        private void cmbProfiles_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        private void txtBlkProceed_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.Key == Key.Return)
-                txtBlkProceed_MouseDown(null, null);
-        }
-
-        private void cmbProfiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            canvasEditProfile.Visibility = Visibility.Hidden;
-
-            if (cmbProfiles.SelectedItem as SyncJob == null)
-                return;
-            else
+            showErrorMsg("");
+            try
             {
-                canvasEditProfile.Visibility = Visibility.Visible;
-                txtRenJob.Text = cmbProfiles.SelectedItem.ToString();
+                UISyncJobEntry p = listAllSyncJobs.SelectedItem as UISyncJobEntry;
+
+                lblSyncJobName.Content = normalizeString(p.JobName, 20, 50);
+                lblSyncJobName.ToolTip = p.JobName;
+                lblSyncJobSource.Content = normalizeString(p.SyncSource, 20, 30);
+                lblSyncJobSource.ToolTip = p.SyncSource;
+                lblSyncJobStorage.Content = normalizeString(p.IntStorage, 20, 30);
+                lblSyncJobStorage.ToolTip = p.IntStorage;
+                reloadProfile();
+                listLog.ItemsSource = uiLog.LogEntries;
+
+                Window.Title = p.JobName + " - OneSync";
+                UpdateSyncUI(false, false);
+                ((Storyboard)Resources["sbNext"]).Begin(this);
+            }
+            catch (Exception)
+            {
+                showErrorMsg("Please select an existing sync job.");
+            }
+        }
+		
+		private void btnBrowse_Source_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+
+            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                txtSource.Text = fbd.SelectedPath;
+                txtSource.Focus();
             }
         }
 
-        private void txtBlkRenJob_MouseDown(object sender, MouseButtonEventArgs e)
+        private void txtBlkNewJob_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            SyncJob p = cmbProfiles.SelectedItem as SyncJob;
-            if (p == null) return;
+        	//Check the three required inputs for a new sync job:
+            // 1. Sync Job Name;
+            // 2. Sync Source Folder Directory;
+            // 3. Intermediate Storage Location.
+            string syncJobName = txtSyncJobName.Text.Trim();
+            string syncSourceDir = txtSource.Text.Trim();
+            string intStorageDir = txtIntStorage.Text.Trim();
 
-            string errorMsg = Validator.validateSyncJobName(txtRenJob.Text);
-
+            string errorMsg = Validator.validateSyncJobName(syncJobName);
             if (errorMsg != null)
             {
                 showErrorMsg(errorMsg);
                 return;
             }
 
-            showErrorMsg("");
+            errorMsg = Validator.validateSyncDirs(syncSourceDir, intStorageDir);
+            if (errorMsg != null)
+            {
+                showErrorMsg(errorMsg);
+                return;
+            }
+
+            //Create new sync job if all three inputs mentioned above are valid.
             try
             {
-                p.Name = txtRenJob.Text.Trim();
-                profileManager.Update(p);
-                txtBlkProceed_MouseDown(null, null);
+                SyncJob p = profileManager.CreateSyncJob(syncJobName, syncSourceDir, intStorageDir);
+
+                //Reload the list of sync jobs.
+                reloadProfile();
             }
             catch (ProfileNameExistException)
             {
-                showErrorMsg("Rename failed: A sync job with the name already exists.");
+                showErrorMsg("A sync job with the same name already exists.");
                 return;
+            }
+            catch (Exception ee)
+            {
+                showErrorMsg(ee.Message);
+                return;
+            }
+        }
+		
+		private void txtSource_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            showErrorMsg("");
+            string errorMsg = Validator.validateDirPath(txtSource.Text.Trim());
+            if (errorMsg != null)
+            {
+                showErrorMsg(errorMsg);
+                return;
+            }
+
+            reloadProfile();
+        }
+
+        private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                UISyncJobEntry p = listAllSyncJobs.SelectedItem as UISyncJobEntry;
+                SyncJob editingJob = (new SQLiteSyncJobManager(STARTUP_PATH)).GetProfileByName(p.JobName);
+                SyncJobManagementWindow syncJobManagementWindow = new SyncJobManagementWindow(editingJob, profileManager);
+                syncJobManagementWindow.Owner = this;
+                syncJobManagementWindow.ShowDialog();
+                reloadProfile();
             }
             catch (Exception)
             {
-                // Log error
-                showErrorMsg("Rename failed.");
-                throw;
+                //Do nothing.
             }
         }
-
-        private void txtBlkDelJob_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            SyncJob p = cmbProfiles.SelectedItem as SyncJob;
-            if (p == null) return;
-
-            DialogResult result = System.Windows.Forms.MessageBox.Show(
-                            "Are you sure you want to delete " + p.Name + "?", "Job Profile Deletion",
-                            MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Question);
-
-            if (result == System.Windows.Forms.DialogResult.Yes)
-            {
-                if (!profileManager.Delete(p))
-                    showErrorMsg("Unable to delete profile.");
-
-                reloadProfileComboBox();
-            }
-        }
-
-        private void txtBlkProceed_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            SyncJob p = cmbProfiles.SelectedItem as SyncJob;
-
-            if (p == null)
-            {
-                string errorMsg = Validator.validateSyncJobName(cmbProfiles.Text);
-                if (errorMsg != null)
-                {
-                    showErrorMsg(errorMsg);
-                    return;
-                }
-                txtIntStorage.Text = "";
-            }
-            else
-            {
-                txtIntStorage.Text = p.IntermediaryStorage.Path;
-                Window.Title = p.Name + " - OneSync";
-            }
-
-            UpdateSyncUI(false, false);
-            ((Storyboard)Resources["sbNext"]).Begin(this);
-        }
-		
 		
 		/*========================================================
 		PART 2: Sync Screen
@@ -179,59 +191,9 @@ namespace OneSync.UI
         {
             showErrorMsg(""); // clear error msg
 
-            /* Validate information/syncParameters */
-
-            string errorMsg = Validator.validateDirPath(txtIntStorage.Text);
-            if (errorMsg != null)
-            {
-                showErrorMsg(errorMsg);
-                return;
-            }
-
-            errorMsg = Validator.validateSyncDirs(syncDir, txtIntStorage.Text);
-            if (errorMsg != null)
-            {
-                showErrorMsg(errorMsg);
-                return;
-            }
-
-
-            // Create a new profile if necessary
-            SyncJob p = cmbProfiles.SelectedItem as SyncJob;
-            if (p == null) /* No saved profile selected */
-            {
-                // Create a new profile
-                try
-                {
-                    p = profileManager.CreateSyncJob(cmbProfiles.Text, syncDir, txtIntStorage.Text);
-                    cmbProfiles.Items.Add(p);
-                    cmbProfiles.SelectedItem = p;
-                }
-                catch (ProfileNameExistException)
-                {
-                    showErrorMsg("A sync job with the same name already exists.");
-                    return;
-                }
-                catch (Exception)
-                {
-                    showErrorMsg("Unable to save newly created profile.");
-                    return;
-                }
-            }
-            else
-            {
-                // Update current profile
-                p.SyncSource.Path = syncDir;
-                p.IntermediaryStorage.Path = txtIntStorage.Text;
-
-                if (!profileManager.Update(p))
-                {
-                    showErrorMsg("Unable to update profile.");
-                    return;
-                }
-            }
-
-            Synchronize(p);
+            UISyncJobEntry p = listAllSyncJobs.SelectedItem as UISyncJobEntry;
+            SyncJob jobToBeSynced = (new SQLiteSyncJobManager(STARTUP_PATH)).GetProfileByName(p.JobName);
+            Synchronize(jobToBeSynced);
         }
 
         private void txtBlkShowLog_MouseDown(object sender, MouseButtonEventArgs e)
@@ -265,7 +227,7 @@ namespace OneSync.UI
 
             //Import all the previous created existing sync job profiles.
             //Note that only the profile having the directory which is the current directory will be loaded.
-            reloadProfileComboBox();
+            reloadProfile();
 
             // Show log will be shown again after sync is complete.
             txtBlkShowLog.Visibility = Visibility.Hidden;
@@ -280,26 +242,33 @@ namespace OneSync.UI
 		PART 3: UI handling code
 		========================================================*/
 
-        private void reloadProfileComboBox()
+        private void reloadProfile()
         {
             //Reload the profile combobox.
-            cmbProfiles.Items.Clear();
+            string syncSourceDir = txtSource.Text.Trim();
+
+            uiSyncJob.SyncJobEntries.Clear();
             try
             {
                 IList<SyncJob> profileItemsCollection = SyncClient.GetSyncJobManager(STARTUP_PATH).LoadAllJobs();
+                //System.Windows.Forms.MessageBox.Show(profileItemsCollection.Count.ToString());
                 foreach (SyncJob profileItem in profileItemsCollection)
                 {
-                    if (profileItem.SyncSource.Path.Equals(syncDir))
-                        cmbProfiles.Items.Add(profileItem);
+                    if (profileItem.SyncSource.Path.Equals(syncSourceDir))
+                        uiSyncJob.Add(profileItem.Name, profileItem.SyncSource.Path, profileItem.IntermediaryStorage.Path);
+                    else if(syncSourceDir.Length == 0)
+                        uiSyncJob.Add(profileItem.Name, profileItem.SyncSource.Path, profileItem.IntermediaryStorage.Path);
                 }
+                uiSyncJob.Add("Testing 1", "Testing Path 11", "Testing Path 12");
+                uiSyncJob.Add("Testing 2", "Testing Path 21", "Testing Path 22");
+                listAllSyncJobs.ItemsSource = uiSyncJob.SyncJobEntries;
+                if(profileItemsCollection.Count > 0)
+                    listAllSyncJobs.SelectedIndex = 0;
             }
             catch (Exception)
             {
-                // Log error
                 showErrorMsg("Error loading profiles.");
             }
-
-            cmbProfiles.SelectedIndex = -1;
         }
 
         // There are 3 states for visiblity of controls in CanvasSync:
@@ -308,7 +277,7 @@ namespace OneSync.UI
         // 2. syncInProgress = false, syncCompletedBefore = true
         private void UpdateSyncUI(bool syncInProgress, bool showProgressControls)
         {
-                Storyboard sb = (Storyboard)Window.Resources["sbRotateSync"];
+            Storyboard sb = (Storyboard)Window.Resources["sbRotateSync"];
 
             // Set Visibility of common controls
             txtBlkBackToHome.IsEnabled = !syncInProgress;

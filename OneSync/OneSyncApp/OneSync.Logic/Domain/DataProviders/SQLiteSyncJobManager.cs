@@ -98,6 +98,7 @@ namespace OneSync.Synchronization
                         cmd.CommandText = "SELECT * FROM " + SYNCJOB_TABLE +
                                      " p, " + DATASOURCE_INFO_TABLE +
                                      " d WHERE p" + "." + COL_SYNC_SOURCE_ID + " = d" + "." + COL_SOURCE_ID;
+                        
                         using (SqliteDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())

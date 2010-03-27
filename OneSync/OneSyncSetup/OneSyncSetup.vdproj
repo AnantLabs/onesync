@@ -15,6 +15,12 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_5FB27FCD24FE48578A819A4397C2E850"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_6ACFB0F10014E1330113E9E759FBCFD4"
         "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
         "MsmSig" = "8:_UNDEFINED"
@@ -22,7 +28,7 @@
         "Entry"
         {
         "MsmKey" = "8:_6ACFB0F10014E1330113E9E759FBCFD4"
-        "OwnerKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -46,7 +52,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_AFC484BCCB68A0A0280E2EE6AD185C47"
+        "OwnerKey" = "8:_5FB27FCD24FE48578A819A4397C2E850"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -58,7 +64,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_6ACFB0F10014E1330113E9E759FBCFD4"
+        "OwnerKey" = "8:_AFC484BCCB68A0A0280E2EE6AD185C47"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -194,20 +200,20 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6ACFB0F10014E1330113E9E759FBCFD4"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_5FB27FCD24FE48578A819A4397C2E850"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Community.CsharpSqlite, Version=3.6.22.1, Culture=neutral, PublicKeyToken=9ae8498fe54c7621, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_6ACFB0F10014E1330113E9E759FBCFD4"
+                    "_5FB27FCD24FE48578A819A4397C2E850"
                     {
                     "Name" = "8:Community.CsharpSqlite.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Community.CsharpSqlite.dll"
+            "SourcePath" = "8:..\\OneSyncApp\\OneSync.Lib\\Community.CsharpSqlite.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_E017F1941B1444CBBF2A995811C34F54"
@@ -222,7 +228,7 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_AFC484BCCB68A0A0280E2EE6AD185C47"

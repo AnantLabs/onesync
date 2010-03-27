@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("OneSync")]
+[assembly: AssemblyTitle("OneSyncWPF")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("CodeDroids")]
-[assembly: AssemblyProduct("OneSync")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCompany("NUS")]
+[assembly: AssemblyProduct("OneSyncWPF")]
+[assembly: AssemblyCopyright("Copyright © NUS 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
