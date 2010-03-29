@@ -25,6 +25,9 @@ namespace OneSync.UI
         private SyncJobManager profileManager;
         private FileSyncAgent syncAgent; //The file sync agent.
         private BackgroundWorker syncWorker;
+        private BackgroundWorker previewWorker;
+
+        IList<FileSyncAgent> syncAgents = new List<FileSyncAgent>();
 
         private UILog uiLog = new UILog();
         private UISyncJob uiSyncJob = new UISyncJob();
@@ -55,10 +58,15 @@ namespace OneSync.UI
                 reloadProfile();
             }
 
-            // Intialize syncWorker 
+            // Initialize syncWorker 
             syncWorker = new BackgroundWorker();
             syncWorker.DoWork += new DoWorkEventHandler(syncWorker_DoWork);
             syncWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(syncWorker_RunWorkerCompleted);
+
+            // Initialize previewWorker
+            previewWorker = new BackgroundWorker();
+            previewWorker.DoWork += new DoWorkEventHandler(previewWorker_DoWork);
+            previewWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(previewWorker_RunWorkerCompleted);
         }
 
         private void txtBlkProceed_MouseDown(object sender, MouseButtonEventArgs e)
@@ -66,7 +74,9 @@ namespace OneSync.UI
             showErrorMsg("");
             try
             {
-                UISyncJobEntry p = listAllSyncJobs.SelectedItem as UISyncJobEntry;
+                //Show the info of the first Sync Job first.
+                //The rest will be updated later during the sync.
+                UISyncJobEntry p = listAllSyncJobs.SelectedItems[0] as UISyncJobEntry;
 
                 lblSyncJobName.Content = normalizeString(p.JobName, 20, 50);
                 lblSyncJobName.ToolTip = p.JobName;
@@ -191,9 +201,12 @@ namespace OneSync.UI
         {
             showErrorMsg(""); // clear error msg
 
-            UISyncJobEntry p = listAllSyncJobs.SelectedItem as UISyncJobEntry;
-            SyncJob jobToBeSynced = (new SQLiteSyncJobManager(STARTUP_PATH)).GetProfileByName(p.JobName);
-            Synchronize(jobToBeSynced);
+            IList<SyncJob> jobsToBeSynced = new List<SyncJob>();
+            foreach (UISyncJobEntry p in listAllSyncJobs.SelectedItems)
+            {
+                jobsToBeSynced.Add((new SQLiteSyncJobManager(STARTUP_PATH)).GetProfileByName(p.JobName));                
+            }
+            Synchronize(jobsToBeSynced);
         }
 
         private void txtBlkShowLog_MouseDown(object sender, MouseButtonEventArgs e)
@@ -326,25 +339,50 @@ namespace OneSync.UI
 
         #region Synchronization
 
-        private void Synchronize(SyncJob p)
+        private void Synchronize(IList<SyncJob> syncJobs)
         {
-            syncAgent = new FileSyncAgent(p);
+            foreach(SyncJob syncJob in syncJobs)
+            {
+                syncAgent = new FileSyncAgent(syncJob);
 
-            syncAgent.ProgressChanged += new SyncProgressChangedHandler(currAgent_ProgressChanged);
-            syncAgent.StageChanged += new SyncStageChangedHandler(currAgent_StatusChanged);
-            syncAgent.SyncCompleted += new SyncCompletedHandler(currAgent_SyncCompleted);
-            syncAgent.SyncFileChanged += new SyncFileChangedHandler(currAgent_FileChanged);
-            syncAgent.SyncStatusChanged += new SyncStatusChangedHandler(syncAgent_SyncStatusChanged);
+                syncAgent.ProgressChanged += new SyncProgressChangedHandler(currAgent_ProgressChanged);
+                syncAgent.StageChanged += new SyncStageChangedHandler(currAgent_StatusChanged);
+                syncAgent.SyncCompleted += new SyncCompletedHandler(currAgent_SyncCompleted);
+                syncAgent.SyncFileChanged += new SyncFileChangedHandler(currAgent_FileChanged);
+                syncAgent.SyncStatusChanged += new SyncStatusChangedHandler(syncAgent_SyncStatusChanged);
+
+                syncAgents.Add(syncAgent);
+                
+            }
 
             UpdateSyncUI(true, true);
 
-            syncWorker.RunWorkerAsync();
+            syncWorker.RunWorkerAsync(syncAgents);
         }
 
         void syncWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            SyncPreviewResult previewResult = syncAgent.GenerateSyncPreview();
-            syncAgent.Synchronize(previewResult);
+            IList<FileSyncAgent> agents = e.Argument as IList<FileSyncAgent>;
+            if (agents == null) return;
+
+            FileSyncAgent agent = agents[0];
+            SyncPreviewResult previewResult = agent.GenerateSyncPreview();
+            agent.Synchronize(previewResult);
+            /*
+            foreach (FileSyncAgent syncAgent in agents)
+            {
+                try
+                {
+                    SyncPreviewResult previewResult = syncAgent.GenerateSyncPreview();
+                    syncAgent.Synchronize(previewResult);
+                    
+                }
+                catch (Exception)
+                {
+                    showErrorMsg("Synchronization cannot be done. Please inform the administrator.");
+                }
+            }*/
+            e.Result = agents;
         }
 
         void syncWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -356,8 +394,50 @@ namespace OneSync.UI
                 // Notify user
             }
 
-            // Update UI and hide sync progress controls
-            UpdateSyncUI(false, true);
+            IList<FileSyncAgent> syncAgents = e.Result as IList<FileSyncAgent>;
+
+            
+            if (syncAgents.Count > 0 && syncAgents[0] != null)
+            {
+                syncAgent = syncAgents[0];
+
+                syncAgent.ProgressChanged -= new SyncProgressChangedHandler(currAgent_ProgressChanged);
+                syncAgent.StageChanged -= new SyncStageChangedHandler(currAgent_StatusChanged);
+                syncAgent.SyncCompleted -= new SyncCompletedHandler(currAgent_SyncCompleted);
+                syncAgent.SyncFileChanged -= new SyncFileChangedHandler(currAgent_FileChanged);
+                syncAgent.SyncStatusChanged -= new SyncStatusChangedHandler(syncAgent_SyncStatusChanged);
+
+                syncAgent = null;
+
+                // remove completed sync job
+                syncAgents.RemoveAt(0);
+            }
+
+            // Check if there are more sync jobs to be run
+            if (syncAgents.Count > 0)
+                syncWorker.RunWorkerAsync(syncAgents);
+            else
+                // Update UI and hide sync progress controls
+                UpdateSyncUI(false, true);
+        }
+
+        #endregion
+
+        #region Sync Preview
+
+        void previewWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            e.Result = syncAgent.GenerateSyncPreview();
+        }
+
+        void previewWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if(e.Error == null)
+            {
+                SyncPreviewResult syncResult = (SyncPreviewResult)e.Result;
+
+                
+            }
         }
 
         #endregion
@@ -415,6 +495,7 @@ namespace OneSync.UI
         /// </summary>
         void currAgent_SyncCompleted(object sender, Synchronization.SyncCompletedEventArgs e)
         {
+            
             if (this.Dispatcher.CheckAccess())
             {
                 UpdateSyncUI(false, true);
