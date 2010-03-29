@@ -1,0 +1,69 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:local="clr-namespace:OneSync.UI" 
+	mc:Ignorable="d"
+	x:Class="OneSync.UI.SyncActionsListView"
+	x:Name="UserControl"
+	d:DesignWidth="640" d:DesignHeight="480">
+
+	<UserControl.Resources>
+		<!-- Converters used for databinding -->
+		<local:InvertBoolConverter x:Key="invertBoolConverter" />
+		<local:ConflictVisibilityConverter x:Key="conflictVisibilityConverter" />
+		<local:ConflictResolutionToIntConverter x:Key="intConverter" />
+		<local:ChangeTypeConverter x:Key="changeTypeConverter" />
+		<local:ChangeTypeColorConverter x:Key="changeTypeColorConverter" />
+		
+		<!-- Style for listview -->
+		<Style TargetType="{x:Type ListViewItem}">
+	      <Style.Triggers>
+	        <Trigger Property="IsMouseOver" Value="true">
+	          <Setter Property="Cursor" Value="Hand"/>
+	        </Trigger>
+	      </Style.Triggers>
+	    </Style>
+		
+		<DataTemplate x:Key="PathCell">
+	      <StackPanel Orientation="Horizontal">
+			<Label Content="{Binding Path=RelativeFilePath}" Foreground="{Binding Path=ChangeType, Converter={StaticResource changeTypeColorConverter}}"/>
+	      </StackPanel>
+	    </DataTemplate>
+	
+		<DataTemplate x:Key="SelectCell">
+	      <StackPanel Orientation="Horizontal">
+			<CheckBox IsChecked="{Binding Path=Skip}" />
+	      </StackPanel>
+	    </DataTemplate>
+		
+		<DataTemplate x:Key="ActionCell">
+	      <StackPanel Orientation="Horizontal">
+	        <ComboBox Width="80" 
+							Visibility="{Binding Path=ConflictResolution, Converter={StaticResource conflictVisibilityConverter}}"
+							SelectedIndex="{Binding Path=ConflictResolution, Converter={StaticResource intConverter}}"
+							IsEnabled="{Binding Path=Skip, Converter={StaticResource invertBoolConverter}}">
+				<ComboBoxItem Content="Keep Both"/>
+				<ComboBoxItem Content="Overwrite"/>
+			</ComboBox>
+	      </StackPanel>
+	    </DataTemplate>
+		
+	</UserControl.Resources>
+
+	<Grid x:Name="LayoutRoot">
+	<!--IsSynchronizedWithCurrentItem="True"-->
+		<ListView SelectionMode="Single" x:Name="lvActions">
+			<ListView.View>
+				<GridView AllowsColumnReorder="False">
+					<GridViewColumn Header="Skip" CellTemplate="{StaticResource SelectCell}" Width="30"/>
+					<GridViewColumn Header="Action" DisplayMemberBinding="{Binding ChangeType, Converter={StaticResource changeTypeConverter}}" Width="60"/>
+					<GridViewColumn Header="File Path" CellTemplate="{StaticResource PathCell}" Width="500"/>
+					<GridViewColumn Header="Action" CellTemplate="{StaticResource ActionCell}" Width="100"/>
+				</GridView>
+			</ListView.View>
+		</ListView>
+	</Grid>
+	
+</UserControl>

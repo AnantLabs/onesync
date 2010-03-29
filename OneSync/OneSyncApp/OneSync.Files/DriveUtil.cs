@@ -1,6 +1,12 @@
 ﻿/*
  $Id$
  */
+/*
+ * Last edited by Thuat
+ * Last modified time: 27 March 2010
+ * Changes:
+ *  + Add in 2 stub methods: TotalCapacity and SpareCapacity of a drive
+ */
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,6 +83,10 @@ namespace OneSync.Files
             return new DriveInfo(driveLetter.ToString()).DriveType == DriveType.Removable;
         }
 
+
+        
+        
+
         /// <summary>
         /// Determines whether the filesystem of the drive is NTFS.
         /// </summary>
@@ -103,6 +113,27 @@ namespace OneSync.Files
         {
             return GetDetails(GetDeviceId(driveLetter), driveLetter);
         }
+
+        /// <summary>
+        /// Gets the total capacity of a drive with specific drive letter
+        /// </summary>
+        /// <param name="driveLetter"></param>
+        /// <returns>Total number of capacity</returns>
+        public static long TotalCapacityInBytes(char driveLetter)
+        {
+            return new DriveInfo (driveLetter.ToString()).TotalSize;
+        }
+
+        /// <summary>
+        /// Get the spare capacity of a drive with specified drive letter
+        /// </summary>
+        /// <param name="driveLetter"></param>
+        /// <returns></returns>
+        public static long SpareCapacityInBytes(char driveLetter)
+        {
+            return new DriveInfo (driveLetter.ToString ()).TotalFreeSpace;
+        }
+
 
 
         #region Private Methods
