@@ -20,10 +20,9 @@ namespace OneSync.Synchronization
 
     public enum ConflictResolution
     {
-        SKIP,
         OVERWRITE,
         DUPLICATE_RENAME,
-        DEFAULT
+        NONE
     }
 
     /// <summary>
@@ -32,7 +31,7 @@ namespace OneSync.Synchronization
     public abstract class SyncAction
     {
         //status of the action
-        protected ConflictResolution conflictResolution = ConflictResolution.DEFAULT;
+        protected ConflictResolution conflictResolution = ConflictResolution.NONE;
 
         protected int actionId = 0;
         protected string relFilePath = "";
@@ -57,6 +56,8 @@ namespace OneSync.Synchronization
             this.relFilePath = relFilePath;
             this.fileHash = fileHash;
         }
+
+        public bool Skip { get; set; }
 
 
         /// <summary>

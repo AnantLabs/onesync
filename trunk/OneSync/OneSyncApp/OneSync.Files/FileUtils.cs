@@ -1,6 +1,13 @@
 ﻿/*
  $Id$
  */
+/*
+ * Last edited by Thuat
+ * Last modified time: 27/03/2010
+ * Changes:
+ *  +Integrate with KtmIntegration which provides ntfs transaction.
+ *  +Files/folders permission check
+ */
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +16,9 @@ using System.Security.Cryptography;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Microsoft.KtmIntegration;
+using System.Security.AccessControl;
+using System.Security.Permissions;
 
 namespace OneSync.Files
 {
@@ -49,7 +59,7 @@ namespace OneSync.Files
         /// <param name="path"></param>
         /// <returns></returns>
         public static string GetFileHash(string path)
-        {
+        {          
             string hashString = "";
             MD5 md5Hasher = new MD5CryptoServiceProvider();
             using (Stream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
@@ -62,26 +72,87 @@ namespace OneSync.Files
 
         /// <summary>
         /// Delete a file given absolute path
+        /// </summary>
+        /// <param name="absolutePath"></param>
+        /// <returns></returns>
+        public static bool Delete(string absolutePath)
+        {
+            if (!File.Exists(absolutePath))
+                throw new FileNotFoundException("File " + absolutePath + " is not found");
+            if (IsOpen(absolutePath))
+                throw new FileInUseException("File " + absolutePath + " is in use by another process");
+            if (IsFileReadOnly(absolutePath))
+                throw new UnauthorizedAccessException("File " + absolutePath + " is readonly");
+            try
+            {
+                Microsoft.KtmIntegration.TransactedFile.Delete(absolutePath);
+                return true;
+            }
+            catch (Exception) { return false; }            
+        }
+
+        /// <summary>
+        /// Delete a file given absolute path
         /// If the folder contains this file is empty after the file is deleted, the folder is deleted as well.
         /// </summary>
         /// <param name="absolutePath"></param>
-        public static void DeleteFileAndFolderIfEmpty(string baseFolder, string absolutePath)
+        public static bool DeleteFileAndFolderIfEmpty(string baseFolder, string absolutePath)
         {
-            FileInfo info = new FileInfo(absolutePath);
-            info.Delete();
-
-            DeleteEmptyFolderRecursively(baseFolder, info.Directory);
-
+            FileInfo fileInfo = null;         
+            try
+            {
+                fileInfo = new FileInfo(absolutePath);
+                if (IsOpen(absolutePath)) throw new UnauthorizedAccessException("Can't delete file " + absolutePath );
+                Microsoft.KtmIntegration.TransactedFile.Delete(absolutePath);
+                try
+                {
+                    //delete empty folder recursively 
+                    DeleteEmptyFolderRecursively(baseFolder, fileInfo.Directory);
+                }
+                catch (Exception){}                
+                return true;
+            }
+            catch (Exception)
+            { return false; }            
         }
 
+        /// <summary>
+        /// Recursively delete empty folders
+        /// </summary>
+        /// <param name="baseFolder"></param>
+        /// <param name="dir"></param>
         private static void DeleteEmptyFolderRecursively(string baseFolder, DirectoryInfo dir)
         {
-            if (dir.GetFiles().Length == 0 && !dir.FullName.Equals(baseFolder) && dir.GetDirectories().Length == 0)
-            {
-                Console.WriteLine("Delete: " + dir.FullName);
+            if ( Microsoft.KtmIntegration.TransactedDirectory.GetFiles(dir.FullName, "*.*") .Length  == 0
+                && dir.GetDirectories().Length == 0
+                && !dir.FullName.Equals(baseFolder))
+            {          
                 dir.Delete();
                 DeleteEmptyFolderRecursively(baseFolder, dir.Parent);
             }
+        }
+
+        /// <summary>
+        /// Get list of files in a folder 
+        /// exclude hidden files
+        /// </summary>
+        /// <param name="absolutePath"></param>
+        /// <returns></returns>
+        public static FileInfo[] GetFilesExcludeHidden(string absolutePath)
+        {
+            return (new DirectoryInfo(absolutePath).GetFiles("*.*", SearchOption.AllDirectories)
+                .Where(f => (f.Attributes & FileAttributes.Hidden) !=  FileAttributes.Hidden)).ToArray<FileInfo>();           
+        }
+
+        /// <summary>
+        /// Get list of sub folders under a directory, hidden folders are excluded
+        /// </summary>
+        /// <param name="absolutePath"></param>
+        /// <returns></returns>
+        public static DirectoryInfo[] GetDirectoriesExcludeHidden(string absolutePath)
+        {
+            return (new DirectoryInfo(absolutePath).GetDirectories("*.*", SearchOption.AllDirectories)
+                .Where(f => (f.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)).ToArray<DirectoryInfo>();
         }
 
         private static string GetDoubleHash(string path)
@@ -106,19 +177,7 @@ namespace OneSync.Files
             byte[] hashBytes = md5Hasher.ComputeHash(stream);
             foreach (byte b in hashBytes) builder.Append(String.Format("{0:x2}", b));
         }
-        /// <summary>
-        /// Print information of any given fileinfo object
-        /// </summary>
-        /// <param name="fileInfo"></param>
-        public static void PrintFileInfo(FileInfo fileInfo)
-        {
-            Console.WriteLine("Creation time: " + fileInfo.CreationTime);
-            Console.WriteLine("Directory: " + fileInfo.Directory);
-            Console.WriteLine("Directory name: " + fileInfo.DirectoryName);
-            Console.WriteLine("Full name: " + fileInfo.FullName);
-            Console.WriteLine("Length: " + fileInfo.Length);
-        }
-
+        
         /// <summary>
         /// Get the relative path given the base directory and the full path to a file
         /// </summary>
@@ -131,29 +190,34 @@ namespace OneSync.Files
             else return "";
         }
 
-        public static void LockFile(string fileName)
-        {
-            FileStream stream = new FileStream(fileName, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
-            stream.Lock(0, stream.Length);
-
-        }
-
         /// <summary>
         /// copy one file to another location
         /// source and destination is the full path
         /// </summary>
         /// <param name="source"></param>
         /// <param name="destination"></param>
-        public static void Copy(string source, string destination)
+        /// <exception cref="System.ComponentModel.Win32Exception"></exception>
+        /// <exception cref="FileNotFoundException"></exception>
+        /// <exception cref="FileInUseException"></exception>
+        public static bool Copy(string source, string destination)
         {
+            if (!File.Exists(source)) throw new FileNotFoundException(source);
+            if (IsOpen(source)) throw new FileInUseException("File " + source + " is being opened");
+
             //extract the directory lead to destination
             string directory = destination.Substring(0, destination.LastIndexOf('\\'));
-            if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
-            //overwriten on exist
-            File.Copy(source, destination, true);
+            if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);            
+            //overwriten on exist            
+            return ( IsOpen (source) || !Microsoft.KtmIntegration.TransactedFile.Copy(source, destination, true)) ? false : true;
         }
 
-        public static void DuplicateRename(string source, string destination)
+        /// <summary>
+        /// Used in conflict resolution. Conflict file will be renamed and copied over
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="destination"></param>
+        /// <returns></returns>
+        public static bool DuplicateRename(string source, string destination)
         {
             int lastSlashIndex = destination.LastIndexOf('\\');
             int lastDotIndex = destination.LastIndexOf('.');
@@ -174,8 +238,8 @@ namespace OneSync.Files
 
             fileName += "[conflicted-copy-" + string.Format("{0:yyyy-MM-dd-hh-mm-ss}", DateTime.Now) + "]";
             destination = directory + "\\" + fileName + extension;
-            if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
-            File.Copy(source, destination, true);
+            if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);                       
+            return Copy(source, destination);
         }
 
         /// <summary>
@@ -203,6 +267,43 @@ namespace OneSync.Files
             return uid;
         }
 
+        /// <summary>
+        /// Check whether a file with absolute path is read only
+        /// </summary>
+        /// <param name="absolutePath"></param>
+        /// <returns></returns>
+        public static bool IsFileReadOnly(string absolutePath)
+        {
+            return ((File.GetAttributes(absolutePath) & FileAttributes.ReadOnly) == FileAttributes.ReadOnly) ? true : false;
+        }
+        
+        /// <summary>
+        /// Check whether a file with absolute path is hidden
+        /// </summary>
+        /// <param name="absolutePath"></param>
+        /// <returns></returns>
+        public static bool IsHidden(string absolutePath)
+        {            
+            return ((File.GetAttributes(absolutePath) & FileAttributes.Hidden) == FileAttributes.Hidden) ? true : false;
+        }
 
+        /// <summary>
+        /// Test whether a file with absolute path is open/in use
+        /// </summary>
+        /// <param name="absolutePath"></param>
+        /// <returns></returns>
+        public static bool IsOpen(string absolutePath)
+        {
+            FileStream fs  = null;
+            try
+            {
+                fs = new FileStream(absolutePath, FileMode.Open, FileAccess.ReadWrite);
+                return false;
+            }
+            catch (Exception)
+            {return true;}
+            finally
+            {if (fs != null) fs.Dispose();}            
+        }
     }
 }

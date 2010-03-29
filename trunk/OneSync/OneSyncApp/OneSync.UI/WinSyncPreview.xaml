@@ -1,0 +1,61 @@
+﻿<Window
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:UI="clr-namespace:OneSync.UI"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	x:Class="OneSync.UI.WinSyncPreview"
+	x:Name="Window"
+	Title="OneSync - Sync Preview"
+	Width="640" Height="480">
+
+	<Grid x:Name="LayoutRoot">
+		<Grid Margin="10">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="20"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition/>
+				<RowDefinition Height="30"/>
+			</Grid.RowDefinitions>
+			<TextBlock Foreground="Blue" FontSize="14" Text="Sync Preview" />
+			<Grid Grid.Row="1" d:LayoutOverrides="Height">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="40"/>
+					<ColumnDefinition Width="150"/>
+					<ColumnDefinition Width="150"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<TextBlock FontSize="12" Text="Filter" VerticalAlignment="Center" />
+				<ComboBox Margin="0,0,10,0" SelectedIndex="0" Grid.Column="1" x:Name="cmbFilter" Height="21.96">
+					<ComboBoxItem Content="Show All"/>
+					<ComboBoxItem Content="Conflict Files"/>
+					<ComboBoxItem Content="Copy Only"/>
+					<ComboBoxItem Content="Delete Only"/>
+					<!--<ComboBoxItem Content="Rename"/>-->
+				</ComboBox>
+				<TextBox Grid.Column="2" Foreground="#FF808080" x:Name="txtFilter" Height="21.96" />
+			</Grid>
+			<Button x:Name="btnSync" HorizontalAlignment="Right" Margin="0,0,79,0" VerticalAlignment="Bottom" Width="75" Content="Sync" Grid.Row="3" IsDefault="True" FontWeight="Bold" Click="btnSync_Click">
+				<Button.Background>
+					<LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+						<GradientStop Color="#FFF3F3F3" Offset="0"/>
+						<GradientStop Color="#FFEBEBEB" Offset="0.5"/>
+						<GradientStop Color="#FFDDDDDD" Offset="0.5"/>
+						<GradientStop Color="#FF90CD61" Offset="1"/>
+					</LinearGradientBrush>
+				</Button.Background>
+			</Button>
+			<Button x:Name="btnCancel" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="75" Content="Cancel" Grid.Row="3" IsCancel="True" FontWeight="Bold">
+				<Button.Background>
+					<LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+						<GradientStop Color="#FFF3F3F3" Offset="0"/>
+						<GradientStop Color="#FFEBEBEB" Offset="0.5"/>
+						<GradientStop Color="#FFDDDDDD" Offset="0.5"/>
+						<GradientStop Color="#FFCB8484" Offset="1"/>
+					</LinearGradientBrush>
+				</Button.Background>
+			</Button>
+			<UI:SyncActionsListView x:Name="lvPreview" Grid.Row="2" d:LayoutOverrides="GridBox" />
+		</Grid>
+	</Grid>
+</Window>
