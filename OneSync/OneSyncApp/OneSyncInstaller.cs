@@ -18,8 +18,11 @@ namespace OneSync
     [RunInstaller(true)]
     public partial class OneSyncInstaller : Installer
     {
-        private const string MenuName = "Folder\\shell\\OneSyncMenuOption-v0.9";
-        private const string Command = "Folder\\shell\\OneSyncMenuOption-v0.9\\command";
+        private const string MenuName = "Folder\\shell\\OneSyncMenuOption-v1.0";
+        private const string Command = "Folder\\shell\\OneSyncMenuOption-v1.0\\command";
+
+        private const string AppMenuName = "*\\shell\\OneSyncMenuOption-v1.0App";
+        private const string AppCommand = "*\\shell\\OneSyncMenuOption-v1.0App\\command";
 
         public OneSyncInstaller()
         {
@@ -40,10 +43,17 @@ namespace OneSync
             {
                 regmenu = Registry.ClassesRoot.CreateSubKey(MenuName);
                 if(regmenu != null)
-                    regmenu.SetValue("", "Sync this folder with OneSync V0.9");
+                    regmenu.SetValue("", "Sync with OneSync V1.0");
                 regcmd = Registry.ClassesRoot.CreateSubKey(Command);
                 if(regcmd != null)
                     regcmd.SetValue("", "\"" + Assembly.GetExecutingAssembly().Location + "\" \"%1\"");
+
+                regmenu = Registry.ClassesRoot.CreateSubKey(AppMenuName);
+                if (regmenu != null)
+                    regmenu.SetValue("", "Open OneSync V1.0");
+                regcmd = Registry.ClassesRoot.CreateSubKey(AppCommand);
+                if (regcmd != null)
+                    regcmd.SetValue("", "\"" + Assembly.GetExecutingAssembly().Location + "\"");
             }
             catch(Exception)
             {
@@ -73,11 +83,24 @@ namespace OneSync
                     reg.Close();
                     Registry.ClassesRoot.DeleteSubKey(Command);
                 }
+                reg = Registry.ClassesRoot.OpenSubKey(AppCommand);
+                if (reg != null)
+                {
+                    reg.Close();
+                    Registry.ClassesRoot.DeleteSubKey(AppCommand);
+                }
+
                 reg = Registry.ClassesRoot.OpenSubKey(MenuName);
                 if (reg != null)
                 {
                     reg.Close();
                     Registry.ClassesRoot.DeleteSubKey(MenuName);
+                }
+                reg = Registry.ClassesRoot.OpenSubKey(AppMenuName);
+                if (reg != null)
+                {
+                    reg.Close();
+                    Registry.ClassesRoot.DeleteSubKey(AppMenuName);
                 }
             }
             catch (Exception)
