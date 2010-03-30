@@ -91,6 +91,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DropboxStatusCheck.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="OneSync.Files.XCopy\Class1.cs" />
     <Compile Include="OneSync.Files.XCopy\ICopy.cs" />
