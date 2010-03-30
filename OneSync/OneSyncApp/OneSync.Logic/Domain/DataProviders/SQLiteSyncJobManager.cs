@@ -237,6 +237,9 @@ namespace OneSync.Synchronization
 
         public override bool Update(SyncJob profile)
         {
+            if (this.SyncJobExists(profile.Name))
+                throw new ProfileNameExistException("Profile " + profile.Name + " is already created");
+
             // Update a profile requires update 2 tables at the same time, 
             // If one update on a table fails, the total update action must fail too.
             string updateProfileText  = "UPDATE " + SYNCJOB_TABLE +
