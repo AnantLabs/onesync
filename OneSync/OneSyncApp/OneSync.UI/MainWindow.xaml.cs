@@ -224,22 +224,8 @@ namespace OneSync.UI
         {
             // Set Visibility of common controls
             txtBlkBackToHome.IsEnabled = !syncInProgress;
-            btnSyncStatic.IsEnabled = !syncInProgress;
             txtIntStorage.IsEnabled = !syncInProgress;
             btnBrowse.IsEnabled = !syncInProgress;
-
-            if (syncInProgress)
-            {
-                btnSyncRotating.Visibility = Visibility.Visible;
-                btnSyncStatic.Visibility = Visibility.Hidden;
-                //sb.Begin(this);
-            }
-            else
-            {
-                btnSyncRotating.Visibility = Visibility.Hidden;
-                btnSyncStatic.Visibility = Visibility.Visible;
-                //sb.Stop();
-            }
 
             if (showProgressControls)
             {

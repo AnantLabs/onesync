@@ -8,7 +8,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
     x:Class="OneSync.UI.MainWindow"
 	x:Name="Window"
 	DataContext="{Binding RelativeSource={RelativeSource Self}}"
-	Title="OneSync" Height="365" WindowStartupLocation="CenterScreen" Width="719" mc:Ignorable="d" Closing="Window_Closing">
+	Title="OneSync" Width="720" Height="365" MinWidth="720" MinHeight="365" WindowStartupLocation="CenterScreen" mc:Ignorable="d" Closing="Window_Closing">
 	<Window.Resources>
 		<Style x:Key="btnSyncStaticStyle" TargetType="{x:Type Image}">
       		<Setter Property="Source" Value="Resource/OneSync Transparent Logo (Inactive).png" />
@@ -19,31 +19,13 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 	  		</Style.Triggers>
  		</Style>
 		<Storyboard x:Key="sbNext">
-			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="lblFolderToSync" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)">
-				<LinearDoubleKeyFrame KeyTime="00:00:00.3000000" Value="+24"/>
-			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="lblFolderToSync" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
-				<LinearDoubleKeyFrame KeyTime="00:00:00.3000000" Value="-165"/>
-			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="label_storage_message" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)">
-				<LinearDoubleKeyFrame KeyTime="00:00:00.3000000" Value="+48"/>
-			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="label_storage_message" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
-				<LinearDoubleKeyFrame KeyTime="00:00:00.3000000" Value="-380"/>
-			</DoubleAnimationUsingKeyFrames>
-			
-			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Window" Storyboard.TargetProperty="Height">
-				<LinearDoubleKeyFrame KeyTime="00:00:00" Value="365"/>
-				<LinearDoubleKeyFrame KeyTime="00:00:00.3000000" Value="279"/>
-			</DoubleAnimationUsingKeyFrames>
-			
-			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="canvasHome" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
+			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="gridHome" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
 				<SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="-360"/>
 			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="canvasHome" Storyboard.TargetProperty="(UIElement.Opacity)">
+			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="gridHome" Storyboard.TargetProperty="(UIElement.Opacity)">
 				<LinearDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
 			</DoubleAnimationUsingKeyFrames>
-			<ObjectAnimationUsingKeyFrames BeginTime="00:00:00.3000000" Storyboard.TargetName="canvasHome" Storyboard.TargetProperty="(UIElement.Visibility)">
+			<ObjectAnimationUsingKeyFrames BeginTime="00:00:00.3000000" Storyboard.TargetName="gridHome" Storyboard.TargetProperty="(UIElement.Visibility)">
 				<DiscreteObjectKeyFrame KeyTime="00:00:00.3000000" Value="{x:Static Visibility.Hidden}"/>
 			</ObjectAnimationUsingKeyFrames>
 			<ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="canvasSync" Storyboard.TargetProperty="(UIElement.Visibility)">
@@ -59,37 +41,15 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			</DoubleAnimationUsingKeyFrames>
 		</Storyboard>
 		<Storyboard x:Key="sbHome">
-			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="lblFolderToSync" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)">
-				<LinearDoubleKeyFrame KeyTime="00:00:00" Value="+24"/>
-				<LinearDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
-			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="lblFolderToSync" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
-				<LinearDoubleKeyFrame KeyTime="00:00:00" Value="-165"/>
-				<LinearDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
-			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="label_storage_message" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)">
-				<LinearDoubleKeyFrame KeyTime="00:00:00" Value="+48"/>
-				<LinearDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
-			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="label_storage_message" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
+			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="gridHome" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
 				<LinearDoubleKeyFrame KeyTime="00:00:00" Value="-360"/>
 				<LinearDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
 			</DoubleAnimationUsingKeyFrames>
-			
-			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Window" Storyboard.TargetProperty="Height">
-				<LinearDoubleKeyFrame KeyTime="00:00:00" Value="279"/>
-				<LinearDoubleKeyFrame KeyTime="00:00:00.3000000" Value="365"/>
-			</DoubleAnimationUsingKeyFrames>
-			
-			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="canvasHome" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
-				<LinearDoubleKeyFrame KeyTime="00:00:00" Value="-360"/>
-				<LinearDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
-			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="canvasHome" Storyboard.TargetProperty="(UIElement.Opacity)">
+			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="gridHome" Storyboard.TargetProperty="(UIElement.Opacity)">
 				<LinearDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
 				<LinearDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1"/>
 			</DoubleAnimationUsingKeyFrames>
-			<ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="canvasHome" Storyboard.TargetProperty="(UIElement.Visibility)">
+			<ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="gridHome" Storyboard.TargetProperty="(UIElement.Visibility)">
 				<DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
 			</ObjectAnimationUsingKeyFrames>
 			<ObjectAnimationUsingKeyFrames BeginTime="00:00:00.3000000" Storyboard.TargetName="canvasSync" Storyboard.TargetProperty="(UIElement.Visibility)">
@@ -113,6 +73,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 	<Window.Triggers>
 		<EventTrigger RoutedEvent="FrameworkElement.Loaded">
 			<BeginStoryboard Storyboard="{StaticResource sbRotateSync}"/>
+			<BeginStoryboard Storyboard="{StaticResource sbRotateSync}"/>
 		</EventTrigger>
 	</Window.Triggers>
 	<Window.Background>
@@ -123,46 +84,50 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 		</LinearGradientBrush>
 	</Window.Background>
 
-	<Canvas x:Name="LayoutRoot">
-		<Grid Margin="10">
+	<Grid x:Name="LayoutRoot">
+		<Grid x:Name="gridHome" Margin="10,10,10,0" ShowGridLines="true" d:IsHidden="True">
+			<Grid.RenderTransform>
+				<TranslateTransform X="0" Y="0"/>
+			</Grid.RenderTransform>
 			<Grid.RowDefinitions>
-				<RowDefinition Height="20"/>
-				<RowDefinition Height="100"/>
+				<RowDefinition Height="30"/>
+				<RowDefinition Height="65"/>
 				<RowDefinition/>
 				<RowDefinition Height="35"/>
 			</Grid.RowDefinitions>
+			
+			<!--Row 0 -->
 			<Label Grid.Row="0" Grid.Column="0" x:Name="label_notification" Content="" FontSize="10.667" Foreground="#FFB90000" FontStyle="Italic" FontWeight="Bold" Visibility="Hidden"/>
-			<Grid Grid.Row="1">
+			
+			<!--Row 1 -->
+			<Grid Grid.Row="1" ShowGridLines="true">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="1*"/>
 					<ColumnDefinition Width="1*"/>
 					<ColumnDefinition Width="1*"/>
 					<ColumnDefinition Width="100"/>
 				</Grid.ColumnDefinitions>
-				<Label Grid.Column="0" x:Name="lblSyncJob" Content="Sync Job Name:" FontSize="10.667" Foreground="#FF0000B9"/>
-				<Label Grid.Column="1" x:Name="lblFolderToSync" Content="Folder to Sync:" FontSize="10.667" Foreground="#FF0000B9" RenderTransformOrigin="0.5,0.5">
-					<Label.RenderTransform>
-						<TranslateTransform X="0" Y="0"/>
-					</Label.RenderTransform>
-				</Label>
-				<Label Grid.Column="2" x:Name="label_storage_message" Width="165" Content="Intermediary Storage Location:" FontSize="10.667" Canvas.Left="397" Canvas.Top="45" Foreground="#FF0000B9">
-					<Label.RenderTransform>
-						<TranslateTransform X="0" Y="0"/>
-					</Label.RenderTransform>
-				</Label>
+				
+				<!--Column 0 -->
+				<Label Grid.Column="0" x:Name="lblSyncJob" Content="Sync Job Name:" FontSize="10.667" Foreground="#FF0000B9" Margin="0,0,0,0" />
+				<TextBox Grid.Column="0" x:Name="txtSyncJobName" Height="22.187" MaxLines="1" Margin="5,0,10,0" />
+				
+				<!--Column 1 -->
+				<Label Grid.Column="1" x:Name="lblFolderToSync" Content="Folder to Sync:" FontSize="10.667" Foreground="#FF0000B9" />
+				<TextBox Grid.Column="1" x:Name="txtSource" Height="22.187" MaxLines="1" Margin="5,0,40,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+				<Button Grid.Column="1" x:Name="btnBrowse_Source" Width="22.187" Height="22.187" Content="..." ToolTip="Click to browse folders" Click="btnBrowse_Click" Margin="0,0,8,0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+				
+				<!--Column 2 -->
+				<Label Grid.Column="2" x:Name="label_storage_message" Content="Intermediary Storage Location:" FontSize="10.667" Foreground="#FF0000B9" />
+				<TextBox Grid.Column="2" x:Name="txtIntStorage" Height="22.187" MaxLines="1" Margin="5,0,40,0" VerticalAlignment="Center" HorizontalAlignment="Stretch"  />
+				<Button Grid.Column="2" x:Name="btnBrowse" Width="22.187" Height="22.187" Content="..." ToolTip="Click to browse folders" Click="btnBrowse_Click" Margin="0,0,8,0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+				
+				<!--Column 3 -->
+				<TextBlock Grid.Column="3" x:Name="txtBlkNewJob" Text="Add New Job" TextDecorations="Underline" FontSize="13.333" Cursor="Hand" Foreground="#FF0000B9" FontWeight="Bold" MouseDown="txtBlkNewJob_MouseDown" VerticalAlignment="Center" HorizontalAlignment="Right"/>				
 			</Grid>
-		</Grid>
-		<Canvas x:Name="canvasHome" Canvas.Left="0" Canvas.Top="0" Canvas.Right="0" Canvas.Bottom="0" RenderTransformOrigin="0.5,0.5">
-			<Canvas.RenderTransform>
-				<TranslateTransform X="0" Y="0"/>
-			</Canvas.RenderTransform>
-			<TextBlock x:Name="txtBlkProceed" Text="Sync Selected Jobs" TextWrapping="Wrap" TextDecorations="Underline" FontWeight="Bold" FontSize="14" Cursor="Hand" Foreground="#FF0000B9" Canvas.Left="21" Canvas.Top="308" MouseDown="txtBlkProceed_MouseDown"/>
-			<TextBox x:Name="txtSource" Width="146" Height="22.187" Canvas.Left="187" Canvas.Top="69.002" MaxLines="1"/>
-			<TextBox x:Name="txtIntStorage" Width="143" Height="23" Canvas.Left="401" Canvas.Top="67.777" MaxLines="1"/>
-			<Button x:Name="btnBrowse_Source" Width="27" Height="25" Content="..." Canvas.Left="337" Canvas.Top="67.777" ToolTip="Click to browse folders" Click="btnBrowse_Click"/>
-			<Button x:Name="btnBrowse" Width="27" Height="25" Content="..." Canvas.Left="548" Canvas.Top="68" ToolTip="Click to browse folders" Click="btnBrowse_Click" RenderTransformOrigin="0.815,0.52"/>
 			
-            <ListView x:Name="listAllSyncJobs" Width="669" Height="207" Canvas.Left="21" Canvas.Top="97"> 
+			<!--Row 2 -->
+			<ListView Grid.Row="2" x:Name="listAllSyncJobs"> 
                 <ListView.View>
 					<GridView>
                         <GridViewColumn Width="28" Header="">		
@@ -210,10 +175,26 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 					</GridView>
 				</ListView.View>
 			</ListView>
-			<TextBox x:Name="txtSyncJobName" Width="136.077" Height="23.225" Canvas.Left="21" Canvas.Top="67.777" MaxLines="1"/>
-			<TextBlock x:Name="txtBlkNewJob" Text="Add New Job" TextWrapping="Wrap" TextDecorations="Underline" FontSize="13.333" Cursor="Hand" Foreground="#FF0000B9" Canvas.Left="606.03" Canvas.Top="71.083" FontWeight="Bold" MouseDown="txtBlkNewJob_MouseDown"/>
-		</Canvas>
-		<Canvas x:Name="canvasSync" Canvas.Left="0" Canvas.Top="0" Canvas.Right="0" Canvas.Bottom="0" RenderTransformOrigin="0.5,0.5" Visibility="Hidden">
+			
+			<!--Row 3 -->
+			<TextBlock Grid.Row="3" x:Name="txtBlkProceed" Text="Sync Selected Jobs" TextDecorations="Underline" FontWeight="Bold" FontSize="13.333" Cursor="Hand" Foreground="#FF0000B9" MouseDown="txtBlkProceed_MouseDown" Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Right" />
+		</Grid>
+		
+		<Grid x:Name="gridSync" Margin="10,10,10,0" ShowGridLines="true">
+			<Grid.RenderTransform>
+				<TranslateTransform X="0" Y="0"/>
+			</Grid.RenderTransform>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="30"/>
+				<RowDefinition Height="100"/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			
+			<!--Row 1 -->
+			<TextBlock x:Name="txtBlkBackToHome" Text="&lt;&lt; Back to Home" TextWrapping="Wrap" FontWeight="Bold" FontSize="13.333" Cursor="Hand" Foreground="#FF3000FF" MouseDown="txtBlkBackToHome_MouseDown" Canvas.Left="611" Canvas.Top="10" d:LayoutOverrides="VerticalAlignment" />
+		</Grid>
+		
+		<Canvas x:Name="canvasSync" Canvas.Left="0" Canvas.Top="0" Canvas.Right="0" Canvas.Bottom="0" RenderTransformOrigin="0.5,0.5" Visibility="Visible">
 			<Canvas.RenderTransform>
 				<TranslateTransform X="0" Y="0"/>
 			</Canvas.RenderTransform>
@@ -226,7 +207,6 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			<ProgressBar x:Name="pbSync" Value="20" Width="579.988" Height="18" Canvas.Left="12" Canvas.Top="136"/>
 			<Image x:Name="btnSyncStatic" Style="{StaticResource btnSyncStaticStyle}" Stretch="Fill" Cursor="Hand" MouseDown="btnSyncStatic_MouseDown" ToolTip="Sync this folder now!" VerticalAlignment="Bottom" Width="104" Canvas.Left="595.988" Canvas.Top="40" Height="104"  />
 			<Label x:Name="lblStatus" Width="692.988" Content="label_current_processing_file" FontSize="10.667" Canvas.Left="7" Canvas.Top="158"/>
-			<TextBlock x:Name="txtBlkBackToHome" Text="&lt;&lt; Back to Home" TextWrapping="Wrap" FontWeight="Bold" FontSize="10.667" Cursor="Hand" Foreground="#FF3000FF" MouseDown="txtBlkBackToHome_MouseDown" Canvas.Left="611" Canvas.Top="10" d:LayoutOverrides="VerticalAlignment, Height"/>
 			<Label x:Name="lblSyncJobName" Width="392" Height="24" Content="Label" FontWeight="Bold" Foreground="#FF0000B9" Canvas.Left="186" Canvas.Top="45"/>
 			<Label x:Name="lblSyncJobSource" Width="392" Height="24" Content="Label" FontWeight="Bold" Foreground="#FF0000B9" Canvas.Left="186" Canvas.Top="69"/>
 			<Label x:Name="lblSyncJobStorage" Width="392" Height="24" Content="Label" FontWeight="Bold" Foreground="#FF0000B9" Canvas.Left="186" Canvas.Top="93"/>
@@ -234,5 +214,5 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			<Label x:Name="lblJobsNumber" Width="55.988" Content="4" FontSize="10.667" Canvas.Left="186.979" Canvas.Top="30" Foreground="#FF0000B9" FontWeight="Bold"/>
 		</Canvas>
 		
-	</Canvas>
+	</Grid>
 </Window>
