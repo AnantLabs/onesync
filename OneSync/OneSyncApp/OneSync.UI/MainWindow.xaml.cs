@@ -66,35 +66,58 @@ namespace OneSync.UI
 
             // Set-up data bindings
             listAllSyncJobs.ItemsSource = this.SyncJobEntries;
-			
-			//Do the sync button rotating here.
-			Storyboard sb = (Storyboard)Window.Resources["sbRotateSync"];
-			sb.Begin(this);
-        }
+
+            reloadSyncJobs();
+        }             
 
         private void txtBlkProceed_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            int selectedCount = 0;
+            foreach (UISyncJobEntry entry in SyncJobEntries)
+            {
+                if (entry.IsSelected)  selectedCount = selectedCount + 1; 
+            }
+            if (selectedCount == 0)
+            {
+                showErrorMsg("Please select at least one sync job");
+                return;
+            }
+            
+
             showErrorMsg("");
             try
             {
                 //Show the info of the first Sync Job first.
                 //The rest will be updated later during the sync.
-                UISyncJobEntry p = listAllSyncJobs.SelectedItems[0] as UISyncJobEntry;
 
-                UpdateSyncInfoUI(p);
-                reloadSyncJobs();
+                for (int x = 0; x < listAllSyncJobs.Items.Count; x++)
+                {
+                    ListViewItem lvItem = listAllSyncJobs.ItemContainerGenerator.ContainerFromIndex(x) as ListViewItem;
+                    ContentPresenter lvItemPresenter = UIHelper.FindVisualChild<ContentPresenter>(lvItem);
+                    DataTemplate template = lvItemPresenter.ContentTemplate;
+                    CheckBox checkBox = (CheckBox)template.FindName("selectSyncCheckBox", lvItemPresenter);
+                    if (checkBox.IsChecked.Value)
+                    {
+                        UISyncJobEntry jobEntry = (UISyncJobEntry) checkBox.DataContext;
+                    }
+                }             
+                //reloadSyncJobs();
 
-                Window.Title = p.JobName + " - OneSync";
-                lblJobsNumber.Content = listAllSyncJobs.SelectedItems.Count.ToString() + "/" + listAllSyncJobs.SelectedItems.Count.ToString();
+                //Window.Title = p.JobName + " - OneSync";
                 UpdateSyncUI(false, false);
-                ((Storyboard)Resources["sbNext"]).Begin(this);
+                ((Storyboard)Resources["sbNext"]).Begin(this,true );
             }
             catch (Exception)
             {
                 showErrorMsg("Please select an existing sync job.");
             }
         }
-		
+
+        private void MainWindow_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+           
+        }
+
 		private void btnBrowse_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             TextBox tb = ((Button)sender).Tag as TextBox;
@@ -154,13 +177,13 @@ namespace OneSync.UI
             }
         }
 
-        private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void textBoxEdit_MouseDown(object sender, MouseButtonEventArgs e)
         {
             try
             {
-                UISyncJobEntry p = listAllSyncJobs.SelectedItem as UISyncJobEntry;
-                SyncJob editingJob = jobManager.Load(p.JobName);
-                SyncJobManagementWindow syncJobManagementWindow = new SyncJobManagementWindow(editingJob, jobManager);
+                TextBlock clickedBlock = (TextBlock)e.Source;
+                UISyncJobEntry entry  = (UISyncJobEntry) clickedBlock.DataContext;                             
+                SyncJobManagementWindow syncJobManagementWindow = new SyncJobManagementWindow(entry.SyncJob, jobManager);
                 syncJobManagementWindow.Owner = this;
                 syncJobManagementWindow.ShowDialog();
                 reloadSyncJobs();
@@ -178,12 +201,9 @@ namespace OneSync.UI
 
         private void btnSyncStatic_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            showErrorMsg(""); // clear error msg
-
+            showErrorMsg(""); // clear error msg            
             IList<SyncJob> selectedJobs = new List<SyncJob>();
-            foreach (UISyncJobEntry j in listAllSyncJobs.SelectedItems)
-                selectedJobs.Add(j.SyncJob);
-
+            foreach (UISyncJobEntry entry in SyncJobEntries) if ( entry.IsSelected) selectedJobs.Add(entry.SyncJob);
             Synchronize(selectedJobs);
         }
 
@@ -201,7 +221,7 @@ namespace OneSync.UI
 
             //Import all the previous created existing sync job profiles.
             //Note that only the profile having the directory which is the current directory will be loaded.
-            reloadSyncJobs();
+            //reloadSyncJobs();
 
             // Show log will be shown again after sync is complete.
             txtBlkShowLog.Visibility = Visibility.Hidden;
@@ -222,10 +242,26 @@ namespace OneSync.UI
         // 2. syncInProgress = false, syncCompletedBefore = true
         private void UpdateSyncUI(bool syncInProgress, bool showProgressControls)
         {
+            Storyboard sb = (Storyboard)Window.Resources["sbRotateSync"];
+
             // Set Visibility of common controls
             txtBlkBackToHome.IsEnabled = !syncInProgress;
+            btnSyncStatic.IsEnabled = !syncInProgress;
             txtIntStorage.IsEnabled = !syncInProgress;
             btnBrowse.IsEnabled = !syncInProgress;
+
+            if (syncInProgress)
+            {
+                btnSyncRotating.Visibility = Visibility.Visible;
+                btnSyncStatic.Visibility = Visibility.Hidden;
+                sb.Begin(this);
+            }
+            else
+            {
+                btnSyncRotating.Visibility = Visibility.Hidden;
+                btnSyncStatic.Visibility = Visibility.Visible;
+                sb.Stop();
+            }
 
             if (showProgressControls)
             {
@@ -269,6 +305,7 @@ namespace OneSync.UI
         {
             if (syncJobs.Count < 0) return;
 
+            
             // Create a list of SyncJobs
             List<FileSyncAgent> agents = new List<FileSyncAgent>(syncJobs.Count);
             foreach (SyncJob job in syncJobs)
@@ -286,15 +323,13 @@ namespace OneSync.UI
             // Get first sync agent to run
             FileSyncAgent agent = agents[0];
 
-            AddAgentEventHandler(agent);
+            AddAgentEventHandler(agent);          
             
-            // Note: SyncActions could have been generated during preview
-            if (agent.SyncJob.SyncActions == null)
-                agent.SyncJob.SyncActions = agent.GenerateSyncPreview().GetAllActions();
-
             // TODO: [THUAT] uncomment for sync to work
-            //agent.Synchronize(agent.SyncJob.SyncActions);
 
+            if (agent.SyncJob.SyncPreviewResult == null)
+                agent.SyncJob.SyncPreviewResult = agent.GenerateSyncPreview();
+            agent.Synchronize(agent.SyncJob.SyncPreviewResult);
             e.Result = agents;
         }
 
@@ -311,12 +346,13 @@ namespace OneSync.UI
             IList<FileSyncAgent> agents = e.Result as IList<FileSyncAgent>;
             if (agents == null) return;
 
+
             if (agents.Count > 0 && agents[0] != null)
             {
                 FileSyncAgent agent = agents[0];
+                agent.SyncJob.SyncPreviewResult = null;
                 RemoveAgentEventHandler(agent);
                 agents.RemoveAt(0);
-                lblJobsNumber.Content = agents.Count.ToString() + "/" + listAllSyncJobs.SelectedItems.Count.ToString();
             }
 
             // Check for more sync agents to run
@@ -347,39 +383,19 @@ namespace OneSync.UI
 
         #region Sync Preview
 
-        private void PreviewSyncJob(object sender, MouseButtonEventArgs e)
-        {
-            UISyncJobEntry jobEntry = listAllSyncJobs.SelectedItem as UISyncJobEntry;
-            if (jobEntry == null) return;
-
-            SyncJob job = jobEntry.SyncJob;
-            if (job == null) return;
-
-            if (job.SyncActions != null) /* Job has been previewed before */
-            {
-                MessageBoxResult result = MessageBox.Show(
-                    "This Sync Job has been previewed before. Do you want to re-generate the actions for preview?",
-                    "Preview", MessageBoxButton.YesNo);
-
-                if (result == MessageBoxResult.Yes)
-                    previewWorker.RunWorkerAsync(jobEntry.SyncJob);
-                else
-                    new WinSyncPreview(job.SyncActions).ShowDialog();
-            }
-            else
-                previewWorker.RunWorkerAsync(jobEntry.SyncJob);
-        }
-
+       
         void previewWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            SyncJob job = e.Result as SyncJob;
+        {            
+            SyncJob job = e.Argument as SyncJob;
             if (job == null) return;
+                        
+            if (job.SyncPreviewResult == null)
+            {
+                FileSyncAgent agent = new FileSyncAgent(job);                
+                job.SyncPreviewResult = agent.GenerateSyncPreview();
+            }            
 
-            FileSyncAgent agent = new FileSyncAgent(job);
-            SyncPreviewResult result = agent.GenerateSyncPreview();
-
-            // Save sync actions so it will not be generated again for this job
-            job.SyncActions = result.GetAllActions();
+            // Save sync actions so it will not be generated again for this job            
             e.Result = job;
         }
 
@@ -394,8 +410,9 @@ namespace OneSync.UI
             SyncJob job = e.Result as SyncJob;
             if (job == null) return;
 
-            WinSyncPreview winPreview = new WinSyncPreview(job.SyncActions);
+            WinSyncPreview winPreview = new WinSyncPreview(job.SyncPreviewResult);
             winPreview.ShowDialog();
+
         }
 
         #endregion
@@ -474,24 +491,25 @@ namespace OneSync.UI
 
         private void reloadSyncJobs()
         {
-            string syncSourceDir = txtSource.Text.Trim();
-
-            this.SyncJobEntries.Clear();
+            string syncSourceDir = txtSource.Text.Trim();                 
+            ObservableCollection<UISyncJobEntry> tempEntries = new ObservableCollection<UISyncJobEntry> ();            
             try
             {
-                IList<SyncJob> jobs = jobManager.LoadAllJobs();
-
+                IList<SyncJob> jobs = jobManager.LoadAllJobs();            
                 foreach (SyncJob job in jobs)
                 {
-                    if (job.SyncSource.Path.Equals(syncSourceDir))
-                        this.SyncJobEntries.Add(new UISyncJobEntry(job));
-                    else if (syncSourceDir.Length == 0)
-                        this.SyncJobEntries.Add(new UISyncJobEntry(job)); /* Add all jobs */
+                    UISyncJobEntry entry = new UISyncJobEntry(job);
+                    if (SyncJobEntries.Contains(entry))
+                    {
+                        entry.IsSelected = SyncJobEntries[SyncJobEntries.IndexOf(entry)].IsSelected;                        
+                    }
+                    tempEntries.Add(entry);
                 }
-
-                // Select job if there is only 1 job available
-                if (jobs.Count == 1)
-                    listAllSyncJobs.SelectedIndex = 0;
+                SyncJobEntries.Clear();
+                foreach (UISyncJobEntry entry in tempEntries)
+                {
+                    SyncJobEntries.Add(entry);
+                }
             }
             catch (Exception)
             {
@@ -500,7 +518,8 @@ namespace OneSync.UI
         }
 
         public ObservableCollection<UISyncJobEntry> SyncJobEntries
-        {
+
+        {            
             get { return _SyncJobEntries; }
         }
 
@@ -522,6 +541,58 @@ namespace OneSync.UI
                 return str.Substring(0, prefixLength) + "..." + str.Substring(str.Length - suffixLength);
             else
                 return str;
+        }
+
+        private void checkBoxSelectAll_Checked(object sender, RoutedEventArgs e)
+        {
+            for (int x = 0; x < listAllSyncJobs.Items.Count; x++)
+            {
+                ListViewItem lvItem = listAllSyncJobs.ItemContainerGenerator.ContainerFromIndex(x) as ListViewItem;
+                ContentPresenter lvItemPresenter = UIHelper.FindVisualChild <ContentPresenter>(lvItem);
+                DataTemplate template = lvItemPresenter.ContentTemplate;
+                CheckBox checkBox = (CheckBox)template.FindName("selectSyncCheckBox", lvItemPresenter);
+                checkBox.IsChecked = true;
+            }
+        }
+
+        
+
+        private void checkBoxSelectAll_Unchecked(object sender, RoutedEventArgs e)
+        {
+            for (int x = 0; x < listAllSyncJobs.Items.Count; x++)
+            {
+                ListViewItem lvItem = listAllSyncJobs.ItemContainerGenerator.ContainerFromIndex(x) as ListViewItem;
+                ContentPresenter lvItemPresenter = UIHelper.FindVisualChild<ContentPresenter>(lvItem);
+                DataTemplate template = lvItemPresenter.ContentTemplate;
+                CheckBox checkBox = (CheckBox)template.FindName("selectSyncCheckBox", lvItemPresenter);
+                checkBox.IsChecked = false;
+            }
+        }
+
+        private void textBoxPreview_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            TextBlock clickedBlock = (TextBlock)e.Source;
+            UISyncJobEntry entry = clickedBlock.DataContext as UISyncJobEntry;
+            if (entry == null || entry.SyncJob == null)
+            {
+                showErrorMsg("Couldn't find selected sync job(s)");
+                return;
+            }
+            previewWorker.RunWorkerAsync(entry.SyncJob);   
+        }
+
+        private void selectSyncCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckBox checkBox = e.Source as CheckBox;
+            UISyncJobEntry entry = checkBox.DataContext as UISyncJobEntry;
+            entry.IsSelected = true;
+        }
+
+        private void selectSyncCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            CheckBox checkBox = e.Source as CheckBox;
+            UISyncJobEntry entry = checkBox.DataContext as UISyncJobEntry;
+            entry.IsSelected = false ;
         }    
 
 	}

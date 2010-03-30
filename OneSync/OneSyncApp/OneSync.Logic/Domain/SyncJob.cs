@@ -67,11 +67,17 @@ namespace OneSync.Synchronization
         /// <summary>
         /// SyncActions already generated for this SyncJob
         /// </summary>
-        public IEnumerable<SyncAction> SyncActions { get; set; }
+        public SyncPreviewResult SyncPreviewResult { get; set; }
 
         public override string ToString()
         {
             return this.Name;
+        }
+
+        public IEnumerable<SyncAction> SyncActions
+        {
+            set;
+            get;
         }
     }
 }

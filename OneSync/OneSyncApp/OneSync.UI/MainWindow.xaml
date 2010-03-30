@@ -8,7 +8,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
     x:Class="OneSync.UI.MainWindow"
 	x:Name="Window"
 	DataContext="{Binding RelativeSource={RelativeSource Self}}"
-	Title="OneSync" Width="720" Height="365" MinWidth="720" MinHeight="279" WindowStartupLocation="CenterScreen" mc:Ignorable="d" Closing="Window_Closing">
+	Title="OneSync" Width="800" Height="365" MinWidth="720" MinHeight="279" WindowStartupLocation="CenterScreen" mc:Ignorable="d" Closing="Window_Closing">
 	<Window.Resources>
 		<Style x:Key="blueLabel" TargetType="{x:Type Label}">
 			<Setter Property="FontSize" Value="10.667" />
@@ -140,14 +140,19 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			<ListView Grid.Row="2" x:Name="listAllSyncJobs"> 
                 <ListView.View>
 					<GridView>
-                        <GridViewColumn Width="28" Header="">		
-						    <GridViewColumn.CellTemplate>
-								<DataTemplate x:Name="checkBoxTemplate">
-									<CheckBox IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
-								</DataTemplate>
-							</GridViewColumn.CellTemplate>
+                        <GridViewColumn Width="30" >
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate x:Name="CheckBoxSelectAll">
+                                    <CheckBox Name="checkBoxSelectAll" Checked="checkBoxSelectAll_Checked" Unchecked="checkBoxSelectAll_Unchecked"/>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Name="selectSyncCheckBox" IsChecked="{Binding IsSelected}" Checked="selectSyncCheckBox_Checked" Unchecked="selectSyncCheckBox_Unchecked"></CheckBox>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-						<GridViewColumn Width="108" Header="Job Name">		
+                        <GridViewColumn Width="108" Header="Job Name">		
 						    <GridViewColumn.CellTemplate>
 								<DataTemplate x:Name="jobNameTemplate">
 									<TextBlock TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Text="{Binding JobName}" ToolTip="{Binding JobName}"/>
@@ -171,14 +176,14 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
                         <GridViewColumn Width="70" Header="">
 							<GridViewColumn.CellTemplate>
 								<DataTemplate x:Name="operationEditTemplate">
-									<TextBlock TextDecorations="Underline" FontWeight="Bold" Cursor="Hand" Text="Edit" ToolTip="Edit selected job" MouseDown="TextBlock_MouseDown"/>
+									<TextBlock TextDecorations="Underline" FontWeight="Bold" Cursor="Hand" Text="Edit" ToolTip="Edit selected job" MouseDown="textBoxEdit_MouseDown"/>
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>
                         <GridViewColumn Width="70" Header="">
 							<GridViewColumn.CellTemplate>
 								<DataTemplate x:Name="operationPreviewTemplate">
-									<TextBlock TextDecorations="Underline" FontWeight="Bold" Cursor="Hand" Text="Preview" ToolTip="Preview selected job" MouseDown="PreviewSyncJob" />
+									<TextBlock TextDecorations="Underline" FontWeight="Bold" Cursor="Hand" Text="Preview" ToolTip="Preview selected job" MouseDown="textBoxPreview_MouseDown" />
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>

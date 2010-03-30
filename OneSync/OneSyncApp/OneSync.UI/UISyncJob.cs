@@ -9,11 +9,12 @@ namespace OneSync.UI
 {
 
     // UI Wrapper class for SyncJob
-    public class UISyncJobEntry
+    public class UISyncJobEntry: IEquatable<UISyncJobEntry>
     {
         public UISyncJobEntry(SyncJob job)
         {
             this.SyncJob = job;
+            this.IsSelected = true;
         }
 
         public SyncJob SyncJob { get; set; }
@@ -30,5 +31,21 @@ namespace OneSync.UI
             get { return this.SyncJob.IntermediaryStorage.Path; } 
         }
 
+        public string JobId
+        {
+            get { return this.SyncJob.ID; }
+        }
+
+        public bool IsSelected { get; set; }
+
+
+        #region IEquatable<UISyncJobEntry> Members
+
+        public bool Equals(UISyncJobEntry other)
+        {
+            return (this.JobId == other.JobId) || (this.JobName.Equals(other.JobName));
+        }
+
+        #endregion
     }
 }

@@ -9,7 +9,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Windows.Forms;
 using OneSync.Synchronization;
 
 namespace OneSync.UI
@@ -25,8 +24,6 @@ namespace OneSync.UI
 		public SyncJobManagementWindow()
 		{
 			this.InitializeComponent();
-			
-			// Insert code required on object creation below this point.
 		}
 
         public SyncJobManagementWindow(SyncJob selectedSyncJob, SyncJobManager inputProfileManager)
@@ -41,7 +38,7 @@ namespace OneSync.UI
 
 		private void btnBrowse_Source_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
 
             if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
@@ -52,7 +49,7 @@ namespace OneSync.UI
 
 		private void btnBrowse_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
 
             if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
@@ -98,17 +95,17 @@ namespace OneSync.UI
 
 		private void txtBlkDeleteJob_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
-            DialogResult result = System.Windows.Forms.MessageBox.Show(
+            MessageBoxResult result = MessageBox.Show(
                             "Are you sure you want to delete " + editingSyncJob.Name + "?", "Job Profile Deletion",
-                            MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Question);
-
-            if (result == System.Windows.Forms.DialogResult.Yes)
+                            MessageBoxButton.YesNo, MessageBoxImage.Question);
+            
+            if (result == MessageBoxResult.Yes)
             {
                 if (!profileManager.Delete(editingSyncJob))
                     showErrorMsg("Unable to delete sync job at this moment.");
+                else
+                    this.Close();
             }
-            this.Close();
 		}
 
         private void showErrorMsg(string message)
