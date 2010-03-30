@@ -64,7 +64,7 @@ namespace OneSync.UI
                     return "Dropbox storage synchronizing";
                 else if (status == OneSync.DropboxStatus.UP_TO_DATE)
                     return "Dropbox storage synced";
-                return "N/A";
+                return "";
             }
         }
 
