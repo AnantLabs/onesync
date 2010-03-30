@@ -198,7 +198,14 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>
-					</GridView>
+                        <GridViewColumn Width="200" Header="Dropbox Status">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate x:Name="dropboxStatusTemplate">
+                                    <TextBlock Text="{Binding DropboxStatus}" />
+								</DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
 				</ListView.View>
 			</ListView>
 			
