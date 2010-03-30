@@ -13,23 +13,23 @@ namespace OneSync.Synchronization
     public class SyncExecutor
     {
         #region Carryout actions
-        public static void CopyToDirtyFolderAndUpdateActionTable(SyncAction action, SyncJob profile)
+        public static void CopyToDirtyFolderAndUpdateActionTable(SyncAction action, SyncJob job)
         {
             // TODO: make it atomic??
-            string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
-            string absolutePathInImediateStorage = profile.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
+            string absolutePathInSyncSource = job.SyncSource.Path + action.RelativeFilePath;
+            string absolutePathInImediateStorage = job.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
 
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(profile.IntermediaryStorage.Path, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME));
             SqliteConnection con = db.NewSQLiteConnection();
             SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
             try
             {
-                SQLiteSyncActionsProvider actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
+                SQLiteSyncActionsProvider actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
                 actProvider.Add(action, con);
-                Files.FileUtils.Copy(absolutePathInSyncSource, absolutePathInImediateStorage);
+                if (!Files.FileUtils.Copy(absolutePathInSyncSource, absolutePathInImediateStorage)) throw new Exception("Can't copy file " + absolutePathInSyncSource);
                 transaction.Commit();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 transaction.Rollback();
                 throw;
@@ -40,22 +40,27 @@ namespace OneSync.Synchronization
             }
         }
 
-        public static void CopyToSyncFolderAndUpdateActionTable(SyncAction action, SyncJob profile)
+        /// <summary>
+        /// Copy a file from sync folder and update action table
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="profile"></param>
+        public static void CopyToSyncFolderAndUpdateActionTable(SyncAction action, SyncJob job)
         {
             // TODO: atomic....
-            string absolutePathInIntermediateStorage = profile.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
-            string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
+            string absolutePathInIntermediateStorage = job.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
+            string absolutePathInSyncSource = job.SyncSource.Path + action.RelativeFilePath;
 
-            SQLiteAccess dbAccess = new SQLiteAccess(Path.Combine(profile.IntermediaryStorage.Path, Configuration.DATABASE_NAME));
+            SQLiteAccess dbAccess = new SQLiteAccess(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME));
             SqliteConnection con = dbAccess.NewSQLiteConnection();
             SqliteTransaction trasaction = (SqliteTransaction)con.BeginTransaction();
             try
             {
-                SQLiteSyncActionsProvider actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
+                SQLiteSyncActionsProvider actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
                 actProvider.Delete(action, con);
-                Files.FileUtils.Copy(absolutePathInIntermediateStorage, absolutePathInSyncSource);
-                Files.FileUtils.DeleteFileAndFolderIfEmpty(profile.IntermediaryStorage.DirtyFolderPath, absolutePathInIntermediateStorage);
+                if (!Files.FileUtils.Copy(absolutePathInIntermediateStorage, absolutePathInSyncSource)) throw new Exception("Can't copy file " + absolutePathInIntermediateStorage);
                 trasaction.Commit();
+                Files.FileUtils.DeleteFileAndFolderIfEmpty(job.IntermediaryStorage.DirtyFolderPath, absolutePathInIntermediateStorage);
             }
             catch (Exception)
             {
@@ -69,22 +74,22 @@ namespace OneSync.Synchronization
         }
                
 
-        public static void DuplicateRenameToSyncFolderAndUpdateActionTable(SyncAction action, SyncJob profile)
+        public static void DuplicateRenameToSyncFolderAndUpdateActionTable(SyncAction action, SyncJob job)
         {
-            string absolutePathInIntermediateStorage = profile.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
-            string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
+            string absolutePathInIntermediateStorage = job.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
+            string absolutePathInSyncSource = job.SyncSource.Path + action.RelativeFilePath;
 
-            SQLiteAccess access = new SQLiteAccess(Path.Combine(profile.IntermediaryStorage.Path, Configuration.DATABASE_NAME));
+            SQLiteAccess access = new SQLiteAccess(Path.Combine ( job.IntermediaryStorage.Path,Configuration.DATABASE_NAME) );
             SqliteConnection con = access.NewSQLiteConnection();
             SqliteTransaction trasaction = (SqliteTransaction)con.BeginTransaction();
             try
             {
-                SQLiteSyncActionsProvider actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
+                SQLiteSyncActionsProvider actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
                 actProvider.Delete(action, con);
 
-                Files.FileUtils.DuplicateRename(absolutePathInIntermediateStorage, absolutePathInSyncSource);
-                Files.FileUtils.DeleteFileAndFolderIfEmpty(profile.IntermediaryStorage.DirtyFolderPath, absolutePathInIntermediateStorage);
-
+                if (!Files.FileUtils.DuplicateRename(absolutePathInIntermediateStorage, absolutePathInSyncSource))
+                    throw new Exception("Can't copy file " +absolutePathInIntermediateStorage);
+                Files.FileUtils.DeleteFileAndFolderIfEmpty(job.IntermediaryStorage.DirtyFolderPath, absolutePathInIntermediateStorage);
                 trasaction.Commit();
             }
             catch (Exception)
@@ -98,19 +103,25 @@ namespace OneSync.Synchronization
             }
         }
 
-        public static void DeleteInSyncFolderAndUpdateActionTable(SyncAction action, SyncJob profile)
+        /// <summary>
+        /// Delete a file in sync source folder and update action table
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="profile"></param>
+        public static void DeleteInSyncFolderAndUpdateActionTable(SyncAction action, SyncJob job)
         {
-            string absolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
+            string absolutePathInSyncSource = job.SyncSource.Path + action.RelativeFilePath;
 
-            SQLiteAccess access = new SQLiteAccess(Path.Combine(profile.IntermediaryStorage.Path, Configuration.DATABASE_NAME));
+            SQLiteAccess access = new SQLiteAccess(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME));
             SqliteConnection con = access.NewSQLiteConnection();
             SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
 
             try
             {
-                SQLiteSyncActionsProvider actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
+                SQLiteSyncActionsProvider actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
                 actProvider.Delete(action);
-                Files.FileUtils.DeleteFileAndFolderIfEmpty(profile.SyncSource.Path, absolutePathInSyncSource);
+                if (!Files.FileUtils.Delete(absolutePathInSyncSource))
+                    throw new Exception("Can't delete file " + absolutePathInSyncSource);                
                 transaction.Commit();
             }
             catch (Exception)
@@ -124,21 +135,28 @@ namespace OneSync.Synchronization
             }
         }
 
-        public static void RenameInSyncFolderAndUpdateActionTable(RenameAction action, SyncJob profile)
+        /// <summary>
+        /// Rename a file in sync source folder and update action table
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="profile"></param>
+        /// <exception cref="System.ComponentModel.Win32Exception"></exception>
+        public static void RenameInSyncFolderAndUpdateActionTable(RenameAction action, SyncJob job)
         {
-            string oldAbsolutePathInSyncSource = profile.SyncSource.Path + action.PreviousRelativeFilePath;
-            string newAbsolutePathInSyncSource = profile.SyncSource.Path + action.RelativeFilePath;
+            string oldAbsolutePathInSyncSource = job.SyncSource.Path + action.PreviousRelativeFilePath;
+            string newAbsolutePathInSyncSource = job.SyncSource.Path + action.RelativeFilePath;
 
-            SQLiteAccess access = new SQLiteAccess(Path.Combine(profile.IntermediaryStorage.Path, Configuration.DATABASE_NAME));
+            SQLiteAccess access = new SQLiteAccess(job.IntermediaryStorage.Path);
             SqliteConnection con = access.NewSQLiteConnection();
             SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
 
             try
             {
-                SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(profile.IntermediaryStorage.Path);
+                SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
                 actProvider.Delete(action);
 
-                Files.FileUtils.Copy(oldAbsolutePathInSyncSource, newAbsolutePathInSyncSource);
+                if (!Files.FileUtils.Copy(oldAbsolutePathInSyncSource, newAbsolutePathInSyncSource))
+                    throw new Exception("Can't copy file " + oldAbsolutePathInSyncSource);
                 transaction.Commit();
             }
             catch (Exception)

@@ -36,11 +36,11 @@ namespace OneSync.Synchronization
 
 
         /// <summary>
-        /// Load SyncJob with specified SyncJob id.
+        /// Load SyncJob with specified name.
         /// </summary>
-        /// <param name="jobId">Id of SyncJob to load</param>
-        /// <returns>SyncJob with specified id. null if SyncJob not found.</returns>
-        public abstract SyncJob Load(string jobId);
+        /// <param name="jobId">Name of SyncJob</param>
+        /// <returns>SyncJob with specified name. null if SyncJob not found.</returns>
+        public abstract SyncJob Load(string jobName);
 
         /// <summary>
         /// Create a new SyncJob. Newly created SyncJob will be saved

@@ -8,10 +8,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using OneSync.Synchronization;
+using System.Collections.ObjectModel;
 
 namespace OneSync.UI
 {
@@ -22,15 +22,11 @@ namespace OneSync.UI
         private string syncDir = ""; //The directory of the chosen source folder.
         private string STARTUP_PATH = System.Windows.Forms.Application.StartupPath;
         
-        private SyncJobManager profileManager;
-        private FileSyncAgent syncAgent; //The file sync agent.
+        private SyncJobManager jobManager;
         private BackgroundWorker syncWorker;
         private BackgroundWorker previewWorker;
 
-        IList<FileSyncAgent> syncAgents = new List<FileSyncAgent>();
-
-        private UILog uiLog = new UILog();
-        private UISyncJob uiSyncJob = new UISyncJob();
+        private ObservableCollection<UISyncJobEntry> _SyncJobEntries = new ObservableCollection<UISyncJobEntry>();
         // End: Global variables.
 		
 		
@@ -41,22 +37,22 @@ namespace OneSync.UI
 		public MainWindow()
 		{
             this.InitializeComponent();
-			
-#if DEBUG
-			testingCode(0); //Testing code number 0.
-#endif
 
             // Get current synchronization directory from command line arguments.
             // Default sync directory is current directory of app.
             string[] args = System.Environment.GetCommandLineArgs();
 
-            profileManager = SyncClient.GetSyncJobManager(STARTUP_PATH);
+            jobManager = SyncClient.GetSyncJobManager(STARTUP_PATH);
 
             if (args.Length > 1 && Validator.validateDirPath(args[1]) == null)
             {
                 txtSource.Text = args[1];
-                reloadProfile();
+                reloadSyncJobs();
             }
+
+            // Tag each browse button to corr TextBox
+            btnBrowse_Source.Tag = txtSource;
+            btnBrowse.Tag = txtIntStorage;
 
             // Initialize syncWorker 
             syncWorker = new BackgroundWorker();
@@ -67,6 +63,9 @@ namespace OneSync.UI
             previewWorker = new BackgroundWorker();
             previewWorker.DoWork += new DoWorkEventHandler(previewWorker_DoWork);
             previewWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(previewWorker_RunWorkerCompleted);
+
+            // Set-up data bindings
+            listAllSyncJobs.ItemsSource = this.SyncJobEntries;
         }
 
         private void txtBlkProceed_MouseDown(object sender, MouseButtonEventArgs e)
@@ -78,14 +77,8 @@ namespace OneSync.UI
                 //The rest will be updated later during the sync.
                 UISyncJobEntry p = listAllSyncJobs.SelectedItems[0] as UISyncJobEntry;
 
-                lblSyncJobName.Content = normalizeString(p.JobName, 20, 50);
-                lblSyncJobName.ToolTip = p.JobName;
-                lblSyncJobSource.Content = normalizeString(p.SyncSource, 20, 30);
-                lblSyncJobSource.ToolTip = p.SyncSource;
-                lblSyncJobStorage.Content = normalizeString(p.IntStorage, 20, 30);
-                lblSyncJobStorage.ToolTip = p.IntStorage;
-                reloadProfile();
-                listLog.ItemsSource = uiLog.LogEntries;
+                UpdateSyncInfoUI(p);
+                reloadSyncJobs();
 
                 Window.Title = p.JobName + " - OneSync";
                 UpdateSyncUI(false, false);
@@ -97,14 +90,18 @@ namespace OneSync.UI
             }
         }
 		
-		private void btnBrowse_Source_Click(object sender, System.Windows.RoutedEventArgs e)
+		private void btnBrowse_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            TextBox tb = ((Button)sender).Tag as TextBox;
+            if (tb == null) return;
+
+            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
 
             if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                txtSource.Text = fbd.SelectedPath;
-                txtSource.Focus();
+                tb.Text = fbd.SelectedPath;
+                tb.Focus();
+                tb.Select(tb.Text.Length, 0);
             }
         }
 
@@ -135,10 +132,10 @@ namespace OneSync.UI
             //Create new sync job if all three inputs mentioned above are valid.
             try
             {
-                SyncJob p = profileManager.CreateSyncJob(syncJobName, syncSourceDir, intStorageDir);
+                SyncJob p = jobManager.CreateSyncJob(syncJobName, syncSourceDir, intStorageDir);
 
                 //Reload the list of sync jobs.
-                reloadProfile();
+                reloadSyncJobs();
             }
             catch (ProfileNameExistException)
             {
@@ -151,30 +148,17 @@ namespace OneSync.UI
                 return;
             }
         }
-		
-		private void txtSource_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
-            showErrorMsg("");
-            string errorMsg = Validator.validateDirPath(txtSource.Text.Trim());
-            if (errorMsg != null)
-            {
-                showErrorMsg(errorMsg);
-                return;
-            }
-
-            reloadProfile();
-        }
 
         private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
         {
             try
             {
                 UISyncJobEntry p = listAllSyncJobs.SelectedItem as UISyncJobEntry;
-                SyncJob editingJob = (new SQLiteSyncJobManager(STARTUP_PATH)).GetProfileByName(p.JobName);
-                SyncJobManagementWindow syncJobManagementWindow = new SyncJobManagementWindow(editingJob, profileManager);
+                SyncJob editingJob = jobManager.Load(p.JobName);
+                SyncJobManagementWindow syncJobManagementWindow = new SyncJobManagementWindow(editingJob, jobManager);
                 syncJobManagementWindow.Owner = this;
                 syncJobManagementWindow.ShowDialog();
-                reloadProfile();
+                reloadSyncJobs();
             }
             catch (Exception)
             {
@@ -186,50 +170,22 @@ namespace OneSync.UI
 		PART 2: Sync Screen
 		========================================================*/
 
-        private void btnBrowse_Click(object sender, RoutedEventArgs e)
-        {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-
-            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                txtIntStorage.Text = fbd.SelectedPath;
-                txtIntStorage.Focus();
-            }
-        }
 
         private void btnSyncStatic_MouseDown(object sender, MouseButtonEventArgs e)
         {
             showErrorMsg(""); // clear error msg
 
-            IList<SyncJob> jobsToBeSynced = new List<SyncJob>();
-            foreach (UISyncJobEntry p in listAllSyncJobs.SelectedItems)
-            {
-                jobsToBeSynced.Add((new SQLiteSyncJobManager(STARTUP_PATH)).GetProfileByName(p.JobName));                
-            }
-            Synchronize(jobsToBeSynced);
+            IList<SyncJob> selectedJobs = new List<SyncJob>();
+            foreach (UISyncJobEntry j in listAllSyncJobs.SelectedItems)
+                selectedJobs.Add(j.SyncJob);
+
+            Synchronize(selectedJobs);
         }
 
         private void txtBlkShowLog_MouseDown(object sender, MouseButtonEventArgs e)
         {
             //View log file (The extension of the file should be .html).
             Process.Start(Log.returnLogReportPath(syncDir, false));
-        }
-
-        private void Expander_Toggle(object sender, RoutedEventArgs e)
-        {
-            const string COLLAPSED_HEADER = "Show details";
-            const string EXPANDED_HEADER = "Hide details";
-
-            if (Expander.Header.ToString() == COLLAPSED_HEADER)
-            {
-                Expander.Header = EXPANDED_HEADER;
-                this.Height += 220;
-            }
-            else
-            {
-                Expander.Header = COLLAPSED_HEADER;
-                this.Height -= 220;
-            }
         }
 
         private void txtBlkBackToHome_MouseDown(object sender, MouseButtonEventArgs e)
@@ -240,7 +196,7 @@ namespace OneSync.UI
 
             //Import all the previous created existing sync job profiles.
             //Note that only the profile having the directory which is the current directory will be loaded.
-            reloadProfile();
+            reloadSyncJobs();
 
             // Show log will be shown again after sync is complete.
             txtBlkShowLog.Visibility = Visibility.Hidden;
@@ -254,35 +210,6 @@ namespace OneSync.UI
 		/*========================================================
 		PART 3: UI handling code
 		========================================================*/
-
-        private void reloadProfile()
-        {
-            //Reload the profile combobox.
-            string syncSourceDir = txtSource.Text.Trim();
-
-            uiSyncJob.SyncJobEntries.Clear();
-            try
-            {
-                IList<SyncJob> profileItemsCollection = SyncClient.GetSyncJobManager(STARTUP_PATH).LoadAllJobs();
-                //System.Windows.Forms.MessageBox.Show(profileItemsCollection.Count.ToString());
-                foreach (SyncJob profileItem in profileItemsCollection)
-                {
-                    if (profileItem.SyncSource.Path.Equals(syncSourceDir))
-                        uiSyncJob.Add(profileItem.Name, profileItem.SyncSource.Path, profileItem.IntermediaryStorage.Path);
-                    else if(syncSourceDir.Length == 0)
-                        uiSyncJob.Add(profileItem.Name, profileItem.SyncSource.Path, profileItem.IntermediaryStorage.Path);
-                }
-                uiSyncJob.Add("Testing 1", "Testing Path 11", "Testing Path 12");
-                uiSyncJob.Add("Testing 2", "Testing Path 21", "Testing Path 22");
-                listAllSyncJobs.ItemsSource = uiSyncJob.SyncJobEntries;
-                if(profileItemsCollection.Count > 0)
-                    listAllSyncJobs.SelectedIndex = 0;
-            }
-            catch (Exception)
-            {
-                showErrorMsg("Error loading profiles.");
-            }
-        }
 
         // There are 3 states for visiblity of controls in CanvasSync:
         // 1. syncInProgress = false, syncCompletedBefore = false
@@ -322,6 +249,16 @@ namespace OneSync.UI
                 lblStatus.Visibility = Visibility.Hidden;
             }
         }
+
+        private void UpdateSyncInfoUI(UISyncJobEntry p)
+        {
+            lblSyncJobName.Content = normalizeString(p.JobName, 20, 50);
+            lblSyncJobName.ToolTip = p.JobName;
+            lblSyncJobSource.Content = normalizeString(p.SyncSource, 20, 30);
+            lblSyncJobSource.ToolTip = p.SyncSource;
+            lblSyncJobStorage.Content = normalizeString(p.IntStorage, 20, 30);
+            lblSyncJobStorage.ToolTip = p.IntStorage;
+        }
 		
 		private void showErrorMsg(string message)
 		{
@@ -341,47 +278,34 @@ namespace OneSync.UI
 
         private void Synchronize(IList<SyncJob> syncJobs)
         {
-            foreach(SyncJob syncJob in syncJobs)
-            {
-                syncAgent = new FileSyncAgent(syncJob);
+            if (syncJobs.Count < 0) return;
 
-                syncAgent.ProgressChanged += new SyncProgressChangedHandler(currAgent_ProgressChanged);
-                syncAgent.StageChanged += new SyncStageChangedHandler(currAgent_StatusChanged);
-                syncAgent.SyncCompleted += new SyncCompletedHandler(currAgent_SyncCompleted);
-                syncAgent.SyncFileChanged += new SyncFileChangedHandler(currAgent_FileChanged);
-                syncAgent.SyncStatusChanged += new SyncStatusChangedHandler(syncAgent_SyncStatusChanged);
-
-                syncAgents.Add(syncAgent);
-                
-            }
+            // Create a list of SyncJobs
+            List<FileSyncAgent> agents = new List<FileSyncAgent>(syncJobs.Count);
+            foreach (SyncJob job in syncJobs)
+                agents.Add(new FileSyncAgent(job));
 
             UpdateSyncUI(true, true);
-
-            syncWorker.RunWorkerAsync(syncAgents);
+            syncWorker.RunWorkerAsync(agents);
         }
 
         void syncWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             IList<FileSyncAgent> agents = e.Argument as IList<FileSyncAgent>;
-            if (agents == null) return;
+            if (agents == null || agents.Count < 0) return;
 
+            // Get first sync agent to run
             FileSyncAgent agent = agents[0];
-            SyncPreviewResult previewResult = agent.GenerateSyncPreview();
-            agent.Synchronize(previewResult);
-            /*
-            foreach (FileSyncAgent syncAgent in agents)
-            {
-                try
-                {
-                    SyncPreviewResult previewResult = syncAgent.GenerateSyncPreview();
-                    syncAgent.Synchronize(previewResult);
-                    
-                }
-                catch (Exception)
-                {
-                    showErrorMsg("Synchronization cannot be done. Please inform the administrator.");
-                }
-            }*/
+
+            AddAgentEventHandler(agent);
+            
+            // Note: SyncActions could have been generated during preview
+            if (agent.SyncJob.SyncActions == null)
+                agent.SyncJob.SyncActions = agent.GenerateSyncPreview().GetAllActions();
+
+            // TODO: [THUAT] uncomment for sync to work
+            //agent.Synchronize(agent.SyncJob.SyncActions);
+
             e.Result = agents;
         }
 
@@ -392,52 +316,96 @@ namespace OneSync.UI
                 // exception thrown during sync
                 // Log error
                 // Notify user
+                return;
             }
 
-            IList<FileSyncAgent> syncAgents = e.Result as IList<FileSyncAgent>;
+            IList<FileSyncAgent> agents = e.Result as IList<FileSyncAgent>;
+            if (agents == null) return;
 
-            
-            if (syncAgents.Count > 0 && syncAgents[0] != null)
+            if (agents.Count > 0 && agents[0] != null)
             {
-                syncAgent = syncAgents[0];
-
-                syncAgent.ProgressChanged -= new SyncProgressChangedHandler(currAgent_ProgressChanged);
-                syncAgent.StageChanged -= new SyncStageChangedHandler(currAgent_StatusChanged);
-                syncAgent.SyncCompleted -= new SyncCompletedHandler(currAgent_SyncCompleted);
-                syncAgent.SyncFileChanged -= new SyncFileChangedHandler(currAgent_FileChanged);
-                syncAgent.SyncStatusChanged -= new SyncStatusChangedHandler(syncAgent_SyncStatusChanged);
-
-                syncAgent = null;
-
-                // remove completed sync job
-                syncAgents.RemoveAt(0);
+                FileSyncAgent agent = agents[0];
+                RemoveAgentEventHandler(agent);
+                agents.RemoveAt(0);
             }
 
-            // Check if there are more sync jobs to be run
-            if (syncAgents.Count > 0)
-                syncWorker.RunWorkerAsync(syncAgents);
+            // Check for more sync agents to run
+            if (agents.Count > 0)
+                syncWorker.RunWorkerAsync(agents);
             else
                 // Update UI and hide sync progress controls
                 UpdateSyncUI(false, true);
+        }
+
+        private void AddAgentEventHandler(FileSyncAgent agent)
+        {
+            agent.ProgressChanged += new SyncProgressChangedHandler(currAgent_ProgressChanged);
+            agent.SyncCompleted += new SyncCompletedHandler(currAgent_SyncCompleted);
+            agent.SyncFileChanged += new SyncFileChangedHandler(currAgent_FileChanged);
+            agent.StatusChanged += new SyncStatusChangedHandler(syncAgent_SyncStatusChanged);
+        }
+
+        private void RemoveAgentEventHandler(FileSyncAgent agent)
+        {
+            agent.ProgressChanged -= new SyncProgressChangedHandler(currAgent_ProgressChanged);
+            agent.SyncCompleted -= new SyncCompletedHandler(currAgent_SyncCompleted);
+            agent.SyncFileChanged -= new SyncFileChangedHandler(currAgent_FileChanged);
+            agent.StatusChanged -= new SyncStatusChangedHandler(syncAgent_SyncStatusChanged);
         }
 
         #endregion
 
         #region Sync Preview
 
+        private void PreviewSyncJob(object sender, MouseButtonEventArgs e)
+        {
+            UISyncJobEntry jobEntry = listAllSyncJobs.SelectedItem as UISyncJobEntry;
+            if (jobEntry == null) return;
+
+            SyncJob job = jobEntry.SyncJob;
+            if (job == null) return;
+
+            if (job.SyncActions != null) /* Job has been previewed before */
+            {
+                MessageBoxResult result = MessageBox.Show(
+                    "This Sync Job has been previewed before. Do you want to re-generate the actions for preview?",
+                    "Preview", MessageBoxButton.YesNo);
+
+                if (result == MessageBoxResult.Yes)
+                    previewWorker.RunWorkerAsync(jobEntry.SyncJob);
+                else
+                    new WinSyncPreview(job.SyncActions).ShowDialog();
+            }
+            else
+                previewWorker.RunWorkerAsync(jobEntry.SyncJob);
+        }
+
         void previewWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            e.Result = syncAgent.GenerateSyncPreview();
+            SyncJob job = e.Result as SyncJob;
+            if (job == null) return;
+
+            FileSyncAgent agent = new FileSyncAgent(job);
+            SyncPreviewResult result = agent.GenerateSyncPreview();
+
+            // Save sync actions so it will not be generated again for this job
+            job.SyncActions = result.GetAllActions();
+            e.Result = job;
         }
 
         void previewWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if(e.Error == null)
+            if(e.Error != null)
             {
-                SyncPreviewResult syncResult = (SyncPreviewResult)e.Result;
-
-                
+                // Log error
+                return;
             }
+
+            SyncJob job = e.Result as SyncJob;
+            if (job == null) return;
+
+            WinSyncPreview winPreview = new WinSyncPreview(job.SyncActions);
+            winPreview.ShowDialog();
         }
 
         #endregion
@@ -452,31 +420,21 @@ namespace OneSync.UI
             if (this.Dispatcher.CheckAccess())
                 pbSync.Value = e.Value;
             else
-                pbSync.Dispatcher.Invoke((MethodInvoker)delegate { currAgent_ProgressChanged(sender, e); });
+                pbSync.Dispatcher.Invoke((Action)delegate { currAgent_ProgressChanged(sender, e); });
         }
 
         /// <summary>
         /// Update the status message.
         /// </summary>
-        void currAgent_StatusChanged(object sender, Synchronization.SyncStageChangedEventArgs e)
+        void currAgent_StatusChanged(object sender, SyncStatusChangedEventArgs e)
         {
             //Display some text so that the user knows that what OneSync is doing during the synchronization.
             if (this.Dispatcher.CheckAccess())
             {
-                switch (e.SyncStage)
-                {
-                    case SyncStageChangedEventArgs.Stage.APPLY_PATCH:
-                        lblStatus.Content = "Applying Patch"; break;
-                    case SyncStageChangedEventArgs.Stage.GENERATE_PATCH:
-                        lblStatus.Content = "Generating Patch"; break;
-                    case SyncStageChangedEventArgs.Stage.UPDATE_DATA:
-                        lblStatus.Content = "Updating Data"; break;
-                    case SyncStageChangedEventArgs.Stage.VERIFY_PATCH:
-                        lblStatus.Content = "Verifying Patch"; break;
-                }
+                lblStatus.Content = e.Message;
             }
             else
-                lblStatus.Dispatcher.Invoke((MethodInvoker)delegate { currAgent_StatusChanged(sender, e); });
+                lblStatus.Dispatcher.Invoke((Action)delegate { currAgent_StatusChanged(sender, e); });
         }
 
         /// <summary>
@@ -487,7 +445,7 @@ namespace OneSync.UI
             if (this.Dispatcher.CheckAccess())
                 lblStatus.Content = "Synchronizing: " + e.RelativePath;
             else
-                lblStatus.Dispatcher.Invoke((MethodInvoker)delegate { currAgent_FileChanged(sender, e); });
+                lblStatus.Dispatcher.Invoke((Action)delegate { currAgent_FileChanged(sender, e); });
         }
 
         /// <summary>
@@ -509,7 +467,7 @@ namespace OneSync.UI
             }
             else
             {
-                this.Dispatcher.Invoke((MethodInvoker)delegate { currAgent_SyncCompleted(sender, e); });
+                this.Dispatcher.Invoke((Action)delegate { currAgent_SyncCompleted(sender, e); });
             }
         }
 
@@ -518,20 +476,53 @@ namespace OneSync.UI
             if (this.Dispatcher.CheckAccess())
                 lblStatus.Content = e.Message;
             else
-                this.Dispatcher.Invoke((MethodInvoker)delegate { syncAgent_SyncStatusChanged(sender, e); });
+                this.Dispatcher.Invoke((Action)delegate { syncAgent_SyncStatusChanged(sender, e); });
         }
 
         #endregion		
+
+
+        private void reloadSyncJobs()
+        {
+            string syncSourceDir = txtSource.Text.Trim();
+
+            this.SyncJobEntries.Clear();
+            try
+            {
+                IList<SyncJob> jobs = jobManager.LoadAllJobs();
+
+                foreach (SyncJob job in jobs)
+                {
+                    if (job.SyncSource.Path.Equals(syncSourceDir))
+                        this.SyncJobEntries.Add(new UISyncJobEntry(job));
+                    else if (syncSourceDir.Length == 0)
+                        this.SyncJobEntries.Add(new UISyncJobEntry(job)); /* Add all jobs */
+                }
+
+                // Select job if there is only 1 job available
+                if (jobs.Count == 1)
+                    listAllSyncJobs.SelectedIndex = 0;
+            }
+            catch (Exception)
+            {
+                showErrorMsg("Error loading profiles.");
+            }
+        }
+
+        public ObservableCollection<UISyncJobEntry> SyncJobEntries
+        {
+            get { return _SyncJobEntries; }
+        }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (syncWorker.IsBusy)
             {
-                DialogResult result = System.Windows.Forms.MessageBox.Show(
+                MessageBoxResult result = MessageBox.Show(
                     "Are you sure you want to close the program now? The synchronization is still ongoing.",
-                    "Goodbye OneSync", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    "Goodbye OneSync", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-                    e.Cancel = (result == System.Windows.Forms.DialogResult.No);
+                e.Cancel = (result == MessageBoxResult.No);
             }
         }
 
@@ -541,26 +532,7 @@ namespace OneSync.UI
                 return str.Substring(0, prefixLength) + "..." + str.Substring(str.Length - suffixLength);
             else
                 return str;
-        }
-        
-
-#if DEBUG
-        /// <summary>
-        /// This method is for the GUI Designer to test the program.
-        /// </summary>
-        /// <param name="testingNumber">The number of the testing code.</param>
-        private void testingCode(int testingNumber)
-        {
-            switch (testingNumber)
-            {
-                case 0:
-                    
-                    uiLog.Add("CS3215.txt", UILog.Status.Completed, "CS3215.txt has been uploaded to the intermediate storage.");
-                    uiLog.Add("Proposal.pdf", UILog.Status.Conflict, "There is another different copy of Proposal.pdf found in the patch.");
-                    break;
-            }
-        }
-#endif
+        }    
 
 	}
 }

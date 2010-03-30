@@ -62,7 +62,7 @@ namespace OneSync.Synchronization
             itemsToDelete = itemsToDelete.ToList();
         }
 
-        public IList<SyncAction> GetAcionList()
+        public IList<SyncAction> GetAllActions()
         {
             return this.actions;
         }
