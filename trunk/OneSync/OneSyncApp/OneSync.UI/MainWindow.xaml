@@ -139,7 +139,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 					<ColumnDefinition Width="1*"/>
 					<ColumnDefinition Width="100"/>
 				</Grid.ColumnDefinitions>
-				<Label Grid.Column="0" x:Name="lblSyncJob" Content="New Sync Job:" FontSize="10.667" Foreground="#FF0000B9"/>
+				<Label Grid.Column="0" x:Name="lblSyncJob" Content="Sync Job Name:" FontSize="10.667" Foreground="#FF0000B9"/>
 				<Label Grid.Column="1" x:Name="lblFolderToSync" Content="Folder to Sync:" FontSize="10.667" Foreground="#FF0000B9" RenderTransformOrigin="0.5,0.5">
 					<Label.RenderTransform>
 						<TranslateTransform X="0" Y="0"/>
@@ -230,6 +230,8 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			<Label x:Name="lblSyncJobName" Width="392" Height="24" Content="Label" FontWeight="Bold" Foreground="#FF0000B9" Canvas.Left="186" Canvas.Top="45"/>
 			<Label x:Name="lblSyncJobSource" Width="392" Height="24" Content="Label" FontWeight="Bold" Foreground="#FF0000B9" Canvas.Left="186" Canvas.Top="69"/>
 			<Label x:Name="lblSyncJobStorage" Width="392" Height="24" Content="Label" FontWeight="Bold" Foreground="#FF0000B9" Canvas.Left="186" Canvas.Top="93"/>
+			<Label x:Name="lblJobsNumberLabel" Width="89.988" Content="Number of Jobs:" FontSize="10.667" Canvas.Left="10" Canvas.Top="30" Foreground="#FF0000B9"/>
+			<Label x:Name="lblJobsNumber" Width="55.988" Content="4" FontSize="10.667" Canvas.Left="186.979" Canvas.Top="30" Foreground="#FF0000B9" FontWeight="Bold"/>
 		</Canvas>
 		
 	</Canvas>
