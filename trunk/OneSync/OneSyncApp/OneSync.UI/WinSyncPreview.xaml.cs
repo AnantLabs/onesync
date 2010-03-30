@@ -6,26 +6,58 @@ using System.Windows.Media.Animation;
 using OneSync.Synchronization;
 using System.Collections.Generic;
 using System.Linq;
+using System.ComponentModel;
 
 namespace OneSync.UI
 {
 	public partial class WinSyncPreview
 	{
-        SyncPreviewResult _result = null;
-        IEnumerable<SyncAction> allActions = null;
+        SyncJob _job;
+        private BackgroundWorker previewWorker;
+        IEnumerable<SyncAction> allActions = null; /* used for filtering */
 
         /// <summary>
-        /// Instantiate a sync preview window with specified sync actions.
+        /// Instantiate a sync preview window job to be previewed.
         /// </summary>
         /// <param name="syncActions">All sync actions to be dispayed for preview.</param>
-        public WinSyncPreview(SyncPreviewResult result)
+        public WinSyncPreview(SyncJob job)
 		{
 			this.InitializeComponent();
-            _result = result;
+            this._job = job;
 
-            lvPreview.ItemsSource = result.GetAllActions();
-            this.allActions = result.GetAllActions();
+            // Initialize previewWorker
+            previewWorker = new BackgroundWorker();
+            previewWorker.DoWork += new DoWorkEventHandler(previewWorker_DoWork);
+            previewWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(previewWorker_RunWorkerCompleted); ;
+            previewWorker.RunWorkerAsync();
 		}
+
+        void previewWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            if (_job == null) return;
+
+            if (_job.SyncPreviewResult == null)
+            {
+                FileSyncAgent agent = new FileSyncAgent(_job);
+                _job.SyncPreviewResult = agent.GenerateSyncPreview();
+            }
+        }
+
+        void previewWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                // Log error
+                return;
+            }
+
+            if (_job == null) return;
+
+            // Save results
+            SyncPreviewResult result = _job.SyncPreviewResult;
+            this.allActions = result.GetAllActions();
+            lvPreview.ItemsSource = this.allActions;
+        }
 
         void txtFilter_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -78,6 +110,11 @@ namespace OneSync.UI
         private void btnSync_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
-        }      
+        }
+
+        private void txtFilter_GotFocus(object sender, RoutedEventArgs e)
+        {
+            txtFilter.SelectAll();
+        }
 	}
 }

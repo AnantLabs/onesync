@@ -8,6 +8,14 @@
 	x:Name="Window"
 	Title="OneSync - Sync Preview"
 	Width="800" Height="480">
+	
+	<Window.Background>
+		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+			<GradientStop Color="#FF69DAF4" Offset="1"/>
+			<GradientStop Color="White" Offset="0.337"/>
+			<GradientStop Color="#FFC9EFF8" Offset="0.768"/>
+		</LinearGradientBrush>
+	</Window.Background>
 
 	<Grid x:Name="LayoutRoot">
 		<Grid Margin="10">
@@ -33,28 +41,9 @@
 					<ComboBoxItem Content="Delete Only"/>
 					<!--<ComboBoxItem Content="Rename"/>-->
 				</ComboBox>
-				<TextBox Grid.Column="2" Foreground="#FF808080" x:Name="txtFilter" Height="21.96" TextChanged="txtFilter_TextChanged"/>
+				<TextBox Grid.Column="2" Foreground="#FF808080" x:Name="txtFilter" Height="21.96" TextChanged="txtFilter_TextChanged" GotFocus="txtFilter_GotFocus"/>
 			</Grid>
-			<Button x:Name="btnSync" HorizontalAlignment="Right" Margin="0,0,79,0" VerticalAlignment="Bottom" Width="75" Content="Sync" Grid.Row="3" IsDefault="True" FontWeight="Bold" Click="btnSync_Click">
-				<Button.Background>
-					<LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-						<GradientStop Color="#FFF3F3F3" Offset="0"/>
-						<GradientStop Color="#FFEBEBEB" Offset="0.5"/>
-						<GradientStop Color="#FFDDDDDD" Offset="0.5"/>
-						<GradientStop Color="#FF90CD61" Offset="1"/>
-					</LinearGradientBrush>
-				</Button.Background>
-			</Button>
-			<Button x:Name="btnCancel" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="75" Content="Cancel" Grid.Row="3" IsCancel="True" FontWeight="Bold">
-				<Button.Background>
-					<LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-						<GradientStop Color="#FFF3F3F3" Offset="0"/>
-						<GradientStop Color="#FFEBEBEB" Offset="0.5"/>
-						<GradientStop Color="#FFDDDDDD" Offset="0.5"/>
-						<GradientStop Color="#FFCB8484" Offset="1"/>
-					</LinearGradientBrush>
-				</Button.Background>
-			</Button>
+			<TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Text="Done" Grid.Row="3" x:Name="txtBlkSave" TextDecorations="Underline" FontSize="13.333" Cursor="Hand" Foreground="#FF0000B9" FontWeight="Bold" />
 			<UI:SyncActionsListView x:Name="lvPreview" Grid.Row="2" d:LayoutOverrides="GridBox" />
 		</Grid>
 	</Grid>

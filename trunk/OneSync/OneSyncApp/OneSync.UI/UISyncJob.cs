@@ -4,17 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Collections.ObjectModel;
 using OneSync.Synchronization;
+using System.ComponentModel;
 
 namespace OneSync.UI
 {
 
     // UI Wrapper class for SyncJob
-    public class UISyncJobEntry: IEquatable<UISyncJobEntry>
+    public class UISyncJobEntry : IEquatable<UISyncJobEntry>, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private bool _isSelected = true;
+
         public UISyncJobEntry(SyncJob job)
         {
             this.SyncJob = job;
-            this.IsSelected = true;
         }
 
         public SyncJob SyncJob { get; set; }
@@ -27,7 +31,7 @@ namespace OneSync.UI
             get { return this.SyncJob.Name; } 
         }
 
-        public string IntStorage {
+        public string IntermediaryStoragePath {
             get { return this.SyncJob.IntermediaryStorage.Path; } 
         }
 
@@ -36,7 +40,38 @@ namespace OneSync.UI
             get { return this.SyncJob.ID; }
         }
 
-        public bool IsSelected { get; set; }
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+            set
+            {
+                if (value != _isSelected)
+                {
+                    _isSelected = value;
+                    OnPropertyChanged("IsSelected");
+                }
+            }
+        }
+
+        public void InfoChanged()
+        {
+            OnPropertyChanged("IntermediaryStoragePath");
+            OnPropertyChanged("JobName");
+            OnPropertyChanged("SyncSource");
+        }
+
+        public static IList<UISyncJobEntry> GetSelectedJobs(IEnumerable<UISyncJobEntry> entries)
+        {
+            List<UISyncJobEntry> selectedEntries = new List<UISyncJobEntry>();
+
+            foreach (UISyncJobEntry entry in entries)
+            {
+                if (entry.IsSelected)
+                    selectedEntries.Add(entry);
+            }
+
+            return selectedEntries;
+        }
 
 
         #region IEquatable<UISyncJobEntry> Members
@@ -47,5 +82,12 @@ namespace OneSync.UI
         }
 
         #endregion
+
+        protected virtual void OnPropertyChanged(string PropertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(PropertyName));
+        }
+
     }
 }

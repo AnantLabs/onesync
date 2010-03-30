@@ -14,6 +14,18 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			<Setter Property="FontSize" Value="10.667" />
 			<Setter Property="Foreground" Value="#FF0000B9" />
 	    </Style>
+		<Style x:Key="blueBoldLabel" TargetType="{x:Type Label}">
+			<Setter Property="FontSize" Value="10.667" />
+			<Setter Property="Foreground" Value="#FF0000B9" />
+			<Setter Property="FontWeight" Value="Bold" />
+	    </Style>
+		<Style x:Key="blueLinkLabel" TargetType="{x:Type TextBlock}">
+			<Setter Property="FontSize" Value="13.33" />
+			<Setter Property="Foreground" Value="#FF0000B9" />
+			<Setter Property="FontWeight" Value="Bold" />
+			<Setter Property="TextDecorations" Value="Underline" />
+			<Setter Property="Cursor" Value="Hand" />
+	    </Style>
 		<Style x:Key="btnSyncStaticStyle" TargetType="{x:Type Image}">
       		<Setter Property="Source" Value="Resource/OneSync Transparent Logo (Inactive).png" />
 			<Style.Triggers>
@@ -83,7 +95,6 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 	<Window.Triggers>
 		<EventTrigger RoutedEvent="FrameworkElement.Loaded">
 			<BeginStoryboard Storyboard="{StaticResource sbRotateSync}"/>
-			<BeginStoryboard Storyboard="{StaticResource sbRotateSync}"/>
 		</EventTrigger>
 	</Window.Triggers>
 	<Window.Background>
@@ -133,7 +144,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 				<Button Grid.Column="2" x:Name="btnBrowse" Width="22.187" Height="22.187" Content="..." ToolTip="Click to browse folders" Click="btnBrowse_Click" Margin="0,0,8,0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
 				
 				<!--Column 3 -->
-				<TextBlock Grid.Column="3" x:Name="txtBlkNewJob" Text="Add New Job" TextDecorations="Underline" FontSize="13.333" Cursor="Hand" Foreground="#FF0000B9" FontWeight="Bold" MouseDown="txtBlkNewJob_MouseDown" VerticalAlignment="Center" HorizontalAlignment="Right"/>				
+				<TextBlock Grid.Column="3" x:Name="txtBlkNewJob" Style="{StaticResource blueLinkLabel}" Text="Add New Job" MouseDown="txtBlkNewJob_MouseDown" VerticalAlignment="Center" HorizontalAlignment="Right"/>
 			</Grid>
 			
 			<!--Row 2 -->
@@ -169,7 +180,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
                         <GridViewColumn Width="226" Header="Intermediary Storage Location">
 							<GridViewColumn.CellTemplate>
 								<DataTemplate x:Name="intStorageTemplate">
-									<TextBlock TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Text="{Binding IntStorage}" ToolTip="{Binding IntStorage}"/>
+									<TextBlock TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Text="{Binding IntermediaryStoragePath}" ToolTip="{Binding IntermediaryStoragePath}"/>
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>
@@ -192,7 +203,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			</ListView>
 			
 			<!--Row 3 -->
-			<TextBlock Grid.Row="3" x:Name="txtBlkProceed" Text="Sync Selected Jobs" TextDecorations="Underline" FontWeight="Bold" FontSize="13.333" Cursor="Hand" Foreground="#FF0000B9" MouseDown="txtBlkProceed_MouseDown" Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Right" />
+			<TextBlock Grid.Row="3" x:Name="txtBlkProceed" Text="Sync Selected Jobs" Style="{StaticResource blueLinkLabel}" MouseDown="txtBlkProceed_MouseDown" Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Right" />
 		</Grid>
 		
 		<Grid x:Name="gridSync" Margin="10,10,10,0" Visibility="Hidden">
@@ -206,26 +217,26 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			</Grid.RowDefinitions>
 			
 			<!--Row 0 -->
-			<TextBlock Grid.Row="0" x:Name="txtBlkBackToHome" Text="&lt;&lt; Back to Home" TextWrapping="Wrap" FontWeight="Bold" FontSize="13.333" Cursor="Hand" Foreground="#FF3000FF" MouseDown="txtBlkBackToHome_MouseDown" Canvas.Left="611" Canvas.Top="10" d:LayoutOverrides="VerticalAlignment" />
+			<TextBlock Grid.Row="0" x:Name="txtBlkBackToHome" Text="&lt;&lt; Back to Home" Style="{StaticResource blueLinkLabel}" MouseDown="txtBlkBackToHome_MouseDown" d:LayoutOverrides="VerticalAlignment" />
 			
 			<!-- Row 1 -->
-			<Label Grid.Row="1" x:Name="lblJobsNumberLabel" Style="{StaticResource blueLabel}" Content="Number of Jobs:" Margin="10,10,0,0"/>
-			<Label Grid.Row="1" x:Name="lblJobsNumber" Style="{StaticResource blueLabel}" Content="4" FontWeight="Bold" Margin="186,10,0,0"/>
-			<Label Grid.Row="1" x:Name="lblSyncJobName" Style="{StaticResource blueLabel}" Content="Label" Margin="186,35,0,0"/>
-			<Label Grid.Row="1" x:Name="lblSyncJobSource" Style="{StaticResource blueLabel}" Content="Label" Margin="186,55,0,0" />
-			<Label Grid.Row="1" x:Name="lblSyncJobStorage" Style="{StaticResource blueLabel}" Content="Label" Margin="186,75,0,0"/>
+			<Label Grid.Row="1" Style="{StaticResource blueLabel}" Content="Number of Jobs:" Margin="10,10,0,0"/>
+			<Label Grid.Row="1" x:Name="lblJobsNumber" Style="{StaticResource blueBoldLabel}" Content="4" Margin="186,10,0,0"/>
+			<Label Grid.Row="1" x:Name="lblSyncJobName" Style="{StaticResource blueBoldLabel}" Content="Label" Margin="186,35,0,0"/>
+			<Label Grid.Row="1" x:Name="lblSyncJobSource" Style="{StaticResource blueBoldLabel}" Content="Label" Margin="186,55,0,0" />
+			<Label Grid.Row="1" x:Name="lblSyncJobStorage" Style="{StaticResource blueBoldLabel}" Content="Label" Margin="186,75,0,0"/>
 			
-			<Image Grid.Row="1" x:Name="btnSyncRotating" ToolTip="Sync this folder now!" HorizontalAlignment="Right" Margin="0,0,10,0" Width="104" Height="104" Source="Resource/OneSync Transparent Logo.png" Visibility="Hidden" RenderTransformOrigin="0.5,0.5" >
+			<Image Grid.Row="1" x:Name="btnSyncRotating" ToolTip="Sync this folder now!" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Width="104" Height="104" Source="Resource/OneSync Transparent Logo.png" Visibility="Hidden" RenderTransformOrigin="0.5,0.5" >
 				<Image.RenderTransform>
 					<RotateTransform Angle="0"/>
 				</Image.RenderTransform>
 			</Image>
-			<Image Grid.Row="1" x:Name="btnSyncStatic" Style="{StaticResource btnSyncStaticStyle}" Cursor="Hand" MouseDown="btnSyncStatic_MouseDown" ToolTip="Sync this folder now!" VerticalAlignment="Bottom" Width="104" HorizontalAlignment="Right" Margin="0,0,10,0" Height="104" />
+			<Image Grid.Row="1" x:Name="btnSyncStatic" Style="{StaticResource btnSyncStaticStyle}" Cursor="Hand" MouseDown="btnSyncStatic_MouseDown" ToolTip="Sync this folder now!" VerticalAlignment="Center" Width="104" HorizontalAlignment="Right" Margin="0,0,10,0" Height="104" />
 			
 			<!-- Row 2 -->
 			<ProgressBar Grid.Row="2" x:Name="pbSync" Value="0" Height="20" Margin = "0,10,0,10" VerticalAlignment="Top" />
 			<Label Grid.Row="2" x:Name="lblStatus" Content="Status:" FontSize="10.667" Margin = "0,30,0,10" VerticalAlignment="Top" />
-			<TextBlock Grid.Row="2" x:Name="txtBlkShowLog" Text="Show Log " TextDecorations="Underline" FontWeight="Bold" FontSize="13.333" Cursor="Hand" Foreground="#FF3000FF" MouseDown="txtBlkShowLog_MouseDown" Visibility="Visible" Margin = "5,55,0,10" VerticalAlignment="Top"  />
+			<TextBlock Grid.Row="2" x:Name="txtBlkShowLog" Text="Show Log " Style="{StaticResource blueLinkLabel}" MouseDown="txtBlkShowLog_MouseDown" Visibility="Visible" Margin = "5,55,0,10" VerticalAlignment="Top"  />
 		</Grid>
 	</Grid>
 </Window>

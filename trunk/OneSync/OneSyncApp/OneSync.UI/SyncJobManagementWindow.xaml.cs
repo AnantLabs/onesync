@@ -18,22 +18,22 @@ namespace OneSync.UI
 	/// </summary>
 	public partial class SyncJobManagementWindow : Window
 	{
-        private SyncJob editingSyncJob;
-        private SyncJobManager profileManager;
+        private UISyncJobEntry editingSyncJob;
+        private SyncJobManager jobManager;
 
 		public SyncJobManagementWindow()
 		{
 			this.InitializeComponent();
 		}
 
-        public SyncJobManagementWindow(SyncJob selectedSyncJob, SyncJobManager inputProfileManager)
+        public SyncJobManagementWindow(UISyncJobEntry selectedSyncJob, SyncJobManager jobManager)
             : this()
 		{
-            profileManager = inputProfileManager;
+            this.jobManager = jobManager;
             editingSyncJob = selectedSyncJob;
-            txtSyncJobName.Text = editingSyncJob.Name;
-            txtSource.Text = editingSyncJob.SyncSource.Path;
-            txtIntStorage.Text = editingSyncJob.IntermediaryStorage.Path;
+            txtSyncJobName.Text = editingSyncJob.SyncJob.Name;
+            txtSource.Text = editingSyncJob.SyncJob.SyncSource.Path;
+            txtIntStorage.Text = editingSyncJob.SyncJob.IntermediaryStorage.Path;
 		}
 
 		private void btnBrowse_Source_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -83,25 +83,38 @@ namespace OneSync.UI
             }
 
             //Update the job if all three inputs mentioned above are valid.
-            editingSyncJob.Name = syncJobName;
-            editingSyncJob.SyncSource.Path = syncSourceDir;
-            editingSyncJob.IntermediaryStorage.Path = intStorageDir;
+            editingSyncJob.SyncJob.Name = syncJobName;
+            editingSyncJob.SyncJob.SyncSource.Path = syncSourceDir;
+            editingSyncJob.SyncJob.IntermediaryStorage.Path = intStorageDir;
 
-            if (!profileManager.Update(editingSyncJob))
+            try
+            {
+                jobManager.Update(editingSyncJob.SyncJob);
+                editingSyncJob.InfoChanged();
+                this.Close();
+            }
+            catch (ProfileNameExistException ex)
+            {
+                showErrorMsg("A Sync Job with the same name already exists.");
+            }
+            catch (Exception ex)
+            {
                 showErrorMsg("Unable to update sync job at this moment.");
+            }
 
-            this.Close();
+
+            
 		}
 
 		private void txtBlkDeleteJob_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
             MessageBoxResult result = MessageBox.Show(
-                            "Are you sure you want to delete " + editingSyncJob.Name + "?", "Job Profile Deletion",
+                            "Are you sure you want to delete " + editingSyncJob.SyncJob.Name + "?", "Job Profile Deletion",
                             MessageBoxButton.YesNo, MessageBoxImage.Question);
             
             if (result == MessageBoxResult.Yes)
             {
-                if (!profileManager.Delete(editingSyncJob))
+                if (!jobManager.Delete(editingSyncJob.SyncJob))
                     showErrorMsg("Unable to delete sync job at this moment.");
                 else
                     this.Close();
