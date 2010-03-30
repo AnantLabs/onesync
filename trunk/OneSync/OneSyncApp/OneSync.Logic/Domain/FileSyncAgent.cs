@@ -89,13 +89,17 @@ namespace OneSync.Synchronization
         public SyncResult Apply(SyncPreviewResult previewResult)
         {
             // Logging
-            List<LogActivity> applyActivities = new List<LogActivity>();
-            int count = 0;
+            List<LogActivity> applyActivities = new List<LogActivity>();            
             DateTime starttime = DateTime.Now;
 
             SyncResult syncResult = new SyncResult();
             foreach (SyncAction action in previewResult.ItemsToCopyOver)
             {
+                if (action.Skip)
+                {
+                    //add log
+                    continue ;
+                }
                if (SyncFileChanged != null) SyncFileChanged(this, new SyncFileChangedEventArgs(ChangeType.NEWLY_CREATED, action.RelativeFilePath));
                try
                {
@@ -104,12 +108,16 @@ namespace OneSync.Synchronization
                    syncResult.Ok.Add(action);
                    applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "SUCCESS"));                   
                 }
-                catch (Exception){Console.WriteLine("Logging error");}
-                count++;               
+                catch (Exception){Console.WriteLine("Logging error");}                
             }
 
             foreach (SyncAction action in previewResult.ItemsToDelete)
             {
+                if (action.Skip)
+                {
+                    //add log
+                    continue;
+                }
                 if (SyncFileChanged != null) SyncFileChanged(this, new SyncFileChangedEventArgs(ChangeType.DELETED, action.RelativeFilePath));
                 try
                 {
@@ -123,8 +131,7 @@ namespace OneSync.Synchronization
                     syncResult.Ok.Add(action);
                     applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "SUCCESS"));
                 }
-                catch (Exception) { Console.WriteLine("Logging error "); }
-                count++;                
+                catch (Exception) { Console.WriteLine("Logging error "); }                              
             }
 
             foreach (SyncAction action in previewResult.ConflictItems)
@@ -133,7 +140,7 @@ namespace OneSync.Synchronization
                 {
                     syncResult.Skipped.Add(action);
                     applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString()));
-                    count++;
+                    continue;
                 }
                 else if (action.ConflictResolution == ConflictResolution.DUPLICATE_RENAME)
                 {
@@ -150,11 +157,14 @@ namespace OneSync.Synchronization
                         applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString() + "_SUCCESS"));
                     }
                     catch (Exception)
-                    {Console.WriteLine("Logging error");}
-                    count++;
+                    {Console.WriteLine("Logging error");}                  
                 }
                 else if (action.ConflictResolution == ConflictResolution.OVERWRITE)
                 {
+                    if (action.Skip)
+                    {
+                        continue;
+                    }
                     if (SyncFileChanged != null) SyncFileChanged(this, new SyncFileChangedEventArgs(ChangeType.MODIFIED, action.RelativeFilePath));
                     try
                     {
@@ -169,14 +179,13 @@ namespace OneSync.Synchronization
                         applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString() + "_SUCCESS"));
                     }
                     catch (Exception)
-                    {Console.WriteLine("Logging error");}
-                    count++;
+                    {Console.WriteLine("Logging error");}                    
                 }
             }
 
             // Add to log
             Log.addToLog(profile.SyncSource.Path, profile.IntermediaryStorage.Path,
-                    profile.Name, applyActivities, Log.from, count, starttime, DateTime.Now);
+                    profile.Name, applyActivities, Log.from, applyActivities.Count, starttime, DateTime.Now);
 
             return syncResult;
             // TODO:

@@ -7,7 +7,7 @@
 	x:Class="OneSync.UI.WinSyncPreview"
 	x:Name="Window"
 	Title="OneSync - Sync Preview"
-	Width="640" Height="480">
+	Width="800" Height="480">
 
 	<Grid x:Name="LayoutRoot">
 		<Grid Margin="10">
@@ -26,14 +26,14 @@
 					<ColumnDefinition Width="Auto"/>
 				</Grid.ColumnDefinitions>
 				<TextBlock FontSize="12" Text="Filter" VerticalAlignment="Center" />
-				<ComboBox Margin="0,0,10,0" SelectedIndex="0" Grid.Column="1" x:Name="cmbFilter" Height="21.96">
+				<ComboBox Margin="0,0,10,0" SelectedIndex="0" Grid.Column="1" x:Name="cmbFilter" Height="21.96" SelectionChanged="cmbFilter_SelectionChanged">
 					<ComboBoxItem Content="Show All"/>
 					<ComboBoxItem Content="Conflict Files"/>
 					<ComboBoxItem Content="Copy Only"/>
 					<ComboBoxItem Content="Delete Only"/>
 					<!--<ComboBoxItem Content="Rename"/>-->
 				</ComboBox>
-				<TextBox Grid.Column="2" Foreground="#FF808080" x:Name="txtFilter" Height="21.96" />
+				<TextBox Grid.Column="2" Foreground="#FF808080" x:Name="txtFilter" Height="21.96" TextChanged="txtFilter_TextChanged"/>
 			</Grid>
 			<Button x:Name="btnSync" HorizontalAlignment="Right" Margin="0,0,79,0" VerticalAlignment="Bottom" Width="75" Content="Sync" Grid.Row="3" IsDefault="True" FontWeight="Bold" Click="btnSync_Click">
 				<Button.Background>

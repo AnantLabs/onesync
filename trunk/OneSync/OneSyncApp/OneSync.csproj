@@ -158,6 +158,7 @@
     <Compile Include="OneSync.UI\SyncJobManagementWindow.xaml.cs">
       <DependentUpon>SyncJobManagementWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="OneSync.UI\UIHelper.cs" />
     <Compile Include="OneSync.UI\UISyncJob.cs" />
     <Compile Include="OneSync.UI\WinSyncPreview.xaml.cs">
       <DependentUpon>WinSyncPreview.xaml</DependentUpon>

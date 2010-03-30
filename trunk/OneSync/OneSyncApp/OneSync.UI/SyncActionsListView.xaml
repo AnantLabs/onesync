@@ -7,7 +7,7 @@
 	mc:Ignorable="d"
 	x:Class="OneSync.UI.SyncActionsListView"
 	x:Name="UserControl"
-	d:DesignWidth="640" d:DesignHeight="480">
+	d:DesignWidth="800" d:DesignHeight="480">
 
 	<UserControl.Resources>
 		<!-- Converters used for databinding -->
@@ -34,7 +34,7 @@
 	
 		<DataTemplate x:Key="SelectCell">
 	      <StackPanel Orientation="Horizontal">
-			<CheckBox IsChecked="{Binding Path=Skip}" />
+			<CheckBox IsChecked="{Binding Path=Skip}" Name="checkBoxSkip"/>
 	      </StackPanel>
 	    </DataTemplate>
 		
@@ -56,11 +56,16 @@
 	<!--IsSynchronizedWithCurrentItem="True"-->
 		<ListView SelectionMode="Single" x:Name="lvActions">
 			<ListView.View>
-				<GridView AllowsColumnReorder="False">
-					<GridViewColumn Header="Skip" CellTemplate="{StaticResource SelectCell}" Width="30"/>
-					<GridViewColumn Header="Action" DisplayMemberBinding="{Binding ChangeType, Converter={StaticResource changeTypeConverter}}" Width="60"/>
+				<GridView AllowsColumnReorder="False">               
+                    <GridViewColumn CellTemplate="{StaticResource SelectCell}" Width="70">                                               
+                        <DockPanel>
+                            <CheckBox Name="checkBoxSelectAll" Margin="5" Checked="checkBoxSelectAll_Checked" Unchecked="checkBoxSelectAll_Unchecked"></CheckBox>                                
+                            <TextBlock Text="Skip" Margin="5"></TextBlock>
+                        </DockPanel>                           
+                    </GridViewColumn>
+                    <GridViewColumn Header="Action" DisplayMemberBinding="{Binding ChangeType, Converter={StaticResource changeTypeConverter}}" Width="60"/>
 					<GridViewColumn Header="File Path" CellTemplate="{StaticResource PathCell}" Width="500"/>
-					<GridViewColumn Header="Action" CellTemplate="{StaticResource ActionCell}" Width="100"/>
+					<GridViewColumn Header="Conflict Resolution" CellTemplate="{StaticResource ActionCell}" Width="200"/>
 				</GridView>
 			</ListView.View>
 		</ListView>
