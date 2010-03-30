@@ -66,6 +66,10 @@ namespace OneSync.UI
 
             // Set-up data bindings
             listAllSyncJobs.ItemsSource = this.SyncJobEntries;
+			
+			//Do the sync button rotating here.
+			Storyboard sb = (Storyboard)Window.Resources["sbRotateSync"];
+			sb.Begin(this);
         }
 
         private void txtBlkProceed_MouseDown(object sender, MouseButtonEventArgs e)
@@ -81,6 +85,7 @@ namespace OneSync.UI
                 reloadSyncJobs();
 
                 Window.Title = p.JobName + " - OneSync";
+                lblJobsNumber.Content = listAllSyncJobs.SelectedItems.Count.ToString() + "/" + listAllSyncJobs.SelectedItems.Count.ToString();
                 UpdateSyncUI(false, false);
                 ((Storyboard)Resources["sbNext"]).Begin(this);
             }
@@ -217,8 +222,6 @@ namespace OneSync.UI
         // 2. syncInProgress = false, syncCompletedBefore = true
         private void UpdateSyncUI(bool syncInProgress, bool showProgressControls)
         {
-            Storyboard sb = (Storyboard)Window.Resources["sbRotateSync"];
-
             // Set Visibility of common controls
             txtBlkBackToHome.IsEnabled = !syncInProgress;
             btnSyncStatic.IsEnabled = !syncInProgress;
@@ -229,13 +232,13 @@ namespace OneSync.UI
             {
                 btnSyncRotating.Visibility = Visibility.Visible;
                 btnSyncStatic.Visibility = Visibility.Hidden;
-                sb.Begin(this);
+                //sb.Begin(this);
             }
             else
             {
                 btnSyncRotating.Visibility = Visibility.Hidden;
                 btnSyncStatic.Visibility = Visibility.Visible;
-                sb.Stop();
+                //sb.Stop();
             }
 
             if (showProgressControls)
@@ -327,6 +330,7 @@ namespace OneSync.UI
                 FileSyncAgent agent = agents[0];
                 RemoveAgentEventHandler(agent);
                 agents.RemoveAt(0);
+                lblJobsNumber.Content = agents.Count.ToString() + "/" + listAllSyncJobs.SelectedItems.Count.ToString();
             }
 
             // Check for more sync agents to run
