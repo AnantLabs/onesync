@@ -53,11 +53,27 @@ namespace OneSync.UI
             }
         }
 
+        public string DropboxStatus
+        {
+            get
+            {
+                DropboxStatus status = DropboxStatusCheck.ReturnDropboxStatus(this.SyncJob.IntermediaryStorage.Path);
+                if (status == OneSync.DropboxStatus.NOT_RUNNING)
+                    return "Dropbox not available";
+                else if (status == OneSync.DropboxStatus.SYNCHRONIZING)
+                    return "Dropbox storage synchronizing";
+                else if (status == OneSync.DropboxStatus.UP_TO_DATE)
+                    return "Dropbox storage synced";
+                return "N/A";
+            }
+        }
+
         public void InfoChanged()
         {
             OnPropertyChanged("IntermediaryStoragePath");
             OnPropertyChanged("JobName");
             OnPropertyChanged("SyncSource");
+            OnPropertyChanged("DropboxStatus");
         }
 
         public static IList<UISyncJobEntry> GetSelectedJobs(IEnumerable<UISyncJobEntry> entries)

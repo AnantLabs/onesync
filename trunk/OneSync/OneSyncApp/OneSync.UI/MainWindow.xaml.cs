@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media.Animation;
 using OneSync.Synchronization;
 using System.Collections.ObjectModel;
+using System.Windows.Threading;
 
 namespace OneSync.UI
 {
@@ -24,6 +25,8 @@ namespace OneSync.UI
         
         private SyncJobManager jobManager;
         private BackgroundWorker syncWorker;
+
+        private DispatcherTimer timerDropbox; //The time to check the Dropbox status frequently.
 
         private ObservableCollection<UISyncJobEntry> _SyncJobEntries = new ObservableCollection<UISyncJobEntry>();
         // End: Global variables.
@@ -57,10 +60,27 @@ namespace OneSync.UI
             syncWorker.DoWork += new DoWorkEventHandler(syncWorker_DoWork);
             syncWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(syncWorker_RunWorkerCompleted);
 
+            // Starting the timer to check the Dropbox status
+            timerDropbox = new DispatcherTimer();
+            timerDropbox.Tick += new EventHandler(delegate(object s, EventArgs e)
+                {
+                    dropboxStatusChecking();
+                });
+            timerDropbox.Interval = TimeSpan.FromMilliseconds(10000);
+            timerDropbox.Start();
+
             // Set-up data bindings
             listAllSyncJobs.ItemsSource = this.SyncJobEntries;
 
             LoadSyncJobs();
+        }
+
+        private void dropboxStatusChecking()
+        {
+            foreach (UISyncJobEntry entry in SyncJobEntries)
+            {
+                entry.InfoChanged();
+            }
         }             
 
         private void txtBlkProceed_MouseDown(object sender, MouseButtonEventArgs e)
