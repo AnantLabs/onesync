@@ -19,7 +19,7 @@ namespace OneSync.Synchronization
     public delegate void SyncCancelledHandler(object sender, SyncCancelledEventArgs eventArgs);
     public delegate void SyncStatusChangedHandler(object sender, SyncStatusChangedEventArgs args);
     public delegate void SyncProgressChangedHandler(object sender, SyncProgressChangedEventArgs args);
-    public delegate void FileSyncChangedHandler(object sender, SyncFileChangedEventArgs args);
+    public delegate void SyncFileChangedHandler(object sender, SyncFileChangedEventArgs args);
 
     public enum SyncStatus
     {
@@ -37,9 +37,10 @@ namespace OneSync.Synchronization
         public event SyncCompletedHandler SyncCompleted;
         public event SyncStatusChangedHandler StatusChanged;
         public event SyncProgressChangedHandler ProgressChanged;
-        public event FileSyncChangedHandler SyncFileChanged;
-        List<SyncAction> actions = new List<SyncAction>();
-        private SyncPreviewResult result = null;
+        public event SyncFileChangedHandler SyncFileChanged;
+        
+        private List<SyncAction> actions = new List<SyncAction>();
+        private SyncJob _job;
 
         public FileSyncAgent()
             : base()
@@ -49,6 +50,7 @@ namespace OneSync.Synchronization
         public FileSyncAgent(SyncJob job)
             : base(job)
         {
+            this._job = job;
             SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
             actions = (List<SyncAction>)actProvider.Load(job.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
         }
@@ -84,7 +86,6 @@ namespace OneSync.Synchronization
         /// Carry out the sync actions
         /// </summary>
         /// <returns></returns>
-
         public SyncResult Apply(SyncPreviewResult previewResult)
         {
             // Logging
@@ -239,6 +240,14 @@ namespace OneSync.Synchronization
             // Add to log
             Log.addToLog(profile.SyncSource.Path, profile.IntermediaryStorage.Path,
                 profile.Name, generateActivities, Log.to, count, starttime, DateTime.Now);
+        }
+
+        /// <summary>
+        /// Gets the SyncJob associated with this FileSyncAgent
+        /// </summary>
+        public SyncJob SyncJob
+        {
+            get { return _job; }
         }
 
        

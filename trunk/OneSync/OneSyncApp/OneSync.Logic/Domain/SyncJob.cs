@@ -17,11 +17,8 @@ namespace OneSync.Synchronization
     {
         
         private string _jobId;
-        private string _jobName;
-        
         private SyncSource _syncSource;       
         private IntermediaryStorage _iStorage;
-
         
         public SyncJob(string name , SyncSource syncSource, IntermediaryStorage iStorage)
             : this(System.Guid.NewGuid().ToString(), name, syncSource, iStorage)
@@ -31,54 +28,23 @@ namespace OneSync.Synchronization
         public SyncJob(string id, string name, SyncSource syncSource, IntermediaryStorage iStorage)
         {
             this._jobId = id;
-            this._jobName = name;
+            this.Name = name;
             this._syncSource = syncSource;
             this._iStorage = iStorage;
         }
-
-        public SyncJob(string jobName, string absoluteSyncPath, string absoluteIntermediatePath)
-        {
-            SyncSource syncSource = new SyncSource(System.Guid.NewGuid().ToString(), absoluteSyncPath);
-            IntermediaryStorage iSource = new IntermediaryStorage(absoluteIntermediatePath);
-
-            this._jobId = System.Guid.NewGuid().ToString();
-            this._jobName = jobName;
-            this._syncSource = syncSource;
-            this._iStorage = iSource;
-        }
-
         
-
-        public SyncJob(SyncSource syncSource, IntermediaryStorage metaDataSource)
-        {
-            this._syncSource = syncSource;
-            this._iStorage = metaDataSource;
-        }
         
         /// <summary>
         /// Returns the SyncJob name. Each PC will have unique Job name.
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return this._jobName;
-            }
-            set
-            {
-                this._jobName = value;
-            }
-        }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets the unique ID of this SyncJob.
         /// </summary>
         public string ID
         {
-            get
-            {
-                return this._jobId;
-            }
+            get { return this._jobId; }
         }
 
         /// <summary>
@@ -87,10 +53,7 @@ namespace OneSync.Synchronization
         /// </summary>
         public SyncSource SyncSource
         {
-            get
-            {
-                return this._syncSource;
-            }
+            get { return this._syncSource; }
         }
 
         /// <summary>
@@ -98,11 +61,13 @@ namespace OneSync.Synchronization
         /// </summary>
         public IntermediaryStorage IntermediaryStorage
         {
-            get
-            {
-                return this._iStorage;
-            }
+            get { return this._iStorage; }
         }
+
+        /// <summary>
+        /// SyncActions already generated for this SyncJob
+        /// </summary>
+        public IEnumerable<SyncAction> SyncActions { get; set; }
 
         public override string ToString()
         {

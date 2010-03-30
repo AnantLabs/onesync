@@ -8,7 +8,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
     x:Class="OneSync.UI.MainWindow"
 	x:Name="Window"
 	DataContext="{Binding RelativeSource={RelativeSource Self}}"
-	Title="OneSync" Height="365" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Width="719" mc:Ignorable="d" Closing="Window_Closing">
+	Title="OneSync" Height="365" WindowStartupLocation="CenterScreen" Width="719" mc:Ignorable="d" Closing="Window_Closing">
 	<Window.Resources>
 		<Style x:Key="btnSyncStaticStyle" TargetType="{x:Type Image}">
       		<Setter Property="Source" Value="Resource/OneSync Transparent Logo (Inactive).png" />
@@ -124,26 +124,42 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 	</Window.Background>
 
 	<Canvas x:Name="LayoutRoot">
-		<Label x:Name="label_notification" Width="655.988" Height="25" Content="" FontSize="10.667" Canvas.Top="0" Foreground="#FFB90000" FontStyle="Italic" FontWeight="Bold" Visibility="Hidden"/>
-		<Label x:Name="lblSyncJob" Content="New Sync Job:" FontSize="10.667" Canvas.Left="17" Canvas.Top="45" Foreground="#FF0000B9"/>
-		<Label x:Name="lblFolderToSync" Content="Folder to Sync:" FontSize="10.667" Canvas.Left="182" Canvas.Top="45" Foreground="#FF0000B9" RenderTransformOrigin="0.5,0.5">
-			<Label.RenderTransform>
-				<TranslateTransform X="0" Y="0"/>
-			</Label.RenderTransform>
-		</Label>
-		<Label x:Name="label_storage_message" Width="165" Content="Intermediate Storage Location:" FontSize="10.667" Canvas.Left="397" Canvas.Top="45" Foreground="#FF0000B9">
-			<Label.RenderTransform>
-				<TranslateTransform X="0" Y="0"/>
-			</Label.RenderTransform>
-		</Label>
+		<Grid Margin="10">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="20"/>
+				<RowDefinition Height="100"/>
+				<RowDefinition/>
+				<RowDefinition Height="35"/>
+			</Grid.RowDefinitions>
+			<Label Grid.Row="0" Grid.Column="0" x:Name="label_notification" Content="" FontSize="10.667" Foreground="#FFB90000" FontStyle="Italic" FontWeight="Bold" Visibility="Hidden"/>
+			<Grid Grid.Row="1">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="100"/>
+				</Grid.ColumnDefinitions>
+				<Label Grid.Column="0" x:Name="lblSyncJob" Content="New Sync Job:" FontSize="10.667" Foreground="#FF0000B9"/>
+				<Label Grid.Column="1" x:Name="lblFolderToSync" Content="Folder to Sync:" FontSize="10.667" Foreground="#FF0000B9" RenderTransformOrigin="0.5,0.5">
+					<Label.RenderTransform>
+						<TranslateTransform X="0" Y="0"/>
+					</Label.RenderTransform>
+				</Label>
+				<Label Grid.Column="2" x:Name="label_storage_message" Width="165" Content="Intermediary Storage Location:" FontSize="10.667" Canvas.Left="397" Canvas.Top="45" Foreground="#FF0000B9">
+					<Label.RenderTransform>
+						<TranslateTransform X="0" Y="0"/>
+					</Label.RenderTransform>
+				</Label>
+			</Grid>
+		</Grid>
 		<Canvas x:Name="canvasHome" Canvas.Left="0" Canvas.Top="0" Canvas.Right="0" Canvas.Bottom="0" RenderTransformOrigin="0.5,0.5">
 			<Canvas.RenderTransform>
 				<TranslateTransform X="0" Y="0"/>
 			</Canvas.RenderTransform>
 			<TextBlock x:Name="txtBlkProceed" Text="Sync Selected Jobs" TextWrapping="Wrap" TextDecorations="Underline" FontWeight="Bold" FontSize="14" Cursor="Hand" Foreground="#FF0000B9" Canvas.Left="21" Canvas.Top="308" MouseDown="txtBlkProceed_MouseDown"/>
-			<TextBox x:Name="txtSource" Width="146" Height="22.187" Canvas.Left="187" Canvas.Top="69.002" TextChanged="txtSource_TextChanged" MaxLines="1"/>
+			<TextBox x:Name="txtSource" Width="146" Height="22.187" Canvas.Left="187" Canvas.Top="69.002" MaxLines="1"/>
 			<TextBox x:Name="txtIntStorage" Width="143" Height="23" Canvas.Left="401" Canvas.Top="67.777" MaxLines="1"/>
-			<Button x:Name="btnBrowse_Source" Width="27" Height="25" Content="..." Canvas.Left="337" Canvas.Top="67.777" ToolTip="Click to browse folders" Click="btnBrowse_Source_Click"/>
+			<Button x:Name="btnBrowse_Source" Width="27" Height="25" Content="..." Canvas.Left="337" Canvas.Top="67.777" ToolTip="Click to browse folders" Click="btnBrowse_Click"/>
 			<Button x:Name="btnBrowse" Width="27" Height="25" Content="..." Canvas.Left="548" Canvas.Top="68" ToolTip="Click to browse folders" Click="btnBrowse_Click" RenderTransformOrigin="0.815,0.52"/>
 			
             <ListView x:Name="listAllSyncJobs" Width="669" Height="207" Canvas.Left="21" Canvas.Top="97"> 
@@ -170,7 +186,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>
-                        <GridViewColumn Width="226" Header="Intermediate Storage Location">
+                        <GridViewColumn Width="226" Header="Intermediary Storage Location">
 							<GridViewColumn.CellTemplate>
 								<DataTemplate x:Name="intStorageTemplate">
 									<TextBlock TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Text="{Binding IntStorage}" ToolTip="{Binding IntStorage}"/>
@@ -180,7 +196,14 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
                         <GridViewColumn Width="70" Header="">
 							<GridViewColumn.CellTemplate>
 								<DataTemplate x:Name="operationEditTemplate">
-									<TextBlock TextDecorations="Underline" FontWeight="Bold" Cursor="Hand" Text="Edit" ToolTip="Edit the selected job" MouseDown="TextBlock_MouseDown"/>
+									<TextBlock TextDecorations="Underline" FontWeight="Bold" Cursor="Hand" Text="Edit" ToolTip="Edit selected job" MouseDown="TextBlock_MouseDown"/>
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+                        <GridViewColumn Width="70" Header="">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate x:Name="operationPreviewTemplate">
+									<TextBlock TextDecorations="Underline" FontWeight="Bold" Cursor="Hand" Text="Preview" ToolTip="Preview selected job" MouseDown="PreviewSyncJob" />
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>
@@ -202,39 +225,12 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			<TextBlock x:Name="txtBlkShowLog" Width="61" Text="Show Log " TextWrapping="Wrap" TextDecorations="Underline" FontWeight="Bold" FontFamily="Times New Roman" FontSize="13.333" Cursor="Hand" Foreground="#FF3000FF" MouseDown="txtBlkShowLog_MouseDown" Height="18" Canvas.Left="12" Canvas.Top="200" Visibility="Hidden" />
 			<ProgressBar x:Name="pbSync" Value="20" Width="579.988" Height="18" Canvas.Left="12" Canvas.Top="136"/>
 			<Image x:Name="btnSyncStatic" Style="{StaticResource btnSyncStaticStyle}" Stretch="Fill" Cursor="Hand" MouseDown="btnSyncStatic_MouseDown" ToolTip="Sync this folder now!" VerticalAlignment="Bottom" Width="104" Canvas.Left="595.988" Canvas.Top="40" Height="104"  />
-			<Expander x:Name="Expander" VerticalAlignment="Top" Width="697" Height="243" Header="Show details" Canvas.Left="2.483" Canvas.Top="222" Collapsed="Expander_Toggle" Expanded="Expander_Toggle">
-				<Grid>
-					<ListView x:Name="listLog" Margin="8">
-						<ListView.Resources>
-					        <DataTemplate x:Key="IconTemplate">
-					            <Grid>
-					                <Grid.ColumnDefinitions>
-					                    <ColumnDefinition Width="Auto"/>
-					                    <ColumnDefinition/>
-					                </Grid.ColumnDefinitions>
-					                <Image Grid.Column="0" Source="{Binding ImageSrc}"/>
-					                <TextBlock Grid.Column="1" Text="{Binding FileName}"/>
-					            </Grid>
-					        </DataTemplate>
-				    	</ListView.Resources>  
-						<ListView.View>
-							<GridView>
-								<GridViewColumn Width="140" Header="File"
-									CellTemplate="{StaticResource IconTemplate}" />
-							    <GridViewColumn Width="140" Header="Status"
-									DisplayMemberBinding="{Binding Status}" />
-							    <GridViewColumn Width="420" Header="Message"
-									DisplayMemberBinding="{Binding Message}" />
-							</GridView>
-						</ListView.View>
-					</ListView>
-				</Grid>
-			</Expander>
 			<Label x:Name="lblStatus" Width="692.988" Content="label_current_processing_file" FontSize="10.667" Canvas.Left="7" Canvas.Top="158"/>
 			<TextBlock x:Name="txtBlkBackToHome" Text="&lt;&lt; Back to Home" TextWrapping="Wrap" FontWeight="Bold" FontSize="10.667" Cursor="Hand" Foreground="#FF3000FF" MouseDown="txtBlkBackToHome_MouseDown" Canvas.Left="611" Canvas.Top="10" d:LayoutOverrides="VerticalAlignment, Height"/>
 			<Label x:Name="lblSyncJobName" Width="392" Height="24" Content="Label" FontWeight="Bold" Foreground="#FF0000B9" Canvas.Left="186" Canvas.Top="45"/>
 			<Label x:Name="lblSyncJobSource" Width="392" Height="24" Content="Label" FontWeight="Bold" Foreground="#FF0000B9" Canvas.Left="186" Canvas.Top="69"/>
 			<Label x:Name="lblSyncJobStorage" Width="392" Height="24" Content="Label" FontWeight="Bold" Foreground="#FF0000B9" Canvas.Left="186" Canvas.Top="93"/>
 		</Canvas>
+		
 	</Canvas>
 </Window>

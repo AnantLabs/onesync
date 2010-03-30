@@ -123,39 +123,7 @@ namespace OneSync.Synchronization
             return jobs;
         }
 
-        public override SyncJob Load(string jobId)
-        {
-            SyncJob job = null;
-
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME));
-            using (SqliteConnection con = db.NewSQLiteConnection ())
-            {
-                string cmdText = "SELECT * FROM " + SYNCJOB_TABLE +
-                                 " p, " + DATASOURCE_INFO_TABLE +
-                                 " d WHERE p" + "." + COL_SYNC_SOURCE_ID + " = d" + "." + COL_SOURCE_ID +
-                                 " AND " + COL_SYNCJOB_ID + " = @pid";
-
-
-                SqliteParameterCollection paramList = new SqliteParameterCollection();
-                paramList.Add(new SqliteParameter("@pid", System.Data.DbType.String) { Value = jobId });
-
-                db.ExecuteReader(cmdText, paramList, reader => 
-                    {
-                        // TODO: constructor of Profile takes in more arguments to remove dependency on IntermediaryStorage and SyncSource class.
-                        SyncSource source = new SyncSource((string)reader[COL_SYNC_SOURCE_ID], (string)reader[COL_SOURCE_ABS_PATH]);
-                        IntermediaryStorage mdSource = new IntermediaryStorage((string)reader[COL_METADATA_SOURCE_LOCATION]);
-                        
-                        job = new SyncJob((string)reader[COL_SYNCJOB_ID], (string)reader[COL_SYNCJOB_NAME], source, mdSource);
-                        
-                        return;
-                    }
-                );
-
-            }
-            return job;
-        }
-
-        public SyncJob GetProfileByName (string name)
+        public override SyncJob Load(string jobName)
         {
             SyncJob p = null;
 
@@ -169,7 +137,7 @@ namespace OneSync.Synchronization
 
 
                 SqliteParameterCollection paramList = new SqliteParameterCollection();
-                paramList.Add(new SqliteParameter("@pname", System.Data.DbType.String) { Value = name });
+                paramList.Add(new SqliteParameter("@pname", System.Data.DbType.String) { Value = jobName });
 
                 db.ExecuteReader(cmdText, paramList, reader =>
                 {
