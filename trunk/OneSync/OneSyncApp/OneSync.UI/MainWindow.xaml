@@ -234,11 +234,11 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			<TextBlock Grid.Row="0" x:Name="txtBlkBackToHome" Text="&lt;&lt; Back to Home" Style="{StaticResource blueLinkLabel}" MouseDown="txtBlkBackToHome_MouseDown" d:LayoutOverrides="VerticalAlignment" HorizontalAlignment="Left" Width="117" />
 			
 			<!-- Row 1 -->
-			<Label Grid.Row="1" Style="{StaticResource blueLabel}" Content="Number of Jobs:" Margin="10,10,0,0"/>
+			<Label Grid.Row="1" Style="{StaticResource blueLabel}" Content="Number of Remaining Jobs:&#xd;&#xa;&#xd;&#xa;Current Job Name:&#xd;&#xa;Sync Source Directory:&#xd;&#xa;Intermediate Storage Directory:" Margin="10,10,0,0"/>
 			<Label Grid.Row="1" x:Name="lblJobsNumber" Style="{StaticResource blueBoldLabel}" Content="4" Margin="186,10,0,0"/>
-			<Label Grid.Row="1" x:Name="lblSyncJobName" Style="{StaticResource blueBoldLabel}" Content="Label" Margin="186,35,0,0"/>
-			<Label Grid.Row="1" x:Name="lblSyncJobSource" Style="{StaticResource blueBoldLabel}" Content="Label" Margin="186,55,0,0" />
-			<Label Grid.Row="1" x:Name="lblSyncJobStorage" Style="{StaticResource blueBoldLabel}" Content="Label" Margin="186,75,0,0"/>
+			<Label Grid.Row="1" x:Name="lblSyncJobName" Style="{StaticResource blueBoldLabel}" Content="Label" Margin="186,39,0,-4"/>
+			<Label Grid.Row="1" x:Name="lblSyncJobSource" Style="{StaticResource blueBoldLabel}" Content="Label" Margin="186,53,0,2" />
+			<Label Grid.Row="1" x:Name="lblSyncJobStorage" Style="{StaticResource blueBoldLabel}" Content="Label" Margin="186,67,0,8"/>
 			
 			<Image Grid.Row="1" x:Name="btnSyncRotating" ToolTip="Sync process is ongoing." HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Width="104" Height="104" Source="Resource/OneSync Transparent Logo.png" Visibility="Hidden" RenderTransformOrigin="0.5,0.5" >
 				<Image.RenderTransform>
@@ -250,6 +250,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			<!-- Row 2 -->
 			<ProgressBar Grid.Row="2" x:Name="pbSync" Value="0" Height="20" Margin = "0,10,0,10" VerticalAlignment="Top" />
 			<Label Grid.Row="2" x:Name="lblStatus" Content="Status:" FontSize="10.667" Margin = "0,30,0,10" VerticalAlignment="Top" />
+			<Label Grid.Row="2" x:Name="lblSubStatus" Content="" FontSize="10.667" Margin = "0,54.186,0,0" VerticalAlignment="Top" />
 		</Grid>
 	</Grid>
 </Window>

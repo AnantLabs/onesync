@@ -279,12 +279,15 @@ namespace OneSync.UI
             {
                 pbSync.Visibility = Visibility.Visible;
                 lblStatus.Visibility = Visibility.Visible;
+                lblSubStatus.Visibility = Visibility.Visible;
             }
             else
             {
                 pbSync.Visibility = Visibility.Hidden;
                 lblStatus.Visibility = Visibility.Hidden;
+                lblSubStatus.Visibility = Visibility.Hidden;
                 lblStatus.Content = "";
+                lblSubStatus.Content = "";
                 pbSync.Value = 0;
             }
         }
@@ -438,9 +441,9 @@ namespace OneSync.UI
         void currAgent_FileChanged(object sender, Synchronization.SyncFileChangedEventArgs e)
         {
             if (this.Dispatcher.CheckAccess())
-                lblStatus.Content = "Synchronizing: " + e.RelativePath;
+                lblSubStatus.Content = "Synchronizing: " + e.RelativePath;
             else
-                lblStatus.Dispatcher.Invoke((Action)delegate { currAgent_FileChanged(sender, e); });
+                lblSubStatus.Dispatcher.Invoke((Action)delegate { currAgent_FileChanged(sender, e); });
         }
 
         /// <summary>
@@ -454,6 +457,7 @@ namespace OneSync.UI
                 UpdateSyncUI(false, true);
 
                 lblStatus.Content = "Sync process is successfully done.";
+                lblSubStatus.Content = "";
             }
             else
             {
