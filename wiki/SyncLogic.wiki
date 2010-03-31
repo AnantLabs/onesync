@@ -1,0 +1,33 @@
+#summary Sychronization Logic
+
+= Synchronization Logic =
+
+The following outlines of OneSync synchronization algorithm and logic.
+
+= 1. Applying Patch =
+
+When synchonization starts, OneSync will check if there are any patch to be applied to the current folder being synced. A Patch conceptually refers to SyncActions to be executed and the (dirty) files that are associated with these SyncActions.
+
+== 1.1 Executing SyncActions ==
+
+Each SyncAction is can be a Copy action or a Delete action. When a SyncAction is executed, the affected file is checked whether it was modified since last sync. This is done by comparing the file with the metadata created during last sync. If it has been changed, the SyncAction will be considered as a conflict action. The SyncAction has a Conflict Resolution property/field to determine how this conflict is going to be resolved. It is to be noted that there will be no further filesystem changes made to the sync folder after all SyncActions are executed.
+
+After the SyncActions are executed, the SyncActions and any associated files are deleted from the intermediary storage as they are no longer required.
+
+== 1.2 Updating of metadata =
+
+The metadata of the folder being synchronized will be generated and persisted to the intermediary storage. This metadata can be thought of as the state of the filesystem after the patch from other PC is applied (i.e. after all SyncActions generated from other PC are executed).
+
+Hence the metadata can be used for comparison by the other PC for detection of the dirty files (i.e. files changed since last synchronization is run).
+
+= 2. Generating Patch =
+
+This is the stage where the SyncActions for the other folder/PC is being generated.
+
+== 2.1 Comparing Metadata ==
+
+The saved metadata of the other PC is being compared with the current filesystem of the file being synchronized. The purpose is to detect all the differences in the filesystem of the folder being synchronized and the filesystem of the other PC.
+
+== 2.2 Creating SyncActions ==
+
+For each difference, a corresponding SyncAction will be generated to resolve this difference. In this stage only files in the current PC could be associated with a SyncAction. These SyncActions, together with its associated file (if any) can be considered to be the patch for other PC.
