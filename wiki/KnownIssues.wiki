@@ -3,4 +3,3 @@
   # Assumes that user has read/write permission files and folders being synchronized.
   # Empty folder are not synchronized.
   # No file size capacity check of intermediary storage.
-  # The DropBox sync is a BETA released. Only small size and small number of files can be synced.
