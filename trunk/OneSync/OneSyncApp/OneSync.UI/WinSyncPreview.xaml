@@ -7,7 +7,7 @@
 	x:Class="OneSync.UI.WinSyncPreview"
 	x:Name="Window"
 	Title="OneSync - Sync Preview"
-	Width="800" Height="480">
+	Width="900" Height="480">
 	
 	<Window.Background>
 		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -43,7 +43,7 @@
 				</ComboBox>
 				<TextBox Grid.Column="2" Foreground="#FF808080" x:Name="txtFilter" Height="21.96" TextChanged="txtFilter_TextChanged" GotFocus="txtFilter_GotFocus"/>
 			</Grid>
-			<TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Text="Done" Grid.Row="3" x:Name="txtBlkSave" TextDecorations="Underline" FontSize="13.333" Cursor="Hand" Foreground="#FF0000B9" FontWeight="Bold" />
+			<TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Text="Done" Grid.Row="3" x:Name="txtBlkDone" TextDecorations="Underline" FontSize="13.333" Cursor="Hand" Foreground="#FF0000B9" FontWeight="Bold" MouseDown="txtBlkDone_MouseDown" />
 			<UI:SyncActionsListView x:Name="lvPreview" Grid.Row="2" d:LayoutOverrides="GridBox" />
 		</Grid>
 	</Grid>

@@ -170,14 +170,14 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
                         </GridViewColumn>
-					    <GridViewColumn Width="226" Header="Sync Source Folder Directory">
+					    <GridViewColumn Width="226" Header="Sync Source Directory">
 							<GridViewColumn.CellTemplate>
 								<DataTemplate x:Name="syncSourceTemplate">
 									<TextBlock TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Text="{Binding SyncSource}" ToolTip="{Binding SyncSource}"/>
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>
-                        <GridViewColumn Width="226" Header="Intermediary Storage Location">
+                        <GridViewColumn Width="226" Header="Intermediary Storage Directory">
 							<GridViewColumn.CellTemplate>
 								<DataTemplate x:Name="intStorageTemplate">
 									<TextBlock TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Text="{Binding IntermediaryStoragePath}" ToolTip="{Binding IntermediaryStoragePath}"/>

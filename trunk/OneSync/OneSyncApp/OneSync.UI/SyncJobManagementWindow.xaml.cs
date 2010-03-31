@@ -133,9 +133,6 @@ namespace OneSync.UI
                 editingSyncJob.SyncJob.IntermediaryStorage.Path = originalIntStorageDir;
                 editingSyncJob.InfoChanged();
             }
-
-
-            
 		}
 
 		private void txtBlkDeleteJob_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
