@@ -33,8 +33,7 @@ namespace OneSync.Synchronization
         /// <param name="con"></param>
         /// <returns></returns>
         public  bool Add(SyncSource s, SqliteConnection con)
-        {
-            if (GetSyncSourceCount() == 2) throw new SyncSourcesNumberExceededException("The intermediate storage can only be attached to one profile");
+        {            
              using (SqliteCommand cmd = con.CreateCommand())
              {
                  cmd.CommandText = "INSERT INTO " + Configuration.TBL_DATASOURCE_INFO +
@@ -133,8 +132,7 @@ namespace OneSync.Synchronization
                 using (SqliteConnection con = db.NewSQLiteConnection ())
                 {
                     string cmdText = "SELECT COUNT (DISTINCT " + Configuration.COL_SOURCE_ID + ") AS num" +
-                            " FROM " + Configuration.TBL_DATASOURCE_INFO +
-                            " GROUP BY " + Configuration.METADATA_RELATIVE_PATH;
+                            " FROM " + Configuration.TBL_DATASOURCE_INFO;
 
                     return Convert.ToInt32(db.ExecuteScalar(cmdText, null));
                 }

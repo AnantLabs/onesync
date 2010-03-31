@@ -92,13 +92,21 @@ namespace OneSync.Synchronization
         /// <param name="fromPath">Root path of files which metadata is to be generated.</param>
         /// <param name="id">Id of metadata to be generated.</param>
         /// <returns>MetaData of all files specified in root path.</returns>
-        public static FileMetaData Generate(string fromPath, string id)
+        public static FileMetaData Generate(string fromPath, string id, bool excludeHidden)
         {
             FileMetaData metaData = new FileMetaData(id, fromPath);
 
             DirectoryInfo di = new DirectoryInfo(fromPath);
             FileInfo[] files = di.GetFiles("*.*", SearchOption.AllDirectories);
-            //FileInfo[] files = Directory.GetFiles(fromPath, SearchOption.AllDirectories);
+
+            if (excludeHidden)
+            {
+                IEnumerable<FileInfo> noHidden = from file in files
+                                                 where !Files.FileUtils.IsHidden(file.FullName)
+                                                 select file;
+                files = noHidden.ToArray<FileInfo>();
+            }
+            
 
             // TODO: Implement ntfs id
             foreach (FileInfo f in files)

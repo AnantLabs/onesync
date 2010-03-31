@@ -12,7 +12,7 @@ namespace OneSync.UI
 {
 	public partial class SyncActionsListView
 	{
-        private IEnumerable<SyncAction> allActions = null;
+        
 		public SyncActionsListView()
 		{
 			this.InitializeComponent();
@@ -22,28 +22,39 @@ namespace OneSync.UI
         {
             get { return (IEnumerable<SyncAction>)lvActions.ItemsSource; }
             set { lvActions.ItemsSource = value; }
-        }
-
+        }     
+        
         private void checkBoxSelectAll_Checked(object sender, RoutedEventArgs e)
         {
-            UpdateSkipStatus(true);
+            //List<SyncAction> actions = new List<SyncAction>((IEnumerable<SyncAction>) lvActions.ItemsSource);
+            IEnumerable <SyncAction> actions = (IEnumerable <SyncAction>)lvActions.ItemsSource;
+            if (actions == null) return;
+            int index = 0;
+            foreach (SyncAction action in actions)
+            {                
+                ListViewItem lvItem = UserControl.lvActions.ItemContainerGenerator.ContainerFromIndex(index++) as ListViewItem;
+                ContentPresenter lvItemPresenter = UIHelper.FindVisualChild<ContentPresenter>(lvItem);
+                DataTemplate template = lvItemPresenter.ContentTemplate;
+                CheckBox checkBox = (CheckBox)template.FindName("checkBoxSkip", lvItemPresenter);
+                checkBox.IsChecked = true ;                  
+            }
+            //lvActions.ItemsSource = actions;
         }
 
         private void checkBoxSelectAll_Unchecked(object sender, RoutedEventArgs e)
         {
-            UpdateSkipStatus(false);
-        }
-
-        private void UpdateSkipStatus(bool skipAll)
-        {
-            IEnumerable<SyncAction> actions = (IEnumerable<SyncAction>)lvActions.ItemsSource;
-            if (actions == null) return;
-
+            IEnumerable <SyncAction> actions = (IEnumerable<SyncAction>) lvActions.ItemsSource;
+            if (actions == null) return ;
+            int index = 0;
             foreach (SyncAction action in actions)
-                action.Skip = skipAll;
+            {
+                ListViewItem lvItem = UserControl.lvActions.ItemContainerGenerator.ContainerFromIndex(index++) as ListViewItem;
+                ContentPresenter lvItemPresenter = UIHelper.FindVisualChild<ContentPresenter>(lvItem);
+                DataTemplate template = lvItemPresenter.ContentTemplate;
+                CheckBox checkBox = (CheckBox)template.FindName("checkBoxSkip", lvItemPresenter);
+                checkBox.IsChecked = false;                
+            }            
         }
-
-        
     }
 
     #region Converters

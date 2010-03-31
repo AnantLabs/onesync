@@ -8,7 +8,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
     x:Class="OneSync.UI.MainWindow"
 	x:Name="Window"
 	DataContext="{Binding RelativeSource={RelativeSource Self}}"
-	Title="OneSync" Width="800" Height="365" MinWidth="720" MinHeight="279" WindowStartupLocation="CenterScreen" mc:Ignorable="d" Closing="Window_Closing">
+	Title="OneSync" Width="950" Height="365" MinWidth="720" MinHeight="279" WindowStartupLocation="CenterScreen" mc:Ignorable="d" Closing="Window_Closing">
 	<Window.Resources>
 		<Style x:Key="blueLabel" TargetType="{x:Type Label}">
 			<Setter Property="FontSize" Value="10.667" />
@@ -218,14 +218,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
                                     <TextBlock TextDecorations="Underline" FontWeight="Bold" Cursor="Hand" Text="Show Log" ToolTip="Show selected job's log" MouseDown="txtBlkShowLog_MouseDown" />
 								</DataTemplate>
                             </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Width="200" Header="Dropbox Status">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate x:Name="dropboxStatusTemplate">
-                                    <TextBlock Text="{Binding DropboxStatus}" />
-								</DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
+                        </GridViewColumn>                        
                     </GridView>
 				</ListView.View>
 			</ListView>
@@ -248,8 +241,8 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			<TextBlock Grid.Row="0" x:Name="txtBlkBackToHome" Text="&lt;&lt; Back to Home" Style="{StaticResource blueLinkLabel}" MouseDown="txtBlkBackToHome_MouseDown" d:LayoutOverrides="VerticalAlignment" HorizontalAlignment="Left" Width="117" />
 			
 			<!-- Row 1 -->
-			<Label Grid.Row="1" Style="{StaticResource blueLabel}" Content="&#xa;&#xd;&#xa;Current Job Name:&#xa;Sync Source Directory:&#xa;Intermediate Storage Directory:" Margin="10,10,0,0"/>
-			<Label Grid.Row="1" x:Name="lblJobsNumber" Style="{StaticResource blueBoldLabel}" Content="4" Margin="186,10,0,0"/>
+			<Label Grid.Row="1" Style="{StaticResource blueLabel}" Content="Number of sync jobs:&#xd;&#xa;&#xd;&#xa;Current Job Name:&#xd;&#xa;Sync Source Directory:&#xd;&#xa;Intermediate Storage:" Margin="10,10,0,0"/>
+			<Label Grid.Row="1" x:Name="lblJobsNumber" Style="{StaticResource blueBoldLabel}" Content="" Margin="186,10,0,0"/>
 			<Label Grid.Row="1" x:Name="lblSyncJobName" Style="{StaticResource blueBoldLabel}" Content="Label" Margin="186,39,0,-4"/>
 			<Label Grid.Row="1" x:Name="lblSyncJobSource" Style="{StaticResource blueBoldLabel}" Content="Label" Margin="186,53,0,2" />
 			<Label Grid.Row="1" x:Name="lblSyncJobStorage" Style="{StaticResource blueBoldLabel}" Content="Label" Margin="186,67,0,8"/>
@@ -264,7 +257,8 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			<!-- Row 2 -->
 			<ProgressBar Grid.Row="2" x:Name="pbSync" Value="0" Height="20" Margin = "0,10,0,10" VerticalAlignment="Top" />
 			<Label Grid.Row="2" x:Name="lblStatus" Content="Status:" FontSize="10.667" Margin = "0,30,0,10" VerticalAlignment="Top" />
-			<Label Grid.Row="2" x:Name="lblSubStatus" Content="" FontSize="10.667" Margin = "0,54.186,0,0" VerticalAlignment="Top" />
+            <Label Grid.Row="2" x:Name="lblSubStatus" Content=""  FontSize="10.667" Margin = "0,54.186,0,0" VerticalAlignment="Top" />
+            <Label Grid.Row="1" x:Name="lblSyncPageMessage" Style="{StaticResource blueBoldLabel}" Content="" Margin="0,85,186,-10" Foreground="#FFB90000"/>
 		</Grid>
 	</Grid>
 </Window>

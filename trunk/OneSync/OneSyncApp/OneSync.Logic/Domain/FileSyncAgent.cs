@@ -15,33 +15,33 @@ using Community.CsharpSqlite;
 
 namespace OneSync.Synchronization
 {
+    #region Declare delegates 
     public delegate void SyncCompletedHandler(object sender, SyncCompletedEventArgs eventArgs);
     public delegate void SyncCancelledHandler(object sender, SyncCancelledEventArgs eventArgs);
     public delegate void SyncStatusChangedHandler(object sender, SyncStatusChangedEventArgs args);
     public delegate void SyncProgressChangedHandler(object sender, SyncProgressChangedEventArgs args);
     public delegate void SyncFileChangedHandler(object sender, SyncFileChangedEventArgs args);
-
-    public enum SyncStatus
-    {
-        VERIFY_PATCH,
-        APPLY_PATCH,
-        GENERATE_PATCH,
-        UPDATE_DATA
-    }
+    #endregion Declare delegates
+      
 
     /// <summary>
     /// 
     /// </summary>    
     public class FileSyncAgent : BaseSyncAgent
     {
+        #region Declare events
         public event SyncCompletedHandler SyncCompleted;
         public event SyncStatusChangedHandler StatusChanged;
         public event SyncProgressChangedHandler ProgressChanged;
         public event SyncFileChangedHandler SyncFileChanged;
-        
+        #endregion declare events
+
         private List<SyncAction> actions = new List<SyncAction>();
         private SyncJob _job;
 
+
+        #region Constructors
+        //default constructor
         public FileSyncAgent()
             : base()
         {
@@ -51,24 +51,36 @@ namespace OneSync.Synchronization
             : base(job)
         {
             this._job = job;
-            SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
-            actions = (List<SyncAction>)actProvider.Load(job.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
         }
+        #endregion Constructors
 
+        /// <summary>
+        /// This method apply patches and generating new patches
+        /// </summary>
+        /// <param name="preview"></param>
         public void Synchronize(SyncPreviewResult preview)
         {
-            if (ProgressChanged != null) ProgressChanged(this, new SyncProgressChangedEventArgs(0));
+            if (StatusChanged != null) StatusChanged(this, new SyncStatusChangedEventArgs("Applying patch"));
             Apply(preview);
-            if (ProgressChanged != null) ProgressChanged(this, new SyncProgressChangedEventArgs(50));
-            Generate();
-            if (ProgressChanged != null) ProgressChanged(this, new SyncProgressChangedEventArgs(100));
+            if (StatusChanged != null) StatusChanged(this, new SyncStatusChangedEventArgs("Generating patch"));
+            Generate();            
             if (SyncCompleted != null) SyncCompleted(this, new SyncCompletedEventArgs());
         }
 
+        /// <summary>
+        /// Generate the sync preview that being applied to the folder
+        /// </summary>
+        /// <returns></returns>
         public SyncPreviewResult GenerateSyncPreview()
         {
+            if (StatusChanged != null)
+                StatusChanged(this, new SyncStatusChangedEventArgs("Preparing to sync"));
+
+            SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(this._job.IntermediaryStorage.Path);            
+            actions = (List<SyncAction>)actProvider.Load(_job.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
+
             //Generate current folder's metadata
-            FileMetaData currentItems = MetaDataProvider.Generate(profile.SyncSource.Path, profile.SyncSource.ID);
+            FileMetaData currentItems = MetaDataProvider.Generate(profile.SyncSource.Path, profile.SyncSource.ID,true);
 
             //Load current folder metadata from database
             MetaDataProvider mdProvider = SyncClient.GetMetaDataProvider(profile.IntermediaryStorage.Path, profile.SyncSource.ID);
@@ -84,6 +96,7 @@ namespace OneSync.Synchronization
 
         /// <summary>
         /// Carry out the sync actions
+        /// The previewResult contains 3 categories of items (copy over, delete, create new)
         /// </summary>
         /// <returns></returns>
         public SyncResult Apply(SyncPreviewResult previewResult)
@@ -91,13 +104,24 @@ namespace OneSync.Synchronization
             // Logging
             List<LogActivity> applyActivities = new List<LogActivity>();            
             DateTime starttime = DateTime.Now;
-
             SyncResult syncResult = new SyncResult();
+
+            int totalWorkItems = previewResult.ItemsToCopyOver.Count +
+                previewResult.ConflictItems.Count + previewResult.ItemsToDelete.Count;
+            if (totalWorkItems == 0)
+                if (ProgressChanged != null) ProgressChanged(this, new SyncProgressChangedEventArgs(100));
+            int workItem = 0;
+
             foreach (SyncAction action in previewResult.ItemsToCopyOver)
             {
                 if (action.Skip)
                 {
                     //add log
+                    if (ProgressChanged != null)
+                    {
+                        workItem++;
+                        ProgressChanged(this, new SyncProgressChangedEventArgs((workItem * 100 / totalWorkItems)));
+                    }
                     continue ;
                 }
                if (SyncFileChanged != null) SyncFileChanged(this, new SyncFileChangedEventArgs(ChangeType.NEWLY_CREATED, action.RelativeFilePath));
@@ -108,7 +132,12 @@ namespace OneSync.Synchronization
                    syncResult.Ok.Add(action);
                    applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "SUCCESS"));                   
                 }
-                catch (Exception){Console.WriteLine("Logging error");}                
+                catch (Exception){Console.WriteLine("Logging error");}
+               if (ProgressChanged != null)
+               {
+                   workItem++;
+                   ProgressChanged(this, new SyncProgressChangedEventArgs((workItem * 100 / totalWorkItems)));
+               }                
             }
 
             foreach (SyncAction action in previewResult.ItemsToDelete)
@@ -116,6 +145,11 @@ namespace OneSync.Synchronization
                 if (action.Skip)
                 {
                     //add log
+                    if (ProgressChanged != null)
+                    {
+                        workItem++;
+                        ProgressChanged(this, new SyncProgressChangedEventArgs((workItem * 100/ totalWorkItems)));
+                    }
                     continue;
                 }
                 if (SyncFileChanged != null) SyncFileChanged(this, new SyncFileChangedEventArgs(ChangeType.DELETED, action.RelativeFilePath));
@@ -131,7 +165,12 @@ namespace OneSync.Synchronization
                     syncResult.Ok.Add(action);
                     applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "SUCCESS"));
                 }
-                catch (Exception) { Console.WriteLine("Logging error "); }                              
+                catch (Exception) { Console.WriteLine("Logging error "); }
+                if (ProgressChanged != null)
+                {
+                    workItem++;
+                    ProgressChanged(this, new SyncProgressChangedEventArgs((workItem * 100/ totalWorkItems)));
+                }
             }
 
             foreach (SyncAction action in previewResult.ConflictItems)
@@ -140,6 +179,11 @@ namespace OneSync.Synchronization
                 {
                     syncResult.Skipped.Add(action);
                     applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString()));
+                    if (ProgressChanged != null)
+                    {
+                        workItem++;
+                        ProgressChanged(this, new SyncProgressChangedEventArgs((workItem * 100/ totalWorkItems)));
+                    }
                     continue;
                 }
                 else if (action.ConflictResolution == ConflictResolution.DUPLICATE_RENAME)
@@ -157,7 +201,12 @@ namespace OneSync.Synchronization
                         applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString() + "_SUCCESS"));
                     }
                     catch (Exception)
-                    {Console.WriteLine("Logging error");}                  
+                    {Console.WriteLine("Logging error");}
+                    if (ProgressChanged != null)
+                    {
+                        workItem++;
+                        ProgressChanged(this, new SyncProgressChangedEventArgs((workItem * 100/ totalWorkItems)));
+                    }
                 }
                 else if (action.ConflictResolution == ConflictResolution.OVERWRITE)
                 {
@@ -179,8 +228,14 @@ namespace OneSync.Synchronization
                         applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString() + "_SUCCESS"));
                     }
                     catch (Exception)
-                    {Console.WriteLine("Logging error");}                    
+                    {Console.WriteLine("Logging error");}
+                    if (ProgressChanged != null)
+                    {
+                        workItem++;
+                        ProgressChanged(this, new SyncProgressChangedEventArgs((workItem * 100/ totalWorkItems)));
+                    }
                 }
+                
             }
 
             // Add to log
@@ -193,15 +248,17 @@ namespace OneSync.Synchronization
             // Delete all dirty files
         }
 
-        public void Generate()
+        /// <summary>
+        /// Generate patches 
+        /// </summary>
+        private void Generate()
         {
             //read metadata of the current folder in file system 
-            FileMetaData currentItems = MetaDataProvider.Generate(profile.SyncSource.Path, profile.SyncSource.ID);
+            FileMetaData currentItems = MetaDataProvider.Generate(profile.SyncSource.Path, profile.SyncSource.ID,true);
 
             //read metadata of the current folder stored in the database
             MetaDataProvider mdProvider = SyncClient.GetMetaDataProvider(profile.IntermediaryStorage.Path, profile.SyncSource.Path);
             FileMetaData storedItems = mdProvider.Load(profile.SyncSource.ID, SourceOption.SOURCE_ID_EQUALS);
-
 
             //Update metadata 
             mdProvider.Update(storedItems, currentItems);
@@ -222,19 +279,40 @@ namespace OneSync.Synchronization
             int count = 0;
             DateTime starttime = DateTime.Now;
 
-            if (Directory.Exists(profile.IntermediaryStorage.DirtyFolderPath)) Directory.Delete(profile.IntermediaryStorage.DirtyFolderPath, true);
+            int totalWorkItems = newActions.Count;           
+            if (totalWorkItems == 0)
+                if (ProgressChanged != null) ProgressChanged(this, new SyncProgressChangedEventArgs(100));
+            int workItem = 0;
+            
             foreach (SyncAction action in newActions)
             {
                 try
                 {
+                    #region newly created action
                     if (action.ChangeType == ChangeType.NEWLY_CREATED)
                     {
+                        if (SyncFileChanged != null) SyncFileChanged(this, new SyncFileChangedEventArgs(ChangeType.NEWLY_CREATED, action.RelativeFilePath));
                         SyncExecutor.CopyToDirtyFolderAndUpdateActionTable(action, profile);
+                        if (ProgressChanged != null)
+                        {
+                            workItem++;
+                            ProgressChanged(this, new SyncProgressChangedEventArgs( (workItem * 100 / totalWorkItems)));
+                        }
                     }
+                    #endregion newly created action
+
+                    #region delete action
                     else if (action.ChangeType == ChangeType.DELETED || action.ChangeType == ChangeType.RENAMED)
-                    {                        
+                    {
+                        if (SyncFileChanged != null) SyncFileChanged(this, new SyncFileChangedEventArgs(ChangeType.DELETED, action.RelativeFilePath));
                         actProvider.Add(action);
+                        if (ProgressChanged != null)
+                        {
+                            workItem++;
+                            ProgressChanged(this, new SyncProgressChangedEventArgs((workItem * 100 / totalWorkItems)));
+                        }
                     }
+                    #endregion delete action
 
                     generateActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "SUCCESS"));
                 }
@@ -248,7 +326,7 @@ namespace OneSync.Synchronization
 
             // Add to log
             Log.AddToLog(profile.SyncSource.Path, profile.IntermediaryStorage.Path,
-                profile.Name, generateActivities, Log.To, count, starttime, DateTime.Now);
+                profile.Name, generateActivities, Log.To, generateActivities.Count, starttime, DateTime.Now);
         }
 
         /// <summary>
@@ -257,8 +335,6 @@ namespace OneSync.Synchronization
         public SyncJob SyncJob
         {
             get { return _job; }
-        }
-
-       
+        }       
     }
 }

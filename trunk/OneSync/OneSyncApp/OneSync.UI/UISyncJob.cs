@@ -24,17 +24,20 @@ namespace OneSync.UI
         }
 
         public SyncJob SyncJob { get; set; }
-        
-        public string SyncSource {
+
+        public string SyncSource
+        {
             get { return this.SyncJob.SyncSource.Path; }
         }
 
-        public string JobName {
-            get { return this.SyncJob.Name; } 
+        public string JobName
+        {
+            get { return this.SyncJob.Name; }
         }
 
-        public string IntermediaryStoragePath {
-            get { return this.SyncJob.IntermediaryStorage.Path; } 
+        public string IntermediaryStoragePath
+        {
+            get { return this.SyncJob.IntermediaryStorage.Path; }
         }
 
         public string JobId
@@ -61,6 +64,7 @@ namespace OneSync.UI
             set { _order = value; }
         }
 
+        /*
         public string DropboxStatus
         {
             get
@@ -74,7 +78,7 @@ namespace OneSync.UI
                     return "Dropbox storage synced";
                 return "";
             }
-        }
+        }*/
 
         public void InfoChanged()
         {

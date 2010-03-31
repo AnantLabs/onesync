@@ -16,7 +16,7 @@ namespace OneSync.UI
             if (isNullOrEmpty(newName))
                 errorMsg = "SyncJob name cannot be empty.";
             else if (newName.Length > 50)
-                errorMsg = "SyncJob name should be less than 50 characters.";
+                errorMsg = "SyncJob name is too long.";
 
             return errorMsg;
         }
@@ -78,7 +78,8 @@ namespace OneSync.UI
                 return "Intermediary storage folder not found.";
             
             //Check #3: Check whether the Sync Source Folder and the Intermediate Storage Folder are the subdirectory of each other.
-            if (sync_source_dir.Equals(intermediate_storage_dir.Substring(0, intermediate_storage_dir.LastIndexOf(@"\"))) || intermediate_storage_dir.Equals(sync_source_dir.Substring(0, sync_source_dir.LastIndexOf(@"\"))))
+            if (sync_source_dir.Equals(intermediate_storage_dir.Substring(0, intermediate_storage_dir.LastIndexOf(@"\")))
+                || intermediate_storage_dir.Equals(sync_source_dir.Substring(0, sync_source_dir.LastIndexOf(@"\"))))
                 return "Folder to be synchronized cannot be in the intermediary storage folder or vice-versa.";
 
             return null;
