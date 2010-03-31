@@ -78,7 +78,7 @@ namespace OneSync.UI
                 return "Intermediary storage folder not found.";
             
             //Check #3: Check whether the Sync Source Folder and the Intermediate Storage Folder are the subdirectory of each other.
-            if (sync_source_dir.IndexOf(intermediate_storage_dir) > -1 || intermediate_storage_dir.IndexOf(sync_source_dir) > -1)
+            if ((sync_source_dir.Substring(0, intermediate_storage_dir.Length)).Equals(intermediate_storage_dir) || (intermediate_storage_dir.Substring(0, sync_source_dir.Length)).Equals(sync_source_dir))
                 return "Folder to be synchronized cannot be in the intermediary storage folder or vice-versa.";
 
             return null;
