@@ -238,7 +238,11 @@ namespace OneSync.Synchronization
         public override bool Update(SyncJob profile)
         {            
             if (this.SyncJobExists(profile.Name, profile.ID))
-                throw new ProfileNameExistException("Profile " + profile.Name + " is already created");
+                throw new ProfileNameExistException("Sync job " + profile.Name + " is already created");
+
+            SQLiteSyncSourceProvider provider = (SQLiteSyncSourceProvider)SyncClient.GetSyncSourceProvider(profile.IntermediaryStorage.Path);
+            if (provider.GetSyncSourceCount() == 2)
+                throw new SyncSourcesNumberExceededException("Only 2 number of source folders are allowed to connect to the same intermediate storage folder.");
 
             // Update a profile requires update 2 tables at the same time, 
             // If one update on a table fails, the total update action must fail too.
@@ -297,7 +301,7 @@ namespace OneSync.Synchronization
         public override bool Add(SyncJob profile)
         {
             if (this.SyncJobExists(profile.Name, profile.ID))
-                throw new ProfileNameExistException("Profile " + profile.Name + " is already created");
+                throw new ProfileNameExistException("Sync job " + profile.Name + " is already created");
 
             
             SQLiteAccess dbAccess1 = new SQLiteAccess(Path.Combine (this.StoragePath, Configuration.DATABASE_NAME));
@@ -326,7 +330,7 @@ namespace OneSync.Synchronization
                 provider.Add(profile.SyncSource, con1);
 
                 provider = (SQLiteSyncSourceProvider)SyncClient.GetSyncSourceProvider(profile.IntermediaryStorage.Path);
-                if (provider.GetSyncSourceCount() == 2) throw new SyncSourcesNumberExceededException("Only 2 number of sources are allowed");
+                if (provider.GetSyncSourceCount() == 2) throw new SyncSourcesNumberExceededException("Only 2 number of source folders are allowed to connect to the same intermediate storage folder.");
                 provider.Add(profile.SyncSource, con2);
                 
                 transaction1.Commit();
@@ -350,7 +354,7 @@ namespace OneSync.Synchronization
         public bool Add(SyncJob profile, SqliteConnection con)
         {
             if (this.SyncJobExists(profile.Name, profile.ID))
-                throw new ProfileNameExistException("Profile " + profile.Name + " is already created");               
+                throw new ProfileNameExistException("Sync job " + profile.Name + " is already created");               
 
             using (SqliteCommand cmd = con.CreateCommand ())
             {
