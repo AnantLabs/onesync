@@ -5,11 +5,11 @@
 The following outlines of OneSync synchronization algorithm and logic.
 
   * [SyncLogic#Applying_Patch 1. Applying Patch]
-    * [SyncLogic#Executing_SyncActions 1.1 Executing !SyncActions]
+    * [SyncLogic#Executing_SyncActions 1.1 Executing SyncActions]
     * [SyncLogic#Updating_of_metadata 1.2 Updating of metadata]
   * [SyncLogic#Generating_Patch 2. Generating Patch]
     * [SyncLogic#Comparing_Metadata 2.1 Comparing Metadata]
-    * [SyncLogic#Creating_SyncActions 2.2 Creating !SyncActions]
+    * [SyncLogic#Creating_SyncActions 2.2 Creating SyncActions]
 
 = 1. Applying Patch =
 
@@ -17,7 +17,7 @@ When synchonization starts, OneSync will check if there are any patch to be appl
 
 == 1.1 Executing !SyncActions ==
 
-Each SyncAction is can be a Copy action or a Delete action. When a SyncAction is executed, the affected file is checked whether it was modified since last sync. This is done by comparing the file with the metadata created during last sync. If it has been changed, the SyncAction will be considered as a conflict action. The SyncAction has a Conflict Resolution property/field to determine how this conflict is going to be resolved. It is to be noted that there will be no further filesystem changes made to the sync folder after all !SyncActions are executed.
+Each !SyncAction is can be a Copy action or a Delete action. When a !SyncAction is executed, the affected file is checked whether it was modified since last sync. This is done by comparing the file with the metadata created during last sync. If it has been changed, the !SyncAction will be considered as a conflict action. The !SyncAction has a Conflict Resolution property/field to determine how this conflict is going to be resolved. It is to be noted that there will be no further filesystem changes made to the sync folder after all !SyncActions are executed.
 
 After the !SyncActions are executed, the !SyncActions and any associated files are deleted from the intermediary storage as they are no longer required.
 
@@ -37,4 +37,4 @@ The saved metadata of the other PC is being compared with the current filesystem
 
 == 2.2 Creating !SyncActions ==
 
-For each difference, a corresponding SyncAction will be generated to resolve this difference. In this stage only files in the current PC could be associated with a SyncAction. These !SyncActions, together with its associated file (if any) can be considered to be the patch for other PC.
+For each difference, a corresponding !SyncAction will be generated to resolve this difference. In this stage only files in the current PC could be associated with a !SyncAction. These !SyncActions, together with its associated file (if any) can be considered to be the patch for other PC.
