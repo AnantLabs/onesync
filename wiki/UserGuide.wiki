@@ -24,7 +24,8 @@ This guide allows you to learn the features of OneSync. Just follow through the 
     * [UserGuide#Modifying_My_Existing_Sync_Job Modifying my existing sync job]
     * [UserGuide#Deleting_Existing_Sync_Job Deleting existing sync job]
   * [UserGuide#View_The_Logs View the logs]
-  * [UserGuide#I_Saw_Error I saw error]
+  * [UserGuide#What_You_Should_Not_Do What you should not do]
+  * [UserGuide#Error_Messages Error messages]
   * [UserGuide#Contact_Us Contact us]
 
 ==Getting Started==
@@ -158,6 +159,11 @@ To view the logs, just press on the "Show Log" button in the *Sync Page*.
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_08.jpg]
 
 The logs will be shown in your default browser.
+
+==What You Should Not Do==
+In order to make sure that OneSync is working, you should not perform the following actions in the OneSync.
+ * Delete the data.md file.
+ * Delete the intermediate storage.
 
 ==Error Messages==
 Sometimes, you will see an error message displayed on the top of the window (see the screenshot below). It is highly possible that due to one of these problems:
