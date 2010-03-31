@@ -96,6 +96,12 @@ namespace OneSync.UI
                 return;
             }
 
+            //Store the original info of the job first.
+            //If there is an exception thrown later, the system will be able to reset.
+            string originalSyncJobName = editingSyncJob.SyncJob.Name;
+            string originalSyncSourceDir = editingSyncJob.SyncJob.SyncSource.Path;
+            string originalIntStorageDir = editingSyncJob.SyncJob.IntermediaryStorage.Path;
+
             //Update the job if all three inputs mentioned above are valid.
             editingSyncJob.SyncJob.Name = syncJobName;
             editingSyncJob.SyncJob.SyncSource.Path = syncSourceDir;
@@ -107,13 +113,25 @@ namespace OneSync.UI
                 editingSyncJob.InfoChanged();
                 this.Close();
             }
-            catch (ProfileNameExistException ex)
+            catch (ProfileNameExistException)
             {
                 showErrorMsg("A Sync Job with the same name already exists.");
+
+                //Reset.
+                editingSyncJob.SyncJob.Name = originalSyncJobName;
+                editingSyncJob.SyncJob.SyncSource.Path = originalSyncSourceDir;
+                editingSyncJob.SyncJob.IntermediaryStorage.Path = originalIntStorageDir;
+                editingSyncJob.InfoChanged();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 showErrorMsg("Unable to update sync job at this moment.");
+
+                //Reset.
+                editingSyncJob.SyncJob.Name = originalSyncJobName;
+                editingSyncJob.SyncJob.SyncSource.Path = originalSyncSourceDir;
+                editingSyncJob.SyncJob.IntermediaryStorage.Path = originalIntStorageDir;
+                editingSyncJob.InfoChanged();
             }
 
 
