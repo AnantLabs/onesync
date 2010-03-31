@@ -201,14 +201,21 @@ namespace OneSync
         /// <param name="syncDirPath">Path of source directory.</param>
         public static void ShowLog(String syncDirPath)
         {
-            Hashtable pairs = LoadSyncDirAndLogFilePairs();
-            string logFileName = (string)pairs[syncDirPath];
-            string logFilePath = String.Concat(GetAppDir(), @"\", ParentDirectoryName, @"\", logFileName);
+            try
+            {
+                Hashtable pairs = LoadSyncDirAndLogFilePairs();
+                string logFileName = (string)pairs[syncDirPath];
+                string logFilePath = String.Concat(GetAppDir(), @"\", ParentDirectoryName, @"\", logFileName);
 
-            System.Diagnostics.Process proc = new System.Diagnostics.Process();
-            proc.StartInfo.FileName = GetDefaultBrowser();
-            proc.StartInfo.Arguments = logFilePath;
-            proc.Start();
+                System.Diagnostics.Process proc = new System.Diagnostics.Process();
+                proc.StartInfo.FileName = GetDefaultBrowser();
+                proc.StartInfo.Arguments = logFilePath;
+                proc.Start();
+            }
+            catch (Exception e)
+            {
+                LogException(e);
+            }
         }
 
         /// <summary>
