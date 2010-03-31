@@ -3,17 +3,17 @@
 
 == Introduction ==
 
-Welcome to the OneSync User guide - a place to know more about OneSync and find out how to make your life more organized! With OneSync, your personal files stored in your computer will be easily shared and synced with another computer in several ways: syncing through portable drive, thumb drive, Windows Shared Folders and even DropBox (Online Sync)!
+Welcome to the OneSync User guide - a place to know more about OneSync and find out how to organize your files that are stored in different computers! With OneSync, your personal files stored in your computer will be easily shared and synced with another computer in several ways: syncing through portable drive, thumb drive, Windows Shared Folders and even DropBox (Online Sync)!
 
 This guide allows you to learn the features of OneSync. Just follow through the handy guide below, and enjoy the journey! =)
 
 == Content ==
 
   * [UserGuide#Getting_Started Getting started]
+    * [UserGuide#The_OneSync_Concepts The OneSync concepts]
     * [UserGuide#New_Features_in_Version_0.9 New features in version 0.9]
     * [UserGuide#Downloading_and_Installing Downloading and installing]
     * [UserGuide#Getting_Around Getting around]
-    * [UserGuide#The_OneSync_Concepts The OneSync concepts]
   * [UserGuide#Syncing_My_Folders Syncing my folders]
     * [UserGuide#Syncing_Through_Portable_Drive Syncing through portable drive]
     * [UserGuide#Syncing_Through_Drop_Box Syncing through DropBox (BETA)]
@@ -28,26 +28,35 @@ This guide allows you to learn the features of OneSync. Just follow through the 
   * [UserGuide#Contact_Us Contact us]
 
 ==Getting Started==
-===New Features in Version 0.9===
+===The OneSync Concepts===
+OneSync is working based on two important concepts. These are the two concepts that make OneSync different from other sync tools such as Live Mesh, Sync Toy and so on.
+
+The first concept is called the *Light-weight Sync*. OneSync is trying to make optimal use of the intermediate storage. Hence, only your modified files will actually be uploaded to or downloaded from the intermediate storage. This will not only prevent storing duplicated copies of your files on the intermediate storage but also make the whole sync process faster.
+
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_2.jpg]
+
+The second concept is known as *Half Way Sync*. Instead of doing synchronization directly between two PCs, there is an intermediate storage playing an important role during the sync process.
+
+When a user sync his folder, he must first choose the location of his intermediate storage. The storage can be his portable drive, Windows Shared Folder or DropBox local folder that is stored on his computer. When he does the sync on one PC, his files (or *patch*) will be sent to the intermediate storage. After that, he has to do the sync again in his another computer in order to download the *patch* from the intermediate storage and complete the sync process.
+
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_1.jpg]
+
+===New Features in Version 1.0===
 
 This version of OneSync has a number of exciting new features, including:
- # DropBox Integration - You now can select your DropBox folder as the intermediate storage in your sync job profile. Another computer linked to the DropBox will be updated in a few seconds.
- # Sync Job Management - You can create and manage your sync job. You do not have to memorize the long directories anymore.
+ # Multiple Jobs Synchronization - Sync more than one sync job sequentially.
+ # Sync Preview - View the actions that will be carried out during the sync process in advanced.
+ # DropBox Integration - Easily know the status of your DropBox in our system. It will tell you when your files are all uploaded to the DropBox server.
+ # Sync Job Management - Compared to the previous version, this version allows creation and management of your sync jobs in an easy way. You do not have to memorize the long directories anymore.
  # Right-click and Sync - Just right click any reasonable folder, then you will be able to sync it in just three clicks!
- # Logs Viewing - Want to know what are files affected in the sync process? Just view the logs in your web browser.
 
 ===Downloading and Installing===
 
-*NOTE* Make sure you are running an Windows operating system (either Windows Vista or Windows 7) and that you have uninstalled any previous versions of OneSync. The previous versions of OneSync are:
- # OneSync V-0.5
- # OneSync Zero
-
-If you would like to install the latest version of OneSync, you can download the application at https://code.google.com/p/onesync/downloads/list
-
-If you experience issues installing OneSync through the Google Code Project Hosting, you can directly download the latest version of OneSync here: http://onesync.googlecode.com/files/OneSyncSetup.msi
+*NOTE* Make sure you are running an Windows operating system (Windows XP, Windows Vista or Windows 7).
 
 Installation steps are as follows:
- # Run the OneSync Installer
+ # Uninstall Previous Versions
+ # Run The OneSync Installer (Download here: http://onesync.googlecode.com/files/OneSyncSetup.msi)
  # Follow Setup Instructions
  # Done, OneSync Is Successfully Installed
 
@@ -76,19 +85,6 @@ The following diagram describes some of the things that you will see in the next
  # *Sync Process* - Only available when you are doing the sync. You can see what the program is doing now.
  # *Sync* - The only one button that you need to click to start syncing.
 
-===The OneSync Concepts===
-OneSync is working based on two important concepts. These are the two concepts that make OneSync different from other sync tools such as Live Mesh, Sync Toy and so on.
-
-The first concept is known as *Cloud Sync*. Instead of doing synchronization directly between two PCs, there is an intermediate storage (or "Cloud Storage") playing an important role during the sync process.
-
-When a user sync his folder, he must first choose the location of his intermediate storage. The storage can be his portable drive, Windows Shared Folder or DropBox local folder that is stored on his computer. When he does the sync on one PC, his files (or *patch*) will be sent to the intermediate storage. So, for each sync, another computer will not be updated automatically. Hence, he has to do the sync again in the other computer to download the *patch* from the intermediate storage and complete the sync process.
-
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_1.jpg]
-
-The second concept is called the *Light-weight Sync*. OneSync is trying to make optimal use of the intermediate storage. Hence, only your modified files will actually be uploaded to or downloaded from the intermediate storage. This will not only prevent storing duplicated copies of your files on the intermediate storage but also make the whole sync process faster.
-
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_2.jpg]
-
 ==Syncing My Folders==
 Why put your files in different PCs and keep doing copy-and-paste whenever you update the files? Keep them synchronized between your two computers and you will always have the most up-to-date versions at hand.
 ===Syncing Through Portable Drive===
@@ -110,7 +106,7 @@ Now, the program will navigate to a new screen (aka *Sync Page*) where you can e
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_05.jpg]
 
-Now, you just need to sit in front of your computer to wait for the sync job to be done completely.
+Now, you just need to sit in front of your computer () to wait for the sync job to be done completely.
 
 The files are being transferred. Hold on...
 
@@ -121,11 +117,10 @@ Sync process is successfully done. =)
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_06B.jpg]
 
 ===Syncing Through Drop Box===
-*NOTE* This feature is a BETA feature only. Only small size and small number of files can be synced.
 
 Firstly, please install DropBox. You can find the installer at https://www.dropbox.com/downloading.
 
-The steps are same as the steps mentioned in Syncing Through Portable Drive. However, please remember that the intermediate storage path has to be your DropBox folder directory. If you do not know what is your DropBox folder, double click on the DropBox icon on your system tray.
+The steps are same as the steps mentioned in Syncing Through Portable Drive. However, please remember that the intermediate storage path has to be your DropBox folder directory. If you do not know what is your DropBox folder, double click on the DropBox icon on your system tray and then the DropBox folder will be displayed.
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_06.jpg]
 
@@ -146,7 +141,7 @@ In the *Sync Job Page*, you can create a new sync job by entering the name for y
 Next time, when you are going to sync the same folder again, then you can just select the profile from the drop-down list in the *Sync Job Page*.
 
 ===Modifying My Existing Sync Job===
-In the *Sync Job Page*, select existing sync job by either keying in the name (our system will auto-complete the name for you if the profile exists) or selecting the profile from the drop-down list.
+In the *Sync Job Page*, select existing sync job by either keying in the name (OneSync will auto-complete the name for you if the profile exists) or selecting the profile from the drop-down list.
 
 After that, you will see that there will be a few options appearing below. From there, you can either edit the name of the selected existing profile by keying in the new name and pressing the "Rename Job".
 
@@ -164,7 +159,7 @@ To view the logs, just press on the "Show Log" button in the *Sync Page*.
 
 The logs will be shown in your default browser.
 
-==I Saw Error==
+==Error Messages==
 Sometimes, you will see an error message displayed on the top of the window (see the screenshot below). It is highly possible that due to one of these problems:
  * There are more than one profile which have the same intermediate storage (Do not use back the same intermediate storage for different profile).
  * The data.md file is missing (Please uninstall and re-install).
@@ -175,4 +170,4 @@ Sometimes, you will see an error message displayed on the top of the window (see
 
 ==Contact Us==
 
-Tell us how we are doing: Please email us feedback ([mailto:my3215group@googlegroups.com]) about your experience to help us improve our product.
+Tell us how we are doing: Please [mailto:my3215group@googlegroups.com email us] your feedback about your experience to help us improve our product.
