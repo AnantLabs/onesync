@@ -114,14 +114,16 @@ namespace OneSync.Synchronization
 
             foreach (SyncAction action in previewResult.ItemsToCopyOver)
             {
+                if (ProgressChanged != null)
+                {
+                    workItem++;
+                    ProgressChanged(this, new SyncProgressChangedEventArgs((workItem * 100 / totalWorkItems)));
+                }
                 if (action.Skip)
                 {
-                    //add log
-                    if (ProgressChanged != null)
-                    {
-                        workItem++;
-                        ProgressChanged(this, new SyncProgressChangedEventArgs((workItem * 100 / totalWorkItems)));
-                    }
+                    syncResult.Skipped.Add(action);
+                    applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "SKIPPED"));
+                    //add log                   
                     continue ;
                 }
                if (SyncFileChanged != null) SyncFileChanged(this, new SyncFileChangedEventArgs(ChangeType.NEWLY_CREATED, action.RelativeFilePath));
@@ -132,24 +134,21 @@ namespace OneSync.Synchronization
                    syncResult.Ok.Add(action);
                    applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "SUCCESS"));                   
                 }
-                catch (Exception){Console.WriteLine("Logging error");}
-               if (ProgressChanged != null)
-               {
-                   workItem++;
-                   ProgressChanged(this, new SyncProgressChangedEventArgs((workItem * 100 / totalWorkItems)));
-               }                
+                catch (Exception){Console.WriteLine("Logging error");}                               
             }
 
             foreach (SyncAction action in previewResult.ItemsToDelete)
             {
+                if (ProgressChanged != null)
+                {
+                    workItem++;
+                    ProgressChanged(this, new SyncProgressChangedEventArgs((workItem * 100 / totalWorkItems)));
+                }
                 if (action.Skip)
                 {
-                    //add log
-                    if (ProgressChanged != null)
-                    {
-                        workItem++;
-                        ProgressChanged(this, new SyncProgressChangedEventArgs((workItem * 100/ totalWorkItems)));
-                    }
+                    syncResult.Skipped.Add(action);
+                    applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "SKIPPED"));
+                    //add log                    
                     continue;
                 }
                 if (SyncFileChanged != null) SyncFileChanged(this, new SyncFileChangedEventArgs(ChangeType.DELETED, action.RelativeFilePath));
@@ -165,25 +164,20 @@ namespace OneSync.Synchronization
                     syncResult.Ok.Add(action);
                     applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "SUCCESS"));
                 }
-                catch (Exception) { Console.WriteLine("Logging error "); }
-                if (ProgressChanged != null)
-                {
-                    workItem++;
-                    ProgressChanged(this, new SyncProgressChangedEventArgs((workItem * 100/ totalWorkItems)));
-                }
+                catch (Exception) { Console.WriteLine("Logging error "); }               
             }
 
             foreach (SyncAction action in previewResult.ConflictItems)
             {
+                if (ProgressChanged != null)
+                {
+                    workItem++;
+                    ProgressChanged(this, new SyncProgressChangedEventArgs((workItem * 100 / totalWorkItems)));
+                }
                 if (action.Skip)
                 {
                     syncResult.Skipped.Add(action);
-                    applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString()));
-                    if (ProgressChanged != null)
-                    {
-                        workItem++;
-                        ProgressChanged(this, new SyncProgressChangedEventArgs((workItem * 100/ totalWorkItems)));
-                    }
+                    applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString()));                    
                     continue;
                 }
                 else if (action.ConflictResolution == ConflictResolution.DUPLICATE_RENAME)
@@ -201,17 +195,14 @@ namespace OneSync.Synchronization
                         applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString() + "_SUCCESS"));
                     }
                     catch (Exception)
-                    {Console.WriteLine("Logging error");}
-                    if (ProgressChanged != null)
-                    {
-                        workItem++;
-                        ProgressChanged(this, new SyncProgressChangedEventArgs((workItem * 100/ totalWorkItems)));
-                    }
+                    {Console.WriteLine("Logging error");}                 
                 }
                 else if (action.ConflictResolution == ConflictResolution.OVERWRITE)
                 {
                     if (action.Skip)
                     {
+                        syncResult.Skipped.Add(action);
+                        applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString()));                    
                         continue;
                     }
                     if (SyncFileChanged != null) SyncFileChanged(this, new SyncFileChangedEventArgs(ChangeType.MODIFIED, action.RelativeFilePath));
@@ -228,12 +219,7 @@ namespace OneSync.Synchronization
                         applyActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), action.ConflictResolution.ToString() + "_SUCCESS"));
                     }
                     catch (Exception)
-                    {Console.WriteLine("Logging error");}
-                    if (ProgressChanged != null)
-                    {
-                        workItem++;
-                        ProgressChanged(this, new SyncProgressChangedEventArgs((workItem * 100/ totalWorkItems)));
-                    }
+                    {Console.WriteLine("Logging error");}                    
                 }
                 
             }
@@ -286,18 +272,18 @@ namespace OneSync.Synchronization
             
             foreach (SyncAction action in newActions)
             {
+                if (ProgressChanged != null)
+                {
+                    workItem++;
+                    ProgressChanged(this, new SyncProgressChangedEventArgs((workItem * 100 / totalWorkItems)));
+                }
                 try
                 {
                     #region newly created action
                     if (action.ChangeType == ChangeType.NEWLY_CREATED)
                     {
                         if (SyncFileChanged != null) SyncFileChanged(this, new SyncFileChangedEventArgs(ChangeType.NEWLY_CREATED, action.RelativeFilePath));
-                        SyncExecutor.CopyToDirtyFolderAndUpdateActionTable(action, profile);
-                        if (ProgressChanged != null)
-                        {
-                            workItem++;
-                            ProgressChanged(this, new SyncProgressChangedEventArgs( (workItem * 100 / totalWorkItems)));
-                        }
+                        SyncExecutor.CopyToDirtyFolderAndUpdateActionTable(action, profile);                        
                     }
                     #endregion newly created action
 
@@ -320,7 +306,6 @@ namespace OneSync.Synchronization
                 {
                     generateActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "FAIL"));
                 }
-
                 count++;
             }
 
