@@ -133,7 +133,8 @@ namespace OneSync.Synchronization
                 using (SqliteConnection con = db.NewSQLiteConnection ())
                 {
                     string cmdText = "SELECT COUNT (DISTINCT " + Configuration.COL_SOURCE_ID + ") AS num" +
-                            " FROM " + Configuration.TBL_DATASOURCE_INFO;
+                            " FROM " + Configuration.TBL_DATASOURCE_INFO +
+                            " GROUP BY " + Configuration.METADATA_RELATIVE_PATH;
 
                     return Convert.ToInt32(db.ExecuteScalar(cmdText, null));
                 }
