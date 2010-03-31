@@ -38,23 +38,37 @@ namespace OneSync.UI
 
 		private void btnBrowse_Source_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-
-            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            try
             {
-                txtSource.Text = fbd.SelectedPath;
-                txtSource.Focus();
+                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+
+                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    txtSource.Text = fbd.SelectedPath;
+                    txtSource.Focus();
+                }
+            }
+            catch (Exception)
+            {
+                showErrorMsg("The selected folder path is invalid.");
             }
 		}
 
 		private void btnBrowse_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-
-            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            try
             {
-                txtIntStorage.Text = fbd.SelectedPath;
-                txtIntStorage.Focus();
+                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+
+                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    txtIntStorage.Text = fbd.SelectedPath;
+                    txtIntStorage.Focus();
+                }
+            }
+            catch (Exception)
+            {
+                showErrorMsg("The selected folder path is invalid.");
             }
 		}
 

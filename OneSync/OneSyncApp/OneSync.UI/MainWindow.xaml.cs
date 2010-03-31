@@ -114,13 +114,20 @@ namespace OneSync.UI
             TextBox tb = ((Button)sender).Tag as TextBox;
             if (tb == null) return;
 
-            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-
-            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            try
             {
-                tb.Text = fbd.SelectedPath;
-                tb.Focus();
-                tb.Select(tb.Text.Length, 0);
+                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+
+                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    tb.Text = fbd.SelectedPath;
+                    tb.Focus();
+                    tb.Select(tb.Text.Length, 0);
+                }
+            }
+            catch (Exception)
+            {
+                showErrorMsg("The selected folder path is invalid.");
             }
         }
 
