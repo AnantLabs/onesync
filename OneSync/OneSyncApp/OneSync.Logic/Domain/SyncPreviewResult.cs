@@ -59,7 +59,7 @@ namespace OneSync.Synchronization
 
             ConflictItems = conflictItems.ToList();
             ItemsToCopyOver = itemsToCopyOver.ToList();
-            itemsToDelete = itemsToDelete.ToList();
+            ItemsToDelete = itemsToDelete.ToList();
         }
 
         public IList<SyncAction> GetAllActions()

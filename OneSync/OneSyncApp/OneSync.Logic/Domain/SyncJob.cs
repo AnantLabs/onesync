@@ -73,5 +73,11 @@ namespace OneSync.Synchronization
         {
             return this.Name;
         }
+
+        public IEnumerable<SyncAction> SyncActions
+        {
+            set;
+            get;
+        }
     }
 }

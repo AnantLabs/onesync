@@ -107,6 +107,11 @@ namespace OneSync.UI
             }
         }
 
+        private void btnSync_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
         private void txtFilter_GotFocus(object sender, RoutedEventArgs e)
         {
             txtFilter.SelectAll();

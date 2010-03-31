@@ -26,7 +26,9 @@ namespace OneSync.UI
 			this.InitializeComponent();
 		}
 
-        public SyncJobManagementWindow(UISyncJobEntry selectedSyncJob, SyncJobManager jobManager)
+        MainWindow main = null;
+            
+        public SyncJobManagementWindow(UISyncJobEntry selectedSyncJob, SyncJobManager jobManager, MainWindow parent)
             : this()
 		{
             this.jobManager = jobManager;
@@ -34,6 +36,7 @@ namespace OneSync.UI
             txtSyncJobName.Text = editingSyncJob.SyncJob.Name;
             txtSource.Text = editingSyncJob.SyncJob.SyncSource.Path;
             txtIntStorage.Text = editingSyncJob.SyncJob.IntermediaryStorage.Path;
+            main = parent;
 		}
 
 		private void btnBrowse_Source_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -96,22 +99,60 @@ namespace OneSync.UI
                 return;
             }
 
+            string oldSyncJobName = editingSyncJob.SyncJob.Name;
+            string oldIStorage = editingSyncJob.SyncJob.IntermediaryStorage.Path;
+            string oldSyncSource = editingSyncJob.SyncJob.SyncSource.Path;
+
+            try
+            {
+                editingSyncJob.SyncJob.Name = syncJobName;
+                editingSyncJob.SyncJob.IntermediaryStorage.Path = intStorageDir;
+                editingSyncJob.SyncJob.SyncSource.Path = syncSourceDir;
+                jobManager.Update(editingSyncJob.SyncJob);
+                editingSyncJob.InfoChanged();
+                try
+                {
+                    if (!editingSyncJob.SyncJob.IntermediaryStorage.Path.Equals(
+                        oldIStorage))
+                    {
+                        if (!Files.FileUtils.MoveFolder(oldIStorage,
+                        editingSyncJob.SyncJob.IntermediaryStorage.Path)) throw new Exception();
+                        this.Close();
+                    }                    
+                }
+                catch (Exception ex) { showErrorMsg("Can't move file(s) to new location. Please do it manually"); }
+                this.Close();
+            }
+            catch (Exception)
+            {
+                editingSyncJob.SyncJob.Name = oldSyncJobName;
+                editingSyncJob.SyncJob.IntermediaryStorage.Path = oldIStorage;
+                editingSyncJob.SyncJob.SyncSource.Path = oldSyncSource;
+            }
+                
+            
+            /*
             //Store the original info of the job first.
             //If there is an exception thrown later, the system will be able to reset.
             string originalSyncJobName = editingSyncJob.SyncJob.Name;
             string originalSyncSourceDir = editingSyncJob.SyncJob.SyncSource.Path;
-            string originalIntStorageDir = editingSyncJob.SyncJob.IntermediaryStorage.Path;
-
-            //Update the job if all three inputs mentioned above are valid.
-            editingSyncJob.SyncJob.Name = syncJobName;
-            editingSyncJob.SyncJob.SyncSource.Path = syncSourceDir;
-            editingSyncJob.SyncJob.IntermediaryStorage.Path = intStorageDir;
+            string originalIntStorageDir = editingSyncJob.SyncJob.IntermediaryStorage.Path;           
 
             try
             {
                 jobManager.Update(editingSyncJob.SyncJob);
+
+                //Update the job if all three inputs mentioned above are valid.
+                editingSyncJob.SyncJob.Name = syncJobName;
+                editingSyncJob.SyncJob.SyncSource.Path = syncSourceDir;
+                editingSyncJob.SyncJob.IntermediaryStorage.Path = intStorageDir;
                 editingSyncJob.InfoChanged();
-                this.Close();
+                try
+                {
+                    if (!originalIntStorageDir.Equals(intStorageDir)) Files.FileUtils.MoveFolder(originalIntStorageDir, intStorageDir);
+                    this.Close();
+                }
+                catch (Exception) { showErrorMsg("Error moving file(s) to new intermediate storage"); }                               
             }
             catch (ProfileNameExistException)
             {
@@ -133,6 +174,7 @@ namespace OneSync.UI
                 editingSyncJob.SyncJob.IntermediaryStorage.Path = originalIntStorageDir;
                 editingSyncJob.InfoChanged();
             }
+            */
 		}
 
 		private void txtBlkDeleteJob_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -146,6 +188,7 @@ namespace OneSync.UI
                 if (!jobManager.Delete(editingSyncJob.SyncJob))
                     showErrorMsg("Unable to delete sync job at this moment.");
                 else
+                    this.main.LoadSyncJobs();
                     this.Close();
             }
 		}

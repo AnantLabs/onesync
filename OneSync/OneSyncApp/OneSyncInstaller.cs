@@ -21,8 +21,8 @@ namespace OneSync
         private const string MenuName = "Folder\\shell\\OneSyncMenuOption-v1.0";
         private const string Command = "Folder\\shell\\OneSyncMenuOption-v1.0\\command";
 
-        private const string AppMenuName = "*\\shell\\OneSyncMenuOption-v1.0App";
-        private const string AppCommand = "*\\shell\\OneSyncMenuOption-v1.0App\\command";
+        private const string AppMenuName = "Folder\\shell\\OneSyncMenuOption-v1.0App";
+        private const string AppCommand = "Folder\\shell\\OneSyncMenuOption-v1.0App\\command";
 
         public OneSyncInstaller()
         {
@@ -73,7 +73,6 @@ namespace OneSync
             base.Uninstall(savedState);
             RegistrationServices regSrv = new RegistrationServices();
             regSrv.UnregisterAssembly(base.GetType().Assembly);
-
             //Remove the added context menu item.
             try
             {
@@ -107,11 +106,12 @@ namespace OneSync
             {
                 //Do nothing again?
             }
-
+            
             //Delete the installation dir because there is a data.md file stored inside.
-            if(File.Exists(System.Windows.Forms.Application.StartupPath + @"\data.md"))
+            string datamdLocation = Assembly.GetExecutingAssembly().Location.Substring(0, Assembly.GetExecutingAssembly().Location.LastIndexOf(@"\")) + @"\data.md";
+            if (File.Exists(datamdLocation))
             {
-                File.Delete(System.Windows.Forms.Application.StartupPath + @"\data.md");
+                File.Delete(datamdLocation);
             }
         }
     }

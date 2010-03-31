@@ -26,8 +26,8 @@ namespace OneSync.Synchronization
             {
                 SQLiteSyncActionsProvider actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
                 actProvider.Add(action, con);
-                if (!Files.FileUtils.Copy(absolutePathInSyncSource, absolutePathInImediateStorage)) throw new Exception("Can't copy file " + absolutePathInSyncSource);
-                transaction.Commit();
+                if (!Files.FileUtils.Copy(absolutePathInSyncSource, absolutePathInImediateStorage, true)) throw new Exception("Can't copy file " + absolutePathInSyncSource);
+                transaction.Commit();                
             }
             catch (Exception ex)
             {
@@ -58,9 +58,9 @@ namespace OneSync.Synchronization
             {
                 SQLiteSyncActionsProvider actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
                 actProvider.Delete(action, con);
-                if (!Files.FileUtils.Copy(absolutePathInIntermediateStorage, absolutePathInSyncSource)) throw new Exception("Can't copy file " + absolutePathInIntermediateStorage);
+                if (!Files.FileUtils.Copy(absolutePathInIntermediateStorage, absolutePathInSyncSource, true)) throw new Exception("Can't copy file " + absolutePathInIntermediateStorage);
                 trasaction.Commit();
-                Files.FileUtils.DeleteFileAndFolderIfEmpty(job.IntermediaryStorage.DirtyFolderPath, absolutePathInIntermediateStorage);
+                Files.FileUtils.DeleteFileAndFolderIfEmpty(job.IntermediaryStorage.DirtyFolderPath, absolutePathInIntermediateStorage,true);
             }
             catch (Exception)
             {
@@ -88,9 +88,9 @@ namespace OneSync.Synchronization
                 actProvider.Delete(action, con);
 
                 if (!Files.FileUtils.DuplicateRename(absolutePathInIntermediateStorage, absolutePathInSyncSource))
-                    throw new Exception("Can't copy file " +absolutePathInIntermediateStorage);
-                Files.FileUtils.DeleteFileAndFolderIfEmpty(job.IntermediaryStorage.DirtyFolderPath, absolutePathInIntermediateStorage);
+                    throw new Exception("Can't copy file " +absolutePathInIntermediateStorage);                
                 trasaction.Commit();
+                Files.FileUtils.DeleteFileAndFolderIfEmpty(job.IntermediaryStorage.DirtyFolderPath, absolutePathInIntermediateStorage,true);
             }
             catch (Exception)
             {
@@ -120,9 +120,10 @@ namespace OneSync.Synchronization
             {
                 SQLiteSyncActionsProvider actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
                 actProvider.Delete(action);
-                if (!Files.FileUtils.Delete(absolutePathInSyncSource))
+                if (!Files.FileUtils.Delete(absolutePathInSyncSource,true))
                     throw new Exception("Can't delete file " + absolutePathInSyncSource);                
                 transaction.Commit();
+                Files.FileUtils.DeleteFileAndFolderIfEmpty(job.SyncSource.Path, absolutePathInSyncSource,true);
             }
             catch (Exception)
             {
@@ -155,7 +156,7 @@ namespace OneSync.Synchronization
                 SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
                 actProvider.Delete(action);
 
-                if (!Files.FileUtils.Copy(oldAbsolutePathInSyncSource, newAbsolutePathInSyncSource))
+                if (!Files.FileUtils.Copy(oldAbsolutePathInSyncSource, newAbsolutePathInSyncSource, true))
                     throw new Exception("Can't copy file " + oldAbsolutePathInSyncSource);
                 transaction.Commit();
             }

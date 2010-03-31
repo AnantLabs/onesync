@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.ComponentModel;
 
 namespace OneSync.Synchronization
 {
@@ -29,13 +28,10 @@ namespace OneSync.Synchronization
     /// <summary>
     /// This class is the base class for all the sync action (rename, delete, create,...)
     /// </summary>
-    public abstract class SyncAction : INotifyPropertyChanged
+    public abstract class SyncAction
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         //status of the action
         protected ConflictResolution conflictResolution = ConflictResolution.NONE;
-        protected bool _skip = false;
 
         protected int actionId = 0;
         protected string relFilePath = "";
@@ -61,25 +57,18 @@ namespace OneSync.Synchronization
             this.fileHash = fileHash;
         }
 
-        public bool Skip { 
-            get { return _skip; }
-            set 
-            {
-                if (value != Skip)
-                {
-                    _skip = value;
-                    OnPropertyChanged("Skip");
-                }
-            }
-        }
+        public bool Skip { get; set; }
 
 
         /// <summary>
         /// Source ID of where this action is generated.
         /// </summary>
         public string SourceID
-        { 
-            get { return sourceID; }
+        {
+            get
+            {
+                return sourceID;
+            }
         }
 
         /// <summary>
@@ -89,21 +78,27 @@ namespace OneSync.Synchronization
         {
             get { return this.actionId; }
         }
-
         /// <summary>
         /// Relative path of relevant/dirty file of this action.
         /// </summary>
         public string RelativeFilePath
         {
-            get { return this.relFilePath; }
+            get
+            {
+                return this.relFilePath;
+            }
         }
+
 
         /// <summary>
         /// File hash of the relevant/dirty file of this action.
         /// </summary>
         public string FileHash
         {
-            get { return this.fileHash; }
+            get
+            {
+                return this.fileHash;
+            }
         }
 
         /// <summary>
@@ -111,20 +106,16 @@ namespace OneSync.Synchronization
         /// </summary>
         public ChangeType ChangeType
         {
-            get { return changeType; }
+            get
+            {
+                return changeType;
+            }
         }
 
         public ConflictResolution ConflictResolution
         {
             get { return this.conflictResolution; }
             set { conflictResolution = value; }
-        }
-
-
-        protected virtual void OnPropertyChanged(string PropertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(PropertyName));
         }
 
     }
