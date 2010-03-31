@@ -200,9 +200,9 @@ namespace OneSync.UI
                 UISyncJobEntry entry = clickedBlock.DataContext as UISyncJobEntry;
 
                 //View log file (The extension of the file should be .html).
-                if (File.Exists(Log.returnLogReportPath(entry.SyncSource, false)))
+                if (File.Exists(Log.ReturnLogReportPath(entry.SyncSource)))
                 {
-                    Process.Start(Log.returnLogReportPath(entry.SyncSource, false));
+                    Log.ShowLog(entry.SyncSource);
                 }
                 else
                 {
