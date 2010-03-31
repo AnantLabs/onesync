@@ -16,6 +16,8 @@ namespace OneSync.UI
 
         private bool _isSelected = false;
 
+        private int _order = 0;
+
         public UISyncJobEntry(SyncJob job)
         {
             this.SyncJob = job;
@@ -51,6 +53,12 @@ namespace OneSync.UI
                     OnPropertyChanged("IsSelected");
                 }
             }
+        }
+
+        public int Order
+        {
+            get { return _order; }
+            set { _order = value; }
         }
 
         public string DropboxStatus

@@ -483,8 +483,13 @@ namespace OneSync.UI
                 IList<SyncJob> jobs = jobManager.LoadAllJobs();
 
                 SyncJobEntries.Clear();
+                int i = 1;
                 foreach (SyncJob job in jobs)
+                {
                     SyncJobEntries.Add(new UISyncJobEntry(job));
+                    SyncJobEntries[SyncJobEntries.Count - 1].Order = i;
+                    i++;
+                }
             }
             catch (Exception)
             {
@@ -559,7 +564,81 @@ namespace OneSync.UI
             CheckBox checkBox = e.Source as CheckBox;
             UISyncJobEntry entry = checkBox.DataContext as UISyncJobEntry;
             entry.IsSelected = false ;
-        }    
+        }
+
+        private void TextBlock_MouseDown_Plus(object sender, MouseButtonEventArgs e)
+        {
+            TextBlock clickedBlock = (TextBlock)e.Source;
+            UISyncJobEntry entry = clickedBlock.DataContext as UISyncJobEntry;
+            if (entry == null || entry.SyncJob == null)
+            {
+                showErrorMsg("Couldn't find selected sync job(s)");
+                return;
+            }
+
+            if(entry.Order > 1)
+                entry.Order -= 1;
+
+            OrderSyncJobs(entry.JobId, true, entry.Order);
+        }
+
+        private void TextBlock_MouseDown_Minus(object sender, MouseButtonEventArgs e)
+        {
+            TextBlock clickedBlock = (TextBlock)e.Source;
+            UISyncJobEntry entry = clickedBlock.DataContext as UISyncJobEntry;
+            if (entry == null || entry.SyncJob == null)
+            {
+                showErrorMsg("Couldn't find selected sync job(s)");
+                return;
+            }
+
+            if (entry.Order < SyncJobEntries.Count)
+                entry.Order += 1;
+
+            OrderSyncJobs(entry.JobId, false, entry.Order);
+        }
+
+        private void OrderSyncJobs(string jobId, bool isPlus, int order)
+        {
+            ObservableCollection<UISyncJobEntry> tempSyncJobEntries = new ObservableCollection<UISyncJobEntry>();
+            foreach (UISyncJobEntry entry in SyncJobEntries)
+            {
+                tempSyncJobEntries.Add(entry);
+            }
+
+            //Do the reordering here.
+            foreach (UISyncJobEntry entry in tempSyncJobEntries)
+            {
+                if (isPlus)
+                {
+                    if (entry.Order == order && !entry.JobId.Equals(jobId))
+                        entry.Order++;
+                }
+                else 
+                {
+                    if (entry.Order == order && !entry.JobId.Equals(jobId))
+                        entry.Order--;
+                }
+            }
+
+            //Do the reloading here according to the new order.
+            try
+            {
+                SyncJobEntries.Clear();
+                for (int i = 1; i < tempSyncJobEntries.Count + 1; i++)
+                {
+                    foreach (UISyncJobEntry entry in tempSyncJobEntries)
+                    {
+                        if(entry.Order == i)
+                            SyncJobEntries.Add(entry);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                showErrorMsg("Error loading profiles.");
+            }
+        }
 
 	}
 }
