@@ -87,7 +87,8 @@ namespace OneSync.Synchronization
                 SQLiteSyncActionsProvider actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
                 actProvider.Delete(action, con);
 
-                if (!Files.FileUtils.DuplicateRename(absolutePathInIntermediateStorage, absolutePathInSyncSource))
+                if (!Files.FileUtils.DuplicateRename(absolutePathInSyncSource, absolutePathInSyncSource)
+                    || !Files.FileUtils.Copy (absolutePathInIntermediateStorage, absolutePathInSyncSource,true))                    
                     throw new Exception("Can't copy file " +absolutePathInIntermediateStorage);                
                 trasaction.Commit();
                 Files.FileUtils.DeleteFileAndFolderIfEmpty(job.IntermediaryStorage.DirtyFolderPath, absolutePathInIntermediateStorage,true);
