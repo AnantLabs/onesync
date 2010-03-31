@@ -197,6 +197,8 @@ namespace OneSync.UI
         {
             showErrorMsg(""); // clear error msg            
             IList<SyncJob> selectedJobs = new List<SyncJob>();
+            btnSyncStatic.IsEnabled = false;
+            txtBlkBackToHome.IsEnabled = false;
             foreach (UISyncJobEntry entry in SyncJobEntries) if ( entry.IsSelected) selectedJobs.Add(entry.SyncJob);
             Synchronize(selectedJobs);
         }
