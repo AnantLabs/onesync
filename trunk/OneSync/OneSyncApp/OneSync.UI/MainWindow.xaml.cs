@@ -380,7 +380,7 @@ namespace OneSync.UI
                 catch (Community.CsharpSqlite.SQLiteClient.SqliteSyntaxException syntax)
                 {
                     if (this.Dispatcher.CheckAccess())
-                        lblSyncPageMessage.Content = "Database resources exception";
+                        lblSyncPageMessage.Content = "Error: The intermediate storage not found or data.md is missing in the intermediate storage";
                     else
                         lblSyncPageMessage.Dispatcher.Invoke((Action)delegate { ShowSyncMessage("Database resources exception"); });
                 }
