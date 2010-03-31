@@ -15,12 +15,6 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_5FB27FCD24FE48578A819A4397C2E850"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_6ACFB0F10014E1330113E9E759FBCFD4"
         "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
         "MsmSig" = "8:_UNDEFINED"
@@ -28,13 +22,25 @@
         "Entry"
         {
         "MsmKey" = "8:_6ACFB0F10014E1330113E9E759FBCFD4"
-        "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
+        "OwnerKey" = "8:_AFC484BCCB68A0A0280E2EE6AD185C47"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_AFC484BCCB68A0A0280E2EE6AD185C47"
         "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C38D42624694FD29A9C9EB0986DB3C01"
+        "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E93CBEBB75FA4EA98BAE3121E5219D36"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -52,19 +58,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_5FB27FCD24FE48578A819A4397C2E850"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_AFC484BCCB68A0A0280E2EE6AD185C47"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_AFC484BCCB68A0A0280E2EE6AD185C47"
+        "OwnerKey" = "8:_6ACFB0F10014E1330113E9E759FBCFD4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_C38D42624694FD29A9C9EB0986DB3C01"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -200,20 +206,20 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_5FB27FCD24FE48578A819A4397C2E850"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6ACFB0F10014E1330113E9E759FBCFD4"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Community.CsharpSqlite, Version=3.6.22.1, Culture=neutral, PublicKeyToken=9ae8498fe54c7621, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Community.CsharpSqlite, Version=3.6.22.1, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_5FB27FCD24FE48578A819A4397C2E850"
+                    "_6ACFB0F10014E1330113E9E759FBCFD4"
                     {
                     "Name" = "8:Community.CsharpSqlite.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:..\\OneSyncApp\\OneSync.Lib\\Community.CsharpSqlite.dll"
+            "SourcePath" = "8:Community.CsharpSqlite.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_E017F1941B1444CBBF2A995811C34F54"
@@ -228,14 +234,14 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_AFC484BCCB68A0A0280E2EE6AD185C47"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Community.CsharpSqlite.SQLiteClient, Version=3.6.22.3, Culture=neutral, PublicKeyToken=9ae8498fe54c7621, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:Community.CsharpSqlite.SQLiteClient, Version=3.6.22.3, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_AFC484BCCB68A0A0280E2EE6AD185C47"
@@ -260,6 +266,57 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C38D42624694FD29A9C9EB0986DB3C01"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:KtmIntegration, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_C38D42624694FD29A9C9EB0986DB3C01"
+                    {
+                    "Name" = "8:KtmIntegration.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:KtmIntegration.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_E017F1941B1444CBBF2A995811C34F54"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E93CBEBB75FA4EA98BAE3121E5219D36"
+            {
+            "SourcePath" = "8:..\\..\\..\\Modules Material\\A Is The Only Option, A+ Otherwise\\CS3215\\Graphic Design\\Installation Setup Logo V1.bmp"
+            "TargetName" = "8:Installation Setup Logo V1.bmp"
+            "Tag" = "8:"
+            "Folder" = "8:_E017F1941B1444CBBF2A995811C34F54"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
         }
@@ -317,24 +374,24 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:OneSync V0.9"
-        "ProductCode" = "8:{F64B2795-4F80-4311-BA05-19F741B3E6D0}"
-        "PackageCode" = "8:{5CC4746A-8B6C-40B2-AB35-D32583381205}"
+        "ProductName" = "8:OneSync V1.0"
+        "ProductCode" = "8:{80813CB7-7239-48F1-9F5B-3CBDEB5E41D0}"
+        "PackageCode" = "8:{89C8F8D9-BE2D-49B2-94B4-24BAE86365B7}"
         "UpgradeCode" = "8:{268160E3-0323-49E7-8B23-E33489420389}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:3.0.0"
+        "ProductVersion" = "8:4.0.0"
         "Manufacturer" = "8:CodeDroids 2009"
         "ARPHELPTELEPHONE" = "8:"
-        "ARPHELPLINK" = "8:"
-        "Title" = "8:OneSync V0.9 Setup"
-        "Subject" = "8:"
+        "ARPHELPLINK" = "8:http://code.google.com/p/onesync/wiki/UserGuide"
+        "Title" = "8:OneSync V1.0 Setup"
+        "Subject" = "8:Synchronization Tool"
         "ARPCONTACT" = "8:CodeDroids"
         "Keywords" = "8:"
-        "ARPCOMMENTS" = "8:"
-        "ARPURLINFOABOUT" = "8:"
+        "ARPCOMMENTS" = "8:This will install the OneSync V1.0 in your computer."
+        "ARPURLINFOABOUT" = "8:http://onesync.googlecode.com/"
         "ARPPRODUCTICON" = "8:"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
@@ -465,7 +522,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:_E93CBEBB75FA4EA98BAE3121E5219D36"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "UpdateText"
@@ -691,7 +749,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:_E93CBEBB75FA4EA98BAE3121E5219D36"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "ShowProgress"
@@ -741,7 +800,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:_E93CBEBB75FA4EA98BAE3121E5219D36"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "InstallAllUsersVisible"
@@ -776,7 +836,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:_E93CBEBB75FA4EA98BAE3121E5219D36"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "CopyrightWarning"
@@ -788,7 +849,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:WARNING: This setup is for V0.9 only. If you would like to install the another version of OneSync, please uninstall your current version first."
+                            "Value" = "8:WARNING: This setup is for V1.0 only. If you would like to install the another version of OneSync, please uninstall your current version first."
                             "DefaultValue" = "8:#1202"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -824,7 +885,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:_E93CBEBB75FA4EA98BAE3121E5219D36"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
