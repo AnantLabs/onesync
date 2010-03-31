@@ -192,8 +192,8 @@ namespace OneSync.UI
 
         private void txtBlkShowLog_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            //View log file (The extension of the file should be .html).
-            Process.Start(Log.returnLogReportPath(syncDir, false));
+            //View log file
+            Log.ShowLog(syncDir);
         }
 
         private void txtBlkBackToHome_MouseDown(object sender, MouseButtonEventArgs e)
@@ -417,7 +417,7 @@ namespace OneSync.UI
 
                 lblStatus.Content = "Sync process is successfully done.";
 
-                if (File.Exists(Log.returnLogReportPath(syncDir, false))) //To be changed. Depends on Naing.
+                if (File.Exists(Log.ReturnLogReportPath(syncDir))) //To be changed. Depends on Naing.
                     txtBlkShowLog.Visibility = Visibility.Visible;
                 else
                     txtBlkShowLog.Visibility = Visibility.Hidden;

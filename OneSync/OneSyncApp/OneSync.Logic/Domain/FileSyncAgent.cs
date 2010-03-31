@@ -184,8 +184,8 @@ namespace OneSync.Synchronization
             }
 
             // Add to log
-            Log.addToLog(profile.SyncSource.Path, profile.IntermediaryStorage.Path,
-                    profile.Name, applyActivities, Log.from, applyActivities.Count, starttime, DateTime.Now);
+            Log.AddToLog(profile.SyncSource.Path, profile.IntermediaryStorage.Path,
+                    profile.Name, applyActivities, Log.From, applyActivities.Count, starttime, DateTime.Now);
 
             return syncResult;
             // TODO:
@@ -247,8 +247,8 @@ namespace OneSync.Synchronization
             }
 
             // Add to log
-            Log.addToLog(profile.SyncSource.Path, profile.IntermediaryStorage.Path,
-                profile.Name, generateActivities, Log.to, count, starttime, DateTime.Now);
+            Log.AddToLog(profile.SyncSource.Path, profile.IntermediaryStorage.Path,
+                profile.Name, generateActivities, Log.To, count, starttime, DateTime.Now);
         }
 
         /// <summary>
