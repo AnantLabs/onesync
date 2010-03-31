@@ -240,7 +240,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			<Label Grid.Row="1" x:Name="lblSyncJobSource" Style="{StaticResource blueBoldLabel}" Content="Label" Margin="186,55,0,0" />
 			<Label Grid.Row="1" x:Name="lblSyncJobStorage" Style="{StaticResource blueBoldLabel}" Content="Label" Margin="186,75,0,0"/>
 			
-			<Image Grid.Row="1" x:Name="btnSyncRotating" ToolTip="Sync this folder now!" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Width="104" Height="104" Source="Resource/OneSync Transparent Logo.png" Visibility="Hidden" RenderTransformOrigin="0.5,0.5" >
+			<Image Grid.Row="1" x:Name="btnSyncRotating" ToolTip="Sync process is ongoing." HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Width="104" Height="104" Source="Resource/OneSync Transparent Logo.png" Visibility="Hidden" RenderTransformOrigin="0.5,0.5" >
 				<Image.RenderTransform>
 					<RotateTransform Angle="0"/>
 				</Image.RenderTransform>
