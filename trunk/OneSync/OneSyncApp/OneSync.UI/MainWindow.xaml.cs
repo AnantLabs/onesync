@@ -98,9 +98,12 @@ namespace OneSync.UI
             Window.Title = selectedJobs[0].JobName + " - OneSync";
             
             lblSyncJobName.Content = selectedJobs[0].JobName;
-            lblSyncJobSource.Content = selectedJobs[0].SyncSource;
-            lblSyncJobStorage.Content = selectedJobs[0].IntermediaryStoragePath;
-            lblJobsNumber.Content = "1/" + selectedJobs.Count.ToString();
+            lblSyncJobName.ToolTip = selectedJobs[0].JobName;
+            lblSyncJobSource.Content = normalizeString(selectedJobs[0].SyncSource, 20, 20);
+            lblSyncJobSource.ToolTip = selectedJobs[0].SyncSource;
+            lblSyncJobStorage.Content = normalizeString(selectedJobs[0].IntermediaryStoragePath, 20, 20);
+            lblSyncJobStorage.ToolTip = selectedJobs[0].IntermediaryStoragePath;
+            lblJobsNumber.Content = selectedJobs.Count.ToString();
 
             UpdateSyncUI(false, false);
             ((Storyboard)Resources["sbNext"]).Begin(this, true);
@@ -358,6 +361,13 @@ namespace OneSync.UI
             if (agents.Count > 0)
             {
                 Window.Title = agents[0].SyncJob.Name + " - OneSync";
+                lblSyncJobName.Content = agents[0].SyncJob.Name;
+                lblSyncJobName.ToolTip = agents[0].SyncJob.Name;
+                lblSyncJobSource.Content = normalizeString(agents[0].SyncJob.SyncSource.Path, 20, 20);
+                lblSyncJobSource.ToolTip = agents[0].SyncJob.SyncSource.Path;
+                lblSyncJobStorage.Content = normalizeString(agents[0].SyncJob.IntermediaryStorage.Path, 20, 20);
+                lblSyncJobStorage.ToolTip = agents[0].SyncJob.IntermediaryStorage.Path;
+                lblJobsNumber.Content = agents.Count.ToString();
                 syncWorker.RunWorkerAsync(agents);
             }
             else
