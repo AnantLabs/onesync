@@ -256,6 +256,9 @@ namespace OneSync.UI
         // 2. syncInProgress = false, syncCompletedBefore = true
         private void UpdateSyncUI(bool syncInProgress, bool showProgressControls)
         {
+            lblStatus.Content = "";
+            pbSync.Value = 0;
+
             // Set Visibility of common controls
             txtBlkBackToHome.IsEnabled = !syncInProgress;
             btnSyncStatic.IsEnabled = !syncInProgress;
