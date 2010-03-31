@@ -192,8 +192,27 @@ namespace OneSync.UI
 
         private void txtBlkShowLog_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            //View log file
-            Log.ShowLog(syncDir);
+            showErrorMsg(""); //Clear error msg
+
+            try
+            {
+                TextBlock clickedBlock = (TextBlock)e.Source;
+                UISyncJobEntry entry = clickedBlock.DataContext as UISyncJobEntry;
+
+                //View log file (The extension of the file should be .html).
+                if (File.Exists(Log.returnLogReportPath(entry.SyncSource, false)))
+                {
+                    Process.Start(Log.returnLogReportPath(entry.SyncSource, false));
+                }
+                else
+                {
+                    showErrorMsg("There is no log for this job currently.");
+                }
+            }
+            catch (Exception)
+            {
+                //Do nothing.
+            }
         }
 
         private void txtBlkBackToHome_MouseDown(object sender, MouseButtonEventArgs e)
@@ -204,9 +223,6 @@ namespace OneSync.UI
 
             // Clear any sync preview results previously
             ClearPreviewResults();
-
-            // Show log will be shown again after sync is complete.
-            txtBlkShowLog.Visibility = Visibility.Hidden;
 
             // Animate to start screen
             Storyboard sb = (Storyboard)Window.Resources["sbHome"];
@@ -416,11 +432,6 @@ namespace OneSync.UI
                 UpdateSyncUI(false, true);
 
                 lblStatus.Content = "Sync process is successfully done.";
-
-                if (File.Exists(Log.ReturnLogReportPath(syncDir))) //To be changed. Depends on Naing.
-                    txtBlkShowLog.Visibility = Visibility.Visible;
-                else
-                    txtBlkShowLog.Visibility = Visibility.Hidden;
             }
             else
             {
