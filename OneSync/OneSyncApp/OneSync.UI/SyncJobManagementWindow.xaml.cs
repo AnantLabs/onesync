@@ -123,11 +123,12 @@ namespace OneSync.UI
                 catch (Exception ex) { showErrorMsg("Can't move file(s) to new location. Please do it manually"); }
                 this.Close();
             }
-            catch (Exception)
+            catch (Exception ee)
             {
                 editingSyncJob.SyncJob.Name = oldSyncJobName;
                 editingSyncJob.SyncJob.IntermediaryStorage.Path = oldIStorage;
                 editingSyncJob.SyncJob.SyncSource.Path = oldSyncSource;
+                showErrorMsg(ee.Message);
             }
                 
             
