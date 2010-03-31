@@ -6,6 +6,7 @@
 * [DeveloperGuide Developer Guide]
   * [HowOneSyncWorks How OneSync works?]
   * [Architecture Architecture of OneSync]
+  * [SyncLogic Synchronization Logic]
   * [ClassInfo Class Information]
   * [KnownIssues Known Issues]
   * [Glossary Glossary]
