@@ -14,7 +14,7 @@ namespace OneSync.UI
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private bool _isSelected = true;
+        private bool _isSelected = false;
 
         public UISyncJobEntry(SyncJob job)
         {
