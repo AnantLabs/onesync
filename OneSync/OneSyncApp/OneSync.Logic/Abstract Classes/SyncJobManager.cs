@@ -82,8 +82,9 @@ namespace OneSync.Synchronization
         /// Determines whether a profile with specified name already exists.
         /// </summary>
         /// <param name="jobName"></param>
+        /// <param name="jobID"></param>
         /// <returns>true if SyncJob with specified name already exists.</returns>
-        public abstract bool SyncJobExists(string jobName);
+        public abstract bool SyncJobExists(string jobName, string jobID);
 
         public abstract void CreateSchema();
         #region Public Properties

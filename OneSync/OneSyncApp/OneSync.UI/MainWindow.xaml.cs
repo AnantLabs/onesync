@@ -133,6 +133,7 @@ namespace OneSync.UI
 
         private void txtBlkNewJob_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            showErrorMsg("");
         	//Check the three required inputs for a new sync job:
             // 1. Sync Job Name;
             // 2. Sync Source Folder Directory;

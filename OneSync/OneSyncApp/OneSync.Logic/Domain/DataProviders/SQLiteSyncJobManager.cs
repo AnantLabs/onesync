@@ -237,7 +237,7 @@ namespace OneSync.Synchronization
 
         public override bool Update(SyncJob profile)
         {
-            if (this.SyncJobExists(profile.Name))
+            if (this.SyncJobExists(profile.Name, profile.ID))
                 throw new ProfileNameExistException("Profile " + profile.Name + " is already created");
 
             // Update a profile requires update 2 tables at the same time, 
@@ -296,7 +296,7 @@ namespace OneSync.Synchronization
 
         public override bool Add(SyncJob profile)
         {
-            if (this.SyncJobExists(profile.Name))
+            if (this.SyncJobExists(profile.Name, profile.ID))
                 throw new ProfileNameExistException("Profile " + profile.Name + " is already created");
 
             
@@ -348,7 +348,7 @@ namespace OneSync.Synchronization
 
         public bool Add(SyncJob profile, SqliteConnection con)
         {
-            if (this.SyncJobExists(profile.Name))
+            if (this.SyncJobExists(profile.Name, profile.ID))
                 throw new ProfileNameExistException("Profile " + profile.Name + " is already created");               
 
             using (SqliteCommand cmd = con.CreateCommand ())
@@ -371,17 +371,18 @@ namespace OneSync.Synchronization
             
         
 
-        public override bool SyncJobExists(string profileName)
+        public override bool SyncJobExists(string profileName, string profileID)
         {
             SQLiteAccess db = new SQLiteAccess(Path.Combine (this.StoragePath, Configuration.DATABASE_NAME ));
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 // TODO: Change sql to SELECT COUNT(*)?
                 string cmdText = "SELECT * FROM " + SYNCJOB_TABLE + " WHERE "
-                                 + COL_SYNCJOB_NAME + " = @profileName";
+                                 + COL_SYNCJOB_NAME + " = @profileName AND " + COL_SYNCJOB_ID + " <> @id;";
 
                 SqliteParameterCollection paramList = new SqliteParameterCollection();
                 paramList.Add(new SqliteParameter("@profileName", System.Data.DbType.String) { Value = profileName });
+                paramList.Add(new SqliteParameter("@id", System.Data.DbType.String) { Value = profileID });
 
                 bool found = false;
                 db.ExecuteReader(cmdText, paramList, reader =>
