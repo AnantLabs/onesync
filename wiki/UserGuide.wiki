@@ -165,6 +165,8 @@ In order to make sure that OneSync is working, you should not perform the follow
  * Delete the data.md file.
  * Delete the intermediate storage.
 
+If you accidentally delete the intermediate storage folder or accidentally edit/delete the data.md, then you should delete the profile which is associated to the intermediate storage folder in OneSync under Sync Job Management.
+
 ==Error Messages==
 Sometimes, you will see an error message displayed on the top of the window (see the screenshot below). It is highly possible that due to one of these problems:
  * There are more than one profile which have the same intermediate storage (Do not use back the same intermediate storage for different profile).
