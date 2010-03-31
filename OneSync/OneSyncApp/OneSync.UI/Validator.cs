@@ -16,7 +16,7 @@ namespace OneSync.UI
             if (isNullOrEmpty(newName))
                 errorMsg = "SyncJob name cannot be empty.";
             else if (newName.Length > 50)
-                errorMsg = "SyncJob name is too long.";
+                errorMsg = "SyncJob name should be less than 50 characters.";
 
             return errorMsg;
         }
