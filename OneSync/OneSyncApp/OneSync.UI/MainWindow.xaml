@@ -106,7 +106,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 	</Window.Background>
 
 	<Grid x:Name="LayoutRoot">
-		<Grid x:Name="gridHome" Margin="10,10,10,0" Visibility="Hidden">
+		<Grid x:Name="gridHome" Margin="10,10,10,0">
 			<Grid.RenderTransform>
 				<TranslateTransform X="0" Y="0"/>
 			</Grid.RenderTransform>
@@ -234,7 +234,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			<TextBlock Grid.Row="3" x:Name="txtBlkProceed" Text="Sync Selected Jobs" Style="{StaticResource blueLinkLabel}" MouseDown="txtBlkProceed_MouseDown" Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Right" />
 		</Grid>
 		
-		<Grid x:Name="gridSync" Margin="10,10,10,0">
+		<Grid x:Name="gridSync" Margin="10,10,10,0" Visibility="Hidden">
 			<Grid.RenderTransform>
 				<TranslateTransform X="0" Y="0"/>
 			</Grid.RenderTransform>
