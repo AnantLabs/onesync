@@ -21,6 +21,9 @@ Each !SyncAction is can be a Copy action or a Delete action. When a !SyncAction 
 
 After the !SyncActions are executed, the !SyncActions and any associated files are deleted from the intermediary storage as they are no longer required.
 
+The sequence diagram below shows the execution of SyncActions. It takes in a !SyncPreviewResult as an argument.
+[http://www.comp.nus.edu.sg/~deskoh/devGuide/sd_apply.png]
+
 == 1.2 Updating of metadata =
 
 The metadata of the folder being synchronized will be generated and persisted to the intermediary storage. This metadata can be thought of as the state of the filesystem after the patch from other PC is applied (i.e. after all !SyncActions generated from other PC are executed).
