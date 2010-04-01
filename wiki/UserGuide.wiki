@@ -29,13 +29,13 @@ OneSync is working based on two important concepts. These are the two concepts t
 
 The first concept is called the *Light-weight Sync*. OneSync is trying to make optimal use of the intermediate storage. Hence, only your modified files will actually be uploaded to or downloaded from the intermediate storage. This will not only prevent storing duplicated copies of your files on the intermediate storage but also make the whole sync process faster.
 
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_2.jpg]
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_2_v2.jpg]
 
 The second concept is known as *Half Way Sync*. Instead of doing synchronization directly between two PCs, there is an intermediate storage playing an important role during the sync process.
 
 When a user sync his folder, he must first choose the location of his intermediate storage. The storage can be his portable drive, Windows Shared Folder or DropBox local folder that is stored on his computer. When he does the sync on one PC, his files (or *patch*) will be sent to the intermediate storage. After that, he has to do the sync again in his another computer in order to download the *patch* from the intermediate storage and complete the sync process.
 
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_1.jpg]
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_1_v2.jpg]
 
 ===New Features in Version 1.0===
 
