@@ -443,7 +443,8 @@ namespace OneSync.UI
                     lblSyncJobSource.Content = normalizeString(agents[0].SyncJob.SyncSource.Path, 20, 20);
                     lblSyncJobSource.ToolTip = agents[0].SyncJob.SyncSource.Path;
                     lblSyncJobStorage.Content = normalizeString(agents[0].SyncJob.IntermediaryStorage.Path, 20, 20);
-                    lblSyncJobStorage.ToolTip = agents[0].SyncJob.IntermediaryStorage.Path;                    
+                    lblSyncJobStorage.ToolTip = agents[0].SyncJob.IntermediaryStorage.Path;
+                    UpdateSyncUI(true, true);
                     syncWorker.RunWorkerAsync(agents);
                 }
                 else
