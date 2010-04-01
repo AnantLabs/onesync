@@ -241,7 +241,7 @@ namespace OneSync.Synchronization
                 throw new ProfileNameExistException("Sync job " + profile.Name + " is already created");
 
             SQLiteSyncSourceProvider provider = (SQLiteSyncSourceProvider)SyncClient.GetSyncSourceProvider(profile.IntermediaryStorage.Path);
-            if (provider.GetSyncSourceCount() == 2)
+            if (provider.GetSyncSourceCount() > 2)
                 throw new SyncSourcesNumberExceededException("Only 2 number of source folders are allowed to connect to the same intermediate storage folder.");
 
             // Update a profile requires update 2 tables at the same time, 
