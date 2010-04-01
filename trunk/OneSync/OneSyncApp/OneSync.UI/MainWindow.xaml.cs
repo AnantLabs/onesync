@@ -185,9 +185,15 @@ namespace OneSync.UI
             {
                 TextBlock clickedBlock = (TextBlock)e.Source;
                 UISyncJobEntry entry  = (UISyncJobEntry) clickedBlock.DataContext;
-                SyncJobManagementWindow syncJobManagementWindow = new SyncJobManagementWindow(entry, jobManager, this);
+                SyncJobManagementWindow syncJobManagementWindow = new SyncJobManagementWindow(entry, jobManager);
                 syncJobManagementWindow.Owner = this;
                 syncJobManagementWindow.ShowDialog();
+
+                // DialogResult will be true if SyncJob is deleted
+                if (syncJobManagementWindow.DialogResult.HasValue && syncJobManagementWindow.DialogResult.Value)
+                    this.SyncJobEntries.Remove(entry);
+
+
             }
             catch (Exception)
             {

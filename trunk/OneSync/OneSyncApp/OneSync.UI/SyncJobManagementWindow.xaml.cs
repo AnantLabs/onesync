@@ -26,10 +26,8 @@ namespace OneSync.UI
 		{
 			this.InitializeComponent();
 		}
-
-        MainWindow main = null;
             
-        public SyncJobManagementWindow(UISyncJobEntry selectedSyncJob, SyncJobManager jobManager, MainWindow parent)
+        public SyncJobManagementWindow(UISyncJobEntry selectedSyncJob, SyncJobManager jobManager)
             : this()
 		{
             this.jobManager = jobManager;
@@ -37,7 +35,6 @@ namespace OneSync.UI
             txtSyncJobName.Text = editingSyncJob.SyncJob.Name;
             txtSource.Text = editingSyncJob.SyncJob.SyncSource.Path;
             txtIntStorage.Text = editingSyncJob.SyncJob.IntermediaryStorage.Path;
-            main = parent;
 		}
 
 		private void btnBrowse_Source_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -163,8 +160,11 @@ namespace OneSync.UI
                 if (!jobManager.Delete(editingSyncJob.SyncJob))
                     showErrorMsg("Unable to delete sync job at this moment.");
                 else
-                    this.main.LoadSyncJobs();
+                {
+                    // Indicate to owner that SyncJob deleted
+                    this.DialogResult = true;
                     this.Close();
+                }
             }
 		}
 
