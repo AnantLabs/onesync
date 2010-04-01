@@ -21,7 +21,7 @@ Each !SyncAction is can be a Copy action or a Delete action. When a !SyncAction 
 
 After the !SyncActions are executed, the !SyncActions and any associated files are deleted from the intermediary storage as they are no longer required.
 
-The sequence diagram below shows the execution of SyncActions. It takes in a !SyncPreviewResult as an argument.
+In implementation, to support sync preview, !SyncPreviewResult is first generated. The conflict actions are detected and filtered during the preview generation. The sequence diagram below shows the execution of !SyncActions. It takes in a !SyncPreviewResult as an argument. 
 [http://www.comp.nus.edu.sg/~deskoh/devGuide/sd_apply.png]
 
 == 1.2 Updating of metadata =
