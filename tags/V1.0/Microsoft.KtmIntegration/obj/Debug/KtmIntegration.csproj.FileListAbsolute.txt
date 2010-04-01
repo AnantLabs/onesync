@@ -1,0 +1,5 @@
+C:\Users\u0707373\Documents\Visual Studio 2008\OneSync\Microsoft.KtmIntegration\bin\Debug\KtmIntegration.dll
+C:\Users\u0707373\Documents\Visual Studio 2008\OneSync\Microsoft.KtmIntegration\bin\Debug\KtmIntegration.pdb
+C:\Users\u0707373\Documents\Visual Studio 2008\OneSync\Microsoft.KtmIntegration\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\u0707373\Documents\Visual Studio 2008\OneSync\Microsoft.KtmIntegration\obj\Debug\KtmIntegration.dll
+C:\Users\u0707373\Documents\Visual Studio 2008\OneSync\Microsoft.KtmIntegration\obj\Debug\KtmIntegration.pdb
