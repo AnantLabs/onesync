@@ -47,7 +47,6 @@ When a user sync his folder, he must first choose the location of his intermedia
 This version of OneSync has a number of exciting new features, including:
  # Multiple Jobs Synchronization - Sync more than one sync job sequentially.
  # Sync Preview - View the actions that will be carried out during the sync process in advanced.
- # DropBox Integration - Easily know the status of your DropBox in our system. It will tell you when your files are all uploaded to the DropBox server.
  # Sync Job Management - Compared to the previous version, this version allows creation and management of your sync jobs in an easy way. You do not have to memorize the long directories anymore.
  # Right-click and Sync - Just right click any reasonable folder, then you will be able to sync it in just three clicks!
 
@@ -68,23 +67,39 @@ The following diagram describes some of the things that you will see in the firs
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync(V0.9)%20Profile%20Page.jpg]
 
- # *Directory of Sync Source Folder* - The directory shown above is the directory of the folder that you are going to sync later. Hence, the folder is your *Sync Source Folder*.
  # *Sync Job Name* - The name of your new/existing sync job.
- # *Delete This Job* - Only available if you are choosing an existing sync job. You can delete any existing sync job from here.
- # *New Name* - Only available if you are choosing an existing sync job. You can give your existing sync job a new name here.
- # *Rename Job* - Only available if you are choosing an existing sync job. Click here to confirm the rename action.
- # *Proceed* - Setup the sync job.
+ # *Folder To Sync* - The directory shown above is the directory of the folder that you are going to sync later. Hence, the folder is your *Sync Source Folder*.
+ # *Intermediate Storage Location* - The location of intermediate storage folder, for example a folder in your thumb drive or DropBox.
+ # *Add New Job* - Add the new sync job to your collection of sync jobs so that you can do the same job again in the future.
+ # *Check Box* - Check all the sync jobs that you are going to sync.
+ # *+ or -* - Sort your sync jobs. This is important if there are more than one sync job will be synced. The sync job at the top always gets synced first.
+ # *Edit Preview Show Log* - The three basic operations on a sync job. You can edit your sync job name and folder directories, preview the sync actions that will be carried out and show the log.
+ # *Sync Selected Jobs* - Click it to sync only the selected jobs.
 
-The following diagram describes some of the things that you will see in the next window, aka *Sync Page*, of OneSync:
+The following diagram describes some of the things that you will see when you click on the *Edit* button:
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync(V0.9)%20Sync%20Job%20Management%20Page.jpg]
+
+ # *New Job Name* - The new name of your job.
+ # *Folder to Sync* - Can update the sync source folder here.
+ # *Intermediate Storage Location* - Can update the intermediate storage location here.
+ # *Edit Job* - Confirm edit the sync job.
+ # *Delete Job* - Delete the job.
+
+The following diagram describes some of the things that you will see when you click on the *Preview* button:
+[http://www.comp.nus.edu.sg/~gohchunl/OneSync(V0.9)%20Sync%20Preview%20Page.jpg]
+
+ # *Filter* - Filter the sync action that will be carried out.
+ # *Skip* - Can choose to skip syncing certain files.
+ # *Conflict Resolution* - The way to resolve the conflict, if any.
+ # *Done* - Save and close the window.
+
+The following diagram describes some of the things that you will see in the next window, aka *Sync Page*, of OneSync when you click on the *Sync Selected Jobs* button:
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync(V0.9)%20Sync%20Page.jpg]
 
- # *Directory of Sync Source Folder* - The directory shown above is the directory of the folder that you are going to sync later. Hence, the folder is your *Sync Source Folder*.
- # *Directory of Intermediate Storage* - The location of intermediate storage folder, for example a folder in your thumb drive or DropBox.
- # *Open Folder Browser* - Cannot locate your intermediate storage folder? Never mind, use the Folder Browser to help you locate the folder.
- # *Quit Job* - Back to the *Sync Job Page* without doing the sync.
- # *Show Log* - Only available if you synced this job before. You are able to view the logs in your browser.
- # *Sync Process* - Only available when you are doing the sync. You can see what the program is doing now.
+ # *Back to Home* - Back to the *Sync Job Page* without doing the sync.
  # *Sync* - The only one button that you need to click to start syncing.
+ # *Sync Process* - Only available when you are doing the sync. You can see what the program is doing and what files are being synced.
+
 
 ==Syncing My Folders==
 Why put your files in different PCs and keep doing copy-and-paste whenever you update the files? Keep them synchronized between your two computers and you will always have the most up-to-date versions at hand.
