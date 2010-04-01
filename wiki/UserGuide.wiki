@@ -19,11 +19,6 @@ This guide allows you to learn the features of OneSync. Just follow through the 
     * [UserGuide#Syncing_Through_Drop_Box Syncing through DropBox (BETA)]
     * [UserGuide#Syncing_Through_Windows_Shared_Folders Syncing through Windows Shared Folders]
     * [UserGuide#Handling_Conflicts Handling conflicts]
-  * [UserGuide#Managing_Sync_Jobs Managing Sync Jobs]
-    * [UserGuide#Creating_A_New_Sync_Job Creating a new sync job]
-    * [UserGuide#Modifying_My_Existing_Sync_Job Modifying my existing sync job]
-    * [UserGuide#Deleting_Existing_Sync_Job Deleting existing sync job]
-  * [UserGuide#View_The_Logs View the logs]
   * [UserGuide#What_You_Should_Not_Do What you should not do]
   * [UserGuide#Error_Messages Error messages]
   * [UserGuide#Contact_Us Contact us]
@@ -142,34 +137,7 @@ If you do not bring your portable drive and also do not want to install DropBox,
 Of course, you need to setup a Windows Shared Folder in your LAN first.
 
 ===Handling Conflicts===
-If there is a file conflict detected, OneSync will keep both old and new version of the conflict file so that you can choose which version to keep. Please remember to deleted the version that you do not want to keep so that there are no "recursive conflicts".
-
-==Managing Sync Jobs==
-===Creating A New Sync Job===
-In the *Sync Job Page*, you can create a new sync job by entering the name for your new sync job and press the "Proceed" button. However, please remember that the sync job is meaningless if there is no intermediate storage assigned to it. Hence, the sync job is only created when you do the sync, i.e. pressing the "Sync" button on the *Sync Page*.
-
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_04.jpg]
-
-Next time, when you are going to sync the same folder again, then you can just select the profile from the drop-down list in the *Sync Job Page*.
-
-===Modifying My Existing Sync Job===
-In the *Sync Job Page*, select existing sync job by either keying in the name (OneSync will auto-complete the name for you if the profile exists) or selecting the profile from the drop-down list.
-
-After that, you will see that there will be a few options appearing below. From there, you can either edit the name of the selected existing profile by keying in the new name and pressing the "Rename Job".
-
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_07.jpg]
-
-===Deleting Existing Sync Job===
-You can permanently delete any existing sync job easily by selecting an existing sync job and pressing the "Delete This Job".
-
-==View The Logs==
-After you sync or when you are going to sync an existing profile, you will be able to view the logs of past sync process. The logs include the records from all profiles which are attached to the *Sync Source Folder*.
-
-To view the logs, just press on the "Show Log" button in the *Sync Page*.
-
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_08.jpg]
-
-The logs will be shown in your default browser.
+You can choose different ways to handle the conflicts in the *Preview* window before you do the synchronization.
 
 ==What You Should Not Do==
 In order to make sure that OneSync is working, you should not perform the following actions in the OneSync.
@@ -184,8 +152,6 @@ Sometimes, you will see an error message displayed on the top of the window (see
  * The data.md file is missing (Please uninstall and re-install).
  * The data.md file is not updated because of the IO problem (Please try run the program later).
  * A problem that the CodeDroids members do not even know (Please tell us).
-
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_09.jpg]
 
 ==Contact Us==
 
