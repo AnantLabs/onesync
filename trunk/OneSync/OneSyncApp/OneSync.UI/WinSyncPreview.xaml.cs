@@ -16,6 +16,8 @@ namespace OneSync.UI
         private BackgroundWorker previewWorker;
         IEnumerable<SyncAction> allActions = null; /* used for filtering */
 
+        TaskbarManager tbManager = TaskbarManager.Instance;
+
         /// <summary>
         /// Instantiate a sync preview window job to be previewed.
         /// </summary>
@@ -29,6 +31,9 @@ namespace OneSync.UI
             previewWorker = new BackgroundWorker();
             previewWorker.DoWork += new DoWorkEventHandler(previewWorker_DoWork);
             previewWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(previewWorker_RunWorkerCompleted); ;
+
+            if (tbManager != null) tbManager.SetProgressState(TaskbarProgressBarState.Indeterminate);
+            pb.Visibility = Visibility.Visible;
             previewWorker.RunWorkerAsync();
 		}
 
@@ -48,6 +53,8 @@ namespace OneSync.UI
             if (e.Error != null)
             {
                 // Log error
+                if (tbManager != null) tbManager.SetProgressState(TaskbarProgressBarState.NoProgress);
+                pb.Visibility = Visibility.Hidden;
                 return;
             }
 
@@ -57,6 +64,9 @@ namespace OneSync.UI
             SyncPreviewResult result = _job.SyncPreviewResult;
             this.allActions = result.GetAllActions();
             lvPreview.ItemsSource = this.allActions;
+
+            if (tbManager != null) tbManager.SetProgressState(TaskbarProgressBarState.NoProgress);
+            pb.Visibility = Visibility.Hidden;
         }
 
         void txtFilter_TextChanged(object sender, TextChangedEventArgs e)
@@ -105,11 +115,14 @@ namespace OneSync.UI
                           && a.RelativeFilePath.ToLower().Contains(searchTerm)
                     select a;
             }
-        }
-
-        private void btnSync_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
+            else if (cmbFilter.SelectedIndex == 4)
+            {
+                lvPreview.ItemsSource =
+                    from a in allActions
+                    where a.ChangeType == ChangeType.RENAMED
+                          && a.RelativeFilePath.ToLower().Contains(searchTerm)
+                    select a;
+            }
         }
 
         private void txtFilter_GotFocus(object sender, RoutedEventArgs e)

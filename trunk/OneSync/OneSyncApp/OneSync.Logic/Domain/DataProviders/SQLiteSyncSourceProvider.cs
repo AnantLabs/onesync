@@ -97,6 +97,22 @@ namespace OneSync.Synchronization
             return true;
         }
 
+        public override bool Delete(SyncSource source)
+        {
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            using (SqliteConnection con = db.NewSQLiteConnection())
+            {
+                string cmdText = "DELETE FROM " + Configuration.TBL_DATASOURCE_INFO +
+                        " WHERE " + Configuration.COL_SOURCE_ID + " = @id";
+
+                SqliteParameterCollection paramList = new SqliteParameterCollection();
+                paramList.Add(new SqliteParameter("@id", DbType.String) { Value = source.ID });
+
+                db.ExecuteNonQuery(cmdText, paramList);
+            }
+            return true;
+        }
+
         /// <summary>
         /// Update details of sync source
         /// Pass SQLiteConnection object to make atomic action
@@ -104,7 +120,7 @@ namespace OneSync.Synchronization
         /// <param name="source"></param>
         /// <param name="con"></param>
         /// <returns></returns>
-        public  bool Update(SyncSource source, SqliteConnection con )
+        public bool Update(SyncSource source, SqliteConnection con )
         {          
             using (SqliteCommand cmd = con.CreateCommand())
             {

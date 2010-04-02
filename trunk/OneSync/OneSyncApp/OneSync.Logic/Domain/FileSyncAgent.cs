@@ -107,7 +107,7 @@ namespace OneSync.Synchronization
                                  previewResult.ItemsToRename.Count;
 
             if (totalProgressCount == 0)
-                if (ProgressChanged != null) ProgressChanged(this, new SyncProgressChangedEventArgs(100));
+                OnProgressChanged(new SyncProgressChangedEventArgs(100));
             
             int currProgressCount = 0;
 
@@ -130,11 +130,8 @@ namespace OneSync.Synchronization
         {
             foreach (SyncAction action in actions)
             {
-                if (ProgressChanged != null)
-                {
-                    currProgressCount++;
-                    ProgressChanged(this, new SyncProgressChangedEventArgs((currProgressCount * 100 / totalProgressCount)));
-                }
+                OnProgressChanged(new SyncProgressChangedEventArgs((currProgressCount++ * 100 / totalProgressCount)));
+
                 if (action.Skip)
                 {
                     syncResult.Skipped.Add(action);
@@ -159,11 +156,8 @@ namespace OneSync.Synchronization
         {
             foreach (SyncAction action in actions)
             {
-                if (ProgressChanged != null)
-                {
-                    currProgressCount++;
-                    ProgressChanged(this, new SyncProgressChangedEventArgs((currProgressCount * 100 / totalProgressCount)));
-                }
+                OnProgressChanged(new SyncProgressChangedEventArgs((currProgressCount++ * 100 / totalProgressCount)));
+
                 if (action.Skip)
                 {
                     syncResult.Skipped.Add(action);
@@ -193,11 +187,8 @@ namespace OneSync.Synchronization
         {
             foreach (SyncAction action in actions)
             {
-                if (ProgressChanged != null)
-                {
-                    currProgressCount++;
-                    ProgressChanged(this, new SyncProgressChangedEventArgs((currProgressCount * 100 / totalProgressCount)));
-                }
+                OnProgressChanged(new SyncProgressChangedEventArgs((currProgressCount++ * 100 / totalProgressCount)));
+
                 if (action.Skip)
                 {
                     syncResult.Skipped.Add(action);
@@ -222,11 +213,8 @@ namespace OneSync.Synchronization
         {
             foreach (SyncAction action in actions)
             {
-                if (ProgressChanged != null)
-                {
-                    currProgressCount++;
-                    ProgressChanged(this, new SyncProgressChangedEventArgs((currProgressCount * 100 / totalProgressCount)));
-                }
+                OnProgressChanged(new SyncProgressChangedEventArgs((currProgressCount++ * 100 / totalProgressCount)));
+
                 if (action.Skip)
                 {
                     syncResult.Skipped.Add(action);
@@ -372,6 +360,21 @@ namespace OneSync.Synchronization
         public SyncJob SyncJob
         {
             get { return job; }
-        }       
+        }
+
+        #region Event-Raising
+
+        protected virtual void OnProgressChanged(SyncProgressChangedEventArgs e)
+        {
+            if (ProgressChanged != null)
+                ProgressChanged(this, e);
+        }
+
+        protected virtual void OnSyncFileChanged(SyncFileChangedEventArgs e)
+        {
+            if (SyncFileChanged != null)
+                SyncFileChanged(this, e);
+        }
+        #endregion
     }
 }

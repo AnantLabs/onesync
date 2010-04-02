@@ -21,7 +21,7 @@
 		<Grid Margin="10">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="20"/>
-				<RowDefinition Height="40"/>
+				<RowDefinition Height="48"/>
 				<RowDefinition/>
 				<RowDefinition Height="30"/>
 			</Grid.RowDefinitions>
@@ -39,10 +39,11 @@
 					<ComboBoxItem Content="Conflict Files"/>
 					<ComboBoxItem Content="Copy Only"/>
 					<ComboBoxItem Content="Delete Only"/>
-					<!--<ComboBoxItem Content="Rename"/>-->
+					<ComboBoxItem Content="Rename Only"/>
 				</ComboBox>
 				<TextBox Grid.Column="2" Foreground="#FF808080" x:Name="txtFilter" Height="21.96" TextChanged="txtFilter_TextChanged" GotFocus="txtFilter_GotFocus"/>
 			</Grid>
+			<ProgressBar x:Name="pb" Margin="0,0,0,3" VerticalAlignment="Bottom" Height="5" Grid.Row="1" IsIndeterminate="True" Visibility="Hidden"/>
 			<TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Text="Done" Grid.Row="3" x:Name="txtBlkDone" TextDecorations="Underline" FontSize="13.333" Cursor="Hand" Foreground="#FF0000B9" FontWeight="Bold"  MouseDown="txtBlkDone_MouseDown"/>
 			<UI:SyncActionsListView x:Name="lvPreview" Grid.Row="2" d:LayoutOverrides="GridBox" />
 		</Grid>

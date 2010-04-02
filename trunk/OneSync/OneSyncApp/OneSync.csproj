@@ -148,14 +148,15 @@
     <Compile Include="OneSync.Logic\SyncEvents\SyncCancelledEventArgs.cs" />
     <Compile Include="OneSync.Logic\SyncEvents\SyncCompletedEventArgs.cs" />
     <Compile Include="OneSync.Logic\SyncEvents\SyncProgressChangedEventArgs.cs" />
+    <Compile Include="OneSync.UI\Interop\CoreErrorHelper.cs" />
+    <Compile Include="OneSync.UI\Interop\TaskbarCOMInterface.cs" />
+    <Compile Include="OneSync.UI\Interop\TaskbarManager.cs" />
+    <Compile Include="OneSync.UI\Interop\TaskbarNativeMethods.cs" />
     <Compile Include="OneSync.UI\SyncActionsListView.xaml.cs">
       <DependentUpon>SyncActionsListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="OneSync.UI\SyncJobManagementWindow.xaml.cs">
       <DependentUpon>SyncJobManagementWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="OneSync.UI\UIHelper.cs">
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="OneSync.UI\UISyncJob.cs" />
     <Compile Include="OneSync.UI\WinSyncPreview.xaml.cs">
@@ -195,8 +196,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Application.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="OneSync.Lib\Community.CsharpSqlite.dll" />
     <Content Include="OneSync.Lib\Community.CsharpSqlite.SQLiteClient.dll" />
     <Content Include="OneSync.Lib\FSync.Files.dll" />
@@ -212,9 +211,6 @@
       <Project>{1B3809EF-E3B2-4681-ABBD-4A4280655A33}</Project>
       <Name>KtmIntegration</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="OneSync.Logic\UIProcess\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

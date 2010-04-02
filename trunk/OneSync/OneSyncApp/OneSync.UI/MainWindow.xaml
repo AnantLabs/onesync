@@ -8,7 +8,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
     x:Class="OneSync.UI.MainWindow"
 	x:Name="Window"
 	DataContext="{Binding RelativeSource={RelativeSource Self}}"
-	Title="OneSync" Width="950" Height="365" MinWidth="720" MinHeight="279" WindowStartupLocation="CenterScreen" mc:Ignorable="d" Closing="Window_Closing">
+	Title="OneSync" Width="950" Height="365" MinWidth="720" MinHeight="279" WindowStartupLocation="CenterScreen" mc:Ignorable="d" Closing="Window_Closing" Icon="../Application.ico">
 	<Window.Resources>
 		<Style x:Key="blueLabel" TargetType="{x:Type Label}">
 			<Setter Property="FontSize" Value="10.667" />
@@ -135,12 +135,12 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 				
 				<!--Column 1 -->
 				<Label Grid.Column="1" x:Name="lblFolderToSync" Content="Folder to Sync:" FontSize="10.667" Foreground="#FF0000B9" />
-				<TextBox Grid.Column="1" x:Name="txtSource" Height="22.187" MaxLines="1" Margin="5,0,40,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
-				<Button Grid.Column="1" x:Name="btnBrowse_Source" Width="22.187" Height="22.187" Content="..." ToolTip="Click to browse folders" Click="btnBrowse_Click" Margin="0,0,8,0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+				<TextBox Grid.Column="1" x:Name="txtSource" Height="22.187" MaxLines="1" Margin="5,0,40,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" AllowDrop="True" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop" />
+				<Button Grid.Column="1" x:Name="btnBrowse_Source" Width="22.187" Height="22.187" Content="..." ToolTip="Click to browse folders" Click="btnBrowse_Click" Margin="0,0,8,0" HorizontalAlignment="Right" VerticalAlignment="Center" />
 				
 				<!--Column 2 -->
 				<Label Grid.Column="2" x:Name="label_storage_message" Content="Intermediary Storage Location:" FontSize="10.667" Foreground="#FF0000B9" />
-				<TextBox Grid.Column="2" x:Name="txtIntStorage" Height="22.187" MaxLines="1" Margin="5,0,40,0" VerticalAlignment="Center" HorizontalAlignment="Stretch"  />
+				<TextBox Grid.Column="2" x:Name="txtIntStorage" Height="22.187" MaxLines="1" Margin="5,0,40,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" AllowDrop="True" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop" />
 				<Button Grid.Column="2" x:Name="btnBrowse" Width="22.187" Height="22.187" Content="..." ToolTip="Click to browse folders" Click="btnBrowse_Click" Margin="0,0,8,0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
 				
 				<!--Column 3 -->

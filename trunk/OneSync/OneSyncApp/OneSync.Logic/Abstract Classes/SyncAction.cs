@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
 
 namespace OneSync.Synchronization
 {
-
     public enum ChangeType
     {
         NEWLY_CREATED,
@@ -28,10 +28,13 @@ namespace OneSync.Synchronization
     /// <summary>
     /// This class is the base class for all the sync action (rename, delete, create,...)
     /// </summary>
-    public abstract class SyncAction
+    public abstract class SyncAction : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         //status of the action
         protected ConflictResolution conflictResolution = ConflictResolution.NONE;
+        protected bool _skip = false;
 
         protected int actionId = 0;
         protected string relFilePath = "";
@@ -57,7 +60,18 @@ namespace OneSync.Synchronization
             this.fileHash = fileHash;
         }
 
-        public bool Skip { get; set; }
+        public bool Skip
+        {
+            get { return _skip; }
+            set
+            {
+                if (value != Skip)
+                {
+                    _skip = value;
+                    OnPropertyChanged("Skip");
+                }
+            }
+        }
 
 
         /// <summary>
@@ -104,6 +118,12 @@ namespace OneSync.Synchronization
         {
             get { return this.conflictResolution; }
             set { conflictResolution = value; }
+        }
+
+        protected virtual void OnPropertyChanged(string PropertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(PropertyName));
         }
 
     }
