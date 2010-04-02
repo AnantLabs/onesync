@@ -708,19 +708,17 @@ namespace OneSync.UI
 
         #region Drag-Drop
 
-        #endregion
-
         private void txtDir_PreviewDrop(object sender, DragEventArgs e)
         {
             string[] folders = e.Data.GetData(DataFormats.FileDrop) as string[];
-            
+
             if (folders == null) return;
 
             if (folders.Length > 0)
             {
                 TextBox tb = sender as TextBox;
                 if (tb == null) return;
-                
+
                 if (Directory.Exists(folders[0]))
                     tb.Text = folders[0];
             }
@@ -740,6 +738,8 @@ namespace OneSync.UI
             e.Handled = true;
         }
 
+        #endregion
 
+        
 	}
 }

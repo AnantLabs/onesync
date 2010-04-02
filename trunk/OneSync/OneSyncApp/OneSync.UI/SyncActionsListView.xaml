@@ -16,6 +16,7 @@
 		<local:ConflictResolutionToIntConverter x:Key="intConverter" />
 		<local:ChangeTypeConverter x:Key="changeTypeConverter" />
 		<local:ChangeTypeColorConverter x:Key="changeTypeColorConverter" />
+		<local:OriginalPathConverter x:Key="originalPathConverter" />
 		
 		<!-- Style for listview -->
 		<Style TargetType="{x:Type ListViewItem}">
@@ -35,6 +36,12 @@
 		<DataTemplate x:Key="SelectCell">
 	      <StackPanel Orientation="Horizontal">
 			<CheckBox IsChecked="{Binding Path=Skip}" Name="checkBoxSkip"/>
+	      </StackPanel>
+	    </DataTemplate>
+		
+		<DataTemplate x:Key="OriginalPathCell">
+	      <StackPanel Orientation="Horizontal">
+			<Label Content="{Binding Converter={StaticResource originalPathConverter}}" />
 	      </StackPanel>
 	    </DataTemplate>
 		
@@ -64,8 +71,9 @@
                         </DockPanel>                           
                     </GridViewColumn>
                     <GridViewColumn Header="Action" DisplayMemberBinding="{Binding ChangeType, Converter={StaticResource changeTypeConverter}}" Width="60"/>
-					<GridViewColumn Header="File Path" CellTemplate="{StaticResource PathCell}" Width="500"/>
-					<GridViewColumn Header="Conflict Resolution" CellTemplate="{StaticResource ActionCell}" Width="200"/>
+					<GridViewColumn Header="File Path" CellTemplate="{StaticResource PathCell}" Width="300"/>
+					<GridViewColumn Header="Original File Path" CellTemplate="{StaticResource OriginalPathCell}" Width="300"/>
+					<GridViewColumn Header="Conflict Resolution" CellTemplate="{StaticResource ActionCell}" Width="120"/>
 				</GridView>
 			</ListView.View>
 		</ListView>

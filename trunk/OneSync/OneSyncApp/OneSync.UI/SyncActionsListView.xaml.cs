@@ -165,6 +165,25 @@ namespace OneSync.UI
         }
     }
 
+    [ValueConversion(typeof(SyncAction), typeof(string))]
+    public class OriginalPathConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            SyncAction action = (SyncAction)value;
+            if (action.ChangeType == ChangeType.RENAMED)
+                return ((RenameAction)action).PreviousRelativeFilePath;
+            else
+                return null;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+
+
     #endregion
 
 }

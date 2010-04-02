@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using OneSync.Synchronization;
 using System.ComponentModel;
+using System.IO;
 
 namespace OneSync.UI
 {
@@ -190,5 +191,39 @@ namespace OneSync.UI
                 label_notification.Visibility = Visibility.Visible;
             }
         }
+
+        #region Drag-Drop
+
+        private void txtDir_PreviewDrop(object sender, DragEventArgs e)
+        {
+            string[] folders = e.Data.GetData(DataFormats.FileDrop) as string[];
+
+            if (folders == null) return;
+
+            if (folders.Length > 0)
+            {
+                TextBox tb = sender as TextBox;
+                if (tb == null) return;
+
+                if (Directory.Exists(folders[0]))
+                    tb.Text = folders[0];
+            }
+
+            e.Handled = true;
+        }
+
+        private void txtDir_PreviewDragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effects = DragDropEffects.All;
+        }
+
+        private void txtDir_PreviewDragOver(object sender, DragEventArgs e)
+        {
+            e.Effects = DragDropEffects.All;
+            e.Handled = true;
+        }
+
+        #endregion
 	}
 }
