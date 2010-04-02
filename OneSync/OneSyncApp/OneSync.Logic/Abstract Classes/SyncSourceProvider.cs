@@ -45,6 +45,13 @@ namespace OneSync.Synchronization
         /// <returns>true if update is successful.</returns>
         public abstract bool Update(SyncSource source);
 
+        /// <summary>
+        /// Delets a SyncSource
+        /// </summary>
+        /// <param name="source">SyncSource to be deleted.</param>
+        /// <returns>true if deletion is successful.</returns>
+        public abstract bool Delete(SyncSource source);
+
 
         /// <summary>
         /// Returns the number of SyncSource saved in <see cref="StoragePath"/>.

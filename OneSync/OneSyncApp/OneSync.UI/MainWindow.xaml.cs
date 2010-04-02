@@ -29,6 +29,8 @@ namespace OneSync.UI
         private DispatcherTimer timerDropbox; //The time to check the Dropbox status frequently.
 
         private ObservableCollection<UISyncJobEntry> _SyncJobEntries = new ObservableCollection<UISyncJobEntry>();
+
+        TaskbarManager tbManager = TaskbarManager.Instance;
         // End: Global variables.
 		
 		
@@ -99,17 +101,13 @@ namespace OneSync.UI
                 return;
             }
 
-            // Update Sync UI info
-            Window.Title = selectedJobs[0].JobName + " - OneSync";
-            
-            lblSyncJobName.Content = selectedJobs[0].JobName;
-            lblSyncJobName.ToolTip = selectedJobs[0].JobName;
-            lblSyncJobSource.Content = normalizeString(selectedJobs[0].SyncSource, 20, 20);
-            lblSyncJobSource.ToolTip = selectedJobs[0].SyncSource;
-            lblSyncJobStorage.Content = normalizeString(selectedJobs[0].IntermediaryStoragePath, 20, 20);
-            lblSyncJobStorage.ToolTip = selectedJobs[0].IntermediaryStoragePath;
-            lblJobsNumber.Content = selectedJobs.Count.ToString();
+            lblJobsNumber.Content = selectedJobs.Count;
+            UpdateSyncInfoUI(selectedJobs[0].SyncJob);
             UpdateSyncUI(false, false);
+
+            if (tbManager != null) tbManager.SetProgressState(TaskbarProgressBarState.Normal);
+            pbSync.Value = 0;
+
             ((Storyboard)Resources["sbNext"]).Begin(this, true);
         }
 
@@ -255,6 +253,8 @@ namespace OneSync.UI
                 // Clear any sync preview results previously
                 ClearPreviewResults();
 
+                if (tbManager != null) tbManager.SetProgressState(TaskbarProgressBarState.NoProgress);
+
                 // Animate to start screen
                 Storyboard sb = (Storyboard)Window.Resources["sbHome"];
                 sb.Begin(this);
@@ -274,10 +274,6 @@ namespace OneSync.UI
 		PART 3: UI handling code
 		========================================================*/
 
-        // There are 3 states for visiblity of controls in CanvasSync:
-        // 1. syncInProgress = false, syncCompletedBefore = false
-        // 2. syncInProgress = true, syncCompletedBefore = true
-        // 2. syncInProgress = false, syncCompletedBefore = true
         private void UpdateSyncUI(bool syncInProgress, bool showProgressControls)
         {
             // Set Visibility of common controls
@@ -314,14 +310,17 @@ namespace OneSync.UI
             }
         }
 
-        private void UpdateSyncInfoUI(UISyncJobEntry p)
+        private void UpdateSyncInfoUI(SyncJob p)
         {
-            lblSyncJobName.Content = normalizeString(p.JobName, 20, 50);
-            lblSyncJobName.ToolTip = p.JobName;
-            lblSyncJobSource.Content = normalizeString(p.SyncSource, 20, 30);
-            lblSyncJobSource.ToolTip = p.SyncSource;
-            lblSyncJobStorage.Content = normalizeString(p.IntermediaryStoragePath, 20, 30);
-            lblSyncJobStorage.ToolTip = p.IntermediaryStoragePath;
+            // Update Sync UI info
+            Window.Title = p.Name + " - OneSync";
+
+            lblSyncJobName.Content = p.Name;
+            lblSyncJobName.ToolTip = p.Name;
+            lblSyncJobSource.Content = normalizeString(p.SyncSource.Path, 20, 20);
+            lblSyncJobSource.ToolTip = p.SyncSource.Path;
+            lblSyncJobStorage.Content = normalizeString(p.IntermediaryStorage.Path, 20, 20);
+            lblSyncJobStorage.ToolTip = p.IntermediaryStorage.Path;
         }
 		
 		private void showErrorMsg(string message)
@@ -352,6 +351,7 @@ namespace OneSync.UI
                     agents.Add(new FileSyncAgent(job));
 
                 UpdateSyncUI(true, true);
+
                 syncWorker.RunWorkerAsync(agents);
             }
             catch (Exception)
@@ -363,7 +363,6 @@ namespace OneSync.UI
         {            
             try
             {
-
                 if (this.Dispatcher.CheckAccess())
                     lblSyncPageMessage.Content = "";
                 else
@@ -437,13 +436,7 @@ namespace OneSync.UI
                 // Check for more sync agents to run
                 if (agents.Count > 0)
                 {
-                    Window.Title = agents[0].SyncJob.Name + " - OneSync";
-                    lblSyncJobName.Content = agents[0].SyncJob.Name;
-                    lblSyncJobName.ToolTip = agents[0].SyncJob.Name;
-                    lblSyncJobSource.Content = normalizeString(agents[0].SyncJob.SyncSource.Path, 20, 20);
-                    lblSyncJobSource.ToolTip = agents[0].SyncJob.SyncSource.Path;
-                    lblSyncJobStorage.Content = normalizeString(agents[0].SyncJob.IntermediaryStorage.Path, 20, 20);
-                    lblSyncJobStorage.ToolTip = agents[0].SyncJob.IntermediaryStorage.Path;
+                    UpdateSyncInfoUI(agents[0].SyncJob);
                     UpdateSyncUI(true, true);
                     syncWorker.RunWorkerAsync(agents);
                 }
@@ -485,7 +478,10 @@ namespace OneSync.UI
         void currAgent_ProgressChanged(object sender, Synchronization.SyncProgressChangedEventArgs e)
         {
             if (this.Dispatcher.CheckAccess())
+            {
+                if (tbManager != null) tbManager.SetProgressValue(e.Value, 100);
                 pbSync.Value = e.Value;
+            }
             else
                 pbSync.Dispatcher.Invoke((Action)delegate { currAgent_ProgressChanged(sender, e); });
         }
@@ -708,6 +704,42 @@ namespace OneSync.UI
                 showErrorMsg("Error loading profiles.");
             }
         }
+
+
+        #region Drag-Drop
+
+        #endregion
+
+        private void txtDir_PreviewDrop(object sender, DragEventArgs e)
+        {
+            string[] folders = e.Data.GetData(DataFormats.FileDrop) as string[];
+            
+            if (folders == null) return;
+
+            if (folders.Length > 0)
+            {
+                TextBox tb = sender as TextBox;
+                if (tb == null) return;
+                
+                if (Directory.Exists(folders[0]))
+                    tb.Text = folders[0];
+            }
+
+            e.Handled = true;
+        }
+
+        private void txtDir_PreviewDragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effects = DragDropEffects.All;
+        }
+
+        private void txtDir_PreviewDragOver(object sender, DragEventArgs e)
+        {
+            e.Effects = DragDropEffects.All;
+            e.Handled = true;
+        }
+
 
 	}
 }

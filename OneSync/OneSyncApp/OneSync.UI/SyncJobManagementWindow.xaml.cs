@@ -165,6 +165,15 @@ namespace OneSync.UI
                     this.DialogResult = true;
                     this.Close();
                 }
+
+                // Try to delete Sync Source table from intermediary storage
+                try
+                {
+                    SyncSourceProvider syncSourceProvider = 
+                        SyncClient.GetSyncSourceProvider(editingSyncJob.IntermediaryStoragePath);
+                    syncSourceProvider.Delete(editingSyncJob.SyncJob.SyncSource);
+                }
+                catch (Exception) {}
             }
 		}
 

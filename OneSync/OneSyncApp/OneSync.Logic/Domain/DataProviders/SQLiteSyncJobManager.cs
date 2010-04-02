@@ -275,7 +275,7 @@ namespace OneSync.Synchronization
             }          
         }
 
-        public override bool Delete(SyncJob profile)
+        public override bool Delete(SyncJob job)
         {
             SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME));
             using (SqliteConnection con = db.NewSQLiteConnection ())
@@ -285,12 +285,12 @@ namespace OneSync.Synchronization
                 string cmdText = "DELETE FROM " + SyncSource.DATASOURCE_INFO_TABLE +
                                  " WHERE " + SyncSource.SOURCE_ID + " = @sid;";
                 
-                paramList.Add(new SqliteParameter("@sid", System.Data.DbType.String) { Value = profile.SyncSource.ID });
+                paramList.Add(new SqliteParameter("@sid", System.Data.DbType.String) { Value = job.SyncSource.ID });
 
                 cmdText += "DELETE FROM " + SYNCJOB_TABLE +
                            " WHERE " + COL_SYNCJOB_ID + " = @pid";
 
-                paramList.Add(new SqliteParameter("@pid", System.Data.DbType.String) { Value = profile.ID });
+                paramList.Add(new SqliteParameter("@pid", System.Data.DbType.String) { Value = job.ID });
 
                 db.ExecuteNonQuery(cmdText, paramList);
             }
