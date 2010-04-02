@@ -17,15 +17,11 @@
 	<Grid x:Name="LayoutRoot">
 		<TextBox x:Name="txtSyncJobName" Width="136.077" MaxLines="1" HorizontalAlignment="Left" Margin="9,53.775,0,76"/>
 		<Label x:Name="lblSyncJob" Content="New Job Name:" FontSize="10.667" Foreground="#FF0000B9" HorizontalAlignment="Left" Margin="5.383,29.588,0,0" VerticalAlignment="Top"/>
-		<TextBox x:Name="txtSource" MaxLines="1" Margin="175,55,271,75.813"/>
-		<Label x:Name="lblFolderToSync" Content="Folder to Sync:" FontSize="10.667" Foreground="#FF0000B9" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Margin="170,31.185,0,0" VerticalAlignment="Top">
-			<Label.RenderTransform>
-				<TranslateTransform X="0" Y="0"/>
-			</Label.RenderTransform>
-		</Label>
+		<TextBox x:Name="txtSource" MaxLines="1" Margin="175,55,271,75.813" PreviewDrop="txtDir_PreviewDrop" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" AllowDrop="True"/>
+		<Label x:Name="lblFolderToSync" Content="Folder to Sync:" FontSize="10.667" Foreground="#FF0000B9" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Margin="170,31.185,0,0" VerticalAlignment="Top" />
 		<Button x:Name="btnBrowse_Source" Width="27" Content="..." ToolTip="Click to browse folders" Click="btnBrowse_Source_Click" HorizontalAlignment="Right" Margin="0,53.775,240,74.225"/>
 		<Label Width="165" Height="23" Content="Intermediate Storage Location:" FontSize="10.667" x:Name="label_storage_message" Foreground="#FF0000B9" HorizontalAlignment="Right" Margin="0,29,42,0" VerticalAlignment="Top" />
-		<TextBox x:Name="txtIntStorage" Width="143" MaxLines="1" HorizontalAlignment="Right" Margin="0,53.775,60,76.225"/>
+		<TextBox x:Name="txtIntStorage" Width="143" MaxLines="1" HorizontalAlignment="Right" Margin="0,53.775,60,76.225" AllowDrop="True" PreviewDrop="txtDir_PreviewDrop" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver"/>
 		<Button x:Name="btnBrowse" Width="27" Content="..." ToolTip="Click to browse folders" Click="btnBrowse_Click" RenderTransformOrigin="0.815,0.52" HorizontalAlignment="Right" Margin="0,53.998,29,74.002"/>
 		<TextBlock x:Name="txtBlkEditJob" Text="Edit Job" TextWrapping="Wrap" TextDecorations="Underline" FontSize="13.333" Cursor="Hand" Foreground="#FF0000B9" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,0,10.816,34.635" VerticalAlignment="Bottom" MouseDown="txtBlkEditJob_MouseDown"/>
 		<TextBlock x:Name="txtBlkDeleteJob" Text="Delete Job" TextWrapping="Wrap" TextDecorations="Underline" FontSize="10.667" Cursor="Hand" Foreground="#FFB90000" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,0,8,16.449" VerticalAlignment="Bottom" MouseDown="txtBlkDeleteJob_MouseDown"/>
