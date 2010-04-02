@@ -65,10 +65,7 @@ namespace OneSync.Synchronization
         /// </summary>
         public string SourceID
         {
-            get
-            {
-                return sourceID;
-            }
+            get { return sourceID; }
         }
 
         /// <summary>
@@ -83,10 +80,7 @@ namespace OneSync.Synchronization
         /// </summary>
         public string RelativeFilePath
         {
-            get
-            {
-                return this.relFilePath;
-            }
+            get { return this.relFilePath; }
         }
 
 
@@ -95,10 +89,7 @@ namespace OneSync.Synchronization
         /// </summary>
         public string FileHash
         {
-            get
-            {
-                return this.fileHash;
-            }
+            get { return this.fileHash; }
         }
 
         /// <summary>
@@ -106,10 +97,7 @@ namespace OneSync.Synchronization
         /// </summary>
         public ChangeType ChangeType
         {
-            get
-            {
-                return changeType;
-            }
+            get { return changeType; }
         }
 
         public ConflictResolution ConflictResolution

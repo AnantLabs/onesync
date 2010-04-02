@@ -218,13 +218,34 @@ namespace OneSync.Files
             catch (Exception){return false;}
         }
 
+
+        public static bool Move(string oldPath, string newPath, bool forceToRename)
+        {
+            if (!File.Exists(oldPath)) throw new FileNotFoundException(oldPath);
+            if (IsOpen(oldPath)) throw new FileInUseException("File " + oldPath + " is being opened");
+
+            //extract the directory lead to destination
+            string directory = newPath.Substring(0, newPath.LastIndexOf('\\'));
+            if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
+            //overwriten on exist            
+            try
+            {
+                FileInfo info = new FileInfo(newPath);
+                if (info.Exists && info.IsReadOnly) { info.IsReadOnly = !forceToRename; }
+                File.Delete(newPath);
+                File.Move(oldPath, newPath);
+                return true;
+            }
+            catch (Exception) { return false; }
+        }
+
         /// <summary>
-        /// Used in conflict resolution. Conflict file will be renamed and copied over
+        /// Used in conflict resolution. Conflict file will be renamed and copied/moved over
         /// </summary>
         /// <param name="source"></param>
         /// <param name="destination"></param>
         /// <returns></returns>
-        public static bool DuplicateRename(string source, string destination)
+        public static bool DuplicateRename(string source, string destination, bool keepOriginal)
         {
             int lastSlashIndex = destination.LastIndexOf('\\');
             int lastDotIndex = destination.LastIndexOf('.');
@@ -246,7 +267,11 @@ namespace OneSync.Files
             fileName += "[conflicted-copy-" + string.Format("{0:yyyy-MM-dd-hh-mm-ss}", DateTime.Now) + "]";
             destination = directory + "\\" + fileName + extension;
             if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);                       
-            return Copy(source, destination, true);
+
+            if (keepOriginal)
+                return Copy(source, destination, true);
+            else
+                return Move(source, destination, false);
         }
 
         /// <summary>
@@ -334,6 +359,6 @@ namespace OneSync.Files
             {
                 return false;
             }            
-        }        
+        }
     }
 }

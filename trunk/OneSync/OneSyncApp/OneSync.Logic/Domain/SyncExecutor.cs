@@ -74,7 +74,7 @@ namespace OneSync.Synchronization
         }
                
 
-        public static void DuplicateRenameToSyncFolderAndUpdateActionTable(SyncAction action, SyncJob job)
+        public static void DuplicateRenameToSyncFolderAndUpdateActionTable(SyncAction action, SyncJob job, bool keepOriginal)
         {
             string absolutePathInIntermediateStorage = job.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
             string absolutePathInSyncSource = job.SyncSource.Path + action.RelativeFilePath;
@@ -87,7 +87,7 @@ namespace OneSync.Synchronization
                 SQLiteSyncActionsProvider actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
                 actProvider.Delete(action, con);
 
-                if (!Files.FileUtils.DuplicateRename(absolutePathInSyncSource, absolutePathInSyncSource)
+                if (!Files.FileUtils.DuplicateRename(absolutePathInSyncSource, absolutePathInSyncSource, keepOriginal)
                     || !Files.FileUtils.Copy (absolutePathInIntermediateStorage, absolutePathInSyncSource,true))                    
                     throw new Exception("Can't copy file " +absolutePathInIntermediateStorage);                
                 trasaction.Commit();
@@ -155,10 +155,11 @@ namespace OneSync.Synchronization
             try
             {
                 SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
-                actProvider.Delete(action);
+                actProvider.Delete(action.OriginalCreateAction);
+                actProvider.Delete(action.OriginalDeleteAction);
 
-                if (!Files.FileUtils.Copy(oldAbsolutePathInSyncSource, newAbsolutePathInSyncSource, true))
-                    throw new Exception("Can't copy file " + oldAbsolutePathInSyncSource);
+                if (!Files.FileUtils.Move(oldAbsolutePathInSyncSource, newAbsolutePathInSyncSource, true))
+                    throw new Exception("Can't rename file " + oldAbsolutePathInSyncSource);
                 transaction.Commit();
             }
             catch (Exception)
@@ -171,6 +172,8 @@ namespace OneSync.Synchronization
                 if (con != null) con.Dispose();
             }
         }
+
         #endregion Carryout actions
+
     }
 }

@@ -112,15 +112,11 @@
     <Compile Include="OneSync.Files\FolderComparer.cs" />
     <Compile Include="OneSync.Files\PartialFileStream.cs" />
     <Compile Include="OneSync.Logic\Abstract Classes\BaseSQLiteProvider.cs" />
-    <Compile Include="OneSync.Logic\Abstract Classes\BaseSyncAgent.cs" />
     <Compile Include="OneSync.Logic\Abstract Classes\MetaDataProvider.cs" />
     <Compile Include="OneSync.Logic\Abstract Classes\SyncJobManager.cs" />
     <Compile Include="OneSync.Logic\Abstract Classes\SyncAction.cs" />
     <Compile Include="OneSync.Logic\Abstract Classes\SyncActionsProvider.cs" />
     <Compile Include="OneSync.Logic\Abstract Classes\SyncSourceProvider.cs" />
-    <Compile Include="OneSync.Logic\Common Interfaces\ISyncAgent.cs" />
-    <Compile Include="OneSync.Logic\Common Interfaces\ISyncProvider.cs" />
-    <Compile Include="OneSync.Logic\Common Interfaces\ISyncVerifier.cs" />
     <Compile Include="OneSync.Logic\Configuration\Configuration.cs" />
     <Compile Include="OneSync.Logic\Data\SQLiteAccess.cs" />
     <Compile Include="OneSync.Logic\Domain\Actions\CreateAction.cs" />

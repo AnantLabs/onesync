@@ -5,7 +5,7 @@ using System.Text;
 
 namespace OneSync.Synchronization
 {
-    public class FileMetaDataComparer:ISyncProvider
+    public class FileMetaDataComparer
     {
         List<FileMetaDataItem> leftOnly = new List<FileMetaDataItem>();
         List<FileMetaDataItem> rightOnly = new List<FileMetaDataItem>();
