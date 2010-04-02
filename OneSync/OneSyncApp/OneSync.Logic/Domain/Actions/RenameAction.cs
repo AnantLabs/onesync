@@ -39,5 +39,8 @@ namespace OneSync.Synchronization
             get { return prevRelFilePath; }
         }
 
+        public SyncAction OriginalCreateAction { get; set; }
+        public SyncAction OriginalDeleteAction { get; set; }
+
     }
 }

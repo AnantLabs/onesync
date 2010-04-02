@@ -9,46 +9,31 @@ using System.Text;
 namespace OneSync.Synchronization
 {    
     
-    public abstract class BaseSyncAgent:ISyncAgent
+    public abstract class BaseSyncAgent
     {
-     
-        protected ISyncProvider provider;
-        protected SyncJob profile;
+        protected SyncJob job;
 
         public BaseSyncAgent()
         {
         }
 
 
-        public BaseSyncAgent(SyncJob profile)
+        public BaseSyncAgent(SyncJob job)
         {
-            this.profile = profile;
+            this.job = job;
         }
         
-        public SyncJob Profile
+        public SyncJob Job
         {
             set
             {
-                this.profile = value;
+                this.job = value;
             }
             get
             {
-                return this.profile;
+                return this.job;
             }
         }
-
-        public ISyncProvider SyncProvider
-        {
-            set
-            {
-                this.provider = value;
-            }
-            get
-            {
-                return this.provider;
-            }
-        }
-
         
     }
 }
