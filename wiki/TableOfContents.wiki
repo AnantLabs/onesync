@@ -5,8 +5,8 @@
 
 * [DeveloperGuide Developer Guide]
   * [HowOneSyncWorks How OneSync works?]
-  * [Architecture Architecture of OneSync]
+  * [HighLevelDesign High Level Design]
   * [SyncLogic Synchronization Logic]
-  * [ClassInfo Class Information]
+  * [DetailedDesign Detailed Design]
   * [KnownIssues Known Issues]
   * [Glossary Glossary]
