@@ -25,7 +25,7 @@
 
 === !SyncJob ===
 
-Represents information about a synchronization job. It stores information about the folder being synchronized ([ClassInfo#SyncSource SyncSource]) and the intermediary storage ([ClassInfo#IntermediaryStorage IntermediaryStorage]). A SyncJob is uniquely identified by its name on a PC. Internally, it also uses a unique id.
+Represents information about a synchronization job. It stores information about the folder being synchronized ([DetailedDesign#SyncSource SyncSource]) and the intermediary storage ([DetailedDesign#IntermediaryStorage IntermediaryStorage]). A SyncJob is uniquely identified by its name on a PC. Internally, it also uses a unique id.
 
 !SyncJobManager is used to manage SyncJob object. This includes saving and restoring a SyncJob to storage as well as modifying SyncJob information.
 
@@ -62,7 +62,7 @@ Inherits from !SyncSourceProvider abstract class. On instantiation, it will chec
 
 === !SyncAction ===
 
-An abstract class to represent actions to be taken during synchronization. Each action is associated with at least a file (to be either copied, deleted). Hence, an action contains fields (e.g. file hash) related to the file it is associated with and the id of [ClassInfo#SyncSource SyncSource] where the file originates from.
+An abstract class to represent actions to be taken during synchronization. Each action is associated with at least a file (to be either copied, deleted). Hence, an action contains fields (e.g. file hash) related to the file it is associated with and the id of [DetailedDesign#SyncSource SyncSource] where the file originates from.
 
 === !CreateAction ===
 
@@ -84,11 +84,11 @@ A !DeleteAction represents a file to be deleted. This action generated if a file
 
 === !FileMetadata ===
 
-Stores selected information about the file system of a folder to be synchronized. Information includes the root folder, the id of the [ClassInfo#SyncSource SyncSource] and a list of [ClassInfo#FileMetadataItem FileMetadataItem].
+Stores selected information about the file system of a folder to be synchronized. Information includes the root folder, the id of the [DetailedDesign#SyncSource SyncSource] and a list of [DetailedDesign#FileMetadataItem FileMetadataItem].
 
 === !FileMetadataItem ===
 
-Contains specific information regarding a file like its hash code, relative file path as well as the id of [ClassInfo#SyncSource SyncSource] it originates from. It should be noted that the absolute root path of a !FileMetadataItem can be obtained by combining it with the rootFolder property of the [ClassInfo#FileMetadata FileMetadata] it belongs to.
+Contains specific information regarding a file like its hash code, relative file path as well as the id of [DetailedDesign#SyncSource SyncSource] it originates from. It should be noted that the absolute root path of a !FileMetadataItem can be obtained by combining it with the rootFolder property of the [DetailedDesign#FileMetadata FileMetadata] it belongs to.
 
 === SQLiteMetadataProvider ===
 
