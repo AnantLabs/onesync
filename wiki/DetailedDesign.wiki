@@ -50,7 +50,7 @@ Encapsulates information about the folder being synchronized and possibly other 
 
 === SQLiteSyncSourceProvider ===
 
-Inherits from !SyncSourceProvider abstract class. On instantiation, it will check if the database schema is created and creates it if necessary.
+On instantiation, it will check if the database schema is created and creates it if necessary.
 
 [http://www.comp.nus.edu.sg/~deskoh/devGuide/syncsource02.png]
 
