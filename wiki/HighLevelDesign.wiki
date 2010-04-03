@@ -2,7 +2,7 @@
 
 == Overview ==
 
-The UI will with interact with !SyncClient and !SyncAgent. !SyncClient is a controller class which manages all providers for business objects and !SyncAgent is the class that handles the synchronization.
+The UI will interact with !SyncClient and !SyncAgent. !SyncClient is a controller class which manages all providers for business objects and !SyncAgent is the class that handles the synchronization.
 
 The business objects are
   * !SyncJob
