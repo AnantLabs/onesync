@@ -2,22 +2,22 @@
 
 = Classes =
 
-  * [ClassInfo#SyncJob_Related_Classes SyncJob Related Classes]
-    * [ClassInfo#SyncJob SyncJob]
-    * [ClassInfo#SQLiteSyncJobManager SQLiteSyncJobManager]
-  * [ClassInfo#SyncSource_Related_Classes SyncSource Related Classes]
-    * [ClassInfo#SyncSource SyncSource]
-    * [ClassInfo#SQLiteSyncSourceProvider SQLiteSyncSourceProvider]
-  * [ClassInfo#SyncActions_Related_Classes SyncActions Related Classes]
-    * [ClassInfo#SyncActions SyncAction]
-    * [ClassInfo#SyncActions CreateAction]
-    * [ClassInfo#SyncActions DeleteAction]
-    * [ClassInfo#SyncActions RenameAction]
-  * [ClassInfo#Metadata_Related_Classes Metadata Related Classes]
-    * [ClassInfo#FileMetadata FileMetadata]
-    * [ClassInfo#FileMetadataItem FileMetadataItem]
-    * [ClassInfo#SQLiteMetadataProvider SQLiteMetadataProvider]
-  * [ClassInfo#IntermediaryStorage IntermediaryStorage]
+  * [DetailedDesign#SyncJob_Related_Classes SyncJob Related Classes]
+    * [DetailedDesign#SyncJob SyncJob]
+    * [DetailedDesign#SQLiteSyncJobManager SQLiteSyncJobManager]
+  * [DetailedDesign#SyncSource_Related_Classes SyncSource Related Classes]
+    * [DetailedDesign#SyncSource SyncSource]
+    * [DetailedDesign#SQLiteSyncSourceProvider SQLiteSyncSourceProvider]
+  * [DetailedDesign#SyncActions_Related_Classes SyncActions Related Classes]
+    * [DetailedDesign#SyncActions SyncAction]
+    * [DetailedDesign#SyncActions CreateAction]
+    * [DetailedDesign#SyncActions DeleteAction]
+    * [DetailedDesign#SyncActions RenameAction]
+  * [DetailedDesign#Metadata_Related_Classes Metadata Related Classes]
+    * [DetailedDesign#FileMetadata FileMetadata]
+    * [DetailedDesign#FileMetadataItem FileMetadataItem]
+    * [DetailedDesign#SQLiteMetadataProvider SQLiteMetadataProvider]
+  * [DetailedDesign#IntermediaryStorage IntermediaryStorage]
 
 ----
 
