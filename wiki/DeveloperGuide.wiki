@@ -10,7 +10,7 @@ architecture and then progresses to more and more detailed information about the
 == Content ==
 
   * [http://code.google.com/p/onesync/wiki/HowOneSyncWorks How OneSync works]
-  * [http://code.google.com/p/onesync/wiki/Architecture Architecture]
-  * [http://code.google.com/p/onesync/wiki/ClassInfo Class Information]
+  * [http://code.google.com/p/onesync/wiki/HighLevelDesgin High Level Design]
+  * [http://code.google.com/p/onesync/wiki/DetailedDesign Detailed Design]
   * [http://code.google.com/p/onesync/wiki/KnownIssues Known Issues]
   * [http://code.google.com/p/onesync/wiki/Glossary Glossary]
