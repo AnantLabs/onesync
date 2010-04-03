@@ -25,9 +25,9 @@
 
 === !SyncJob ===
 
-Represents information about a synchronization job. It stores information about the folder being synchronized ([DetailedDesign#SyncSource SyncSource]) and the intermediary storage ([DetailedDesign#IntermediaryStorage IntermediaryStorage]). A SyncJob is uniquely identified by its name on a PC. Internally, it also uses a unique id.
+Represents information about a synchronization job. It stores information about the folder being synchronized ([DetailedDesign#SyncSource SyncSource]) and the intermediary storage ([DetailedDesign#IntermediaryStorage IntermediaryStorage]). A !SyncJob is uniquely identified by its name on a PC. Internally, it also uses a unique id.
 
-!SyncJobManager is used to manage SyncJob object. This includes saving and restoring a SyncJob to storage as well as modifying SyncJob information.
+!SyncJobManager is used to manage !SyncJob object. This includes saving and restoring a SyncJob to storage as well as modifying !SyncJob information.
 
 [http://www.comp.nus.edu.sg/~deskoh/devGuide/syncjob01.png]
 
