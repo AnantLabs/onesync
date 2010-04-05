@@ -252,6 +252,7 @@ namespace OneSync.UI
         {
             foreach (UISyncJobEntry entry in listAllSyncJobs.Items)
                 entry.SyncJob.SyncPreviewResult = null;
+
         }
 
         /*========================================================
