@@ -26,7 +26,9 @@ namespace OneSync.UI
         private SyncJobManager jobManager;
         private BackgroundWorker syncWorker;
 
-        private DispatcherTimer timerDropbox; //The time to check the Dropbox status frequently.
+        private UISyncJobEntry currentSyncJob = null;
+
+        //private DispatcherTimer timerDropbox; //The time to check the Dropbox status frequently.
 
         private ObservableCollection<UISyncJobEntry> _SyncJobEntries = new ObservableCollection<UISyncJobEntry>();
 
@@ -91,8 +93,17 @@ namespace OneSync.UI
 
         private void txtBlkProceed_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            SyncSelectedJobs();
+        }
+
+        private void btnSyncStatic_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            SyncSelectedJobs();
+        }
+
+        private void SyncSelectedJobs()
+        {
             showErrorMsg("");
-            ShowSyncMessage("");
             IList<UISyncJobEntry> selectedJobs = UISyncJobEntry.GetSelectedJobs(SyncJobEntries);
 
             if (selectedJobs.Count == 0)
@@ -102,13 +113,26 @@ namespace OneSync.UI
             }
 
             lblJobsNumber.Content = selectedJobs.Count;
-            UpdateSyncInfoUI(selectedJobs[0].SyncJob);
-            UpdateSyncUI(false, false);
 
-            if (tbManager != null) tbManager.SetProgressState(TaskbarProgressBarState.Normal);
-            pbSync.Value = 0;
+            try
+            {
+                foreach(UISyncJobEntry uiSyncJobEntry in selectedJobs)
+                {
+                    uiSyncJobEntry.ProgressBarVisibility = Visibility.Hidden;
+                    uiSyncJobEntry.InfoChanged();
+                }
+                Synchronize(selectedJobs);
+                UpdateSyncInfoUI(selectedJobs[0].SyncJob);
+                UpdateSyncUI(true);
+            }
+            catch (Exception)
+            {
+                //Do nothing.
+            }
 
-            ((Storyboard)Resources["sbNext"]).Begin(this, true);
+            //if (tbManager != null) tbManager.SetProgressState(TaskbarProgressBarState.Normal);
+
+            //((Storyboard)Resources["sbNext"]).Begin(this, true);
         }
 
 		private void btnBrowse_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -203,20 +227,6 @@ namespace OneSync.UI
 		PART 2: Sync Screen
 		========================================================*/
 
-        private void btnSyncStatic_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            try
-            {
-                showErrorMsg(""); // clear error msg            
-                IList<SyncJob> selectedJobs = new List<SyncJob>();
-                foreach (UISyncJobEntry entry in SyncJobEntries) if (entry.IsSelected) selectedJobs.Add(entry.SyncJob);
-                Synchronize(selectedJobs);
-            }
-            catch (Exception)
-            {
-            }           
-        }
-
         private void txtBlkShowLog_MouseDown(object sender, MouseButtonEventArgs e)
         {
             showErrorMsg(""); //Clear error msg
@@ -242,28 +252,6 @@ namespace OneSync.UI
             }
         }
 
-        private void txtBlkBackToHome_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            try
-            {
-                showErrorMsg(""); //Empty the notification message (if any).
-
-                Window.Title = "OneSync"; //Change back the menu title.
-
-                // Clear any sync preview results previously
-                ClearPreviewResults();
-
-                if (tbManager != null) tbManager.SetProgressState(TaskbarProgressBarState.NoProgress);
-
-                // Animate to start screen
-                Storyboard sb = (Storyboard)Window.Resources["sbHome"];
-                sb.Begin(this);
-            }
-            catch (Exception)
-            {
-            }            
-        }
-
         private void ClearPreviewResults()
         {
             foreach (UISyncJobEntry entry in listAllSyncJobs.Items)
@@ -274,10 +262,9 @@ namespace OneSync.UI
 		PART 3: UI handling code
 		========================================================*/
 
-        private void UpdateSyncUI(bool syncInProgress, bool showProgressControls)
+        private void UpdateSyncUI(bool syncInProgress)
         {
             // Set Visibility of common controls
-            txtBlkBackToHome.IsEnabled = !syncInProgress;
             btnSyncStatic.IsEnabled = !syncInProgress;
             txtIntStorage.IsEnabled = !syncInProgress;
             btnBrowse.IsEnabled = !syncInProgress;
@@ -286,41 +273,20 @@ namespace OneSync.UI
             {
                 btnSyncRotating.Visibility = Visibility.Visible;
                 btnSyncStatic.Visibility = Visibility.Hidden;
+                lbl_description.Visibility = Visibility.Visible;
             }
             else
             {
                 btnSyncRotating.Visibility = Visibility.Hidden;
                 btnSyncStatic.Visibility = Visibility.Visible;
             }
-
-            if (showProgressControls)
-            {
-                pbSync.Visibility = Visibility.Visible;
-                lblStatus.Visibility = Visibility.Visible;
-                lblSubStatus.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                pbSync.Visibility = Visibility.Hidden;
-                lblStatus.Visibility = Visibility.Hidden;
-                lblSubStatus.Visibility = Visibility.Hidden;
-                lblStatus.Content = "";
-                lblSubStatus.Content = "";
-                pbSync.Value = 0;
-            }
         }
 
         private void UpdateSyncInfoUI(SyncJob p)
         {
             // Update Sync UI info
-            Window.Title = p.Name + " - OneSync";
-
             lblSyncJobName.Content = p.Name;
             lblSyncJobName.ToolTip = p.Name;
-            lblSyncJobSource.Content = normalizeString(p.SyncSource.Path, 20, 20);
-            lblSyncJobSource.ToolTip = p.SyncSource.Path;
-            lblSyncJobStorage.Content = normalizeString(p.IntermediaryStorage.Path, 20, 20);
-            lblSyncJobStorage.ToolTip = p.IntermediaryStorage.Path;
         }
 		
 		private void showErrorMsg(string message)
@@ -339,23 +305,26 @@ namespace OneSync.UI
 
         #region Synchronization
 
-        private void Synchronize(IList<SyncJob> syncJobs)
+        private void Synchronize(IList<UISyncJobEntry> selectedSyncJobs)
         {
             try
             {
-                if (syncJobs.Count < 0) return;
+                if (selectedSyncJobs.Count < 0) return;
 
                 // Create a list of SyncJobs
-                List<FileSyncAgent> agents = new List<FileSyncAgent>(syncJobs.Count);
-                foreach (SyncJob job in syncJobs)
-                    agents.Add(new FileSyncAgent(job));
+                List<FileSyncAgent> agents = new List<FileSyncAgent>(selectedSyncJobs.Count);
+                foreach (UISyncJobEntry uiSyncJob in selectedSyncJobs)
+                    agents.Add(new FileSyncAgent(uiSyncJob.SyncJob));
 
-                UpdateSyncUI(true, true);
+                //UpdateSyncUI(true, true);
 
-                syncWorker.RunWorkerAsync(agents);
+                SyncWorkerArguments arguments = new SyncWorkerArguments(selectedSyncJobs, agents);
+
+                syncWorker.RunWorkerAsync(arguments);
             }
             catch (Exception)
             {
+                //Do nothing.
             }            
         }
 
@@ -363,50 +332,47 @@ namespace OneSync.UI
         {            
             try
             {
-                if (this.Dispatcher.CheckAccess())
-                    lblSyncPageMessage.Content = "";
-                else
-                    lblSyncPageMessage.Dispatcher.Invoke((Action)delegate { ShowSyncMessage(""); });
+                //IList<FileSyncAgent> agents = e.Argument as IList<FileSyncAgent>;
+                //if (agents == null || agents.Count < 0) return;
+                SyncWorkerArguments arguments = e.Argument as SyncWorkerArguments;
+                if (arguments == null) return;
 
-                IList<FileSyncAgent> agents = e.Argument as IList<FileSyncAgent>;
-                if (agents == null || agents.Count < 0) return;
+                if (arguments.Agents[0] == null) return;
 
-                // Get first sync agent to run
-                FileSyncAgent agent = agents[0];
+                //Renew the currentSyncJob variable.
+                currentSyncJob = arguments.SelectedSyncJobs[0];
 
-                AddAgentEventHandler(agent);
+                currentSyncJob.ProgressBarVisibility = Visibility.Visible;
+                currentSyncJob.ProgressBarColor = "Green";
+                currentSyncJob.ProgressBarMessage = "Syncing...";
+                currentSyncJob.InfoChanged();
+
+                AddAgentEventHandler(arguments.Agents[0]);
 
                 try
                 {
-                    if (agent.SyncJob.SyncPreviewResult == null)
-                        agent.SyncJob.SyncPreviewResult = agent.GenerateSyncPreview();
-                    agent.Synchronize(agent.SyncJob.SyncPreviewResult);
+                    if (arguments.Agents[0].SyncJob.SyncPreviewResult == null)
+                        arguments.Agents[0].SyncJob.SyncPreviewResult = arguments.Agents[0].GenerateSyncPreview();
+                    arguments.Agents[0].Synchronize(arguments.Agents[0].SyncJob.SyncPreviewResult);
                 }
                 catch (Community.CsharpSqlite.SQLiteClient.SqliteSyntaxException syntax)
                 {
-                    if (this.Dispatcher.CheckAccess())
-                        lblSyncPageMessage.Content = "Error: The intermediate storage not found or data.md is missing in the intermediate storage";
-                    else
-                        lblSyncPageMessage.Dispatcher.Invoke((Action)delegate { ShowSyncMessage("Database resources exception"); });
+                    currentSyncJob.ProgressBarColor = "Red";
+                    currentSyncJob.ProgressBarMessage = "Error: The intermediate storage not found or data.md is missing in the intermediate storage";
+                    currentSyncJob.InfoChanged();
                 }
                 catch (Exception)
                 {
-                    if (this.Dispatcher.CheckAccess())
-                        lblSyncPageMessage.Content = "Unknown error";
-                    else
-                        lblSyncPageMessage.Dispatcher.Invoke((Action)delegate { ShowSyncMessage("Unknown error"); });
+                    currentSyncJob.ProgressBarColor = "Red";
+                    currentSyncJob.ProgressBarMessage = "Unknown error occurred during the sync process";
+                    currentSyncJob.InfoChanged();
                 }
-                e.Result = agents;
+                e.Result = arguments;
             }
             catch (Exception ex)
             {            
                 
             }
-        }
-
-        void ShowSyncMessage(string message)
-        {
-            lblSyncPageMessage.Content = message;
         }
 
         void syncWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -421,28 +387,38 @@ namespace OneSync.UI
                     return;
                 }
 
-                IList<FileSyncAgent> agents = e.Result as IList<FileSyncAgent>;
-                if (agents == null) return;
+                //IList<FileSyncAgent> agents = e.Result as IList<FileSyncAgent>;
+                //if (agents == null) return;
+                SyncWorkerArguments arguments = e.Result as SyncWorkerArguments;
+                if (arguments == null) return;
+                if (arguments.Agents == null) return;
 
-
-                if (agents.Count > 0 && agents[0] != null)
+                if (arguments.Agents.Count > 0 && arguments.Agents[0] != null)
                 {
-                    FileSyncAgent agent = agents[0];
-                    agent.SyncJob.SyncPreviewResult = null;
-                    RemoveAgentEventHandler(agent);
-                    agents.RemoveAt(0);
+                    currentSyncJob.ProgressBarMessage = "Sync completed";
+                    currentSyncJob.InfoChanged();
+
+                    //Remove the synced agent and sync job.
+                    arguments.Agents[0].SyncJob.SyncPreviewResult = null;
+                    RemoveAgentEventHandler(arguments.Agents[0]);
+                    arguments.Agents.RemoveAt(0);
+                    arguments.SelectedSyncJobs.RemoveAt(0);
                 }
 
-                // Check for more sync agents to run
-                if (agents.Count > 0)
+                // Check for more sync jobs to run
+                if (arguments.Agents.Count > 0)
                 {
-                    UpdateSyncInfoUI(agents[0].SyncJob);
-                    UpdateSyncUI(true, true);
-                    syncWorker.RunWorkerAsync(agents);
+                    UpdateSyncInfoUI(arguments.Agents[0].SyncJob);
+                    syncWorker.RunWorkerAsync(arguments);
                 }
                 else
+                {
+                    currentSyncJob = null;
                     // Update UI and hide sync progress controls
-                    UpdateSyncUI(false, true);
+                    UpdateSyncUI(false);
+                    lblStatus.Content = "Synchronization of all jobs is successfully done.";
+                    lblSubStatus.Content = "";
+                }
             }
             catch (Exception)
             {
@@ -477,13 +453,8 @@ namespace OneSync.UI
         /// </summary>
         void currAgent_ProgressChanged(object sender, Synchronization.SyncProgressChangedEventArgs e)
         {
-            if (this.Dispatcher.CheckAccess())
-            {
-                if (tbManager != null) tbManager.SetProgressValue(e.Value, 100);
-                pbSync.Value = e.Value;
-            }
-            else
-                pbSync.Dispatcher.Invoke((Action)delegate { currAgent_ProgressChanged(sender, e); });
+            currentSyncJob.ProgressBarValue = e.Value;
+            currentSyncJob.InfoChanged();
         }
 
         /// <summary>
@@ -519,9 +490,7 @@ namespace OneSync.UI
             
             if (this.Dispatcher.CheckAccess())
             {
-                UpdateSyncUI(false, true);
-
-                lblStatus.Content = "Sync process is successfully done.";
+                lblStatus.Content = "Synchronization of " + currentSyncJob.JobName + " is successfully done.";
                 lblSubStatus.Content = "";
             }
             else

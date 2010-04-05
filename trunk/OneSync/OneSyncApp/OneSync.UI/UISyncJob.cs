@@ -5,6 +5,8 @@ using System.Text;
 using System.Collections.ObjectModel;
 using OneSync.Synchronization;
 using System.ComponentModel;
+using System.Windows;
+using System.Drawing;
 
 namespace OneSync.UI
 {
@@ -17,6 +19,14 @@ namespace OneSync.UI
         private bool _isSelected = false;
 
         private int _order = 0;
+
+        private int _progressbarValue = 0;
+
+        private Visibility _progressbarVisibility = Visibility.Hidden;
+
+        private String _progressbarColor = "Green";
+
+        private string _progressbarMessage = "";
 
         public UISyncJobEntry(SyncJob job)
         {
@@ -80,12 +90,39 @@ namespace OneSync.UI
             }
         }*/
 
+        public int ProgressBarValue
+        {
+            get { return _progressbarValue; }
+            set { _progressbarValue = value; }
+        }
+
+        public Visibility ProgressBarVisibility
+        {
+            get { return _progressbarVisibility; }
+            set { _progressbarVisibility = value; }
+        }
+
+        public String ProgressBarColor 
+        {
+            get { return _progressbarColor; }
+            set { _progressbarColor = value; }
+        }
+
+        public string ProgressBarMessage
+        {
+            get { return _progressbarMessage; }
+            set { _progressbarMessage = value; }
+        }
+
         public void InfoChanged()
         {
             OnPropertyChanged("IntermediaryStoragePath");
             OnPropertyChanged("JobName");
             OnPropertyChanged("SyncSource");
-            OnPropertyChanged("DropboxStatus");
+            //OnPropertyChanged("DropboxStatus");
+            OnPropertyChanged("ProgressBarValue");
+            OnPropertyChanged("ProgressBarVisibility");
+            OnPropertyChanged("ProgressBarMessage");
         }
 
         public static IList<UISyncJobEntry> GetSelectedJobs(IEnumerable<UISyncJobEntry> entries)
