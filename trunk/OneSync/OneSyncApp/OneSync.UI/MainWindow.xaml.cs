@@ -222,10 +222,6 @@ namespace OneSync.UI
                 //Do nothing.
             }
         }
-		
-		/*========================================================
-		PART 2: Sync Screen
-		========================================================*/
 
         private void txtBlkShowLog_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -257,6 +253,10 @@ namespace OneSync.UI
             foreach (UISyncJobEntry entry in listAllSyncJobs.Items)
                 entry.SyncJob.SyncPreviewResult = null;
         }
+
+        /*========================================================
+        PART 2: Sync Screen
+        ========================================================*/
 		
 		/*========================================================
 		PART 3: UI handling code
