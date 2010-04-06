@@ -33,7 +33,7 @@ The first concept is called the *Light-weight Sync*. OneSync is trying to make o
 
 The second concept is known as *Half Way Sync*. Instead of doing synchronization directly between two PCs, there is an intermediate storage playing an important role during the sync process.
 
-When a user sync his folder, he must first choose the location of his intermediate storage. The storage can be his portable drive, Windows Shared Folder or DropBox local folder that is stored on his computer. When he does the sync on one PC, his files (or *patch*) will be sent to the intermediate storage. After that, he has to do the sync again in his another computer in order to download the *patch* from the intermediate storage and complete the sync process.
+When a user sync his folder, he must first choose the location of his intermediate storage. The storage can be a folder his portable drive, Windows Shared Folder or DropBox local folder that is stored on his computer. When he does the sync on one PC, his files (or *patch*) will be sent to the intermediate storage. After that, he has to do the sync again in his another computer in order to download the *patch* from the intermediate storage and complete the sync process. It is important that the user chooses the same folder as the intermediate storage in subsequent rounds of sync for this couple of folders  on two different PCs.
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_1_v2.jpg]
 
@@ -50,10 +50,10 @@ This version of OneSync has a number of exciting new features, including:
 *NOTE* Make sure you are running an Windows operating system (Windows XP, Windows Vista or Windows 7).
 
 Installation steps are as follows:
- # Uninstall Previous Versions
- # Run The OneSync Installer (Download here: http://onesync.googlecode.com/files/OneSyncSetup.msi)
- # Follow Setup Instructions
- # Done, OneSync Is Successfully Installed
+ # Uninstall previous versions
+ # Run the OneSync installer (Download here: http://onesync.googlecode.com/files/OneSyncSetup.msi)
+ # Follow setup instructions
+ # Done, OneSync is successfully installed
 
 Should you encounter any difficulties while installing, please contact us.
 
