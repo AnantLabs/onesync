@@ -18,11 +18,11 @@ namespace OneSync
     [RunInstaller(true)]
     public partial class OneSyncInstaller : Installer
     {
-        private const string MenuName = "Folder\\shell\\OneSyncMenuOption-v1.0";
-        private const string Command = "Folder\\shell\\OneSyncMenuOption-v1.0\\command";
+        private const string MenuName = "Folder\\shell\\OneSyncMenuOption-v2.0";
+        private const string Command = "Folder\\shell\\OneSyncMenuOption-v2.0\\command";
 
-        private const string AppMenuName = "Folder\\shell\\OneSyncMenuOption-v1.0App";
-        private const string AppCommand = "Folder\\shell\\OneSyncMenuOption-v1.0App\\command";
+        private const string AppMenuName = "Folder\\shell\\OneSyncMenuOption-v2.0App";
+        private const string AppCommand = "Folder\\shell\\OneSyncMenuOption-v2.0App\\command";
 
         public OneSyncInstaller()
         {
@@ -43,14 +43,14 @@ namespace OneSync
             {
                 regmenu = Registry.ClassesRoot.CreateSubKey(MenuName);
                 if(regmenu != null)
-                    regmenu.SetValue("", "Sync with OneSync V1.0");
+                    regmenu.SetValue("", "Sync with OneSync V2.0");
                 regcmd = Registry.ClassesRoot.CreateSubKey(Command);
                 if(regcmd != null)
                     regcmd.SetValue("", "\"" + Assembly.GetExecutingAssembly().Location + "\" \"%1\"");
 
                 regmenu = Registry.ClassesRoot.CreateSubKey(AppMenuName);
                 if (regmenu != null)
-                    regmenu.SetValue("", "Open OneSync V1.0");
+                    regmenu.SetValue("", "Open OneSync V2.0");
                 regcmd = Registry.ClassesRoot.CreateSubKey(AppCommand);
                 if (regcmd != null)
                     regcmd.SetValue("", "\"" + Assembly.GetExecutingAssembly().Location + "\"");
