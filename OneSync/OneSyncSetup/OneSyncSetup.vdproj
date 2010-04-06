@@ -15,8 +15,20 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_5AC098135E4643E29165B9008094939C"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_6ACFB0F10014E1330113E9E759FBCFD4"
         "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_6ACFB0F10014E1330113E9E759FBCFD4"
+        "OwnerKey" = "8:_7E8A0FB160104C03953304DD39BC3164"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -27,14 +39,32 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_7E8A0FB160104C03953304DD39BC3164"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_AFC484BCCB68A0A0280E2EE6AD185C47"
         "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
+        "MsmKey" = "8:_AFC484BCCB68A0A0280E2EE6AD185C47"
+        "OwnerKey" = "8:_7E8A0FB160104C03953304DD39BC3164"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_C38D42624694FD29A9C9EB0986DB3C01"
         "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C38D42624694FD29A9C9EB0986DB3C01"
+        "OwnerKey" = "8:_7E8A0FB160104C03953304DD39BC3164"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -53,6 +83,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_7E8A0FB160104C03953304DD39BC3164"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -206,6 +242,26 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5AC098135E4643E29165B9008094939C"
+            {
+            "SourcePath" = "8:..\\OneSyncApp\\Uninstall OneSync.bat"
+            "TargetName" = "8:Uninstall OneSync.bat"
+            "Tag" = "8:"
+            "Folder" = "8:_DA6FBBEDC48B4897A8A9C068CEB10B43"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6ACFB0F10014E1330113E9E759FBCFD4"
             {
             "AssemblyRegister" = "3:1"
@@ -334,6 +390,17 @@
             "Property" = "8:ProgramMenuFolder"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_DA6FBBEDC48B4897A8A9C068CEB10B43"
+                    {
+                    "Name" = "8:OneSync"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_CFACE29E4A604905946B765D4BABB4DF"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_BD9FA52841AB4FBF9E8BCCA57C15331F"
@@ -374,23 +441,23 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:OneSync V1.0"
-        "ProductCode" = "8:{80813CB7-7239-48F1-9F5B-3CBDEB5E41D0}"
-        "PackageCode" = "8:{89C8F8D9-BE2D-49B2-94B4-24BAE86365B7}"
+        "ProductName" = "8:OneSync V2.0"
+        "ProductCode" = "8:{E8783D2A-EB76-468D-AA7D-CB50C0075A6A}"
+        "PackageCode" = "8:{69CEF466-1D54-4E65-A385-D3E08B874DBE}"
         "UpgradeCode" = "8:{268160E3-0323-49E7-8B23-E33489420389}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:4.0.0"
+        "ProductVersion" = "8:5.0.0"
         "Manufacturer" = "8:CodeDroids 2009"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://code.google.com/p/onesync/wiki/UserGuide"
-        "Title" = "8:OneSync V1.0 Setup"
+        "Title" = "8:OneSync V2.0 Setup"
         "Subject" = "8:Synchronization Tool"
         "ARPCONTACT" = "8:CodeDroids"
         "Keywords" = "8:"
-        "ARPCOMMENTS" = "8:This will install the OneSync V1.0 in your computer."
+        "ARPCOMMENTS" = "8:This will install the OneSync V2.0 in your computer."
         "ARPURLINFOABOUT" = "8:http://onesync.googlecode.com/"
         "ARPPRODUCTICON" = "8:"
         "ARPIconIndex" = "3:0"
@@ -849,7 +916,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:WARNING: This setup is for V1.0 only. If you would like to install the another version of OneSync, please uninstall your current version first."
+                            "Value" = "8:WARNING: This setup is for V2.0 only. If you would like to install the another version of OneSync, please uninstall your current version first."
                             "DefaultValue" = "8:#1202"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -899,6 +966,34 @@
         }
         "ProjectOutput"
         {
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_7E8A0FB160104C03953304DD39BC3164"
+            {
+            "SourcePath" = "8:..\\OneSyncApp\\obj\\Debug\\OneSync.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_DA6FBBEDC48B4897A8A9C068CEB10B43"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{18DA4780-0E82-440E-B282-6DDF766420E4}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
             {
             "SourcePath" = "8:..\\OneSyncApp\\obj\\Debug\\OneSync.exe"
