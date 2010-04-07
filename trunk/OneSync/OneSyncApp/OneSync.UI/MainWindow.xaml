@@ -7,9 +7,12 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Class="OneSync.UI.MainWindow"
 	x:Name="Window"
+	xmlns:local="clr-namespace:OneSync.UI"
 	DataContext="{Binding RelativeSource={RelativeSource Self}}"
-	Title="OneSync" Width="1029" Height="483" MinWidth="720" MinHeight="279" WindowStartupLocation="CenterScreen" mc:Ignorable="d" Closing="Window_Closing" Icon="../Application.ico">
+	Title="OneSync" Width="1024" Height="480" MinWidth="720" MinHeight="480" WindowStartupLocation="CenterScreen" mc:Ignorable="d" Closing="Window_Closing" Icon="../Application.ico" KeyDown="Window_KeyDown">
 	<Window.Resources>
+		<local:VisibilityConverter x:Key="visibilityConverter" />
+		<local:EditModeConverter x:Key="editModeConverter" />
 		<Style x:Key="blueLabel" TargetType="{x:Type Label}">
 			<Setter Property="FontSize" Value="10.667" />
 			<Setter Property="Foreground" Value="#FF0000B9" />
@@ -26,6 +29,10 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			<Setter Property="TextDecorations" Value="Underline" />
 			<Setter Property="Cursor" Value="Hand" />
 	    </Style>
+		<Style x:Key="jobInfo" TargetType="{x:Type TextBlock}">
+			<Setter Property="TextWrapping" Value="NoWrap" />
+			<Setter Property="TextTrimming" Value="CharacterEllipsis" />
+	    </Style>
 		<Style x:Key="btnSyncStaticStyle" TargetType="{x:Type Image}">
       		<Setter Property="Source" Value="Resource/OneSync Transparent Logo (Inactive).png" />
 			<Style.Triggers>
@@ -34,36 +41,6 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 		    	</Trigger>
 	  		</Style.Triggers>
  		</Style>
-		<Storyboard x:Key="sbNext">
-			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Window" Storyboard.TargetProperty="Height">
-				<LinearDoubleKeyFrame KeyTime="00:00:00.3000000" Value="279"/>
-			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="gridHome" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
-				<SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="-360"/>
-			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="gridHome" Storyboard.TargetProperty="(UIElement.Opacity)">
-				<LinearDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
-			</DoubleAnimationUsingKeyFrames>
-			<ObjectAnimationUsingKeyFrames BeginTime="00:00:00.3000000" Storyboard.TargetName="gridHome" Storyboard.TargetProperty="(UIElement.Visibility)">
-				<DiscreteObjectKeyFrame KeyTime="00:00:00.3000000" Value="{x:Static Visibility.Hidden}"/>
-			</ObjectAnimationUsingKeyFrames>
-		</Storyboard>
-		<Storyboard x:Key="sbHome">
-			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Window" Storyboard.TargetProperty="Height">
-				<LinearDoubleKeyFrame KeyTime="00:00:00.3000000" Value="365"/>
-			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="gridHome" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
-				<LinearDoubleKeyFrame KeyTime="00:00:00" Value="-360"/>
-				<LinearDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
-			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="gridHome" Storyboard.TargetProperty="(UIElement.Opacity)">
-				<LinearDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
-				<LinearDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1"/>
-			</DoubleAnimationUsingKeyFrames>
-			<ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="gridHome" Storyboard.TargetProperty="(UIElement.Visibility)">
-				<DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
-			</ObjectAnimationUsingKeyFrames>			
-		</Storyboard>
 		<Storyboard x:Key="sbRotateSync" RepeatBehavior="Forever">
 			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="btnSyncRotating" Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)">
 				<LinearDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
@@ -127,7 +104,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			</Grid>
 			
 			<!--Row 2 -->
-			<ListView Grid.Row="2" x:Name="listAllSyncJobs" Margin="0,0,7,0"> 
+			<ListView Grid.Row="2" x:Name="listAllSyncJobs" Margin="0,0,7,0" LostFocus="listAllSyncJobs_LostFocus"> 
                 <ListView.View>
 					<GridView>
                         <GridViewColumn Width="30" >
@@ -142,45 +119,65 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
+				        <GridViewColumn Width="50" Header="Reorder">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+									<StackPanel Orientation="Horizontal">
+	                                    <TextBlock FontWeight="Bold" Cursor="Hand" Text="ñ" FontFamily="Wingdings" FontSize="20" MouseDown="reorder_MouseDown" Tag="-1" />
+										<TextBlock FontWeight="Bold" Cursor="Hand" Text="ò" FontFamily="Wingdings" FontSize="20" MouseDown="reorder_MouseDown" Tag="1" />
+									</StackPanel>
+								</DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                         <GridViewColumn Width="108" Header="Job Name">		
 						    <GridViewColumn.CellTemplate>
-								<DataTemplate x:Name="jobNameTemplate">
-									<TextBlock TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Text="{Binding JobName}" ToolTip="{Binding JobName}"/>
+								<DataTemplate>
+									<Grid>
+										<TextBlock Style="{StaticResource jobInfo}" Text="{Binding JobName}" ToolTip="{Binding JobName}"/>
+										<TextBox Text="{Binding NewJobName}" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"/>
+									</Grid>
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
                         </GridViewColumn>
 					    <GridViewColumn Width="226" Header="Sync Source Directory">
 							<GridViewColumn.CellTemplate>
-								<DataTemplate x:Name="syncSourceTemplate">
-									<TextBlock TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Text="{Binding SyncSource}" ToolTip="{Binding SyncSource}"/>
+								<DataTemplate>
+									<Grid>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition/>
+											<ColumnDefinition Width="22.2"/>
+										</Grid.ColumnDefinitions>
+										<TextBlock Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource jobInfo}" Text="{Binding SyncSource}" ToolTip="{Binding SyncSource}"/>
+										<TextBox Grid.Column="0" Text="{Binding NewSyncSource}" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"  Loaded="editControls_Loaded"/>
+										<Button Grid.Column="1" Width="22.187" Height="22.188" Content="..." Click="btnBrowse_Click" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" Loaded="editControls_Loaded" />
+									</Grid>
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>
                         <GridViewColumn Width="226" Header="Intermediary Storage Directory">
 							<GridViewColumn.CellTemplate>
-								<DataTemplate x:Name="intStorageTemplate">
-									<TextBlock TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Text="{Binding IntermediaryStoragePath}" ToolTip="{Binding IntermediaryStoragePath}"/>
+								<DataTemplate>
+									<Grid>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition/>
+											<ColumnDefinition Width="22.2"/>
+										</Grid.ColumnDefinitions>
+										<TextBlock Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource jobInfo}" Text="{Binding IntermediaryStoragePath}" ToolTip="{Binding IntermediaryStoragePath}"/>
+										<TextBox Grid.Column="0" Text="{Binding NewIntermediaryStoragePath}" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"  Loaded="editControls_Loaded"/>
+										<Button Grid.Column="1" Width="22.187" Height="22.188" Content="..." Click="btnBrowse_Click" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}"  Loaded="editControls_Loaded" />
+									</Grid>
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>
-                        <GridViewColumn Width="40" Header="">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate x:Name="operationPlusTemplate">
-                                    <TextBlock FontWeight="Bold" Cursor="Hand" Text="+" MouseDown="TextBlock_MouseDown_Plus"/>
-								</DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Width="40" Header="">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate x:Name="operationMinusTemplate">
-                                    <TextBlock FontWeight="Bold" Cursor="Hand" Text="-" MouseDown="TextBlock_MouseDown_Minus"/>
-								</DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Width="40" Header="">
+                        <GridViewColumn Width="120" Header="">
 							<GridViewColumn.CellTemplate>
 								<DataTemplate x:Name="operationEditTemplate">
-									<TextBlock TextDecorations="Underline" FontWeight="Bold" Cursor="Hand" Text="Edit" ToolTip="Edit selected job" MouseDown="textBoxEdit_MouseDown"/>
+                                    <StackPanel Orientation="Horizontal">
+									    <Image Width="24" Height="24" Cursor="Hand" Source="{Binding Path=EditMode, Converter={StaticResource editModeConverter}}" ToolTip="Edit selected job" MouseDown="imgEdit_MouseDown"/>
+                                        <Image Width="24" Height="24" Cursor="Hand" Source="Resource/delete.png" MouseDown="imgDelete_MouseDown" />
+                                        <Image Width="24" Height="24" Cursor="Hand" Source="Resource/preview.png" />
+                                        <Image Width="24" Height="24" Cursor="Hand" Source="Resource/log.png" />
+                                    </StackPanel>
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>
@@ -212,13 +209,13 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			</ListView>
 			
 			<!--Row 3 -->
-			<TextBlock Grid.Row="3" x:Name="txtBlkProceed" Text="Sync Selected Jobs" Style="{StaticResource blueLinkLabel}" MouseDown="txtBlkProceed_MouseDown" Margin="0,0,0,15.27" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
+			<TextBlock Grid.Row="3" x:Name="txtBlkProceed" Text="Sync Selected Jobs" Style="{StaticResource blueLinkLabel}" MouseDown="sync_MouseDown" Margin="0,0,0,15.27" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
 			<Image Grid.Row="3" x:Name="btnSyncRotating" ToolTip="Sync process is ongoing." HorizontalAlignment="Left" Margin="8,8,0,33" Width="104" Source="Resource/OneSync Transparent Logo.png" RenderTransformOrigin="0.5,0.5" d:LayoutOverrides="GridBox" Visibility="Hidden" >
 				<Image.RenderTransform>
 					<RotateTransform Angle="0"/>
 				</Image.RenderTransform>
 			</Image>
-			<Image Grid.Row="3" x:Name="btnSyncStatic" Style="{StaticResource btnSyncStaticStyle}" ToolTip="Sync Selected Jobs" Width="104" HorizontalAlignment="Left" Margin="8,8,0,33" d:LayoutOverrides="GridBox" Cursor="Hand" MouseDown="btnSyncStatic_MouseDown" />
+			<Image Grid.Row="3" x:Name="btnSyncStatic" Style="{StaticResource btnSyncStaticStyle}" ToolTip="Sync Selected Jobs" Width="104" HorizontalAlignment="Left" Margin="8,8,0,33" d:LayoutOverrides="GridBox" Cursor="Hand" MouseDown="sync_MouseDown" />
 			<Label x:Name="lbl_description" Grid.Row="3" Style="{StaticResource blueLabel}" Content="Number of sync jobs:&#xd;&#xa;&#xd;&#xa;Current syncing job:" Margin="130.398,6,63,71.985" Visibility="Hidden"/>
 			<Label Grid.Row="3" x:Name="lblJobsNumber" Style="{StaticResource blueBoldLabel}" Content="" Margin="237.217,6,104,0" VerticalAlignment="Top" Height="27.015"/>
 			<Label Grid.Row="3" x:Name="lblSyncJobName" Style="{StaticResource blueBoldLabel}" Content="" Margin="237.217,34.015,104,0" VerticalAlignment="Top" Height="25.99"/>
