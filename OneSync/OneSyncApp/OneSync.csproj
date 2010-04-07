@@ -155,10 +155,6 @@
     <Compile Include="OneSync.UI\SyncActionsListView.xaml.cs">
       <DependentUpon>SyncActionsListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="OneSync.UI\SyncJobManagementWindow.xaml.cs">
-      <DependentUpon>SyncJobManagementWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="OneSync.UI\SyncWorkerArguments.cs" />
     <Compile Include="OneSync.UI\UISyncJob.cs" />
     <Compile Include="OneSync.UI\WinSyncPreview.xaml.cs">
       <DependentUpon>WinSyncPreview.xaml</DependentUpon>
@@ -182,10 +178,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="OneSync.UI\SyncJobManagementWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="OneSync.UI\WinSyncPreview.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -200,12 +192,13 @@
     <Content Include="OneSync.Lib\Community.CsharpSqlite.dll" />
     <Content Include="OneSync.Lib\Community.CsharpSqlite.SQLiteClient.dll" />
     <Content Include="OneSync.Lib\FSync.Files.dll" />
-    <Resource Include="OneSync.UI\Resource\completed_icon.gif" />
-    <Resource Include="OneSync.UI\Resource\conflicting_icon.gif" />
+    <Resource Include="OneSync.UI\Resource\log.png" />
+    <Resource Include="OneSync.UI\Resource\preview.png" />
+    <Resource Include="OneSync.UI\Resource\save.png" />
+    <Resource Include="OneSync.UI\Resource\delete.png" />
+    <Resource Include="OneSync.UI\Resource\edit.png" />
     <Resource Include="OneSync.UI\Resource\OneSync Transparent Logo %28Inactive%29.png" />
-    <Resource Include="OneSync.UI\Resource\OneSync Transparent Logo.gif" />
     <Resource Include="OneSync.UI\Resource\OneSync Transparent Logo.png" />
-    <Resource Include="OneSync.UI\Resource\processing_icon.gif" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.KtmIntegration\KtmIntegration.csproj">
