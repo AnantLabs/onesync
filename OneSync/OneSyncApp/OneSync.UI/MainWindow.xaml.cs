@@ -775,6 +775,7 @@ namespace OneSync.UI
             txtSyncJobName.IsEnabled = isEnabled;
             txtSource.IsEnabled = isEnabled;
             txtIntStorage.IsEnabled = isEnabled;
+            txtBlkNewJob.IsEnabled = isEnabled;
         }
 
 	}
