@@ -43,6 +43,10 @@ namespace OneSync.UI
 
             if (_job.SyncPreviewResult == null)
             {
+				this.Dispatcher.Invoke((Action)delegate
+				{
+					previewUIUpdate(false);
+				});
                 FileSyncAgent agent = new FileSyncAgent(_job);
                 _job.SyncPreviewResult = agent.GenerateSyncPreview();
             }
@@ -50,6 +54,7 @@ namespace OneSync.UI
 
         void previewWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+			previewUIUpdate(true);
             if (e.Error != null)
             {
                 // Log error
@@ -68,6 +73,13 @@ namespace OneSync.UI
             if (tbManager != null) tbManager.SetProgressState(TaskbarProgressBarState.NoProgress);
             pb.Visibility = Visibility.Hidden;
         }
+		
+		void previewUIUpdate(bool isEnable)
+		{
+			cmbFilter.IsEnabled = isEnable;
+			txtFilter.IsEnabled = isEnable;
+			txtBlkDone.IsEnabled = isEnable;
+		}
 
         void txtFilter_TextChanged(object sender, TextChangedEventArgs e)
         {

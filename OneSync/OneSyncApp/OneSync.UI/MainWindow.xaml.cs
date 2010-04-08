@@ -51,7 +51,7 @@ namespace OneSync.UI
                 txtSyncJobName.Text = System.IO.Path.GetFileName(args[1]);
                 txtSource.Text = args[1];
                 txtSource.Focus();
-                txtSource.Select(txtSource.Text.Length, 0);
+                //txtSource.Select(txtSource.Text.Length, 0);
             }
 
             // Tag each browse button to corr TextBox
@@ -70,11 +70,14 @@ namespace OneSync.UI
                 {
                     dropboxStatusChecking();
                 });
-            timerDropbox.Interval = TimeSpan.FromMilliseconds(10000);
+            timerDropbox.Interval = TimeSpan.FromMilliseconds(1000);
 
             // Set-up data bindings
             listAllSyncJobs.ItemsSource = this.SyncJobEntries;
             LoadSyncJobs();
+
+            // Reload the two comboboxes.
+            refreshCombobox();
         }
 
         private void dropboxStatusChecking()
@@ -90,6 +93,21 @@ namespace OneSync.UI
                     else
                         entry.ProgressBarColor = "Red";
                 }
+            }
+        }
+
+        private void refreshCombobox() 
+        {
+            txtSource.Items.Clear();
+            foreach (UISyncJobEntry entry in SyncJobEntries)
+            {
+                txtSource.Items.Add(entry.SyncSource);
+            }
+
+            txtIntStorage.Items.Clear();
+            foreach (UISyncJobEntry entry in SyncJobEntries)
+            {
+                txtIntStorage.Items.Add(entry.IntermediaryStoragePath);
             }
         }
 
@@ -129,7 +147,7 @@ namespace OneSync.UI
         {           
             try
             {
-                TextBox tb = ((Button)sender).Tag as TextBox;
+                ComboBox tb = ((Button)sender).Tag as ComboBox;
                 if (tb == null) return;
                 System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
 
@@ -137,7 +155,7 @@ namespace OneSync.UI
                 {
                     tb.Text = fbd.SelectedPath;
                     tb.Focus();
-                    tb.CaretIndex = tb.Text.Length;
+                    //tb.CaretIndex = tb.Text.Length;
                 }
             }
             catch (Exception)
@@ -176,6 +194,7 @@ namespace OneSync.UI
                 SyncJob job = jobManager.CreateSyncJob(syncJobName, syncSourceDir, intStorageDir);
                 UISyncJobEntry entry = new UISyncJobEntry(job) { IsSelected = true };
                 SyncJobEntries.Add(entry);
+                refreshCombobox();
             }
             catch (ProfileNameExistException)
             {
@@ -228,7 +247,10 @@ namespace OneSync.UI
                 if (!jobManager.Delete(entry.SyncJob))
                     showErrorMsg("Unable to delete sync job at this moment.");
                 else
+                {
                     this.SyncJobEntries.Remove(entry);
+                    refreshCombobox();
+                }
 
                 // Try to delete Sync Source table from intermediary storage
                 // TODO: thuat handled this?
@@ -332,6 +354,11 @@ namespace OneSync.UI
             if (entry == null) return;
 
             entry.EditMode = false;
+
+            this.Dispatcher.Invoke((Action)delegate
+            {
+                refreshCombobox();
+            });
             
             SetControlsEnabledState(false, true);
         }
@@ -680,8 +707,8 @@ namespace OneSync.UI
             index += delta;
 
             // Bound index
-            if (index < 0) index = 0;
-            if (index > SyncJobEntries.Count) index = SyncJobEntries.Count;
+            if (index < 0) index = (SyncJobEntries.Count + 1) + index;
+            if (index > SyncJobEntries.Count) index -= (SyncJobEntries.Count + 1);
 
             SyncJobEntries.Insert(index, entry);
         }
@@ -748,7 +775,7 @@ namespace OneSync.UI
 
             if (folders.Length > 0)
             {
-                TextBox tb = sender as TextBox;
+                ComboBox tb = sender as ComboBox;
                 if (tb == null) return;
 
                 if (Directory.Exists(folders[0]))
