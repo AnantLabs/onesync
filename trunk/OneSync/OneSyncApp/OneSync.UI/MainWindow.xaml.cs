@@ -187,8 +187,6 @@ namespace OneSync.UI
                 }
                 else
                     entry.EditMode = true;
-
-                //TODO: when start sync, all editmode should be false
             }
             catch (Exception)
             {
@@ -306,7 +304,8 @@ namespace OneSync.UI
             if (entry == null) return;
 
             entry.EditMode = false;
-            // TODO: enable controls
+            
+            SetControlsEnabledState(true);
         }
 
         private void txtBlkShowLog_MouseDown(object sender, MouseButtonEventArgs e)
@@ -419,6 +418,8 @@ namespace OneSync.UI
                 // Update UI
                 UpdateSyncInfoUI(currentJobEntry.SyncJob);
                 UpdateSyncUI(true);
+                listAllSyncJobs_SelectionChanged(null, null);
+                SetControlsEnabledState(false);
 
                 // Run sync
                 syncWorker.RunWorkerAsync(selectedEntries);
@@ -504,6 +505,7 @@ namespace OneSync.UI
                 {
                     // Update UI and hide sync progress controls
                     UpdateSyncUI(false);
+                    SetControlsEnabledState(true);
                     lblStatus.Content = "All SyncJobs completed succesfully.";
                     lblSubStatus.Content = "";
 
@@ -703,9 +705,9 @@ namespace OneSync.UI
             BackgroundWorker editJobWorker = new BackgroundWorker();
             editJobWorker.DoWork += new DoWorkEventHandler(editJobWorker_DoWork);
             editJobWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(editJobWorker_RunWorkerCompleted);
-            editJobWorker.RunWorkerAsync(entry);
 
-            // TODO: disable controls
+            SetControlsEnabledState(false);
+            editJobWorker.RunWorkerAsync(entry);
 
             return true;
         }
@@ -765,6 +767,14 @@ namespace OneSync.UI
                     if (saveSyncJob(entry)) entry.EditMode = false;
                 }
             }
+        }
+
+        private void SetControlsEnabledState(bool isEnabled)
+        {
+            listAllSyncJobs.IsEnabled = isEnabled;
+            txtSyncJobName.IsEnabled = isEnabled;
+            txtSource.IsEnabled = isEnabled;
+            txtIntStorage.IsEnabled = isEnabled;
         }
 
 	}
