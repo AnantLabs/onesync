@@ -1,3 +1,5 @@
-#summary What is DropBox?
+#summary What is Dropbox?
 
-Kindly please visit DropBox official website http://www.dropbox.com/ or read the Wikipedia [http://en.wikipedia.org/wiki/Dropbox_(storage_provider)].
+Kindly please visit Dropbox official website http://www.dropbox.com/ or read the Wikipedia [http://en.wikipedia.org/wiki/Dropbox_(storage_provider)].
+
+http://www.dropbox.com/static/images/dropbox_logo_home.png
