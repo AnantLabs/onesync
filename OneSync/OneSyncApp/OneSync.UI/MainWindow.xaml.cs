@@ -100,12 +100,12 @@ namespace OneSync.UI
             if (syncWorker.IsBusy)
             {
                 txtBlkProceed.Text = "Cancelling...";
-                btnSyncStatic.ToolTip = "Cancelling...";
+                btnSyncRotating.ToolTip = "Cancelling...";
                 syncWorker.CancelAsync();
                 return;
             }
 
-            btnSyncStatic.ToolTip = "Cancel Subsequent Jobs";
+            btnSyncRotating.ToolTip = "Cancel Subsequent Jobs";
 
             Queue<UISyncJobEntry> selectedJobs = UISyncJobEntry.GetSelectedJobs(SyncJobEntries);
 
@@ -275,6 +275,11 @@ namespace OneSync.UI
 
         void editJobWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+            this.Dispatcher.Invoke((Action)delegate
+            {
+                showErrorMsg("");
+            });
+
             UISyncJobEntry entry = e.Argument as UISyncJobEntry;
             if (entry == null) return;
 
@@ -307,12 +312,17 @@ namespace OneSync.UI
                 }
                 e.Result = entry;
             }
-            catch (Exception)
+            catch (Exception ee)
             {
                 entry.SyncJob.Name = oldSyncJobName;
                 entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
                 entry.SyncJob.SyncSource.Path = oldSyncSource;
                 entry.InfoChanged(); /* Force databinding to refresh */
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    showErrorMsg(ee.Message);
+                    SetControlsEnabledState(false, true);
+                });
             } 
         }
 
@@ -789,6 +799,8 @@ namespace OneSync.UI
             txtBlkNewJob.IsEnabled = isEnabled;
             btnBrowse.IsEnabled = isEnabled;
             btnBrowse_Source.IsEnabled = isEnabled;
+            btnSyncStatic.IsEnabled = isEnabled;
+            txtBlkProceed.IsEnabled = isEnabled;
 
             if (syncInProgress)
             {
