@@ -169,14 +169,12 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>
-                        <GridViewColumn Width="120" Header="">
+                        <GridViewColumn Width="70" Header="">
 							<GridViewColumn.CellTemplate>
 								<DataTemplate x:Name="operationEditTemplate">
                                     <StackPanel Orientation="Horizontal">
-									    <Image Width="24" Height="24" Cursor="Hand" Source="{Binding Path=EditMode, Converter={StaticResource editModeConverter}}" ToolTip="Edit selected job" MouseDown="imgEdit_MouseDown"/>
-                                        <Image Width="24" Height="24" Cursor="Hand" Source="Resource/delete.png" MouseDown="imgDelete_MouseDown" />
-                                        <Image Width="24" Height="24" Cursor="Hand" Source="Resource/preview.png" />
-                                        <Image Width="24" Height="24" Cursor="Hand" Source="Resource/log.png" />
+									    <Image Width="24" Height="24" Cursor="Hand" Source="{Binding Path=EditMode, Converter={StaticResource editModeConverter}}" ToolTip="Edit this job" MouseDown="imgEdit_MouseDown"/>
+                                        <Image Width="24" Height="24" Cursor="Hand" Source="Resource/delete.png" ToolTip="Delete this job" MouseDown="imgDelete_MouseDown" />
                                     </StackPanel>
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>

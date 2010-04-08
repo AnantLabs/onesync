@@ -7,7 +7,7 @@
 	x:Class="OneSync.UI.WinSyncPreview"
 	x:Name="Window"
 	Title="OneSync - Sync Preview"
-	Width="900" Height="480">
+	Width="900" Height="490">
 	
 	<Window.Background>
 		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -18,12 +18,12 @@
 	</Window.Background>
 
 	<Grid x:Name="LayoutRoot">
-		<Grid Margin="10">
+		<Grid Margin="10,10,10,8">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="20"/>
 				<RowDefinition Height="48"/>
 				<RowDefinition/>
-				<RowDefinition Height="30"/>
+				<RowDefinition Height="42"/>
 			</Grid.RowDefinitions>
 			<TextBlock Foreground="Blue" FontSize="14" Text="Sync Preview" />
 			<Grid Grid.Row="1" d:LayoutOverrides="Height">
@@ -43,8 +43,8 @@
 				</ComboBox>
 				<TextBox Grid.Column="2" Foreground="#FF808080" x:Name="txtFilter" Height="21.96" TextChanged="txtFilter_TextChanged" GotFocus="txtFilter_GotFocus"/>
 			</Grid>
-			<ProgressBar x:Name="pb" Margin="0,0,0,3" VerticalAlignment="Bottom" Height="5" Grid.Row="1" IsIndeterminate="True" Visibility="Hidden"/>
-			<TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Text="Done" Grid.Row="3" x:Name="txtBlkDone" TextDecorations="Underline" FontSize="13.333" Cursor="Hand" Foreground="#FF0000B9" FontWeight="Bold"  MouseDown="txtBlkDone_MouseDown"/>
+			<ProgressBar x:Name="pb" Margin="0,16.266,45.26,8" Grid.Row="3" IsIndeterminate="True" Visibility="Hidden"/>
+			<TextBlock HorizontalAlignment="Right" Margin="0,16.266,8,8" Text="Done" Grid.Row="3" x:Name="txtBlkDone" TextDecorations="Underline" FontSize="13.333" Cursor="Hand" Foreground="#FF0000B9" FontWeight="Bold"  MouseDown="txtBlkDone_MouseDown" d:LayoutOverrides="Height"/>
 			<UI:SyncActionsListView x:Name="lvPreview" Grid.Row="2" d:LayoutOverrides="GridBox" />
 		</Grid>
 	</Grid>
