@@ -72,11 +72,12 @@ namespace OneSync
     /// </summary>
     public class Log
     {
-        private const string ParentDirectoryName = "OneSync";
+        private const string ParentDirectoryName = "Log";
         private const string SyncDirAndLogFilePairsLocation = "logpairs.dat";
         private const string XslFileName = "onesynclog.xsl";
         private const string ExceptionLogFileName = "exceptionlog.txt";
-
+        //private const long MaxLogFileSize = 100000000; // Roughly 10MB
+        private const long MaxLogFileSize = 5000;
         public const string To = "To intermediate storage";
         public const string From = "From intermediate storage";
 
@@ -99,65 +100,51 @@ namespace OneSync
             DateTime startTime, DateTime endTime)
         {
             bool success = true;
-            bool fileNotFound = false;
-            Hashtable pairs = null;
 
             if (CheckDirectory())
             {
+                Hashtable pairs = LoadSyncDirAndLogFilePairs();
+
+                if (pairs == null) pairs = new Hashtable();
+
+                string logFilePath;
+
+                // Check if the pair already exists
+                if (pairs.ContainsKey(syncDirPath))
+                {
+                    string logFileName = (String)pairs[syncDirPath];
+                    logFilePath = String.Concat(GetAppDir(), @"\", ParentDirectoryName, @"\", logFileName);
+                }
+                else
+                {
+                    string logFileName = string.Format("{0}{1}", DateTime.Now.Ticks, ".xml");
+                    logFilePath = String.Concat(GetAppDir(), @"\", ParentDirectoryName, @"\", logFileName);
+
+                    // Add to the pairs
+                    pairs.Add(syncDirPath, logFileName);
+                }
+
                 try
                 {
-                    pairs = LoadSyncDirAndLogFilePairs();
-                }
-                catch (FileNotFoundException)
-                {
-                    fileNotFound = true;
+                    // Create the document if file not exists
+                    if (!(File.Exists(logFilePath)))
+                    {
+                        CreateXMLDocument(logFilePath, syncDirPath);
+                    }
+
+                    // Check log file size is more than max
+                    bool moreThanMax = false;
+                    moreThanMax = checkLogFileSize(logFilePath);
+
+                    // Save log details
+                    SaveLogDetails(logFilePath, moreThanMax, profileName, storageDirPath, syncDirection, numOfFilesProcessed, startTime, endTime, logActivity);
+
+                    StoreSyncDirAndLogFilePairs(pairs);
                 }
                 catch (Exception e)
                 {
                     success = false;
                     LogException(e);
-                }
-
-                if (success)
-                {
-                    if (fileNotFound) pairs = new Hashtable();
-
-                    string logFilePath;
-
-                    // Check if the pair already exists
-                    if (pairs.ContainsKey(syncDirPath))
-                    {
-                        string logFileName = (String)pairs[syncDirPath];
-                        logFilePath = String.Concat(GetAppDir(), @"\", ParentDirectoryName, @"\", logFileName);
-                    }
-                    else
-                    {
-                        string logFileName = string.Format("{0}{1}", DateTime.Now.Ticks, ".xml");
-                        logFilePath = String.Concat(GetAppDir(), @"\", ParentDirectoryName, @"\", logFileName);
-
-                        // Add to the pairs
-                        pairs.Add(syncDirPath, logFileName);
-                    }
-
-                    try
-                    {
-                        // Create the document if file not exists
-                        if (!(File.Exists(logFilePath)))
-                        {
-                            CreateXMLDocument(logFilePath, syncDirPath);
-                        }
-
-                        // Save log details
-                        SaveLogDetails(logFilePath, profileName, storageDirPath, syncDirection,
-                            numOfFilesProcessed, startTime, endTime, logActivity);
-
-                        StoreSyncDirAndLogFilePairs(pairs);
-                    }
-                    catch (Exception e)
-                    {
-                        success = false;
-                        LogException(e);
-                    }
                 }
             }
             else
@@ -177,19 +164,12 @@ namespace OneSync
         {
             string logFilePath = "";
 
-            try
-            {
-                Hashtable pairs = LoadSyncDirAndLogFilePairs();
+            Hashtable pairs = LoadSyncDirAndLogFilePairs();
 
-                if (pairs.ContainsKey(syncDirPath))
-                {
-                    string logFileName = (String)pairs[syncDirPath];
-                    logFilePath = String.Concat(GetAppDir(), @"\", ParentDirectoryName, @"\", logFileName);
-                }
-            }
-            catch (Exception e)
+            if ((pairs != null) && (pairs.ContainsKey(syncDirPath)))
             {
-                LogException(e);
+                string logFileName = (String)pairs[syncDirPath];
+                logFilePath = String.Concat(GetAppDir(), @"\", ParentDirectoryName, @"\", logFileName);
             }
 
             return logFilePath;
@@ -201,21 +181,47 @@ namespace OneSync
         /// <param name="syncDirPath">Path of source directory.</param>
         public static void ShowLog(String syncDirPath)
         {
+            Hashtable pairs = LoadSyncDirAndLogFilePairs();
+
+            string logFileName = "";
+            if (pairs != null) logFileName = (string)pairs[syncDirPath];
+            string logFilePath = String.Concat(GetAppDir(), @"\", ParentDirectoryName, @"\", logFileName);
+
+            // convert to url for all browsers, otherwise only compatible with IE
+            string logFilePathURL = System.Web.HttpUtility.UrlPathEncode(logFilePath);
+
+            // replace \\ with / and append file:/// at the beginning
+            logFilePathURL = "file:///" + Regex.Replace(logFilePathURL, "\\\\", "/");
+
+            try { Process.Start(GetDefaultBrowser(), logFilePathURL); }
+            catch (Exception) { }
+        }
+
+        /// <summary>
+        /// Delete log file
+        /// </summary>
+        /// <param name="synDirPath">Path of source directory.</param>
+        /// <returns>Success or fail</returns>
+        public static bool ClearLog(String syncDirPath)
+        {
+            Boolean success = true;
+            Hashtable pairs = LoadSyncDirAndLogFilePairs();
+
+            string logFileName = "";
+            if (pairs != null) logFileName = (string)pairs[syncDirPath];
+            string logFilePath = String.Concat(GetAppDir(), @"\", ParentDirectoryName, @"\", logFileName);
+
             try
             {
-                Hashtable pairs = LoadSyncDirAndLogFilePairs();
-                string logFileName = (string)pairs[syncDirPath];
-                string logFilePath = String.Concat(GetAppDir(), @"\", ParentDirectoryName, @"\", logFileName);
-
-                System.Diagnostics.Process proc = new System.Diagnostics.Process();
-                proc.StartInfo.FileName = GetDefaultBrowser();
-                proc.StartInfo.Arguments = logFilePath;
-                proc.Start();
+                File.Delete(logFilePath);
             }
             catch (Exception e)
             {
+                success = false;
                 LogException(e);
             }
+
+            return success;
         }
 
         /// <summary>
@@ -260,7 +266,7 @@ namespace OneSync
         #region private methods
         private static string GetAppDir()
         {
-            return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            return System.Windows.Forms.Application.StartupPath;
         }
 
         private static bool CheckDirectory()
@@ -325,13 +331,28 @@ namespace OneSync
 
         private static Hashtable LoadSyncDirAndLogFilePairs()
         {
-            string filePath = string.Concat(GetAppDir(), @"\",
-                    ParentDirectoryName, @"\", SyncDirAndLogFilePairsLocation);
+            Hashtable pairs = null;
+            Stream stream = null;
 
-            Stream stream = File.Open(filePath, FileMode.Open);
-            BinaryFormatter bin = new BinaryFormatter();
-            Hashtable pairs = (Hashtable)bin.Deserialize(stream);
-            stream.Close();
+            try
+            {
+                string filePath = string.Concat(GetAppDir(), @"\", ParentDirectoryName, @"\", SyncDirAndLogFilePairsLocation);
+                stream = File.Open(filePath, FileMode.Open);
+                BinaryFormatter bin = new BinaryFormatter();
+                pairs = (Hashtable)bin.Deserialize(stream);
+            }
+            catch (FileNotFoundException)
+            {
+            }
+            catch (Exception e)
+            {
+                LogException(e);
+            }
+            finally
+            {
+                if (stream != null) stream.Close();
+            }
+
             return pairs;
         }
 
@@ -347,7 +368,7 @@ namespace OneSync
             xmlWriter.Close();
         }
 
-        private static void SaveLogDetails(string logFilePath, string profileName, string storageDirPath,
+        private static void SaveLogDetails(string logFilePath, bool moreThanMax, string profileName, string storageDirPath,
             string syncDirection, int numOfFilesProcessed, DateTime startTime, DateTime endTime,
             ICollection<LogActivity> logActivity)
         {
@@ -361,7 +382,8 @@ namespace OneSync
             // Construct the must-have child nodes for the sync session
             XmlElement syncSessionNode = xmlLogDoc.CreateElement("syncsession");
             XmlElement profileNameNode = xmlLogDoc.CreateElement("profilename");
-            profileNameNode.InnerText = RemoveTags(profileName);
+            // profileNameNode.InnerText = RemoveTags(profileName);
+            profileNameNode.InnerText = profileName;
             XmlElement dateNode = xmlLogDoc.CreateElement("syncdate");
             dateNode.InnerText = DateTime.Now.ToShortDateString();
             XmlElement storageDirPathNode = xmlLogDoc.CreateElement("storagedirectory");
@@ -370,6 +392,13 @@ namespace OneSync
             syncDirectionNode.InnerText = syncDirection;
             XmlElement numOfFilesProcessedNode = xmlLogDoc.CreateElement("numberoffilesprocessed");
             numOfFilesProcessedNode.InnerText = numOfFilesProcessed.ToString();
+
+            // Delete the first two nodes (syncSessionNode) if the file size exceeds the threshold
+            if (moreThanMax)
+            {
+                root.RemoveChild(root.LastChild);
+                root.RemoveChild(root.LastChild);
+            }
 
             // Prepend the node; the last log will be displayed first
             root.PrependChild(syncSessionNode);
@@ -425,7 +454,7 @@ namespace OneSync
                 sb.Append("<xsl:stylesheet version='1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>\r\n");
                 sb.Append("<xsl:template match='/'>\r\n");
                 sb.Append("<html>\r\n");
-                sb.Append("<body style='FONT-FAMILY: arial'>\r\n");
+                sb.Append("<body style='FONT-FAMILY: arial; FONT-SIZE: 12px'>\r\n");
                 sb.Append("<style type='text/css'>\r\n");
                 sb.Append("table.t1 { background-color: #FEFEF2; }tr.da { background-color: #E0ECF8; }\r\n");
                 sb.Append("tr.db { background-color: #EFFBEF; }\r\n");
@@ -441,7 +470,7 @@ namespace OneSync
                 sb.Append("<br></br><br></br>\r\n");
                 sb.Append("<xsl:for-each select='syncdirectory/syncsession'>\r\n");
                 sb.Append("<table class='t1' width='100%'>\r\n");
-                sb.Append("<tr><td width='20%'>Profile Name</td><td>: <xsl:value-of select='profilename'/></td></tr>\r\n");
+                sb.Append("<tr><td width='20%'>Job Name</td><td>: <xsl:value-of select='profilename'/></td></tr>\r\n");
                 sb.Append("<tr><td width='20%'>Date</td><td>: <xsl:value-of select='syncdate'/></td></tr>\r\n");
                 sb.Append("<tr><td width='20%'>Storage directory</td><td>: <xsl:value-of select='storagedirectory'/></td></tr>\r\n");
                 sb.Append("<tr><td width='20%'>Synchronization direction</td><td>: <xsl:value-of select='syncdirection'/></td></tr>\r\n");
@@ -556,6 +585,12 @@ namespace OneSync
             sb.Append(String.Format("Message\t\t: {0}\r\n", e.Message));
             sb.Append(String.Format("Details\t\t:\r\n{0}\r\n\r\n\r\n", e.ToString()));
             return sb.ToString();
+        }
+
+        private static bool checkLogFileSize(string logFilePath)
+        {
+            FileInfo fi = new FileInfo(logFilePath);
+            return (fi.Length > MaxLogFileSize);
         }
 
         #endregion
