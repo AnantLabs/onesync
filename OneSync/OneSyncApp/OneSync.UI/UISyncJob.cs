@@ -20,7 +20,7 @@ namespace OneSync.UI
         private int _progressbarValue = 0;
 
         private Visibility _progressbarVisibility = Visibility.Hidden;
-        private string _progressbarColor = "#FF01D328";
+        private string _progressbarColor = "#FF01D328"; //This is light green.
         private string _progressbarMessage = "";
         private string _newJobName, _newIntPath, _newSyncSource;
 
@@ -128,21 +128,14 @@ namespace OneSync.UI
 
         public Exception Error { get; set; }
 
-        /*
-        public string DropboxStatus
+        public OneSync.DropboxStatus DropboxStatus
         {
             get
             {
                 DropboxStatus status = DropboxStatusCheck.ReturnDropboxStatus(this.SyncJob.IntermediaryStorage.Path);
-                if (status == OneSync.DropboxStatus.NOT_RUNNING)
-                    return "Dropbox not available";
-                else if (status == OneSync.DropboxStatus.SYNCHRONIZING)
-                    return "Dropbox storage synchronizing";
-                else if (status == OneSync.DropboxStatus.UP_TO_DATE)
-                    return "Dropbox storage synced";
-                return "";
+                return status;
             }
-        }*/
+        }
 
         public int ProgressBarValue
         {
