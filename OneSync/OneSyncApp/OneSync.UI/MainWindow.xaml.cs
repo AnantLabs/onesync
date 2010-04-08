@@ -382,7 +382,7 @@ namespace OneSync.UI
             selectSyncJobs(false);
         }
 
-        private void listAllSyncJobs_LostFocus(object sender, RoutedEventArgs e)
+        private void listAllSyncJobs_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Exit edit-mode of all Job Entry
             foreach (UISyncJobEntry entry in listAllSyncJobs.Items)
