@@ -133,7 +133,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 						    <GridViewColumn.CellTemplate>
 								<DataTemplate>
 									<Grid>
-										<TextBlock Style="{StaticResource jobInfo}" Text="{Binding JobName}" ToolTip="{Binding JobName}"/>
+										<TextBlock Style="{StaticResource jobInfo}" Text="{Binding JobName}" ToolTip="{Binding JobName}" MouseDown="imgEdit_MouseDown" />
 										<TextBox Text="{Binding NewJobName}" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"/>
 									</Grid>
 								</DataTemplate>
@@ -147,7 +147,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 											<ColumnDefinition/>
 											<ColumnDefinition Width="22.2"/>
 										</Grid.ColumnDefinitions>
-										<TextBlock Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource jobInfo}" Text="{Binding SyncSource}" ToolTip="{Binding SyncSource}"/>
+										<TextBlock Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource jobInfo}" Text="{Binding SyncSource}" ToolTip="{Binding SyncSource}"  MouseDown="imgEdit_MouseDown" />
 										<TextBox Grid.Column="0" Text="{Binding NewSyncSource}" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"  Loaded="editControls_Loaded"/>
 										<Button Grid.Column="1" Width="22.187" Height="22.188" Content="..." Click="btnBrowse_Click" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" Loaded="editControls_Loaded" />
 									</Grid>
@@ -162,7 +162,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 											<ColumnDefinition/>
 											<ColumnDefinition Width="22.2"/>
 										</Grid.ColumnDefinitions>
-										<TextBlock Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource jobInfo}" Text="{Binding IntermediaryStoragePath}" ToolTip="{Binding IntermediaryStoragePath}"/>
+										<TextBlock Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource jobInfo}" Text="{Binding IntermediaryStoragePath}" ToolTip="{Binding IntermediaryStoragePath}" MouseDown="imgEdit_MouseDown" />
 										<TextBox Grid.Column="0" Text="{Binding NewIntermediaryStoragePath}" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"  Loaded="editControls_Loaded"/>
 										<Button Grid.Column="1" Width="22.187" Height="22.188" Content="..." Click="btnBrowse_Click" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}"  Loaded="editControls_Loaded" />
 									</Grid>
@@ -208,7 +208,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			
 			<!--Row 3 -->
 			<TextBlock Grid.Row="3" x:Name="txtBlkProceed" Text="Sync Selected Jobs" Style="{StaticResource blueLinkLabel}" MouseDown="sync_MouseDown" Margin="0,0,0,15.27" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
-			<Image Grid.Row="3" x:Name="btnSyncRotating" ToolTip="Sync process is ongoing." HorizontalAlignment="Left" Margin="8,8,0,33" Width="104" Source="Resource/OneSync Transparent Logo.png" RenderTransformOrigin="0.5,0.5" d:LayoutOverrides="GridBox" Visibility="Hidden" >
+			<Image Grid.Row="3" x:Name="btnSyncRotating" ToolTip="Cancel Subsequent Jobs" HorizontalAlignment="Left" Margin="8,8,0,33" Width="104" Source="Resource/OneSync Transparent Logo.png" RenderTransformOrigin="0.5,0.5" d:LayoutOverrides="GridBox" Visibility="Hidden" Cursor="Hand" MouseDown="sync_MouseDown" >
 				<Image.RenderTransform>
 					<RotateTransform Angle="0"/>
 				</Image.RenderTransform>

@@ -12,6 +12,7 @@ using System.Windows.Input;
 using OneSync.Synchronization;
 using Community.CsharpSqlite.SQLiteClient;
 using System.Windows.Data;
+using System.Windows.Threading;
 
 namespace OneSync.UI
 {
@@ -27,7 +28,7 @@ namespace OneSync.UI
 
         TextBox editTextBox;
 
-        //private DispatcherTimer timerDropbox; //The time to check the Dropbox status frequently.
+        private DispatcherTimer timerDropbox; //The time to check the Dropbox status frequently.
 
         private ObservableCollection<UISyncJobEntry> _SyncJobEntries = new ObservableCollection<UISyncJobEntry>();
 
@@ -47,6 +48,7 @@ namespace OneSync.UI
 
             if (args.Length > 1 && Validator.validateDirPath(args[1]) == null)
             {
+                txtSyncJobName.Text = System.IO.Path.GetFileName(args[1]);
                 txtSource.Text = args[1];
                 txtSource.Focus();
                 txtSource.Select(txtSource.Text.Length, 0);
@@ -58,37 +60,53 @@ namespace OneSync.UI
 
             // Initialize syncWorker 
             syncWorker = new BackgroundWorker();
+            syncWorker.WorkerSupportsCancellation = true;
             syncWorker.DoWork += new DoWorkEventHandler(syncWorker_DoWork);
             syncWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(syncWorker_RunWorkerCompleted);
 
-            /*
-            // Starting the timer to check the Dropbox status
+            // Configure the timer to check the Dropbox status
             timerDropbox = new DispatcherTimer();
             timerDropbox.Tick += new EventHandler(delegate(object s, EventArgs e)
                 {
                     dropboxStatusChecking();
                 });
             timerDropbox.Interval = TimeSpan.FromMilliseconds(10000);
-            timerDropbox.Start();
-             */
 
             // Set-up data bindings
             listAllSyncJobs.ItemsSource = this.SyncJobEntries;
             LoadSyncJobs();
         }
 
-        /*
         private void dropboxStatusChecking()
         {
             foreach (UISyncJobEntry entry in SyncJobEntries)
             {
-                entry.InfoChanged();
+                if (entry.DropboxStatus == OneSync.DropboxStatus.SYNCHRONIZING)
+                    entry.ProgressBarColor = "Yellow";
+                else if (entry.DropboxStatus == OneSync.DropboxStatus.UP_TO_DATE)
+                {
+                    if (entry.Error == null)
+                        entry.ProgressBarColor = "#FF01D328";
+                    else
+                        entry.ProgressBarColor = "Red";
+                }
             }
-        }*/
+        }
 
         private void sync_MouseDown(object sender, MouseButtonEventArgs e)
         {
             showErrorMsg("");
+
+            if (syncWorker.IsBusy)
+            {
+                txtBlkProceed.Text = "Cancelling...";
+                btnSyncStatic.ToolTip = "Cancelling...";
+                syncWorker.CancelAsync();
+                return;
+            }
+
+            btnSyncStatic.ToolTip = "Cancel Subsequent Jobs";
+
             Queue<UISyncJobEntry> selectedJobs = UISyncJobEntry.GetSelectedJobs(SyncJobEntries);
 
             if (selectedJobs.Count == 0)
@@ -177,7 +195,7 @@ namespace OneSync.UI
                 
             try
             {
-                Image img = (Image)e.Source;
+                FrameworkElement img = (FrameworkElement)e.Source;
                 UISyncJobEntry entry  = (UISyncJobEntry)img.DataContext;
 
                 if (entry.EditMode)
@@ -305,7 +323,7 @@ namespace OneSync.UI
 
             entry.EditMode = false;
             
-            SetControlsEnabledState(true);
+            SetControlsEnabledState(false, true);
         }
 
         private void txtBlkShowLog_MouseDown(object sender, MouseButtonEventArgs e)
@@ -417,9 +435,8 @@ namespace OneSync.UI
 
                 // Update UI
                 UpdateSyncInfoUI(currentJobEntry.SyncJob);
-                UpdateSyncUI(true);
+                SetControlsEnabledState(true, false);
                 listAllSyncJobs_SelectionChanged(null, null);
-                SetControlsEnabledState(false);
 
                 // Run sync
                 syncWorker.RunWorkerAsync(selectedEntries);
@@ -432,6 +449,9 @@ namespace OneSync.UI
 
         void syncWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+            //Stop the Dropbox checker.
+            timerDropbox.Stop();
+
             Queue<UISyncJobEntry> jobEntries = e.Argument as Queue<UISyncJobEntry>;
             if (jobEntries == null || jobEntries.Count <= 0) return;
 
@@ -469,9 +489,18 @@ namespace OneSync.UI
                 entry.Error = ex;
                 entry.ProgressBarValue = 100;
                 entry.ProgressBarColor = "Red";
-                entry.ProgressBarMessage = "Unknown error occurred during the sync process";
+                entry.ProgressBarMessage = "Error Reported: " + ex.Message;
             }
+
+            if (syncWorker.CancellationPending)
+            {
+                UISyncJobEntry currentSyncJobEntry = jobEntries.Peek();
+                jobEntries.Clear();
+                jobEntries.Enqueue(currentSyncJobEntry);
+            }
+
             e.Result = jobEntries;
+            
         }
 
         void syncWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -495,21 +524,23 @@ namespace OneSync.UI
                     RemoveAgentEventHandler(completedJobEntry.SyncAgent);
                 }
 
-                // Check for more sync jobs to run
-                if (jobEntries.Count > 0)
+                // Check for more sync jobs to run or whether cancel pending
+                if (jobEntries.Count <= 0)
                 {
-                    UpdateSyncInfoUI(jobEntries.Peek().SyncJob);
-                    syncWorker.RunWorkerAsync(jobEntries);
+                    // Update UI and hide sync progress controls
+                    SetControlsEnabledState(false, true);
+                    lblStatus.Content = "Synchronization completed.";
+                    lblSubStatus.Content = "";
+
+                    // Start the Dropbox checker now.
+                    timerDropbox.Start();
+
+                    //listAllSyncJobs.IsEnabled = true;
                 }
                 else
                 {
-                    // Update UI and hide sync progress controls
-                    UpdateSyncUI(false);
-                    SetControlsEnabledState(true);
-                    lblStatus.Content = "All SyncJobs completed succesfully.";
-                    lblSubStatus.Content = "";
-
-                    //listAllSyncJobs.IsEnabled = true;
+                    UpdateSyncInfoUI(jobEntries.Peek().SyncJob);
+                    syncWorker.RunWorkerAsync(jobEntries);
                 }
             }
             catch (Exception)
@@ -537,26 +568,6 @@ namespace OneSync.UI
 
 
         #region UI handling code
-
-        private void UpdateSyncUI(bool syncInProgress)
-        {
-            // Set Visibility of common controls
-            btnSyncStatic.IsEnabled = !syncInProgress;
-            txtIntStorage.IsEnabled = !syncInProgress;
-            btnBrowse.IsEnabled = !syncInProgress;
-
-            if (syncInProgress)
-            {
-                btnSyncRotating.Visibility = Visibility.Visible;
-                btnSyncStatic.Visibility = Visibility.Hidden;
-                lbl_description.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                btnSyncRotating.Visibility = Visibility.Hidden;
-                btnSyncStatic.Visibility = Visibility.Visible;
-            }
-        }
 
         private void UpdateSyncInfoUI(SyncJob p)
         {
@@ -590,7 +601,7 @@ namespace OneSync.UI
         void currAgent_ProgressChanged(object sender, Synchronization.SyncProgressChangedEventArgs e)
         {   
             currentJobEntry.ProgressBarValue = e.Value;
-            tbManager.SetProgressValue(e.Value, 100);
+            if (tbManager != null) tbManager.SetProgressValue(e.Value, 100);
         }
 
         /// <summary>
@@ -706,7 +717,7 @@ namespace OneSync.UI
             editJobWorker.DoWork += new DoWorkEventHandler(editJobWorker_DoWork);
             editJobWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(editJobWorker_RunWorkerCompleted);
 
-            SetControlsEnabledState(false);
+            SetControlsEnabledState(false, false);
             editJobWorker.RunWorkerAsync(entry);
 
             return true;
@@ -769,13 +780,29 @@ namespace OneSync.UI
             }
         }
 
-        private void SetControlsEnabledState(bool isEnabled)
+        private void SetControlsEnabledState(bool syncInProgress, bool isEnabled)
         {
             listAllSyncJobs.IsEnabled = isEnabled;
             txtSyncJobName.IsEnabled = isEnabled;
             txtSource.IsEnabled = isEnabled;
             txtIntStorage.IsEnabled = isEnabled;
             txtBlkNewJob.IsEnabled = isEnabled;
+            btnBrowse.IsEnabled = isEnabled;
+            btnBrowse_Source.IsEnabled = isEnabled;
+
+            if (syncInProgress)
+            {
+                btnSyncRotating.Visibility = Visibility.Visible;
+                btnSyncStatic.Visibility = Visibility.Hidden;
+                lbl_description.Visibility = Visibility.Visible;
+                txtBlkProceed.Text = "Cancel Subsequent Jobs";
+            }
+            else
+            {
+                btnSyncRotating.Visibility = Visibility.Hidden;
+                btnSyncStatic.Visibility = Visibility.Visible;
+                txtBlkProceed.Text = "Sync Selected Jobs";
+            }
         }
 
 	}
