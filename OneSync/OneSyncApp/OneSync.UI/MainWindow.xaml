@@ -155,7 +155,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 								<DataTemplate>
 									<Grid>
                                         <TextBlock Style="{StaticResource jobInfo}" Text="{Binding JobName}" ToolTip="{Binding JobName}" MouseDown="edit_MouseDown" />
-                                        <TextBox Text="{Binding NewJobName}" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"/>
+                                        <TextBox Text="{Binding NewJobName}" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" />
 									</Grid>
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
