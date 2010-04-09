@@ -51,7 +51,7 @@ This version of OneSync has a number of exciting new features, including:
 
 Installation steps are as follows:
  # Uninstall previous versions
- # Run the OneSync installer (Download here: http://onesync.googlecode.com/files/OneSyncOne.msi)
+ # Run the OneSync installer (Download here: http://code.google.com/p/onesync/downloads/list)
  # Follow setup instructions
  # Done, OneSync is successfully installed
 
