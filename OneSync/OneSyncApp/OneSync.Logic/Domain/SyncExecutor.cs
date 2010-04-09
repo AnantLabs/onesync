@@ -155,7 +155,8 @@ namespace OneSync.Synchronization
             string absolutePath = baseFolder + relativePath;
             try
             {
-                Files.FileUtils.DeleteEmptyFolderRecursively(baseFolder, new DirectoryInfo(absolutePath), forceToDelete);
+                //Files.FileUtils.DeleteEmptyFolderRecursively(baseFolder, new DirectoryInfo(absolutePath), forceToDelete);
+                Directory.Delete(absolutePath, false);
 
             }
             catch (Exception) { return false; }
