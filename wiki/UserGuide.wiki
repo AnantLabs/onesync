@@ -71,8 +71,7 @@ The following diagram describes some of the things that you will see in the main
  # *Edit* - Edit your sync job name and folder directories.
  # *Delete* - Delete your sync job.
  # *Preview* - Preview the sync actions that will be carried out.
- # "Show log* - Click on it to view log records for the sync folder.
- # *Sync Selected Jobs* - Click it to sync only the selected jobs.
+ # *Show log* - Click on it to view log records for the sync folder.
 
 The following diagram describes some of the things that you will see when you click on the *Edit* button:
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync(V0.9)%20Sync%20Job%20Management%20Page.jpg]
