@@ -1,22 +1,22 @@
-#summary A place to learn how to explore the OneSync. This user guide describes OneSync Version 1.0.
+#summary This user guide describes OneSync Version 2.0.
 #labels Featured,Phase-Deploy
 
 == Introduction ==
 
-Welcome to the OneSync User guide - a place to know more about OneSync and find out how to organize your files that are stored in different computers! With OneSync, your personal files stored in your computer will be easily shared and synced with another computer in several ways: syncing through portable drive, thumb drive, Windows Shared Folders and even DropBox (Online Sync)!
+Welcome to the user guide for OneSync! From this guide, you will know more about OneSync and find out how to organize your files that are stored in different computers! With OneSync, your personal files stored in your computer will be easily shared and synced with another computer in several ways: syncing through portable drive, thumb drive, Windows Shared Folders or even Dropbox (Online Sync)!
 
-This guide allows you to learn the features of OneSync. Just follow through the handy guide below, and enjoy the journey! =)
+This guide gives you an opportunity to learn the core features of OneSync. Just follow through the handy guide below, and please enjoy the journey!
 
 == Content ==
 
   * [UserGuide#Getting_Started Getting started]
     * [UserGuide#The_OneSync_Concepts The OneSync concepts]
-    * [UserGuide#New_Features_in_Version_1.0 New features in version 1.0]
+    * [UserGuide#New_Features_in_Version_2.0 New features in version 2.0]
     * [UserGuide#Downloading_and_Installing Downloading and installing]
     * [UserGuide#Getting_Around Getting around]
   * [UserGuide#Syncing_My_Folders Syncing my folders]
     * [UserGuide#Syncing_Through_Portable_Drive Syncing through portable drive]
-    * [UserGuide#Syncing_Through_Drop_Box Syncing through DropBox (BETA)]
+    * [UserGuide#Syncing_Through_Drop_Box Syncing through Dropbox]
     * [UserGuide#Syncing_Through_Windows_Shared_Folders Syncing through Windows Shared Folders]
     * [UserGuide#Handling_Conflicts Handling conflicts]
   * [UserGuide#What_You_Should_Not_Do What you should not do]
@@ -24,20 +24,22 @@ This guide allows you to learn the features of OneSync. Just follow through the 
   * [UserGuide#Contact_Us Contact us]
 
 ==Getting Started==
+
 ===The OneSync Concepts===
+
 OneSync is working based on two important concepts. These are the two concepts that make OneSync different from other sync tools such as Live Mesh, Sync Toy and so on.
 
-The first concept is called the *Light-weight Sync*. OneSync is trying to make optimal use of the intermediate storage. Hence, only your modified files will actually be uploaded to or downloaded from the intermediate storage. This will not only prevent storing duplicated copies of your files on the intermediate storage but also make the whole sync process faster.
+The first concept is called the *Light-weight Sync*. OneSync tries to make optimal use of the intermediate storage. Hence, only your modified files will be uploaded to or downloaded from the intermediate storage. This will not only prevent storing duplicated copies of your files on the intermediate storage but also make the whole sync process faster.
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_2_v2.jpg]
 
-The second concept is known as *Half Way Sync*. Instead of doing synchronization directly between two PCs, there is an intermediate storage playing an important role during the sync process.
+The second concept is known as *Half Way Sync*. Instead of doing synchronization directly between two PCs, there is an intermediate storage that plays an important role during the sync process.
 
-When a user sync his folder, he must first choose the location of his intermediate storage. The storage can be a folder in his portable drive, a Windows Shared Folder or a DropBox local folder that is stored on his computer. When he does the sync on one PC, his files (or *patch*) will be sent to the intermediate storage. After that, he has to do the sync again in his another computer in order to download the *patch* from the intermediate storage and complete the sync process. It is important that the user chooses the same folder as the intermediate storage in subsequent rounds of sync for this couple of folders  on two different PCs.
+When a user syncs his folder, he must first choose the location of the intermediate storage. The storage can be a folder in his portable drive, a Windows Shared Folder or a Dropbox local folder that is stored on his computer. When he does the sync on one PC, his files (or *patch*) will be sent to the intermediate storage. After that, he has to do the sync again in his another computer in order to download the *patch* from the intermediate storage and complete the sync process. It is important that the user chooses the same folder as the intermediate storage in subsequent rounds of sync for this couple of folders  on two different PCs.
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_1_v2.jpg]
 
-===New Features in Version 1.0===
+===New Features in Version 2.0===
 
 This version of OneSync has a number of exciting new features, including:
  # Multiple Jobs Synchronization - Sync more than one sync job sequentially.
@@ -58,6 +60,7 @@ Installation steps are as follows:
 If you encounter any difficulties while installing, please contact us.
 
 ===Getting Around===
+
 The following diagram describes some of the things that you will see in the main window of OneSync:
 
 [http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot1.jpg]
