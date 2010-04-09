@@ -91,12 +91,13 @@ The following diagram describes some of the things that you will see when you cl
  # *Conflict Resolution* - The way to resolve the conflict, if any.
  # *Done* - Save and close the window.
 
-The following diagram describes some of the things that you will see in the next window, aka *Sync Page*, of OneSync when you click on the *Sync Selected Jobs* button:
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync(V0.9)%20Sync%20Page.jpg]
+When you click on the *Sync Selected Jobs* button, the main window will start executing the sync jobs selected while it is updating their respective status at the same time:
 
- # *Back to Home* - Back to the *Sync Job Page* without doing the sync.
- # *Sync* - The only one button that you need to click to start syncing.
- # *Sync Process* - Only available when you are doing the sync. You can see what the program is doing and what files are being synced.
+[http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot4.jpg]
+
+ # *Sync Selected Jobs* - Click to start selected jobs in order.
+ # *Current syncing job* - The sync job in process.
+ # *Sync status* - Status of each sync job.
 
 
 ==Syncing My Folders==
