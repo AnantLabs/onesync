@@ -73,14 +73,14 @@ The following diagram describes some of the things that you will see in the main
  # *Preview* - Preview the sync actions that will be carried out.
  # *Show log* - Click on it to view log records for the sync folder.
 
-The following diagram describes some of the things that you will see when you click on the *Edit* button:
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync(V0.9)%20Sync%20Job%20Management%20Page.jpg]
+You can edit you sync job by clicking on the *Edit* button and the main window will change as shown below:
 
- # *New Job Name* - The name of your sync job.
- # *Folder to Sync* - Can update the sync source folder here.
- # *Intermediate Storage Location* - Can update the intermediate storage location here.
- # *Edit Job* - Confirm edit the sync job.
- # *Delete Job* - Delete the job.
+[http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot2.jpg]
+
+ # *New Job Name* - Change the name of your sync job here.
+ # *Folder to Sync* - Update the sync source folder here.
+ # *Intermediate Storage Location* - Update the intermediate storage location here.
+ # *Save Job* - Save and finish updating the sync job.
 
 The following diagram describes some of the things that you will see when you click on the *Preview* button:
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync(V0.9)%20Sync%20Preview%20Page.jpg]
