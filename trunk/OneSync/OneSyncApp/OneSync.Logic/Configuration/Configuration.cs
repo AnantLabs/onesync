@@ -22,7 +22,7 @@ namespace OneSync.Synchronization
         public const string TBL_ACTION = "ACTION_TABLE";
         public const string TBL_DATASOURCE_INFO = "DATASOURCE_INFO_TABLE";
         public const string TBL_METADATA = "METADATA_TABLE";
-
+        public const string TLB_FOLDERMETADATA = "FOLDER_TABLE";
 
         /***************
          * Column Names
@@ -46,5 +46,8 @@ namespace OneSync.Synchronization
         public const string COL_LAST_MODIFIED_TIME = "LAST_MODIFIED_TIME";
         public const string COL_NTFS_ID1 = "NTFS_ID1";
         public const string COL_NTFS_ID2 = "NTFS_ID2";
+
+        // TLB_FOLDERMETADATA columns
+        public const string COL_FOLDER_RELATIVE_PATH = "RELATIVE_PATH";
     }
 }

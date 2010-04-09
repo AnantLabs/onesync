@@ -94,25 +94,12 @@
     </Compile>
     <Compile Include="DropboxStatusCheck.cs" />
     <Compile Include="Log.cs" />
-    <Compile Include="OneSync.Files.XCopy\Class1.cs" />
-    <Compile Include="OneSync.Files.XCopy\ICopy.cs" />
-    <Compile Include="OneSync.Files.XCopy\IFilter.cs" />
-    <Compile Include="OneSync.Files.XCopy\JobDetails.cs" />
-    <Compile Include="OneSync.Files.XCopy\XCopy.cs" />
-    <Compile Include="OneSync.Files.XCopy\XCopyFailedEvent.cs" />
-    <Compile Include="OneSync.Files.XCopy\XError.cs" />
-    <Compile Include="OneSync.Files.XCopy\XFilter.cs" />
-    <Compile Include="OneSync.Files\DirectoryInfoComparer.cs" />
     <Compile Include="OneSync.Files\DriveUtil.cs" />
-    <Compile Include="OneSync.Files\FileChangeDetection.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="OneSync.Files\FileInfoComparer.cs" />
     <Compile Include="OneSync.Files\FileInUseException.cs" />
     <Compile Include="OneSync.Files\FileUtils.cs" />
-    <Compile Include="OneSync.Files\FolderComparer.cs" />
     <Compile Include="OneSync.Files\PartialFileStream.cs" />
     <Compile Include="OneSync.Logic\Abstract Classes\BaseSQLiteProvider.cs" />
+    <Compile Include="OneSync.Logic\Abstract Classes\BaseSyncAgent.cs" />
     <Compile Include="OneSync.Logic\Abstract Classes\MetaDataProvider.cs" />
     <Compile Include="OneSync.Logic\Abstract Classes\SyncJobManager.cs" />
     <Compile Include="OneSync.Logic\Abstract Classes\SyncAction.cs" />
@@ -132,7 +119,12 @@
     <Compile Include="OneSync.Logic\Domain\FileMetaDataItem.cs" />
     <Compile Include="OneSync.Logic\Domain\FileMetaDataItemComparer.cs" />
     <Compile Include="OneSync.Logic\Domain\FileSyncAgent.cs" />
+    <Compile Include="OneSync.Logic\Domain\FolderMetadata.cs" />
+    <Compile Include="OneSync.Logic\Domain\FolderMetadataComparer.cs" />
+    <Compile Include="OneSync.Logic\Domain\FolderMetadataItem.cs" />
+    <Compile Include="OneSync.Logic\Domain\FolderMetadataItemComparer.cs" />
     <Compile Include="OneSync.Logic\Domain\IntermediaryStorage.cs" />
+    <Compile Include="OneSync.Logic\Domain\Metadata.cs" />
     <Compile Include="OneSync.Logic\Domain\SyncJob.cs" />
     <Compile Include="OneSync.Logic\Domain\SyncActionComparer.cs" />
     <Compile Include="OneSync.Logic\Domain\SyncExecutor.cs" />
@@ -198,12 +190,6 @@
     <Resource Include="OneSync.UI\Resource\edit.png" />
     <Resource Include="OneSync.UI\Resource\OneSync Transparent Logo %28Inactive%29.png" />
     <Resource Include="OneSync.UI\Resource\OneSync Transparent Logo.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Microsoft.KtmIntegration\KtmIntegration.csproj">
-      <Project>{1B3809EF-E3B2-4681-ABBD-4A4280655A33}</Project>
-      <Name>KtmIntegration</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
