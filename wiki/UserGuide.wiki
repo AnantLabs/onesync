@@ -67,7 +67,7 @@ The following diagram describes some of the things that you will see in the main
 
  # *Sync Job Name* - The name of your new/existing sync job.
  # *Folder To Sync* - The directory shown above is the directory of the folder that you are going to sync later. Hence, the folder is your *Sync Source Folder*.
- # *Intermediate Storage Location* - The location of intermediate storage folder, for example a folder in your thumb drive or DropBox.
+ # *Intermediate Storage Location* - The location of intermediate storage folder, for example a folder in your thumb drive or Dropbox.
  # *Add New Job* - Add the new sync job to your collection of sync jobs so that you can do the same job again in the future.
  # *Check Box* - Check all the sync jobs that you are going to sync.
  # *Reorder* - Sort your sync jobs by clicking on the arrows. This is important if you plan to carry out more than one sync job. The sync job at the top always gets synced first.
@@ -112,7 +112,7 @@ Make sure you have plugged in the portable drive (or thumb drive) to your comput
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_03.jpg]
 
-In OneSync V1.0, there is another option called "Open OneSync V1.0" which allows you to run the OneSync directly.
+In OneSync V2.0, there is another option called "Open OneSync V2.0" which allows you to run the OneSync directly.
 
 *Step 2*
 
@@ -126,14 +126,14 @@ After a few seconds (unless your sync source folder is huge), sync process will 
 
 ===Syncing Through Drop Box===
 
-Firstly, please install DropBox. You can find the installer at https://www.dropbox.com/downloading.
+Firstly, please install Dropbox. You can find the installer at https://www.dropbox.com/downloading.
 
-The steps are same as the steps mentioned in Syncing Through Portable Drive. However, please remember that the intermediate storage path has to be your DropBox folder directory. If you do not know what is your DropBox folder, double click on the DropBox icon on your system tray and then the DropBox folder will be displayed.
+The steps are same as the steps mentioned in Syncing Through Portable Drive. However, please remember that the intermediate storage path has to be your Dropbox folder directory. If you do not know what is your Dropbox folder, double click on the Dropbox icon on your system tray and then the Dropbox folder will be displayed.
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_06.jpg]
 
 ===Syncing Through Windows Shared Folders===
-If you do not bring your portable drive and also do not want to install DropBox, you may want to use a Windows Share Folder as your intermediate storage as well. Of course, the steps to do this are same as those mentioned in Syncing Through Portable Drive.
+If you do not bring your portable drive and also do not want to install Dropbox, you may want to use a Windows Share Folder as your intermediate storage as well. Of course, the steps to do this are same as those mentioned in Syncing Through Portable Drive.
 
 Of course, you need to setup a Windows Shared Folder in your LAN first.
 
