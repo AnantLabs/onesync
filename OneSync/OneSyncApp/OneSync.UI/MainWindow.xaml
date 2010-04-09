@@ -29,7 +29,11 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			<Setter Property="TextDecorations" Value="Underline" />
 			<Setter Property="Cursor" Value="Hand" />
 	    </Style>
-		<Style x:Key="btnSyncStaticStyle" TargetType="{x:Type Image}">
+        <Style x:Key="jobInfo" TargetType="{x:Type TextBlock}">
+            <Setter Property="TextWrapping" Value="NoWrap" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+        <Style x:Key="btnSyncStaticStyle" TargetType="{x:Type Image}">
       		<Setter Property="Source" Value="Resource/OneSync Transparent Logo (Inactive).png" />
 			<Style.Triggers>
 		    	<Trigger Property="IsMouseOver" Value="True">
@@ -121,10 +125,10 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			</Grid>
 			
 			<!--Row 2 -->
-			<ListView Grid.Row="2" x:Name="listAllSyncJobs" Margin="0,0,7,0" SelectionChanged="listAllSyncJobs_SelectionChanged"> 
+			<ListView Grid.Row="2" x:Name="listAllSyncJobs" Margin="0,0,7,0" SelectionChanged="listAllSyncJobs_SelectionChanged" > 
                 <ListView.View>
 					<GridView>
-                        <GridViewColumn Width="30" >
+                        <GridViewColumn Width="30">
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate x:Name="CheckBoxSelectAll">
                                     <CheckBox Name="checkBoxSelectAll" Checked="checkBoxSelectAll_Checked" Unchecked="checkBoxSelectAll_Unchecked"/>
@@ -150,7 +154,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 						    <GridViewColumn.CellTemplate>
 								<DataTemplate>
 									<Grid>
-                                        <Label Content="{Binding JobName}" ToolTip="{Binding JobName}" MouseDoubleClick="edit_MouseDown" />
+                                        <TextBlock Style="{StaticResource jobInfo}" Text="{Binding JobName}" ToolTip="{Binding JobName}" MouseDown="edit_MouseDown" />
                                         <TextBox Text="{Binding NewJobName}" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"/>
 									</Grid>
 								</DataTemplate>
@@ -164,7 +168,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 											<ColumnDefinition/>
 											<ColumnDefinition Width="22.2"/>
 										</Grid.ColumnDefinitions>
-										<Label Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding SyncSource}" ToolTip="{Binding SyncSource}"  MouseDoubleClick="edit_MouseDown" />
+										<TextBlock Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource jobInfo}" Text="{Binding SyncSource}" ToolTip="{Binding SyncSource}"  MouseDown="edit_MouseDown" />
 										<TextBox Grid.Column="0" Text="{Binding NewSyncSource}" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"  Loaded="editControls_Loaded"/>
 										<Button Grid.Column="1" Width="22.187" Height="22.188" Content="..." Click="btnBrowse_Click" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" Loaded="editControls_Loaded" />
 									</Grid>
@@ -179,7 +183,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 											<ColumnDefinition/>
 											<ColumnDefinition Width="22.2"/>
 										</Grid.ColumnDefinitions>
-										<Label Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding IntermediaryStoragePath}" ToolTip="{Binding IntermediaryStoragePath}" MouseDoubleClick="edit_MouseDown" />
+										<TextBlock Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource jobInfo}" Text="{Binding IntermediaryStoragePath}" ToolTip="{Binding IntermediaryStoragePath}" MouseDown="edit_MouseDown" />
 										<TextBox Grid.Column="0" Text="{Binding NewIntermediaryStoragePath}" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"  Loaded="editControls_Loaded"/>
 										<Button Grid.Column="1" Width="22.187" Height="22.188" Content="..." Click="btnBrowse_Click" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}"  Loaded="editControls_Loaded" />
 									</Grid>

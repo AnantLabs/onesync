@@ -13,6 +13,7 @@ using OneSync.Synchronization;
 using Community.CsharpSqlite.SQLiteClient;
 using System.Windows.Data;
 using System.Windows.Threading;
+using System.Diagnostics;
 
 namespace OneSync.UI
 {
@@ -210,6 +211,9 @@ namespace OneSync.UI
 
         private void edit_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (sender.GetType() == typeof(TextBlock) && e.ClickCount == 1)
+                return;
+
             UpdateTextBoxBindings();
                 
             try
@@ -439,7 +443,7 @@ namespace OneSync.UI
             // Exit edit-mode of all Job Entry
             foreach (UISyncJobEntry entry in listAllSyncJobs.Items)
             {
-                if (e.AddedItems.Count > 0 && e.AddedItems[0] != entry)
+                if (e != null && e.AddedItems.Count > 0 && e.AddedItems[0] != entry)
                     entry.EditMode = false;
             }
         }
