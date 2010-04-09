@@ -67,8 +67,11 @@ The following diagram describes some of the things that you will see in the main
  # *Intermediate Storage Location* - The location of intermediate storage folder, for example a folder in your thumb drive or DropBox.
  # *Add New Job* - Add the new sync job to your collection of sync jobs so that you can do the same job again in the future.
  # *Check Box* - Check all the sync jobs that you are going to sync.
- # *+ or -* - Sort your sync jobs. This is important if you plan to carry out more than one sync job. The sync job at the top always gets synced first.
- # *Edit, Preview, Show Log* - The three basic operations on a sync job. You can edit your sync job name and folder directories, preview the sync actions that will be carried out and show the log.
+ # *Reorder* - Sort your sync jobs by clicking on the arrows. This is important if you plan to carry out more than one sync job. The sync job at the top always gets synced first.
+ # *Edit* - Edit your sync job name and folder directories.
+ # *Delete* - Delete your sync job.
+ # *Preview* - Preview the sync actions that will be carried out.
+ # "Show log* - Click on it to view log records for the sync folder.
  # *Sync Selected Jobs* - Click it to sync only the selected jobs.
 
 The following diagram describes some of the things that you will see when you click on the *Edit* button:
