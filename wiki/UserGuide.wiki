@@ -83,10 +83,11 @@ You can edit you sync job by clicking on the *Edit* button and the main window w
  # *Save Job* - Save and finish updating the sync job.
 
 The following diagram describes some of the things that you will see when you click on the *Preview* button:
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync(V0.9)%20Sync%20Preview%20Page.jpg]
 
+[http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot3.jpg]
+
+ # *Skip* - Skip syncing certain files.
  # *Filter* - Filter the sync action that will be carried out.
- # *Skip* - Can choose to skip syncing certain files.
  # *Conflict Resolution* - The way to resolve the conflict, if any.
  # *Done* - Save and close the window.
 
