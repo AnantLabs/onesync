@@ -115,17 +115,11 @@ In OneSync V1.0, there is another option called "Open OneSync V1.0" which allows
 
 The OneSync Window will pop up. Enter the profile name, directory of the folder to sync and directory of intermediate storage and click on the "Add New Job" button. After that, you can just click on the "Sync Selected Jobs" to start syncing your newly created sync job.
 
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_04.jpg]
+[http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot5.jpg]
 
-*Step 3*
+After a few seconds (unless your sync source folder is huge), sync process will be done successfully. =)
 
-Now, the program will navigate to a new screen (aka *Sync Page*). Here, you just need to click on the 'Sync' button to start syncing.
-
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_05.jpg]
-
-After a few seconds (unless your sync source folder is huge), sync process will be successfully done. =)
-
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_06B.jpg]
+[http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot6.jpg]
 
 ===Syncing Through Drop Box===
 
