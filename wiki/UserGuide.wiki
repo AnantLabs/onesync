@@ -45,7 +45,7 @@ This version of OneSync has a number of exciting new features, including:
  # Multiple Jobs Synchronization - Sync more than one sync job sequentially.
  # Sync Preview - View the actions in advance before the sync process.
  # Sync Job Management - Compared to the previous version, this version allows you to create and manage your sync jobs in an easy way. You do not have to memorize the long directories anymore.
- # Right-click and Sync - Just right click any reasonable folder, and you will be able to sync it in just three clicks!
+ # Right-click and Sync - Just right click any reasonable folder, and you will be able to sync it in just two clicks!
 
 ===Downloading and Installing===
 
@@ -76,7 +76,7 @@ The following diagram describes some of the things that you will see in the main
  # *Preview* - Preview the sync actions that will be carried out.
  # *Show log* - Click on it to view log records for the sync folder.
 
-You can edit you sync job by clicking on the *Edit* button and the main window will change as shown below:
+You can edit any of your sync jobs by clicking on the corresponding *Edit* button for the sync job. The main window will change as shown below:
 
 [http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot2.jpg]
 
@@ -94,7 +94,7 @@ The following diagram describes some of the things that you will see when you cl
  # *Conflict Resolution* - The way to resolve the conflict, if any.
  # *Done* - Save and close the window.
 
-When you click on the *Sync Selected Jobs* button, the main window will start executing the sync jobs selected while it is updating their respective status at the same time:
+When you click on the *Sync Selected Jobs* button, the main window will start executing the sync jobs selected while it is updating their corresponding status at the same time:
 
 [http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot4.jpg]
 
@@ -105,6 +105,7 @@ When you click on the *Sync Selected Jobs* button, the main window will start ex
 
 ==Syncing My Folders==
 Why put your files in different PCs and keep doing copy-and-paste whenever you update the files? Keep them synchronized between your two computers and you will always have the most up-to-date versions at hand.
+
 ===Syncing Through Portable Drive===
 *Step 1*
 
@@ -137,8 +138,10 @@ If you do not bring your portable drive and also do not want to install Dropbox,
 
 Of course, you need to setup a Windows Shared Folder in your LAN first.
 
+
 ===Handling Conflicts===
 You can choose different ways to handle the conflicts in the *Preview* window before you do the synchronization.
+
 
 ==What You Should Not Do==
 In order to make sure that OneSync is working, you should not perform the following actions in the OneSync.
@@ -147,6 +150,7 @@ In order to make sure that OneSync is working, you should not perform the follow
 
 If you accidentally delete the intermediate storage folder or accidentally edit/delete the data.md, then you should delete the profile which is associated to the intermediate storage folder in OneSync under Sync Job Management.
 
+
 ==Error Messages==
 Sometimes, you will see an error message displayed on the top of the window. It is highly possible that due to one of these problems:
  * You create a new job name having the same name as one of the existing sync jobs (Just choose a new name that you have not used before).
@@ -154,6 +158,7 @@ Sometimes, you will see an error message displayed on the top of the window. It 
  * The data.md file is missing (Please uninstall and re-install).
  * The data.md file is not updated because of the IO problem (Please try run the program later).
  * A problem that the CodeDroids members do not even know (Please tell us).
+
 
 ==Contact Us==
 
