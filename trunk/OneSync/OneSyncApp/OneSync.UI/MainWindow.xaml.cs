@@ -208,7 +208,7 @@ namespace OneSync.UI
             }
         }
 
-        private void imgEdit_MouseDown(object sender, MouseButtonEventArgs e)
+        private void edit_MouseDown(object sender, MouseButtonEventArgs e)
         {
             UpdateTextBoxBindings();
                 
@@ -217,13 +217,11 @@ namespace OneSync.UI
                 FrameworkElement img = (FrameworkElement)e.Source;
                 UISyncJobEntry entry  = (UISyncJobEntry)img.DataContext;
 
-                if (entry.EditMode)
-                {
-                    // Saving
-                    if (saveSyncJob(entry)) entry.EditMode = false;
-                }
+                if (entry.EditMode && saveSyncJob(entry)) /* Edit successful*/
+                    entry.EditMode = false;
                 else
                     entry.EditMode = true;
+
             }
             catch (Exception)
             {
@@ -440,7 +438,10 @@ namespace OneSync.UI
         {
             // Exit edit-mode of all Job Entry
             foreach (UISyncJobEntry entry in listAllSyncJobs.Items)
-                entry.EditMode = false;
+            {
+                if (e.AddedItems.Count > 0 && e.AddedItems[0] != entry)
+                    entry.EditMode = false;
+            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

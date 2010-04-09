@@ -29,10 +29,6 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			<Setter Property="TextDecorations" Value="Underline" />
 			<Setter Property="Cursor" Value="Hand" />
 	    </Style>
-		<Style x:Key="jobInfo" TargetType="{x:Type TextBlock}">
-			<Setter Property="TextWrapping" Value="NoWrap" />
-			<Setter Property="TextTrimming" Value="CharacterEllipsis" />
-	    </Style>
 		<Style x:Key="btnSyncStaticStyle" TargetType="{x:Type Image}">
       		<Setter Property="Source" Value="Resource/OneSync Transparent Logo (Inactive).png" />
 			<Style.Triggers>
@@ -154,8 +150,8 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 						    <GridViewColumn.CellTemplate>
 								<DataTemplate>
 									<Grid>
-										<TextBlock Style="{StaticResource jobInfo}" Text="{Binding JobName}" ToolTip="{Binding JobName}" MouseDown="imgEdit_MouseDown" />
-										<TextBox Text="{Binding NewJobName}" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"/>
+                                        <Label Content="{Binding JobName}" ToolTip="{Binding JobName}" MouseDoubleClick="edit_MouseDown" />
+                                        <TextBox Text="{Binding NewJobName}" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"/>
 									</Grid>
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
@@ -168,7 +164,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 											<ColumnDefinition/>
 											<ColumnDefinition Width="22.2"/>
 										</Grid.ColumnDefinitions>
-										<TextBlock Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource jobInfo}" Text="{Binding SyncSource}" ToolTip="{Binding SyncSource}"  MouseDown="imgEdit_MouseDown" />
+										<Label Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding SyncSource}" ToolTip="{Binding SyncSource}"  MouseDoubleClick="edit_MouseDown" />
 										<TextBox Grid.Column="0" Text="{Binding NewSyncSource}" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"  Loaded="editControls_Loaded"/>
 										<Button Grid.Column="1" Width="22.187" Height="22.188" Content="..." Click="btnBrowse_Click" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" Loaded="editControls_Loaded" />
 									</Grid>
@@ -183,7 +179,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 											<ColumnDefinition/>
 											<ColumnDefinition Width="22.2"/>
 										</Grid.ColumnDefinitions>
-										<TextBlock Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource jobInfo}" Text="{Binding IntermediaryStoragePath}" ToolTip="{Binding IntermediaryStoragePath}" MouseDown="imgEdit_MouseDown" />
+										<Label Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding IntermediaryStoragePath}" ToolTip="{Binding IntermediaryStoragePath}" MouseDoubleClick="edit_MouseDown" />
 										<TextBox Grid.Column="0" Text="{Binding NewIntermediaryStoragePath}" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"  Loaded="editControls_Loaded"/>
 										<Button Grid.Column="1" Width="22.187" Height="22.188" Content="..." Click="btnBrowse_Click" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}"  Loaded="editControls_Loaded" />
 									</Grid>
@@ -194,7 +190,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 							<GridViewColumn.CellTemplate>
 								<DataTemplate x:Name="operationEditTemplate">
                                     <StackPanel Orientation="Horizontal">
-									    <Image Width="24" Height="24" Cursor="Hand" Source="{Binding Path=EditMode, Converter={StaticResource editModeConverter}}" ToolTip="Edit this job" MouseDown="imgEdit_MouseDown"/>
+									    <Image Width="24" Height="24" Cursor="Hand" Source="{Binding Path=EditMode, Converter={StaticResource editModeConverter}}" ToolTip="Edit this job" MouseDown="edit_MouseDown"/>
                                         <Image Width="24" Height="24" Cursor="Hand" Source="Resource/delete.png" ToolTip="Delete this job" MouseDown="imgDelete_MouseDown" />
                                     </StackPanel>
 								</DataTemplate>
