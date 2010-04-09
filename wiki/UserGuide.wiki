@@ -58,9 +58,9 @@ Installation steps are as follows:
 If you encounter any difficulties while installing, please contact us.
 
 ===Getting Around===
-The following diagram describes some of the things that you will see in the first window, aka *Sync Job Page*, of OneSync:
+The following diagram describes some of the things that you will see in the main window of OneSync:
 
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync(V0.9)%20Profile%20Page.jpg]
+[http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot1.jpg]
 
  # *Sync Job Name* - The name of your new/existing sync job.
  # *Folder To Sync* - The directory shown above is the directory of the folder that you are going to sync later. Hence, the folder is your *Sync Source Folder*.
