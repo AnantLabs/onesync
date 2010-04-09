@@ -6,9 +6,6 @@ using System.IO;
 
 namespace OneSync.Synchronization
 {
-
-    
-
     /// <summary>
     /// Class to manage MetaData.
     /// </summary>
@@ -19,7 +16,7 @@ namespace OneSync.Synchronization
 
         // Root dir of files referenced by relative paths.
         protected string _rootPath;
-        
+
         /// <summary>
         /// Creates a MetaDataProvider.
         /// </summary>
@@ -28,7 +25,7 @@ namespace OneSync.Synchronization
         public MetaDataProvider(string storagePath, string rootPath)
         {
             _mdStoragePath = storagePath;
-            _rootPath = rootPath;   
+            _rootPath = rootPath;
         }
 
 
@@ -38,8 +35,17 @@ namespace OneSync.Synchronization
         /// <param name="currId">Id of MetaData.</param>
         /// <param name="loadOther">false to load metadata with currId. true to load other metadata with id different from currId.</param>
         /// <returns></returns>
-        public abstract FileMetaData Load(string currId, SourceOption option);
+        public abstract Metadata Load(string currId, SourceOption option);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="currId"></param>
+        /// <param name="option"></param>
+        /// <returns></returns>
+        public abstract FileMetaData LoadFileMetadata(string currId, SourceOption option);
+
+        public abstract FolderMetadata LoadFolderMetadata(string currId, SourceOption option);
 
         /// <summary>
         /// Add metadata infomation.
@@ -72,6 +78,21 @@ namespace OneSync.Synchronization
         /// <returns></returns>
         public abstract bool Update(IList<FileMetaDataItem> items);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="oldItems"></param>
+        /// <param name="newItems"></param>
+        /// <returns></returns>
+        public abstract bool UpdateFolderMetadata(FolderMetadata oldItems, FolderMetadata newItems);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="oldItems"></param>
+        /// <param name="newItems"></param>
+        /// <returns></returns>
+        public abstract bool UpdateFileMetadata(FileMetaData oldItems, FileMetaData newItems);
 
         /// <summary>
         /// Update MetaData information.
@@ -79,7 +100,7 @@ namespace OneSync.Synchronization
         /// <param name="oldMetadata">Outdated metadata.</param>
         /// <param name="newMetada">Updated metadata.</param>
         /// <returns>true if update successful.</returns>
-        public abstract bool Update(FileMetaData oldMetadata, FileMetaData newMetada);
+        public abstract bool Update(Metadata oldMetadata, Metadata newMetada);
 
         /// <summary>
         /// Create default schema
@@ -92,33 +113,66 @@ namespace OneSync.Synchronization
         /// <param name="fromPath">Root path of files which metadata is to be generated.</param>
         /// <param name="id">Id of metadata to be generated.</param>
         /// <returns>MetaData of all files specified in root path.</returns>
-        public static FileMetaData Generate(string fromPath, string id, bool excludeHidden)
+        public static Metadata Generate(string fromPath, string id, bool excludeHidden)
         {
-            FileMetaData metaData = new FileMetaData(id, fromPath);
+            return new Metadata(GenerateFileMetadata(fromPath, id, excludeHidden), GenerateFolderMetadata(fromPath, id, excludeHidden));
+        }
+
+        public static FileMetaData GenerateFileMetadata(string fromPath, string id, bool excludeHidden)
+        {
+            if (!Directory.Exists(fromPath))
+            {
+                try
+                { Directory.CreateDirectory(fromPath); }
+                catch (Exception) { throw; }
+            }
+
+            FileMetaData fileMetadata = new FileMetaData(id, fromPath);
 
             DirectoryInfo di = new DirectoryInfo(fromPath);
             FileInfo[] files = di.GetFiles("*.*", SearchOption.AllDirectories);
 
-            if (excludeHidden)
-            {
-                IEnumerable<FileInfo> noHidden = from file in files
-                                                 where !Files.FileUtils.IsHidden(file.FullName)
-                                                 select file;
-                files = noHidden.ToArray<FileInfo>();
-            }
-            
+            IEnumerable<FileInfo> noHiddenFiles = from file in files
+                                                  where excludeHidden ? ((!Files.FileUtils.IsFileHidden(file.FullName)) && excludeHidden) : !excludeHidden
+                                                  select file;
+            files = noHiddenFiles.ToArray<FileInfo>();
 
             // TODO: Implement ntfs id
             foreach (FileInfo f in files)
             {
-                metaData.MetaDataItems.Add(new FileMetaDataItem(id, f.FullName,
+                fileMetadata.MetaDataItems.Add(new FileMetaDataItem(id, f.FullName,
                     OneSync.Files.FileUtils.GetRelativePath(fromPath, f.FullName), Files.FileUtils.GetFileHash(f.FullName),
                     f.LastWriteTime, (uint)0, (uint)0));
             }
-
-            return metaData;
+            return fileMetadata;
         }
 
+
+        public static FolderMetadata GenerateFolderMetadata(string fromPath, string id, bool excludeHidden)
+        {
+            if (!Directory.Exists(fromPath))
+            {
+                try
+                { Directory.CreateDirectory(fromPath); }
+                catch (Exception) { throw; }
+            }
+            FolderMetadata folderMetadata = new FolderMetadata(id, fromPath);
+
+            DirectoryInfo di = new DirectoryInfo(fromPath);
+            DirectoryInfo[] directories = di.GetDirectories("*.*", SearchOption.AllDirectories);
+
+            IEnumerable<DirectoryInfo> noHiddenDirectories = from dir in directories
+                                                             where excludeHidden ? ((!Files.FileUtils.IsDirectoryHidden(dir.FullName)) && excludeHidden) :
+                                                             (!excludeHidden)
+                                                             select dir;
+            directories = noHiddenDirectories.ToArray<DirectoryInfo>();
+
+            foreach (DirectoryInfo dirInfo in directories)
+            {
+                folderMetadata.FolderMetadataItems.Add(new FolderMetadataItem(id, dirInfo.FullName, fromPath));
+            }
+            return folderMetadata;
+        }
 
 
         #region Public Properties

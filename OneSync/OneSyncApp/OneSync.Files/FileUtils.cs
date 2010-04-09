@@ -58,14 +58,14 @@ namespace OneSync.Files
         /// <param name="path"></param>
         /// <returns></returns>
         public static string GetFileHash(string path)
-        {          
+        {
             string hashString = "";
             MD5 md5Hasher = new MD5CryptoServiceProvider();
             using (Stream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
                 byte[] hashBytes = md5Hasher.ComputeHash(fileStream);
                 foreach (byte b in hashBytes) hashString += String.Format("{0:x2}", b);
-            }          
+            }
             return hashString;
         }
 
@@ -82,13 +82,13 @@ namespace OneSync.Files
             {
                 FileInfo fileInfo = new FileInfo(absolutePath);
                 fileInfo.IsReadOnly = !forceToDelete;
-            }                
+            }
             try
             {
                 File.Delete(absolutePath);
                 return true;
             }
-            catch (Exception) { return false; }            
+            catch (Exception) { return false; }
         }
 
         /// <summary>
@@ -97,21 +97,21 @@ namespace OneSync.Files
         /// </summary>
         /// <param name="absolutePath"></param>
         public static bool DeleteFileAndFolderIfEmpty(string baseFolder, string absolutePath, bool forceToDelete)
-        {               
+        {
             try
             {
                 DirectoryInfo dirInfo = new DirectoryInfo(new FileInfo(absolutePath).Directory.FullName);
-                if ( File.Exists (absolutePath))  Delete(absolutePath, forceToDelete);
+                if (File.Exists(absolutePath)) Delete(absolutePath, forceToDelete);
                 try
                 {
                     //delete empty folder recursively 
-                    DeleteEmptyFolderRecursively(baseFolder, dirInfo);
-                }                
-                catch (Exception){}
+                    DeleteEmptyFolderRecursively(baseFolder, dirInfo, forceToDelete);
+                }
+                catch (Exception) { }
                 return true;
             }
             catch (Exception)
-            { return false; }            
+            { return false; }
         }
 
         /// <summary>
@@ -119,15 +119,16 @@ namespace OneSync.Files
         /// </summary>
         /// <param name="baseFolder"></param>
         /// <param name="dir"></param>
-        private static void DeleteEmptyFolderRecursively(string baseFolder, DirectoryInfo dir)
-        {           
-                if ( dir.GetFiles().Length  == 0
-                && dir.GetDirectories().Length == 0
-                && !dir.FullName.Equals(baseFolder))
+        public static void DeleteEmptyFolderRecursively(string baseFolder, DirectoryInfo dir, bool forceToDelete)
+        {
+            if (dir.GetFiles().Length == 0
+            && dir.GetDirectories().Length == 0
+            && !dir.FullName.Equals(baseFolder))
             {
-                Console.WriteLine("Empty");
+                if (Files.FileUtils.IsDirectoryReadOnly(dir.FullName) && forceToDelete)
+                    dir.Attributes &= ~FileAttributes.ReadOnly;
                 dir.Delete();
-                DeleteEmptyFolderRecursively(baseFolder, dir.Parent);
+                DeleteEmptyFolderRecursively(baseFolder, dir.Parent, forceToDelete);
             }
         }
 
@@ -140,7 +141,7 @@ namespace OneSync.Files
         public static FileInfo[] GetFilesExcludeHidden(string absolutePath)
         {
             return (new DirectoryInfo(absolutePath).GetFiles("*.*", SearchOption.AllDirectories)
-                .Where(f => (f.Attributes & FileAttributes.Hidden) !=  FileAttributes.Hidden)).ToArray<FileInfo>();           
+                .Where(f => (f.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)).ToArray<FileInfo>();
         }
 
         /// <summary>
@@ -176,7 +177,7 @@ namespace OneSync.Files
             byte[] hashBytes = md5Hasher.ComputeHash(stream);
             foreach (byte b in hashBytes) builder.Append(String.Format("{0:x2}", b));
         }
-        
+
         /// <summary>
         /// Get the relative path given the base directory and the full path to a file
         /// </summary>
@@ -202,50 +203,29 @@ namespace OneSync.Files
         {
             if (!File.Exists(source)) throw new FileNotFoundException(source);
             if (IsOpen(source)) throw new FileInUseException("File " + source + " is being opened");
-            if (IsOpen(source) || IsOpen(destination)) throw new FileInUseException("File is currently open");                
+            if (IsOpen(source) || IsOpen(destination)) throw new FileInUseException("File is currently open");
 
             //extract the directory lead to destination
             string directory = destination.Substring(0, destination.LastIndexOf('\\'));
-            if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);            
-            //overwriten on exist            
-            try
-            {
-                FileInfo info = new FileInfo (destination);
-                if (File.Exists(destination) && info.IsReadOnly) { info.IsReadOnly =!forceToCopy; }
-                File.Copy(source, destination, true);
-                return true;
-            }
-            catch (Exception){return false;}
-        }
-
-
-        public static bool Move(string oldPath, string newPath, bool forceToRename)
-        {
-            if (!File.Exists(oldPath)) throw new FileNotFoundException(oldPath);
-            if (IsOpen(oldPath)) throw new FileInUseException("File " + oldPath + " is being opened");
-
-            //extract the directory lead to destination
-            string directory = newPath.Substring(0, newPath.LastIndexOf('\\'));
             if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
             //overwriten on exist            
             try
             {
-                FileInfo info = new FileInfo(newPath);
-                if (info.Exists && info.IsReadOnly) { info.IsReadOnly = !forceToRename; }
-                File.Delete(newPath);
-                File.Move(oldPath, newPath);
+                FileInfo info = new FileInfo(destination);
+                if (File.Exists(destination) && info.IsReadOnly) { info.IsReadOnly = !forceToCopy; }
+                File.Copy(source, destination, true);
                 return true;
             }
             catch (Exception) { return false; }
         }
 
         /// <summary>
-        /// Used in conflict resolution. Conflict file will be renamed and copied/moved over
+        /// Used in conflict resolution. Conflict file will be renamed and copied over
         /// </summary>
         /// <param name="source"></param>
         /// <param name="destination"></param>
         /// <returns></returns>
-        public static bool DuplicateRename(string source, string destination, bool keepOriginal)
+        public static bool DuplicateRename(string source, string destination)
         {
             int lastSlashIndex = destination.LastIndexOf('\\');
             int lastDotIndex = destination.LastIndexOf('.');
@@ -266,12 +246,8 @@ namespace OneSync.Files
 
             fileName += "[conflicted-copy-" + string.Format("{0:yyyy-MM-dd-hh-mm-ss}", DateTime.Now) + "]";
             destination = directory + "\\" + fileName + extension;
-            if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);                       
-
-            if (keepOriginal)
-                return Copy(source, destination, true);
-            else
-                return Move(source, destination, false);
+            if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
+            return Copy(source, destination, true);
         }
 
         /// <summary>
@@ -308,15 +284,37 @@ namespace OneSync.Files
         {
             return ((File.GetAttributes(absolutePath) & FileAttributes.ReadOnly) == FileAttributes.ReadOnly) ? true : false;
         }
-        
+
         /// <summary>
         /// Check whether a file with absolute path is hidden
         /// </summary>
         /// <param name="absolutePath"></param>
         /// <returns></returns>
-        public static bool IsHidden(string absolutePath)
-        {            
+        public static bool IsFileHidden(string absolutePath)
+        {
             return ((File.GetAttributes(absolutePath) & FileAttributes.Hidden) == FileAttributes.Hidden) ? true : false;
+        }
+
+        /// <summary>
+        /// Check whether a directory with absolute path is hidden
+        /// </summary>
+        /// <param name="absolutePath"></param>
+        /// <returns></returns>
+        public static bool IsDirectoryHidden(string absolutePath)
+        {
+            DirectoryInfo dirInfo = new DirectoryInfo(absolutePath);
+            return ((dirInfo.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden) ? true : false;
+        }
+
+        /// <summary>
+        /// Check whether a directory with absolute path is read only
+        /// </summary>
+        /// <param name="absolutePath"></param>
+        /// <returns></returns>
+        public static bool IsDirectoryReadOnly(string absolutePath)
+        {
+            DirectoryInfo dirInfo = new DirectoryInfo(absolutePath);
+            return ((dirInfo.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly) ? true : false;
         }
 
         /// <summary>
@@ -327,18 +325,24 @@ namespace OneSync.Files
         public static bool IsOpen(string absolutePath)
         {
             if (!File.Exists(absolutePath)) return false;
-            FileStream fs  = null;
+            FileStream fs = null;
             try
             {
                 fs = new FileStream(absolutePath, FileMode.Open, FileAccess.Read);
                 return false;
             }
             catch (Exception)
-            {return true;}
+            { return true; }
             finally
-            {if (fs != null) fs.Dispose();}            
+            { if (fs != null) fs.Dispose(); }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sourceDir"></param>
+        /// <param name="destinationDir"></param>
+        /// <returns></returns>
         public static bool MoveFolder(string sourceDir, string destinationDir)
         {
             try
@@ -351,14 +355,14 @@ namespace OneSync.Files
                     {
                         Copy(info.FullName, absolutePathInDestination, false);
                     }
-                    catch (Exception) { }                    
+                    catch (Exception) { }
                 }
                 return true;
             }
             catch (Exception)
             {
                 return false;
-            }            
+            }
         }
     }
 }
