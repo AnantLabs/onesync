@@ -148,15 +148,31 @@ namespace OneSync.UI
         {           
             try
             {
-                ComboBox tb = ((Button)sender).Tag as ComboBox;
-                if (tb == null) return;
-                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-
-                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                ComboBox cb = ((Button)sender).Tag as ComboBox;
+                if (cb == null)
                 {
-                    tb.Text = fbd.SelectedPath;
-                    tb.Focus();
-                    //tb.CaretIndex = tb.Text.Length;
+                    TextBox tb = ((Button)sender).Tag as TextBox;
+                    if (tb == null) return;
+
+                    System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+
+                    if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        tb.Text = fbd.SelectedPath;
+                        tb.Focus();
+                        tb.CaretIndex = tb.Text.Length;
+                    }
+                }
+                else 
+                {
+                    System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+
+                    if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        cb.Text = fbd.SelectedPath;
+                        cb.Focus();
+                        //tb.CaretIndex = tb.Text.Length;
+                    }
                 }
             }
             catch (Exception)
@@ -780,11 +796,21 @@ namespace OneSync.UI
 
             if (folders.Length > 0)
             {
-                ComboBox tb = sender as ComboBox;
-                if (tb == null) return;
+                ComboBox cb = sender as ComboBox;
+                if (cb == null)
+                {
+                    TextBox tb = sender as TextBox;
 
-                if (Directory.Exists(folders[0]))
-                    tb.Text = folders[0];
+                    if (tb == null) return;
+
+                    if (Directory.Exists(folders[0]))
+                        tb.Text = folders[0];
+                }
+                else 
+                {
+                    if (Directory.Exists(folders[0]))
+                        cb.Text = folders[0];
+                }
             }
 
             e.Handled = true;
