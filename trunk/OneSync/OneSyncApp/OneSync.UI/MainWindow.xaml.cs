@@ -109,7 +109,7 @@ namespace OneSync.UI
             txtIntStorage.Items.Clear();
             foreach (UISyncJobEntry entry in SyncJobEntries)
             {
-                if (!txtIntStorage.Items.Contains(entry.SyncSource))
+                if (!txtIntStorage.Items.Contains(entry.IntermediaryStoragePath))
                     txtIntStorage.Items.Add(entry.IntermediaryStoragePath);
             }
         }
