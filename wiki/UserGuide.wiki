@@ -143,8 +143,15 @@ Of course, you need to setup a Windows Shared Folder in your LAN first.
 ===Handling Conflicts===
 You can choose different ways to handle conflicts in the *Preview* window before you do the synchronization.
 
+For example, suppose you are working on two folders on different PCs and keep them in sync using OneSync. You modify a file on one PC and sync the folder that contains the file to the intermediate folder. Later you sync the intermediate folder with a folder on another PC which also contains the same file that also has some modifications. In this case, when you open the preview before syncing OneSync will give you two options for this file as shown below.
+
+[http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot7.jpg]
+
+ * Keep both - The file from the intermediate storage will be transferred to the folder on the second PC and renamed leaving the file on this PC intact.
+ * Overwrite - The file on the second PC will be replaced by the file from the intermediate storage.
 
 ==What You Should Not Do==
+
 In order to make sure that OneSync is working, you should not perform the following actions in the OneSync.
  * Delete the data.md file.
  * Delete the intermediate storage.
@@ -153,6 +160,7 @@ If you accidentally delete the intermediate storage folder or accidentally edit/
 
 
 ==Error Messages==
+
 Sometimes, you will see an error message displayed on the top of the window. It is highly possible that due to one of these problems:
  * You create a new job name having the same name as one of the existing sync jobs (Just choose a new name that you have not used before).
  * There are more than one profile which have the same intermediate storage (Do not use back the same intermediate storage for different profile).
