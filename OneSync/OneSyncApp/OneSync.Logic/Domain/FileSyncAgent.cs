@@ -153,7 +153,6 @@ namespace OneSync.Synchronization
 
             // Logging
             List<LogActivity> generateActivities = new List<LogActivity>();
-            int count = 0;
             DateTime starttime = DateTime.Now;
 
             int totalWorkItems = newActions.Count;
