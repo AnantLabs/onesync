@@ -488,7 +488,7 @@ namespace OneSync.UI
             foreach (UISyncJobEntry entry in SyncJobEntries)
                 entry.ProgressBarVisibility = Visibility.Hidden;
 
-            UISyncJobEntry currentJobEntry;
+            UISyncJobEntry currentJobEntry = null;
 
             try
             {
