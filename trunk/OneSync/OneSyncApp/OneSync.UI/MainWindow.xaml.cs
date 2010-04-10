@@ -547,8 +547,13 @@ namespace OneSync.UI
                 entry.Error = ex;
                 entry.ProgressBarValue = 100;
                 entry.ProgressBarColor = "Red";
-                entry.ProgressBarMessage = "Error Reported: " + ex.Message;
-                showErrorMsg(ex.Message);
+
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    string errorMsg = "Error Reported: " + ex.Message;
+                    entry.ProgressBarMessage = errorMsg;
+                    showErrorMsg(errorMsg);
+                });   
             }
             catch (Community.CsharpSqlite.SQLiteClient.SqliteSyntaxException ex)
             {
@@ -565,14 +570,18 @@ namespace OneSync.UI
             }
             catch (Exception ex)
             {
+                string errorMsg;
                 entry.Error = ex;
                 entry.ProgressBarValue = 100;
                 entry.ProgressBarColor = "Red";
-                string errorMsg = "Error Reported: " + ex.Message;
-                entry.ProgressBarMessage = errorMsg;
+                if (ex.GetType() == typeof(OutOfDiskSpaceException))
+                    errorMsg = "Not enough space in intermediate storage: " + entry.IntermediaryStoragePath;
+                else
+                    errorMsg = "Error Reported: " + ex.Message;
                 this.Dispatcher.Invoke((Action)delegate
                 {
-                    showErrorMsg(ex.Message);
+                    entry.ProgressBarMessage = errorMsg;
+                    showErrorMsg(errorMsg);
                 });    
             }
 
@@ -591,15 +600,9 @@ namespace OneSync.UI
         {
             try
             {
-
                 if (e.Error != null)
                 {
-                    if (e.Error.GetType() == typeof(OutOfDiskSpaceException))
-                    {
-                        // TODO: CL code...
-                    }
-                    else
-                        return;
+                    return;
                 }
 
                 Queue<UISyncJobEntry> jobEntries = e.Result as Queue<UISyncJobEntry>;
