@@ -89,7 +89,7 @@
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\OneSync.csproj">
+    <ProjectReference Include="..\OneSyncApp\OneSync.csproj">
       <Project>{18DA4780-0E82-440E-B282-6DDF766420E4}</Project>
       <Name>OneSync</Name>
     </ProjectReference>
