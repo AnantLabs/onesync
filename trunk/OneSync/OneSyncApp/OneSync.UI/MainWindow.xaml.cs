@@ -77,9 +77,6 @@ namespace OneSync.UI
             // Set-up data bindings
             listAllSyncJobs.ItemsSource = this.SyncJobEntries;
             LoadSyncJobs();
-
-            // Reload the two comboboxes.
-            //refreshCombobox();
         }
 
         private void dropboxStatusChecking()
@@ -89,13 +86,7 @@ namespace OneSync.UI
                 foreach (UISyncJobEntry entry in SyncJobEntries)
                     entry.ProgressBarColor = entry.Error == null ? "#FF01D328" : "Red";
             }
-            catch(Exception ex)
-            {
-                this.Dispatcher.Invoke((Action)delegate
-                {
-                    showErrorMsg("Unknown error");
-                });
-            }            
+            catch(Exception) { }            
         }
 
         private void refreshCombobox() 
@@ -103,26 +94,19 @@ namespace OneSync.UI
             try
             {
                 txtSource.Items.Clear();
+                txtIntStorage.Items.Clear();
                 foreach (UISyncJobEntry entry in SyncJobEntries)
                 {
                     if (!txtSource.Items.Contains(entry.SyncSource))
                         txtSource.Items.Add(entry.SyncSource);
-                }
 
-                txtIntStorage.Items.Clear();
-                foreach (UISyncJobEntry entry in SyncJobEntries)
-                {
                     if (!txtIntStorage.Items.Contains(entry.IntermediaryStoragePath))
                         txtIntStorage.Items.Add(entry.IntermediaryStoragePath);
                 }
-
             }
             catch (Exception ex)
             {
-                this.Dispatcher.Invoke((Action)delegate
-                {
-                    showErrorMsg(ex.Message);
-                });
+                showErrorMsg(ex.Message);
             }
         }
 
@@ -228,21 +212,13 @@ namespace OneSync.UI
                 txtSource.Text = "";
                 txtIntStorage.Text = "";
             }
-            catch (ProfileNameExistException)
+            catch (ProfileNameExistException ex)
             {
-                this.Dispatcher.Invoke((Action)delegate
-                {
-                    showErrorMsg("A sync job with the same name already exists.");
-                });                
-                return;
+                showErrorMsg(ex.Message);
             }
             catch (Exception ex)
             {
-                this.Dispatcher.Invoke((Action)delegate
-                {
-                    showErrorMsg(ex.Message);
-                });
-                return;
+                showErrorMsg(ex.Message);
             }
         }
 
@@ -258,18 +234,11 @@ namespace OneSync.UI
                 FrameworkElement img = (FrameworkElement)e.Source;
                 UISyncJobEntry entry  = (UISyncJobEntry)img.DataContext;
 
-                if (entry.EditMode && saveSyncJob(entry)) /* Edit successful*/
-                    entry.EditMode = false;
-                else
-                    entry.EditMode = true;
-
+                entry.EditMode = !(entry.EditMode && saveSyncJob(entry));
             }
             catch (Exception ex)
             {
-                this.Dispatcher.Invoke((Action)delegate
-                {
-                    showErrorMsg(ex.Message);
-                });
+                showErrorMsg(ex.Message);
             }
         }
 
@@ -311,17 +280,11 @@ namespace OneSync.UI
             }
             catch (MetadataFileException mfe)
             {
-                this.Dispatcher.Invoke((Action)delegate
-                {
-                    showErrorMsg(mfe.Message);
-                });
+                showErrorMsg(mfe.Message);
             }
             catch (Exception ex)
             {
-                this.Dispatcher.Invoke((Action)delegate
-                {
-                    showErrorMsg(ex.Message);
-                });
+                showErrorMsg(ex.Message);
             }
         }
 
@@ -433,13 +396,9 @@ namespace OneSync.UI
 
                 //View log file (The extension of the file should be .html).
                 if (File.Exists(Log.ReturnLogReportPath(entry.SyncSource)))
-                {
                     Log.ShowLog(entry.SyncSource);
-                }
                 else
-                {
                     showErrorMsg("There is no log for this job currently.");
-                }
             }
             catch (Exception ex)
             {
@@ -775,12 +734,6 @@ namespace OneSync.UI
             {
                 showErrorMsg("Error loading profiles.");
             }
-        }
-
-        private void ClearPreviewResults()
-        {
-            foreach (UISyncJobEntry entry in listAllSyncJobs.Items)
-                entry.SyncJob.SyncPreviewResult = null;
         }
 
         private void MoveJobEntry(UISyncJobEntry entry, int delta)
