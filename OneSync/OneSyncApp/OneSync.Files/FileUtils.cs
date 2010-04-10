@@ -371,7 +371,14 @@ namespace OneSync.Files
                     {
                         Copy(info.FullName, absolutePathInDestination, false);
                     }
-                    catch (Exception) { }
+                    catch (OutOfDiskSpaceException)
+                    {
+                        throw;
+                    }
+                    catch (Exception)
+                    {
+
+                    }
                 }
                 return true;
             }

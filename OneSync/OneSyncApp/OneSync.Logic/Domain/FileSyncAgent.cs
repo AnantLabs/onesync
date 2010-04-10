@@ -191,16 +191,21 @@ namespace OneSync.Synchronization
 
                     generateActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "SUCCESS"));
                 }
+                catch (OutOfDiskSpaceException)
+                {
+                    throw;
+                }
                 catch (Exception)
                 {
                     generateActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "FAIL"));
                 }
-                count++;
+                finally
+                {
+                    // Add to log
+                    Log.AddToLog(_job.SyncSource.Path, _job.IntermediaryStorage.Path,
+                        _job.Name, generateActivities, Log.To, generateActivities.Count, starttime, DateTime.Now);
+                }
             }
-
-            // Add to log
-            Log.AddToLog(_job.SyncSource.Path, _job.IntermediaryStorage.Path,
-                _job.Name, generateActivities, Log.To, generateActivities.Count, starttime, DateTime.Now);
         }
 
         private void ExecuteCreateActions(IList<SyncAction> copyList, SyncResult syncResult)
