@@ -133,6 +133,7 @@
     <Compile Include="OneSync.Logic\Domain\SyncSource.cs" />
     <Compile Include="OneSync.Logic\Exceptions\DatabaseException.cs" />
     <Compile Include="OneSync.Logic\Exceptions\MetaDataAlreadyExistsException.cs" />
+    <Compile Include="OneSync.Logic\Exceptions\MetadataFileError.cs" />
     <Compile Include="OneSync.Logic\Exceptions\ProfileNameExistsException.cs" />
     <Compile Include="OneSync.Logic\Exceptions\SyncSourcesNumberExceededException.cs" />
     <Compile Include="OneSync.Logic\SyncClient.cs" />

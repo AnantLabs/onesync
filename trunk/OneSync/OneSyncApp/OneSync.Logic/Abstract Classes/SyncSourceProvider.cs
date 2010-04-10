@@ -64,6 +64,11 @@ namespace OneSync.Synchronization
         /// </summary>
         public abstract void CreateSchema();
 
+        /// <summary>
+        /// Delete the sync source information in the intermediate storage
+        /// </summary>
+        /// <returns></returns>
+        public abstract bool DeleteSyncSourceInIntermediateStorage(SyncSource source);
 
         #region Public Properties
 
