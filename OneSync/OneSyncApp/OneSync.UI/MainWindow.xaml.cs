@@ -558,14 +558,18 @@ namespace OneSync.UI
                 entry.Error = ex;
                 entry.ProgressBarValue = 100;
                 entry.ProgressBarColor = "Red";
-                entry.ProgressBarMessage = "Error Reported: " + ex.Message;
+                string errorMsg = "Error Reported: " + ex.Message;
+                entry.ProgressBarMessage = errorMsg;
+                showErrorMsg(errorMsg);
             }
             catch (Exception ex)
             {
                 entry.Error = ex;
                 entry.ProgressBarValue = 100;
                 entry.ProgressBarColor = "Red";
-                entry.ProgressBarMessage = "Error Reported: " + ex.Message;
+                string errorMsg = "Error Reported: " + ex.Message;
+                entry.ProgressBarMessage = errorMsg;
+                showErrorMsg(errorMsg);
             }
 
             if (syncWorker.CancellationPending)
