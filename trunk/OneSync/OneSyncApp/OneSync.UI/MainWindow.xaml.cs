@@ -15,6 +15,7 @@ using System.Windows.Data;
 using System.Windows.Threading;
 using System.Diagnostics;
 using System.Collections;
+using OneSync.Files;
 
 namespace OneSync.UI
 {
@@ -590,7 +591,16 @@ namespace OneSync.UI
         {
             try
             {
-                if (e.Error != null) return;
+
+                if (e.Error != null)
+                {
+                    if (e.Error.GetType() == typeof(OutOfDiskSpaceException))
+                    {
+                        // TODO: CL code...
+                    }
+                    else
+                        return;
+                }
 
                 Queue<UISyncJobEntry> jobEntries = e.Result as Queue<UISyncJobEntry>;
                 if (jobEntries == null) return;
