@@ -116,12 +116,13 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 				<Button Grid.Column="1" x:Name="btnBrowse_Source" Width="22.187" Height="22.188" Content="..." ToolTip="Click to browse folders" Click="btnBrowse_Click" Margin="0,0,8,0" HorizontalAlignment="Right" VerticalAlignment="Center" />
 				
 				<!--Column 2 -->
-				<Label Grid.Column="2" x:Name="label_storage_message" Content="Intermediary Storage Location:" FontSize="10.667" Foreground="#FF0000B9" Margin="2,0,-2,0" />
+				<Label Grid.Column="2" x:Name="label_storage_message" Content=" Intermediary Storage Location:" FontSize="10.667" Foreground="#FF0000B9" Margin="2,0,-2,0" />
 				<Button Grid.Column="2" x:Name="btnBrowse" Width="22.187" Height="22.188" Content="..." ToolTip="Click to browse folders" Click="btnBrowse_Click" Margin="0,0,8,0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
 				
 				<!--Column 3 -->
 				<TextBlock Grid.Column="3" x:Name="txtBlkNewJob" Style="{StaticResource blueLinkLabel}" Text="Add New Job" MouseDown="txtBlkNewJob_MouseDown" HorizontalAlignment="Right" Margin="0,23.086,18,24.182" d:LayoutOverrides="Height"/>
 				<ComboBox x:Name="txtSource" Margin="4,21.407,34.187,21.406" Grid.Column="1" IsEditable="True" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"/>
+				<ComboBox x:Name="txtIntStorage" Margin="8,23.086,34.187,19.727" IsEditable="True" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop" Grid.Column="2"/>
 			</Grid>
 			
 			<!--Row 2 -->
@@ -241,6 +242,5 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			<Label Grid.Row="3" x:Name="lblStatus" Content="" FontSize="10.667" Margin = "130.398,69.251,54.602,47.763" />
 			<Label Grid.Row="3" x:Name="lblSubStatus" Content=""  FontSize="10.667" Margin = "130.398,0,54.602,33" VerticalAlignment="Bottom" Height="24.739" />
 		</Grid>
-		<ComboBox x:Name="txtIntStorage" Margin="0,61.407,169.854,0" VerticalAlignment="Top" Height="22.187" HorizontalAlignment="Right" Width="247.479" IsEditable="True" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"/>
 	</Grid>
 </Window>
