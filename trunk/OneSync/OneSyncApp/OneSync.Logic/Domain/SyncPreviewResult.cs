@@ -43,9 +43,7 @@ namespace OneSync.Synchronization
                                                     select action;
 
             foreach (SyncAction action in conflictItems)
-            {
                 action.ConflictResolution = ConflictResolution.DUPLICATE_RENAME;
-            }
 
             IEnumerable<SyncAction> itemsToDelete = from action in actions
                                                     where action.ChangeType == ChangeType.DELETED
@@ -57,88 +55,16 @@ namespace OneSync.Synchronization
                                                       && !conflictItems.Contains(action)
                                                       select action;
 
+            IEnumerable<SyncAction> itemsToRename = from action in actions
+                                                    where action.ChangeType == ChangeType.RENAMED
+                                                    && !conflictItems.Contains(action)
+                                                    select action;
+
             ConflictItems = conflictItems.ToList();
             ItemsToCopyOver = itemsToCopyOver.ToList();
             ItemsToDelete = itemsToDelete.ToList();
-
-            // Detect rename
-            IEnumerable<SyncAction> itemsToRename = GenerateRenameActions(ConflictItems, ItemsToCopyOver, ItemsToDelete);
-            ((List<SyncAction>)renameItems).AddRange(itemsToRename);
-            ((List<SyncAction>)this.actions).AddRange(itemsToRename);
+            ItemsToRename = itemsToRename.ToList();
         }
-
-        # region Rename Detection
-
-        private IEnumerable<SyncAction> GenerateRenameActions(IList<SyncAction> conflictItems,
-                                                              IList<SyncAction> itemsToCopyOver,
-                                                              IList<SyncAction> itemsToDelete)
-        {
-            List<SyncAction> renameActions = new List<SyncAction>();
-
-            ProcessRenameActions(conflictItems, itemsToDelete, renameActions);
-            ProcessRenameActions(itemsToCopyOver, itemsToDelete, renameActions);
-
-            return renameActions;
-        }
-
-        private void ProcessRenameActions(IList<SyncAction> createActions, IList<SyncAction> itemsToDelete, IList<SyncAction> renameActions)
-        {
-            // To keep track of actions that is now converted to rename operations;
-            List<SyncAction> originalActionsToRemove = new List<SyncAction>();
-            List<SyncAction> deleteActionsToRemove = new List<SyncAction>();
-
-            // Create a list to store conflict renames
-            List<SyncAction> tempList = new List<SyncAction>();
-
-            // Get all conflict rename actions
-            // i.e. There exist a dirty file having same name as newly renamed file
-            foreach (SyncAction delAction in deleteItems)
-            {
-
-                foreach (SyncAction a in createActions)
-                {
-                    if (delAction.FileHash == a.FileHash)
-                    {
-                        deleteActionsToRemove.Add(delAction);
-                        originalActionsToRemove.Add(a);
-                        RenameAction renameAction = new RenameAction(0, a.SourceID,
-                                        a.RelativeFilePath, delAction.RelativeFilePath, a.FileHash);
-                        renameAction.ConflictResolution = a.ConflictResolution;
-                        renameAction.OriginalCreateAction = a;
-                        renameAction.OriginalDeleteAction = delAction;
-
-                        // Handle conflict actions separately
-                        if (a.ConflictResolution != ConflictResolution.NONE)
-                            tempList.Add(renameAction);
-                        else
-                            renameActions.Add(renameAction);
-                        break;
-                    }
-                }
-            }
-
-            // Remove actions converted to rename actions
-            foreach (SyncAction a in originalActionsToRemove)
-            {
-                this.actions.Remove(a);  /* removed from global list of actions */
-                createActions.Remove(a); /* removed from filtered list of actions */
-            }
-
-            foreach (SyncAction a in deleteActionsToRemove)
-            {
-                this.actions.Remove(a);  /* removed from global list of actions */
-                itemsToDelete.Remove(a); /* removed from filtered list of actions */
-            }
-
-            // Add conflicted rename actions back to conflict action list
-            foreach (SyncAction conflict in tempList)
-            {
-                this.actions.Add(conflict); /* add to global list of actions */
-                createActions.Add(conflict);   /* add to filtered list of actions */
-            }
-        }
-
-        #endregion
 
         public IList<SyncAction> GetAllActions()
         {

@@ -21,4 +21,17 @@ namespace OneSync.Synchronization
 
         #endregion
     }
+
+    public class SyncActionFileHashComparer : IComparer<SyncAction>
+    {
+
+        #region IComparer<SyncAction> Members
+
+        public int Compare(SyncAction x, SyncAction y)
+        {
+            return x.FileHash.CompareTo(y.FileHash);
+        }
+
+        #endregion
+    }
 }

@@ -74,7 +74,7 @@ namespace OneSync.Synchronization
         }
 
 
-        public static void DuplicateRenameToSyncFolderAndUpdateActionTable(SyncAction action, SyncJob job)
+        public static void DuplicateRenameInSyncFolderAndUpdateActionTable(SyncAction action, SyncJob job)
         {
             string absolutePathInIntermediateStorage = job.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
             string absolutePathInSyncSource = job.SyncSource.Path + action.RelativeFilePath;
@@ -184,8 +184,8 @@ namespace OneSync.Synchronization
                 SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
                 actProvider.Delete(action);
 
-                if (!Files.FileUtils.Copy(oldAbsolutePathInSyncSource, newAbsolutePathInSyncSource, true))
-                    throw new Exception("Can't copy file " + oldAbsolutePathInSyncSource);
+                if (!Files.FileUtils.Move(oldAbsolutePathInSyncSource, newAbsolutePathInSyncSource, true))
+                    throw new Exception("Can't rename file " + oldAbsolutePathInSyncSource);
                 transaction.Commit();
             }
             catch (Exception)

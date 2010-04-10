@@ -34,10 +34,7 @@ namespace OneSync.Synchronization
         /// </summary>
         public FileMetaData Left
         {
-            get
-            {
-                return this.left;
-            }
+            get { return this.left; }
         }
         
         /// <summary>
@@ -45,10 +42,7 @@ namespace OneSync.Synchronization
         /// </summary>
         public FileMetaData Right
         {
-            get
-            {
-                return this.right;
-            }
+            get { return this.right; }
         }
 
         public IList<FileMetaDataItem> LeftOnly
@@ -101,13 +95,18 @@ namespace OneSync.Synchronization
         {
 
             IList<SyncAction> actions = new List<SyncAction>();
-            //Get newly created items by comparing relative paths
 
-             
+            /* Keep track of create and delete actions to detect rename */
+            List<SyncAction> createActions = new List<SyncAction>();
+            List<SyncAction> deleteActions = new List<SyncAction>();
+            
+            
+            //Get newly created items by comparing relative paths 
             foreach (FileMetaDataItem item in LeftOnly )
             {
                 CreateAction createAction = new CreateAction(0, item.SourceId, item.RelativePath, item.HashCode);
                 actions.Add(createAction);
+                createActions.Add(createAction);
             }
 
             foreach (FileMetaDataItem item in RightOnly)
@@ -115,16 +114,60 @@ namespace OneSync.Synchronization
                 //the source id of this action must be source id of the folder where the item is deleted                 
                 DeleteAction deleteAction = new DeleteAction(0, left.SourceId, item.RelativePath, item.HashCode);
                 actions.Add(deleteAction);
+                deleteActions.Add(deleteAction);
             }
 
             foreach (FileMetaDataItem item in BothModified)
-
             {
                 CreateAction createAction = new CreateAction(0, item.SourceId, item.RelativePath, item.HashCode);                   
                 actions.Add(createAction);
             }
 
+            DetectRenameActions(actions, createActions, deleteActions);
+
             return  actions;
+        }
+
+        private void DetectRenameActions(IList<SyncAction> actions, List<SyncAction> createActions, List<SyncAction> deleteActions)
+        {
+            SyncActionFileHashComparer hashComparer = new SyncActionFileHashComparer();
+            List<SyncAction> longList, shortList;
+
+            if (createActions.Count > deleteActions.Count)
+            {
+                longList = createActions;
+                shortList = deleteActions;
+            }
+            else
+            {
+                longList = deleteActions;
+                shortList = createActions;
+            }
+
+            // Sort longer list for efficiency
+            longList.Sort(hashComparer);
+
+            foreach (SyncAction a in shortList)
+            {
+                // Find if a file with same hash exist in other list
+                int index = longList.BinarySearch(a, hashComparer);
+                if (index  >= 0)
+                    CreateRenameActions(a, longList[index], actions);
+            }
+        }
+
+        private void CreateRenameActions(SyncAction x, SyncAction y, IList<SyncAction> actions)
+        {
+            // remove create and delete actions from global action list
+            // and replace it with rename action
+            actions.Remove(x);
+            actions.Remove(y);
+
+            // Identify which actions is create/delete
+            SyncAction createAction = (x.ChangeType == ChangeType.NEWLY_CREATED) ? x : y;
+            SyncAction deleteAction = (x.ChangeType == ChangeType.DELETED) ? x : y;
+            actions.Add(new RenameAction(0, x.SourceID, createAction.RelativeFilePath,
+                                         deleteAction.RelativeFilePath, x.FileHash));
         }
     }
 }

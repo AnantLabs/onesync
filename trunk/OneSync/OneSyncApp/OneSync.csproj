@@ -99,7 +99,6 @@
     <Compile Include="OneSync.Files\FileUtils.cs" />
     <Compile Include="OneSync.Files\PartialFileStream.cs" />
     <Compile Include="OneSync.Logic\Abstract Classes\BaseSQLiteProvider.cs" />
-    <Compile Include="OneSync.Logic\Abstract Classes\BaseSyncAgent.cs" />
     <Compile Include="OneSync.Logic\Abstract Classes\MetaDataProvider.cs" />
     <Compile Include="OneSync.Logic\Abstract Classes\SyncJobManager.cs" />
     <Compile Include="OneSync.Logic\Abstract Classes\SyncAction.cs" />
