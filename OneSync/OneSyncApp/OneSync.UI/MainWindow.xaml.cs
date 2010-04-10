@@ -14,6 +14,7 @@ using Community.CsharpSqlite.SQLiteClient;
 using System.Windows.Data;
 using System.Windows.Threading;
 using System.Diagnostics;
+using System.Collections;
 
 namespace OneSync.UI
 {
@@ -492,6 +493,7 @@ namespace OneSync.UI
 
                 e.Cancel = (result == MessageBoxResult.No);
             }
+            if (!e.Cancel) saveJobsOrder();
         }
 
 
@@ -725,8 +727,8 @@ namespace OneSync.UI
             try
             {
                 IList<SyncJob> jobs = jobManager.LoadAllJobs();
+                sortJobs(jobs);
 
-                SyncJobEntries.Clear();
                 foreach (SyncJob job in jobs)
                     SyncJobEntries.Add(new UISyncJobEntry(job));
             }
@@ -801,6 +803,41 @@ namespace OneSync.UI
             editJobWorker.RunWorkerAsync(entry);
 
             return true;
+        }
+
+        private void saveJobsOrder()
+        {
+            ArrayList jobs = new ArrayList();
+
+            foreach (UISyncJobEntry entry in SyncJobEntries)
+                jobs.Add(entry.JobName);
+
+            Properties.Settings.Default.JobsOrder = jobs;
+            Properties.Settings.Default.Save();
+        }
+
+        private void sortJobs(IList<SyncJob> jobs)
+        {
+            // Try to load sync jobs according to previously saved order
+            ArrayList orderedJobs = Properties.Settings.Default.JobsOrder;
+            if (orderedJobs == null) return;
+
+
+            List<SyncJob> loadedJobs = new List<SyncJob>(jobs);
+            jobs.Clear();
+
+            foreach (string jobName in orderedJobs)
+            {
+                SyncJob foundJob = loadedJobs.Find(j => j.Name == jobName);
+                if (foundJob != null)
+                {
+                    loadedJobs.Remove(foundJob);
+                    jobs.Add(foundJob);
+                }
+            }
+
+            foreach (SyncJob j in loadedJobs)
+                jobs.Add(j);
         }
 
         public ObservableCollection<UISyncJobEntry> SyncJobEntries
