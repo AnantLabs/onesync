@@ -881,10 +881,10 @@ namespace OneSync.UI
             btnBrowse.IsEnabled = isEnabled;
             btnBrowse_Source.IsEnabled = isEnabled;
             btnSyncStatic.IsEnabled = isEnabled;
-            txtBlkProceed.IsEnabled = isEnabled;
 
             if (syncInProgress)
             {
+				txtBlkProceed.IsEnabled = true;
                 btnSyncRotating.Visibility = Visibility.Visible;
                 btnSyncStatic.Visibility = Visibility.Hidden;
                 lbl_description.Visibility = Visibility.Visible;
