@@ -28,7 +28,7 @@ namespace OneSync.Synchronization
 
             // Create directory for database file if it does not exist
             FileInfo fi = new FileInfo(dbFilePath);
-            if (!fi.Directory.Exists && createIfNotExist) fi.Directory.Create();
+            if (!fi.Exists && createIfNotExist) fi.Directory.Create();
 
             connectionString = String.Format(CONN_STRING_FORMAT, dbFilePath);
 

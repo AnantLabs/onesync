@@ -27,8 +27,10 @@ namespace OneSync.Synchronization
             : base(storagePath, rootPath)
         {
             // Create database schema if necessary
+            /*
             FileInfo fi = new FileInfo(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
             if (!fi.Exists) { fi.Directory.Create(); }
+             */
         }
 
         #region Load Metadata
@@ -48,7 +50,7 @@ namespace OneSync.Synchronization
             string opt = (option == SourceOption.SOURCE_ID_NOT_EQUALS) ? " <> " : " = ";
             FileMetaData mData = new FileMetaData(currId, this.RootPath);
 
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 string cmdText = "SELECT * FROM " + Configuration.TBL_METADATA +
@@ -75,7 +77,7 @@ namespace OneSync.Synchronization
             string opt = (option == SourceOption.SOURCE_ID_NOT_EQUALS) ? " <> " : " = ";
             FolderMetadata folderMetadata = new FolderMetadata(currId, this.RootPath);
 
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 string cmdText = "SELECT * FROM " + Configuration.TLB_FOLDERMETADATA +
@@ -577,7 +579,7 @@ namespace OneSync.Synchronization
                                                          && !_new.HashCode.Equals(old.HashCode)
                                                          select _new;
 
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
@@ -599,7 +601,7 @@ namespace OneSync.Synchronization
 
         public override bool Update(IList<FileMetaDataItem> items)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 SqliteTransaction trasaction = (SqliteTransaction)con.BeginTransaction();

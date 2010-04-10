@@ -35,14 +35,14 @@ namespace OneSync.Synchronization
             : base(storagePath)
         {
             // Create database schema if necessary
-
+            /*
             FileInfo fi = new FileInfo(Path.Combine(this.StoragePath, DATABASE_NAME));
 
             if (!fi.Exists)
             {
                 // If the parent directory already exists, Create() does nothing.
                 fi.Directory.Create();
-            }           
+            }*/          
         }
 
         /// <summary>
