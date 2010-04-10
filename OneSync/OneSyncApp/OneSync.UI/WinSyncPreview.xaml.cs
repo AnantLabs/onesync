@@ -41,15 +41,13 @@ namespace OneSync.UI
         {
             if (_job == null) return;
 
-            if (_job.SyncPreviewResult == null)
-            {
-				this.Dispatcher.Invoke((Action)delegate
-				{
-					previewUIUpdate(false);
-				});
-                FileSyncAgent agent = new FileSyncAgent(_job);
-                _job.SyncPreviewResult = agent.GenerateSyncPreview();
-            }
+			this.Dispatcher.Invoke((Action)delegate
+			{
+				previewUIUpdate(false);
+			});
+            FileSyncAgent agent = new FileSyncAgent(_job);
+            _job.SyncPreviewResult = agent.GenerateSyncPreview();
+
         }
 
         void previewWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
