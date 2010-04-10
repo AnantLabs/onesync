@@ -105,6 +105,45 @@ namespace OneSync.Synchronization
         }
 
         /// <summary>
+        /// Renames conflicted file so that RenameAction can be executed
+        /// </summary>
+        /// <param name="renameAction">Rename action that cannot be executed due to conflict.</param>
+        public static void ConflictRenameAndUpdateActionTable(RenameAction action, SyncJob job, bool keepConflictedFile)
+        {
+            string absPathInIStorage = job.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
+            string absPathInSyncSource = job.SyncSource.Path + action.RelativeFilePath;
+
+            SQLiteAccess access = new SQLiteAccess(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME), true);
+            SqliteConnection con = access.NewSQLiteConnection();
+            SqliteTransaction trasaction = (SqliteTransaction)con.BeginTransaction();
+            try
+            {
+                SQLiteSyncActionsProvider actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
+                actProvider.Delete(action, con);
+
+                if (!keepConflictedFile)
+                    Files.FileUtils.Delete(absPathInSyncSource, true);
+                else
+                    Files.FileUtils.DuplicateRename(absPathInSyncSource, absPathInSyncSource);
+
+                if (!Files.FileUtils.Move(absPathInIStorage, absPathInSyncSource, true))
+                    throw new Exception("Can't rename file " + absPathInIStorage);
+
+                trasaction.Commit();
+                Files.FileUtils.DeleteFileAndFolderIfEmpty(job.IntermediaryStorage.DirtyFolderPath, absPathInIStorage, true);
+            }
+            catch (Exception)
+            {
+                trasaction.Rollback();
+                throw;
+            }
+            finally
+            {
+                if (con != null) con.Dispose();
+            }
+        }
+
+        /// <summary>
         /// Delete a file in sync source folder and update action table
         /// </summary>
         /// <param name="action"></param>

@@ -94,5 +94,14 @@ namespace OneSync.Synchronization
             set { renameItems = value; }
             get { return this.renameItems; }
         }
+
+        public int ItemsCount
+        {
+            get
+            {
+                return copyItems.Count + conflictItems.Count +
+                       deleteItems.Count + renameItems.Count;
+            }
+        }
     }
 }
