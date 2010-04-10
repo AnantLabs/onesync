@@ -91,7 +91,7 @@ The following diagram describes some of the things that you will see when you cl
 
  # *Skip* - Skip syncing certain files.
  # *Filter* - Filter the sync action that will be carried out.
- # *Conflict Resolution* - The way to resolve the conflict, if any.
+ # *Conflict Resolution* - The way to resolve conflicts, if any.
  # *Done* - Save and close the window.
 
 When you click on the *Sync Selected Jobs* button, the main window will start executing the sync jobs selected while it is updating their corresponding status at the same time:
@@ -109,7 +109,7 @@ Why put your files in different PCs and keep doing copy-and-paste whenever you u
 ===Syncing Through Portable Drive===
 *Step 1*
 
-Make sure you have plugged in the portable drive (or thumb drive) to your computer. From your PC, right-click the folder you want to sync, and then click "Sync This Folder with OneSync". Depending on the version you use, the name will be a bit different.
+Make sure you have plugged in the portable drive (or thumb drive) to your computer. On your PC, right-click the folder you want to sync, and click "Sync This Folder with OneSync". Depending on the version you are currently using, the name will be a bit different.
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_03.jpg]
 
@@ -117,7 +117,7 @@ In OneSync V2.0, there is another option called "Open OneSync V2.0" which allows
 
 *Step 2*
 
-The OneSync Window will pop up. Enter the profile name, directory of the folder to sync and directory of intermediate storage and click on the "Add New Job" button. After that, you can just click on the "Sync Selected Jobs" to start syncing your newly created sync job.
+The OneSync Window will pop up. Enter the profile name, directory of the folder to sync and directory of intermediate storage and click on the "Add New Job" button. After that, you can just click on the "Sync Selected Jobs" to start your newly created sync job.
 
 [http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot5.jpg]
 
@@ -140,7 +140,7 @@ Of course, you need to setup a Windows Shared Folder in your LAN first.
 
 
 ===Handling Conflicts===
-You can choose different ways to handle the conflicts in the *Preview* window before you do the synchronization.
+You can choose different ways to handle conflicts in the *Preview* window before you do the synchronization.
 
 
 ==What You Should Not Do==
