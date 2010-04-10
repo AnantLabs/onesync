@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyTitle("OneSync")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("NUS")]
+[assembly: AssemblyCompany("CodeDroids")]
 [assembly: AssemblyProduct("OneSync")]
 [assembly: AssemblyCopyright("Copyright © NUS 2010")]
 [assembly: AssemblyTrademark("")]
