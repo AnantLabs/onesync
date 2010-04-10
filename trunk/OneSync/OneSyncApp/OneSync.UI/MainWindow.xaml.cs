@@ -102,13 +102,15 @@ namespace OneSync.UI
             txtSource.Items.Clear();
             foreach (UISyncJobEntry entry in SyncJobEntries)
             {
-                txtSource.Items.Add(entry.SyncSource);
+                if(!txtSource.Items.Contains(entry.SyncSource))
+                    txtSource.Items.Add(entry.SyncSource);
             }
 
             txtIntStorage.Items.Clear();
             foreach (UISyncJobEntry entry in SyncJobEntries)
             {
-                txtIntStorage.Items.Add(entry.IntermediaryStoragePath);
+                if (!txtIntStorage.Items.Contains(entry.SyncSource))
+                    txtIntStorage.Items.Add(entry.IntermediaryStoragePath);
             }
         }
 
@@ -486,9 +488,9 @@ namespace OneSync.UI
         {
             if (selectedEntries.Count <= 0) return;
 
-            // Hide progress bar of selected syncjobs
-            foreach (UISyncJobEntry jobEntry in selectedEntries)
-                jobEntry.ProgressBarVisibility = Visibility.Hidden;
+            // Hide all sync job progress bars
+            foreach (UISyncJobEntry entry in SyncJobEntries)
+                entry.ProgressBarVisibility = Visibility.Hidden;
 
             try
             {
@@ -543,7 +545,7 @@ namespace OneSync.UI
                 entry.Error = ex;
                 entry.ProgressBarValue = 100;
                 entry.ProgressBarColor = "Red";
-                entry.ProgressBarMessage = "Error: The intermediate storage not found or data.md is missing in the intermediate storage";
+                entry.ProgressBarMessage = "Error Reported: " + ex.Message;
             }
             catch (Exception ex)
             {

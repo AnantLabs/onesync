@@ -229,7 +229,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			</ListView>
 			
 			<!--Row 3 -->
-			<TextBlock Grid.Row="3" x:Name="txtBlkProceed" Text="Sync Selected Jobs" Style="{StaticResource blueLinkLabel}" MouseDown="sync_MouseDown" Margin="0,0,0,15.27" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
+			<TextBlock Grid.Row="3" x:Name="txtBlkProceed" Text="Sync Selected Jobs" Style="{StaticResource blueLinkLabel}" MouseDown="sync_MouseDown" Margin="0,0,0,8" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
 			<Image Grid.Row="3" x:Name="btnSyncRotating" ToolTip="Cancel Subsequent Jobs" HorizontalAlignment="Left" Margin="8,8,0,33" Width="104" Source="Resource/OneSync Transparent Logo.png" RenderTransformOrigin="0.5,0.5" d:LayoutOverrides="GridBox" Visibility="Hidden" Cursor="Hand" MouseDown="sync_MouseDown" >
 				<Image.RenderTransform>
 					<RotateTransform Angle="0"/>
