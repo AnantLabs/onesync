@@ -219,35 +219,45 @@ namespace OneSync.Files
             catch (Exception) { return false; }
         }
 
+
+        public static bool Move(string oldPath, string newPath, bool forceToRename)
+        {
+            if (!File.Exists(oldPath)) throw new FileNotFoundException(oldPath);
+            if (IsOpen(oldPath)) throw new FileInUseException("File " + oldPath + " is being opened");
+
+            //extract the directory lead to destination
+            string directory = newPath.Substring(0, newPath.LastIndexOf('\\'));
+            if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
+            //overwriten on exist
+            try
+            {
+                FileInfo info = new FileInfo(newPath);
+                if (info.Exists && info.IsReadOnly) { info.IsReadOnly = !forceToRename; }
+                File.Delete(newPath);
+                File.Move(oldPath, newPath);
+                return true;
+            }
+            catch (Exception) { return false; }
+        }
+
         /// <summary>
-        /// Used in conflict resolution. Conflict file will be renamed and copied over
+        /// Used in conflict resolution. Conflict file will be renamed and copied or moved over
         /// </summary>
         /// <param name="source"></param>
         /// <param name="destination"></param>
         /// <returns></returns>
         public static bool DuplicateRename(string source, string destination)
-        {
-            int lastSlashIndex = destination.LastIndexOf('\\');
-            int lastDotIndex = destination.LastIndexOf('.');
-            string fileName = "";
-            string directory = "";
-            string extension = "";
-            directory = destination.Substring(0, lastSlashIndex);
-            if (lastSlashIndex > 0 && lastDotIndex > 0)
-            {
-                fileName = destination.Substring(lastSlashIndex + 1, lastDotIndex - lastSlashIndex - 1);
-                extension = destination.Substring(lastDotIndex, destination.Length - lastDotIndex);
-            }
-            else
-            {
-                fileName = destination.Substring(lastSlashIndex + 1, destination.Length - 1 - lastSlashIndex);
-                extension = destination.Substring(lastSlashIndex + 1, destination.Length - lastSlashIndex - 1 - fileName.Length);
-            }
+        {   
+            string directory = Path.GetDirectoryName(destination);
+            string fileName = Path.GetFileNameWithoutExtension(destination);
+            string extension = Path.GetExtension(destination);
 
             fileName += "[conflicted-copy-" + string.Format("{0:yyyy-MM-dd-hh-mm-ss}", DateTime.Now) + "]";
             destination = directory + "\\" + fileName + extension;
+            
             if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
-            return Copy(source, destination, true);
+            
+            return Move(source, destination, false);
         }
 
         /// <summary>

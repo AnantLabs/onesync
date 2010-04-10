@@ -661,8 +661,8 @@ namespace OneSync.UI
         /// </summary>
         void currAgent_ProgressChanged(object sender, Synchronization.SyncProgressChangedEventArgs e)
         {   
-            currentJobEntry.ProgressBarValue = e.Value;
-            if (tbManager != null) tbManager.SetProgressValue(e.Value, 100);
+            currentJobEntry.ProgressBarValue = e.Progress;
+            if (tbManager != null) tbManager.SetProgressValue(e.Progress, 100);
         }
 
         /// <summary>
