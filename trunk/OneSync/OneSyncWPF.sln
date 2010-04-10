@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneSync", "OneSyncApp\OneSy
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "OneSyncSetup", "OneSyncSetup\OneSyncSetup.vdproj", "{BC6A3BC4-5007-476B-B866-691736DAB9D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{CF3DA93D-3C8D-4F7C-8B1D-BE71064C7A41}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneSyncATD", "OneSyncATD\OneSyncATD.csproj", "{3D109C3F-11BC-4AC5-BDAF-6BB614ED4ED9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +19,10 @@ Global
 		{18DA4780-0E82-440E-B282-6DDF766420E4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BC6A3BC4-5007-476B-B866-691736DAB9D3}.Debug|Any CPU.ActiveCfg = Debug
 		{BC6A3BC4-5007-476B-B866-691736DAB9D3}.Release|Any CPU.ActiveCfg = Release
-		{CF3DA93D-3C8D-4F7C-8B1D-BE71064C7A41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CF3DA93D-3C8D-4F7C-8B1D-BE71064C7A41}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CF3DA93D-3C8D-4F7C-8B1D-BE71064C7A41}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CF3DA93D-3C8D-4F7C-8B1D-BE71064C7A41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D109C3F-11BC-4AC5-BDAF-6BB614ED4ED9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D109C3F-11BC-4AC5-BDAF-6BB614ED4ED9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D109C3F-11BC-4AC5-BDAF-6BB614ED4ED9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D109C3F-11BC-4AC5-BDAF-6BB614ED4ED9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

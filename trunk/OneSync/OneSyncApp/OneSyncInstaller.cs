@@ -106,12 +106,33 @@ namespace OneSync
             {
                 //Do nothing again?
             }
-            
-            //Delete the installation dir because there is a data.md file stored inside.
+
+            //Delete the data.md file stored inside the installation directory.
             string datamdLocation = Assembly.GetExecutingAssembly().Location.Substring(0, Assembly.GetExecutingAssembly().Location.LastIndexOf(@"\")) + @"\data.md";
             if (File.Exists(datamdLocation))
             {
-                File.Delete(datamdLocation);
+                try
+                {
+                    File.Delete(datamdLocation);
+                }
+                catch (Exception)
+                {
+                    //Do nothing =P
+                }
+            }
+
+            //Delete the log folder.
+            string logLocation = Assembly.GetExecutingAssembly().Location.Substring(0, Assembly.GetExecutingAssembly().Location.LastIndexOf(@"\")) + @"\Log";
+            if(Directory.Exists(logLocation))
+            {
+                try
+                {
+                    Directory.Delete(logLocation);
+                }
+                catch (Exception) 
+                {
+                    //Yeah, do nothing. =D
+                }
             }
         }
     }

@@ -214,6 +214,9 @@ namespace OneSync.UI
                 UISyncJobEntry entry = new UISyncJobEntry(job) { IsSelected = true };
                 SyncJobEntries.Add(entry);
                 refreshCombobox();
+                txtSyncJobName.Text = "";
+                txtSource.Text = "";
+                txtIntStorage.Text = "";
             }
             catch (ProfileNameExistException)
             {
@@ -258,8 +261,17 @@ namespace OneSync.UI
                 Image img = (Image)e.Source;
                 UISyncJobEntry entry = (UISyncJobEntry)img.DataContext;
 
+                if (!Directory.Exists(entry.IntermediaryStoragePath))
+                {
+                    MessageBoxResult intermediateStorageAvailability = MessageBox.Show(
+                        "You are going to delete job " + entry.SyncJob.Name + " but its intermediate storage folder cannot be found. If you continue the deletion, you may corrupt the OneSync core files. Continue?", "Delete SyncJob -- Intermediate Storage Folder Not Found",
+                            MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                    if (intermediateStorageAvailability == MessageBoxResult.No) return;
+                }
+
                 MessageBoxResult result = MessageBox.Show(
-                            "You are going to delete job " + entry.SyncJob.Name + ". Please make sure intermediate device is available. Continue?", "Delete SyncJob",
+                            "You are going to delete job " + entry.SyncJob.Name + ". Continue?", "Delete SyncJob",
                             MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.No) return;
