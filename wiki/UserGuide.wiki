@@ -145,10 +145,10 @@ You can choose different ways to handle conflicts in the *Preview* window before
 
 For example, suppose you are working on two folders on different PCs and keep them in sync using OneSync. You modify a file on one PC and sync the folder that contains the file to the intermediate folder. Later you sync the intermediate folder with a folder on another PC which also contains the same file that also has some modifications. In this case, when you open the preview before syncing OneSync will give you two options for this file as shown below.
 
-[http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot7.jpg]
-
  * Keep both - The file from the intermediate storage will be transferred to the folder on the second PC and renamed leaving the file on this PC intact.
- * Overwrite - The file on the second PC will be replaced by the file from the intermediate storage.
+ * Overwrite - The file on the second PC will be replaced with the file from the intermediate storage.
+
+[http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot7.jpg]
 
 ==What You Should Not Do==
 
