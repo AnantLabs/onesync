@@ -30,7 +30,7 @@ namespace OneSync.Synchronization
             string opt = (option == SourceOption.SOURCE_ID_NOT_EQUALS) ? " <> " : " = ";
             IList<SyncAction> actions = new List<SyncAction>();
 
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 string cmdText = "SELECT * FROM " + Configuration.TBL_ACTION + 
@@ -131,7 +131,7 @@ namespace OneSync.Synchronization
 
         public override bool Delete(SyncAction action)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 string cmdText = "DELETE FROM " + Configuration.TBL_ACTION + 
@@ -161,7 +161,7 @@ namespace OneSync.Synchronization
 
         public override bool Delete(IList<SyncAction> actions)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 string cmdText = "DELETE FROM " + Configuration.TBL_ACTION +
@@ -183,7 +183,7 @@ namespace OneSync.Synchronization
         {
             string opt = (option == SourceOption.SOURCE_ID_NOT_EQUALS ) ? " <> " : " = ";
 
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 string cmdText = "DELETE FROM " + Configuration.TBL_ACTION + 
@@ -200,7 +200,7 @@ namespace OneSync.Synchronization
 
         public override void CreateSchema()
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 string cmdText = "CREATE TABLE IF NOT EXISTS " + Configuration.TBL_ACTION +
@@ -235,7 +235,7 @@ namespace OneSync.Synchronization
 
         private bool InsertRenameAction(RenameAction renameAction)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 string cmdText = "INSERT INTO " + Configuration.TBL_ACTION +
@@ -282,7 +282,7 @@ namespace OneSync.Synchronization
 
         private bool InsertCreateAction(CreateAction createAction)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 string cmdText = "INSERT INTO " + Configuration.TBL_ACTION +
@@ -327,7 +327,7 @@ namespace OneSync.Synchronization
 
         private bool InsertDeleteAction(DeleteAction deleteAction)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 string cmdText = "INSERT INTO " + Configuration.TBL_ACTION +

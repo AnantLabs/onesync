@@ -22,23 +22,20 @@ namespace OneSync.Synchronization
         /// </summary>
         /// <param name="dbFilePath">File path of SQLite database file.</param>
         /// <exception cref="ArgumentNullException">dbFilePath is null.</exception>
-        public SQLiteAccess(string dbFilePath)
+        public SQLiteAccess(string dbFilePath, bool createIfNotExist)
         {
             // Note: dbFilePath need not exists.
 
             // Create directory for database file if it does not exist
             FileInfo fi = new FileInfo(dbFilePath);
-            if (!fi.Directory.Exists) fi.Directory.Create();
+            if (!fi.Directory.Exists && createIfNotExist) fi.Directory.Create();
 
             connectionString = String.Format(CONN_STRING_FORMAT, dbFilePath);
 
             // TEST: What if no access to file, security permissions, invalid path format, path too long, db cannot be created?
 
             if (dbFilePath == null)
-                throw new ArgumentNullException("dbFilePath");
-            
-            // Exception thrown if connection cannot be opened.
-            //TestConnection();
+                throw new ArgumentNullException("dbFilePath");          
         }
 
         /// <summary>
@@ -161,30 +158,7 @@ namespace OneSync.Synchronization
             }         
             return retStr;
         }
-
-        /*
-        /// <summary>
-        /// Executes a transact-SQL statement without commit. Callee can commit or rollback by accessing
-        /// Transaction property of returned command object.
-        /// </summary>
-        /// <param name="cmdText">SQL query text.</param>
-        /// <param name="paramsList">Parameters list.</param>
-        /// <returns></returns>
-        public SqliteCommand ExecuteNonQueryWithoutCommit(string cmdText, SqliteParameterCollection paramsList)
-        {
-            SqliteCommand cmd = GetCommand(cmdText, paramsList);
-            
-            cmd.Connection.Open();
-
-            SqliteTransaction transaction = (SqliteTransaction)cmd.Connection.BeginTransaction();
-            cmd.Transaction = transaction;
-
-            cmd.ExecuteNonQuery();
-
-            return cmd;
-        }
-         */
-
+ 
         /// <summary>
         /// Returns a command object associated with a transaction and opened connection.
         /// Associated transaction object can be accessed from transaction property

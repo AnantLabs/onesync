@@ -48,7 +48,7 @@ namespace OneSync.Synchronization
             string opt = (option == SourceOption.SOURCE_ID_NOT_EQUALS) ? " <> " : " = ";
             FileMetaData mData = new FileMetaData(currId, this.RootPath);
 
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 string cmdText = "SELECT * FROM " + Configuration.TBL_METADATA +
@@ -75,7 +75,7 @@ namespace OneSync.Synchronization
             string opt = (option == SourceOption.SOURCE_ID_NOT_EQUALS) ? " <> " : " = ";
             FolderMetadata folderMetadata = new FolderMetadata(currId, this.RootPath);
 
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 string cmdText = "SELECT * FROM " + Configuration.TLB_FOLDERMETADATA +
@@ -115,7 +115,7 @@ namespace OneSync.Synchronization
         /// <returns></returns>
         public bool Add(IList<FolderMetadataItem> folders)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 SqliteTransaction trasaction = (SqliteTransaction)con.BeginTransaction();
@@ -179,7 +179,7 @@ namespace OneSync.Synchronization
         /// <returns></returns>
         public override bool Add(IList<FileMetaDataItem> mData)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 SqliteTransaction trasaction = (SqliteTransaction)con.BeginTransaction();
@@ -269,7 +269,7 @@ namespace OneSync.Synchronization
         {
             // All deletions are atomic
 
-            SQLiteAccess dbAccess = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess dbAccess = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
 
             using (SqliteConnection con = dbAccess.NewSQLiteConnection())
             {
@@ -332,7 +332,7 @@ namespace OneSync.Synchronization
         {
             // All deletions are atomic
 
-            SQLiteAccess dbAccess = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess dbAccess = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
 
             using (SqliteConnection con = dbAccess.NewSQLiteConnection())
             {
@@ -401,7 +401,7 @@ namespace OneSync.Synchronization
         /// <returns></returns>
         public override bool Update(Metadata oldMetadata, Metadata newMetada)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 SqliteTransaction trasaction = (SqliteTransaction)con.BeginTransaction();
@@ -467,7 +467,7 @@ namespace OneSync.Synchronization
                                                       where !newMetadata.FolderMetadataItems.Contains(_old, new FolderMetadataItemComparer())
                                                       select _old;
 
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
@@ -577,7 +577,7 @@ namespace OneSync.Synchronization
                                                          && !_new.HashCode.Equals(old.HashCode)
                                                          select _new;
 
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
@@ -599,7 +599,7 @@ namespace OneSync.Synchronization
 
         public override bool Update(IList<FileMetaDataItem> items)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 SqliteTransaction trasaction = (SqliteTransaction)con.BeginTransaction();
@@ -642,7 +642,7 @@ namespace OneSync.Synchronization
         /// </summary>
         public override void CreateSchema()
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 string cmdText = "CREATE TABLE IF NOT EXISTS " + Configuration.TBL_METADATA +

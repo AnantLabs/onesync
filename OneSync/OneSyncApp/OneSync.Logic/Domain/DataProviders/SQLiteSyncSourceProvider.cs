@@ -54,7 +54,7 @@ namespace OneSync.Synchronization
         {
             IList<SyncSource> syncSources = new List<SyncSource>();
 
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 using (SqliteCommand cmd = con.CreateCommand ())
@@ -81,7 +81,7 @@ namespace OneSync.Synchronization
         /// <returns></returns>
         public override bool Update(SyncSource source)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 string cmdText = "UPDATE " + Configuration.TBL_DATASOURCE_INFO +
@@ -99,7 +99,7 @@ namespace OneSync.Synchronization
 
         public override bool Delete(SyncSource source)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 string cmdText = "DELETE FROM " + Configuration.TBL_DATASOURCE_INFO +
@@ -110,6 +110,51 @@ namespace OneSync.Synchronization
 
                 db.ExecuteNonQuery(cmdText, paramList);
             }
+            return true;
+        }
+
+        public override bool DeleteSyncSourceInIntermediateStorage(SyncSource source)
+        {
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
+            SqliteTransaction transaction = null ;
+            try
+            {
+                using (SqliteConnection con = db.NewSQLiteConnection())
+                {
+                    transaction = (SqliteTransaction)con.BeginTransaction();
+                    using (SqliteCommand cmd = con.CreateCommand())
+                    {
+                        cmd.CommandText = "DELETE FROM " + Configuration.TBL_METADATA +
+                                            " WHERE " + Configuration.COL_SOURCE_ID + " = @id";
+                        cmd.Parameters.Add(new SqliteParameter("@id", DbType.String) { Value = source.ID });
+                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = "DELETE FROM " + Configuration.TLB_FOLDERMETADATA +
+                                            " WHERE " + Configuration.COL_SOURCE_ID + " = @id"; 
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.Add(new SqliteParameter("@id", DbType.String) { Value = source.ID });
+                        cmd.ExecuteNonQuery();
+
+                        cmd.CommandText = "DELETE FROM " + Configuration.TBL_DATASOURCE_INFO +
+                                            " WHERE " + Configuration.COL_SOURCE_ID + " = @id";
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.Add(new SqliteParameter("@id", DbType.String) { Value = source.ID });
+                        cmd.ExecuteNonQuery();
+
+                        cmd.CommandText = "DELETE FROM " + Configuration.TBL_ACTION +
+                                            " WHERE " + Configuration.COL_CHANGE_IN + " = @id";
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.Add(new SqliteParameter("@id", DbType.String) { Value = source.ID });
+                        cmd.ExecuteNonQuery();
+
+                        transaction.Commit();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                if ( transaction != null && transaction.Connection.State == ConnectionState.Open)  transaction.Rollback();
+                return false;
+            }            
             return true;
         }
 
@@ -144,7 +189,7 @@ namespace OneSync.Synchronization
         {
             try
             {
-                SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+                SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
                 using (SqliteConnection con = db.NewSQLiteConnection ())
                 {
                     string cmdText = "SELECT COUNT (DISTINCT " + Configuration.COL_SOURCE_ID + ") AS num" +
@@ -167,7 +212,7 @@ namespace OneSync.Synchronization
         /// </summary>
         public override void CreateSchema()
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con =  db.NewSQLiteConnection ())
             {
                 string cmdText = "CREATE TABLE IF NOT EXISTS " + Configuration.TBL_DATASOURCE_INFO +
@@ -212,7 +257,7 @@ namespace OneSync.Synchronization
             paramList.Add( new SqliteParameter("@id", DbType.String) { Value = s.ID } );
             paramList.Add( new SqliteParameter("@path", DbType.String) { Value = s.Path });
 
-            SQLiteAccess dbAccess = new SQLiteAccess(Path.Combine (this.StoragePath, Configuration.DATABASE_NAME));
+            SQLiteAccess dbAccess = new SQLiteAccess(Path.Combine (this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = dbAccess.NewSQLiteConnection())
             {
                 dbAccess.ExecuteNonQuery(insertText, paramList);

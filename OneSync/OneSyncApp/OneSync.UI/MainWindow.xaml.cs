@@ -257,7 +257,7 @@ namespace OneSync.UI
                 UISyncJobEntry entry = (UISyncJobEntry)img.DataContext;
 
                 MessageBoxResult result = MessageBox.Show(
-                            "Are you sure you want to delete " + entry.SyncJob.Name + "?", "Delete SyncJob",
+                            "You are going to delete job " + entry.SyncJob.Name + ". Please make sure intermediate device is available. Continue?", "Delete SyncJob",
                             MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.No) return;
@@ -274,11 +274,14 @@ namespace OneSync.UI
                 // TODO: thuat handled this?
                 SyncSourceProvider syncSourceProvider =
                     SyncClient.GetSyncSourceProvider(entry.IntermediaryStoragePath);
-                syncSourceProvider.Delete(entry.SyncJob.SyncSource);
-            }
-            catch (Exception)
-            {
 
+                if (!syncSourceProvider.DeleteSyncSourceInIntermediateStorage(entry.SyncJob.SyncSource))
+                    throw new MetadataFileException("Metadata file might be mission or corrupted!!!");
+                    
+            }
+            catch (Exception ex)
+            {
+                showErrorMsg(ex.Message);
             }
         }
 

@@ -19,7 +19,7 @@ namespace OneSync.Synchronization
             string absolutePathInSyncSource = job.SyncSource.Path + action.RelativeFilePath;
             string absolutePathInImediateStorage = job.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
 
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME));
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME),true);
             SqliteConnection con = db.NewSQLiteConnection();
             SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
             try
@@ -51,7 +51,7 @@ namespace OneSync.Synchronization
             string absolutePathInIntermediateStorage = job.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
             string absolutePathInSyncSource = job.SyncSource.Path + action.RelativeFilePath;
 
-            SQLiteAccess dbAccess = new SQLiteAccess(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME));
+            SQLiteAccess dbAccess = new SQLiteAccess(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME),true);
             SqliteConnection con = dbAccess.NewSQLiteConnection();
             SqliteTransaction trasaction = (SqliteTransaction)con.BeginTransaction();
             try
@@ -79,7 +79,7 @@ namespace OneSync.Synchronization
             string absolutePathInIntermediateStorage = job.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
             string absolutePathInSyncSource = job.SyncSource.Path + action.RelativeFilePath;
 
-            SQLiteAccess access = new SQLiteAccess(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME));
+            SQLiteAccess access = new SQLiteAccess(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME),true);
             SqliteConnection con = access.NewSQLiteConnection();
             SqliteTransaction trasaction = (SqliteTransaction)con.BeginTransaction();
             try
@@ -113,7 +113,7 @@ namespace OneSync.Synchronization
         {
             string absolutePathInSyncSource = job.SyncSource.Path + action.RelativeFilePath;
 
-            SQLiteAccess access = new SQLiteAccess(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME));
+            SQLiteAccess access = new SQLiteAccess(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME),true);
             SqliteConnection con = access.NewSQLiteConnection();
             SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
 
@@ -175,7 +175,7 @@ namespace OneSync.Synchronization
             string oldAbsolutePathInSyncSource = job.SyncSource.Path + action.PreviousRelativeFilePath;
             string newAbsolutePathInSyncSource = job.SyncSource.Path + action.RelativeFilePath;
 
-            SQLiteAccess access = new SQLiteAccess(job.IntermediaryStorage.Path);
+            SQLiteAccess access = new SQLiteAccess(Path.Combine (job.IntermediaryStorage.Path, Configuration.DATABASE_NAME),true);
             SqliteConnection con = access.NewSQLiteConnection();
             SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
 
