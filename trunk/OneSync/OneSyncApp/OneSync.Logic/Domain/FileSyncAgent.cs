@@ -38,10 +38,8 @@ namespace OneSync.Synchronization
         #endregion Events
 
         private delegate void ExecuteActionsCallback(SyncAction action);
-
-        List<LogActivity> log;
+        private List<LogActivity> log;
         private SyncJob _job;
-
 
         // To keep track of sync progress
         int totalProgress = 0, currentProgress = 0;
@@ -55,7 +53,6 @@ namespace OneSync.Synchronization
         /// <summary>
         /// This method apply patches and generating new patches
         /// </summary>
-        /// <param name="preview"></param>
         public void Synchronize(SyncPreviewResult preview)
         {
             OnStatusChanged(new SyncStatusChangedEventArgs("Applying patch"));
@@ -69,7 +66,6 @@ namespace OneSync.Synchronization
         /// <summary>
         /// Generate the sync preview that contains sync actions to be executed.
         /// </summary>
-        /// <returns></returns>
         public SyncPreviewResult GenerateSyncPreview()
         {
             OnStatusChanged(new SyncStatusChangedEventArgs("Preparing to sync"));
@@ -97,7 +93,6 @@ namespace OneSync.Synchronization
         /// Carry out the sync actions
         /// The previewResult contains 3 categories of items (copy over, delete, create new)
         /// </summary>
-        /// <returns></returns>
         private SyncResult Apply(SyncPreviewResult previewResult)
         {
             DateTime starTtime = DateTime.Now;
@@ -246,13 +241,13 @@ namespace OneSync.Synchronization
                 else if (a.ChangeType == ChangeType.RENAMED)
                 {
                     if (a.ConflictResolution == ConflictResolution.DUPLICATE_RENAME)
-                        SyncExecutor.ConflictRenameAndUpdateActionTable((RenameAction)a, _job, false);
-                    else if (a.ConflictResolution == ConflictResolution.OVERWRITE)
                         SyncExecutor.ConflictRenameAndUpdateActionTable((RenameAction)a, _job, true);
+                    else if (a.ConflictResolution == ConflictResolution.OVERWRITE)
+                        SyncExecutor.ConflictRenameAndUpdateActionTable((RenameAction)a, _job, false);
                 }
                 else if (a.ChangeType == ChangeType.DELETED)
                 {
-                    //TODO....
+                    SyncExecutor.DeleteFromActionTable((DeleteAction)a, _job);
                 }
             });
         }
