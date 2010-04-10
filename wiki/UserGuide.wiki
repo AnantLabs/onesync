@@ -143,7 +143,7 @@ Of course, you need to setup a Windows Shared Folder in your LAN first.
 ===Handling Conflicts===
 You can choose different ways to handle conflicts in the *Preview* window before you do the synchronization.
 
-For example, suppose you are working on two folders on different PCs and keep them in sync using OneSync. You modify a file on one PC and sync the folder that contains the file to the intermediate folder. Later you sync the intermediate folder with a folder on another PC which also contains the same file that also has some modifications. In this case, when you open the preview before syncing OneSync will give you two options for this file as shown below.
+For example, suppose you are working on two folders on different PCs and keep them in sync using OneSync. You modify a file on one PC and sync the folder that contains the file to the intermediate folder. Later you sync the intermediate folder with a folder on another PC which also contains the same file that also has some modifications. In this case, when you open the preview before syncing, OneSync will give you two options for this file as shown below.
 
  * Keep both - The file from the intermediate storage will be transferred to the folder on the second PC and renamed leaving the file on this PC intact.
  * Overwrite - The file on the second PC will be replaced with the file from the intermediate storage.
