@@ -106,7 +106,7 @@ namespace OneSync.UI
             }
             catch (Exception ex)
             {
-                showErrorMsg(ex.Message);
+                //showErrorMsg(ex.Message);
             }
         }
 
@@ -487,9 +487,11 @@ namespace OneSync.UI
             foreach (UISyncJobEntry entry in SyncJobEntries)
                 entry.ProgressBarVisibility = Visibility.Hidden;
 
+            UISyncJobEntry currentJobEntry;
+
             try
             {
-                UISyncJobEntry currentJobEntry = selectedEntries.Peek();
+                currentJobEntry = selectedEntries.Peek();
 
                 // Update UI
                 UpdateSyncInfoUI(currentJobEntry.SyncJob);
@@ -501,7 +503,11 @@ namespace OneSync.UI
             }
             catch (Exception ex)
             {
-                showErrorMsg(ex.Message);
+                string errorMsg = Validator.validateSyncDirs(currentJobEntry.SyncSource, currentJobEntry.IntermediaryStoragePath);
+                if (errorMsg != null)
+                    showErrorMsg(errorMsg);
+                else
+                    showErrorMsg(ex.Message);
             }
         }
 
@@ -563,7 +569,6 @@ namespace OneSync.UI
                 entry.ProgressBarColor = "Red";
                 string errorMsg = "Error Reported: " + ex.Message;
                 entry.ProgressBarMessage = errorMsg;
-                showErrorMsg(errorMsg);
                 this.Dispatcher.Invoke((Action)delegate
                 {
                     showErrorMsg(ex.Message);
