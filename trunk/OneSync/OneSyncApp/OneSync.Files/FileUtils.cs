@@ -196,7 +196,6 @@ namespace OneSync.Files
         /// </summary>
         /// <param name="source"></param>
         /// <param name="destination"></param>
-        /// <exception cref="System.ComponentModel.Win32Exception"></exception>
         /// <exception cref="FileNotFoundException"></exception>
         /// <exception cref="FileInUseException"></exception>
         public static bool Copy(string source, string destination, bool forceToCopy)
@@ -216,7 +215,14 @@ namespace OneSync.Files
                 File.Copy(source, destination, true);
                 return true;
             }
-            catch (Exception) { return false; }
+            catch (Exception ex)
+            {
+                // Check for not enough space on the disk.
+                if ((uint)Marshal.GetHRForException(ex) == 0x80070070)
+                    throw new OutOfDiskSpaceException();
+
+                return false; 
+            }
         }
 
 

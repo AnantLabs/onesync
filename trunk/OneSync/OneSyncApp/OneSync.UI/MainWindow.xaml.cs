@@ -477,7 +477,6 @@ namespace OneSync.UI
             if (!e.Cancel) saveJobsOrder();
         }
 
-
         #region Synchronization
 
         private void Synchronize(Queue<UISyncJobEntry> selectedEntries)
@@ -549,12 +548,12 @@ namespace OneSync.UI
                 entry.Error = ex;
                 entry.ProgressBarValue = 100;
                 entry.ProgressBarColor = "Red";
-                string errorMsg = "Error Reported: " + ex.Message;
-                entry.ProgressBarMessage = errorMsg;
-                showErrorMsg(errorMsg);
+                
                 this.Dispatcher.Invoke((Action)delegate
                 {
-                    showErrorMsg("Metadata file is missing or corrupted");
+                    string errorMsg = "Error Reported: " + ex.Message;
+                    entry.ProgressBarMessage = errorMsg;
+                    showErrorMsg(errorMsg);
                 });                
             }
             catch (Exception ex)
