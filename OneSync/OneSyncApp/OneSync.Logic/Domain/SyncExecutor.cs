@@ -12,7 +12,6 @@ namespace OneSync.Synchronization
 {
     public class SyncExecutor
     {
-        #region Carryout actions
         public static void CopyToDirtyFolderAndUpdateActionTable(SyncAction action, SyncJob job)
         {
             // TODO: make it atomic??
@@ -112,6 +111,7 @@ namespace OneSync.Synchronization
         {
             string absPathInIStorage = job.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
             string absPathInSyncSource = job.SyncSource.Path + action.RelativeFilePath;
+            string absOldPathInSyncSource = job.SyncSource.Path + action.PreviousRelativeFilePath;
 
             SQLiteAccess access = new SQLiteAccess(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME), true);
             SqliteConnection con = access.NewSQLiteConnection();
@@ -126,7 +126,7 @@ namespace OneSync.Synchronization
                 else
                     Files.FileUtils.DuplicateRename(absPathInSyncSource, absPathInSyncSource);
 
-                if (!Files.FileUtils.Move(absPathInIStorage, absPathInSyncSource, true))
+                if (!Files.FileUtils.Move(absOldPathInSyncSource, absPathInSyncSource, true))
                     throw new Exception("Can't rename file " + absPathInIStorage);
 
                 trasaction.Commit();
@@ -176,6 +176,12 @@ namespace OneSync.Synchronization
             {
                 if (con != null) con.Dispose();
             }
+        }
+
+        public static void DeleteFromActionTable(SyncAction action, SyncJob job)
+        {
+            SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
+            actProvider.Delete(action);
         }
 
         public static bool CreateFolder(string baseFolder, string relativePath)
@@ -239,6 +245,6 @@ namespace OneSync.Synchronization
                 if (con != null) con.Dispose();
             }
         }
-        #endregion Carryout actions
+
     }
 }

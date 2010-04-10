@@ -38,10 +38,9 @@ namespace OneSync.Synchronization
             IEnumerable<SyncAction> conflictItems = from action in actions
                                                     from dirtyInCurrent in dirtyItemsInCurrent
                                                     where action.RelativeFilePath.Equals(dirtyInCurrent.RelativePath)
-                                                    && action.ChangeType == ChangeType.NEWLY_CREATED
                                                     && !action.FileHash.Equals(dirtyInCurrent.HashCode)
                                                     select action;
-
+            
             foreach (SyncAction action in conflictItems)
                 action.ConflictResolution = ConflictResolution.DUPLICATE_RENAME;
 
