@@ -231,7 +231,9 @@ namespace OneSync.Synchronization
                 SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
                 actProvider.Delete(action);
 
-                if (!Files.FileUtils.Move(oldAbsolutePathInSyncSource, newAbsolutePathInSyncSource, true))
+
+                if (File.Exists(oldAbsolutePathInSyncSource) &&
+                    !Files.FileUtils.Move(oldAbsolutePathInSyncSource, newAbsolutePathInSyncSource, true))
                     throw new Exception("Can't rename file " + oldAbsolutePathInSyncSource);
                 transaction.Commit();
             }
