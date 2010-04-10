@@ -76,8 +76,7 @@ namespace OneSync
         private const string SyncDirAndLogFilePairsLocation = "logpairs.dat";
         private const string XslFileName = "onesynclog.xsl";
         private const string ExceptionLogFileName = "exceptionlog.txt";
-        //private const long MaxLogFileSize = 100000000; // Roughly 10MB
-        private const long MaxLogFileSize = 5000;
+        private const long MaxLogFileSize = 100000000; // Roughly 10MB
         public const string To = "To intermediate storage";
         public const string From = "From intermediate storage";
 
@@ -397,7 +396,7 @@ namespace OneSync
             if (moreThanMax)
             {
                 root.RemoveChild(root.LastChild);
-                root.RemoveChild(root.LastChild);
+                if(root.LastChild != null) root.RemoveChild(root.LastChild);
             }
 
             // Prepend the node; the last log will be displayed first
