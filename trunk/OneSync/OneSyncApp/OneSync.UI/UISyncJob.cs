@@ -134,12 +134,11 @@ namespace OneSync.UI
             {
                 try
                 {
-                    DropboxStatus status = DropboxStatusCheck.ReturnDropboxStatus(this.SyncJob.IntermediaryStorage.Path);
-                    return status;
+                    return DropboxStatusCheck.ReturnDropboxStatus(this.SyncJob.IntermediaryStorage.Path);
                 }
                 catch (Exception) 
                 {
-                    return null;
+                    return DropboxStatus.UP_TO_DATE;
                 }
             }
         }

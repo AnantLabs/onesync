@@ -71,12 +71,15 @@ namespace OneSync.UI
             timerDropbox.Tick += new EventHandler((sender, e) => dropboxStatusChecking());
             timerDropbox.Interval = TimeSpan.FromMilliseconds(1000);
 
+            _SyncJobEntries.CollectionChanged += (sender, e) => refreshCombobox();
+
+
             // Set-up data bindings
             listAllSyncJobs.ItemsSource = this.SyncJobEntries;
             LoadSyncJobs();
 
             // Reload the two comboboxes.
-            refreshCombobox();
+            //refreshCombobox();
         }
 
         private void dropboxStatusChecking()
@@ -84,17 +87,7 @@ namespace OneSync.UI
             try
             {
                 foreach (UISyncJobEntry entry in SyncJobEntries)
-                {
-                    if (entry.DropboxStatus == OneSync.DropboxStatus.SYNCHRONIZING)
-                        entry.ProgressBarColor = "Yellow";
-                    else if (entry.DropboxStatus == OneSync.DropboxStatus.UP_TO_DATE)
-                    {
-                        if (entry.Error == null)
-                            entry.ProgressBarColor = "#FF01D328";
-                        else
-                            entry.ProgressBarColor = "Red";
-                    }
-                }
+                    entry.ProgressBarColor = entry.Error == null ? "#FF01D328" : "Red";
             }
             catch(Exception ex)
             {
@@ -144,7 +137,6 @@ namespace OneSync.UI
                 syncWorker.CancelAsync();
                 return;
             }
-
             btnSyncRotating.ToolTip = "Cancel Subsequent Jobs";
 
             Queue<UISyncJobEntry> selectedJobs = UISyncJobEntry.GetSelectedJobs(SyncJobEntries);
@@ -232,7 +224,6 @@ namespace OneSync.UI
                 SyncJob job = jobManager.CreateSyncJob(syncJobName, syncSourceDir, intStorageDir);
                 UISyncJobEntry entry = new UISyncJobEntry(job) { IsSelected = true };
                 SyncJobEntries.Add(entry);
-                refreshCombobox();
                 txtSyncJobName.Text = "";
                 txtSource.Text = "";
                 txtIntStorage.Text = "";
@@ -307,10 +298,7 @@ namespace OneSync.UI
                 if (!jobManager.Delete(entry.SyncJob))
                     showErrorMsg("Unable to delete sync job at this moment.");
                 else
-                {
                     this.SyncJobEntries.Remove(entry);
-                    refreshCombobox();
-                }
 
                 // Try to delete Sync Source table from intermediary storage
                 // TODO: thuat handled this?
@@ -429,10 +417,7 @@ namespace OneSync.UI
 
             entry.EditMode = false;
 
-            this.Dispatcher.Invoke((Action)delegate
-            {
-                refreshCombobox();
-            });
+            refreshCombobox();
             
             SetControlsEnabledState(false, true);
         }
