@@ -864,6 +864,11 @@ namespace OneSync.UI
                     if (saveSyncJob(entry)) entry.EditMode = false;
                 }
             }
+			else if (e.Key == Key.F1)
+			{
+                if (File.Exists(STARTUP_PATH + @"\OneSync.chm"))
+                    Process.Start(STARTUP_PATH + @"\OneSync.chm");
+			}
         }
 
         private void SetControlsEnabledState(bool syncInProgress, bool isEnabled)
