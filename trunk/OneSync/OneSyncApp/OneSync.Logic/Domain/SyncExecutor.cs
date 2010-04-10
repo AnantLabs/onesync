@@ -6,6 +6,7 @@ using OneSync.Synchronization;
 using System.IO;
 using Community.CsharpSqlite;
 using Community.CsharpSqlite.SQLiteClient;
+using OneSync.Files;
 
 
 namespace OneSync.Synchronization
@@ -25,8 +26,15 @@ namespace OneSync.Synchronization
             {
                 SQLiteSyncActionsProvider actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
                 actProvider.Add(action, con);
-                if (!Files.FileUtils.Copy(absolutePathInSyncSource, absolutePathInImediateStorage, true)) throw new Exception("Can't copy file " + absolutePathInSyncSource);
+
+                if (!FileUtils.Copy(absolutePathInSyncSource, absolutePathInImediateStorage, true))
+                    throw new Exception("Can't copy file " + absolutePathInSyncSource);
                 transaction.Commit();
+            }
+            catch (OutOfDiskSpaceException)
+            {
+                transaction.Rollback();
+                throw; 
             }
             catch (Exception ex)
             {
@@ -61,6 +69,11 @@ namespace OneSync.Synchronization
                 trasaction.Commit();
                 Files.FileUtils.DeleteFileAndFolderIfEmpty(job.IntermediaryStorage.DirtyFolderPath, absolutePathInIntermediateStorage, true);
             }
+            catch (OutOfDiskSpaceException)
+            {
+                trasaction.Rollback();
+                throw;
+            }
             catch (Exception)
             {
                 trasaction.Rollback();
@@ -91,6 +104,11 @@ namespace OneSync.Synchronization
                     throw new Exception("Can't copy file " + absolutePathInIntermediateStorage);
                 trasaction.Commit();
                 Files.FileUtils.DeleteFileAndFolderIfEmpty(job.IntermediaryStorage.DirtyFolderPath, absolutePathInIntermediateStorage, true);
+            }
+            catch (OutOfDiskSpaceException)
+            {
+                trasaction.Rollback();
+                throw;
             }
             catch (Exception)
             {
