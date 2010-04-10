@@ -13,16 +13,8 @@ namespace OneSync.Synchronization
 
         public SQLiteSyncActionsProvider(string storagePath)
             : base(storagePath)
-        {
-            // Create database schema if necessary
-
-            FileInfo fi = new FileInfo(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
-
-            if (!fi.Exists)
-            {
-                // If the parent directory already exists, Create() does nothing.
-                fi.Directory.Create();
-            }          
+        {  
+         
         }
 
         public override IList<SyncAction> Load(string sourceID, SourceOption option)
@@ -30,7 +22,7 @@ namespace OneSync.Synchronization
             string opt = (option == SourceOption.SOURCE_ID_NOT_EQUALS) ? " <> " : " = ";
             IList<SyncAction> actions = new List<SyncAction>();
 
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 string cmdText = "SELECT * FROM " + Configuration.TBL_ACTION + 
@@ -131,7 +123,7 @@ namespace OneSync.Synchronization
 
         public override bool Delete(SyncAction action)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 string cmdText = "DELETE FROM " + Configuration.TBL_ACTION + 
@@ -161,7 +153,7 @@ namespace OneSync.Synchronization
 
         public override bool Delete(IList<SyncAction> actions)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 string cmdText = "DELETE FROM " + Configuration.TBL_ACTION +
@@ -183,7 +175,7 @@ namespace OneSync.Synchronization
         {
             string opt = (option == SourceOption.SOURCE_ID_NOT_EQUALS ) ? " <> " : " = ";
 
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 string cmdText = "DELETE FROM " + Configuration.TBL_ACTION + 

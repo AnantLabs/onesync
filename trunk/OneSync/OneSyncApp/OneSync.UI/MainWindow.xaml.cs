@@ -81,34 +81,55 @@ namespace OneSync.UI
 
         private void dropboxStatusChecking()
         {
-            foreach (UISyncJobEntry entry in SyncJobEntries)
+            try
             {
-                if (entry.DropboxStatus == OneSync.DropboxStatus.SYNCHRONIZING)
-                    entry.ProgressBarColor = "Yellow";
-                else if (entry.DropboxStatus == OneSync.DropboxStatus.UP_TO_DATE)
+                foreach (UISyncJobEntry entry in SyncJobEntries)
                 {
-                    if (entry.Error == null)
-                        entry.ProgressBarColor = "#FF01D328";
-                    else
-                        entry.ProgressBarColor = "Red";
+                    if (entry.DropboxStatus == OneSync.DropboxStatus.SYNCHRONIZING)
+                        entry.ProgressBarColor = "Yellow";
+                    else if (entry.DropboxStatus == OneSync.DropboxStatus.UP_TO_DATE)
+                    {
+                        if (entry.Error == null)
+                            entry.ProgressBarColor = "#FF01D328";
+                        else
+                            entry.ProgressBarColor = "Red";
+                    }
                 }
             }
+            catch(Exception ex)
+            {
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    showErrorMsg("Unknown error");
+                });
+            }            
         }
 
         private void refreshCombobox() 
         {
-            txtSource.Items.Clear();
-            foreach (UISyncJobEntry entry in SyncJobEntries)
+            try
             {
-                if(!txtSource.Items.Contains(entry.SyncSource))
-                    txtSource.Items.Add(entry.SyncSource);
-            }
+                txtSource.Items.Clear();
+                foreach (UISyncJobEntry entry in SyncJobEntries)
+                {
+                    if (!txtSource.Items.Contains(entry.SyncSource))
+                        txtSource.Items.Add(entry.SyncSource);
+                }
 
-            txtIntStorage.Items.Clear();
-            foreach (UISyncJobEntry entry in SyncJobEntries)
+                txtIntStorage.Items.Clear();
+                foreach (UISyncJobEntry entry in SyncJobEntries)
+                {
+                    if (!txtIntStorage.Items.Contains(entry.IntermediaryStoragePath))
+                        txtIntStorage.Items.Add(entry.IntermediaryStoragePath);
+                }
+
+            }
+            catch (Exception ex)
             {
-                if (!txtIntStorage.Items.Contains(entry.IntermediaryStoragePath))
-                    txtIntStorage.Items.Add(entry.IntermediaryStoragePath);
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    showErrorMsg(ex.Message);
+                });
             }
         }
 
@@ -218,25 +239,31 @@ namespace OneSync.UI
             }
             catch (ProfileNameExistException)
             {
-                showErrorMsg("A sync job with the same name already exists.");
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    showErrorMsg("A sync job with the same name already exists.");
+                });                
                 return;
             }
             catch (Exception ex)
             {
-                showErrorMsg(ex.Message);
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    showErrorMsg(ex.Message);
+                });
                 return;
             }
         }
 
         private void edit_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (sender.GetType() == typeof(TextBlock) && e.ClickCount == 1)
-                return;
-
-            UpdateTextBoxBindings();
-                
+        {           
             try
             {
+                if (sender.GetType() == typeof(TextBlock) && e.ClickCount == 1)
+                    return;
+
+                UpdateTextBoxBindings();
+
                 FrameworkElement img = (FrameworkElement)e.Source;
                 UISyncJobEntry entry  = (UISyncJobEntry)img.DataContext;
 
@@ -246,9 +273,12 @@ namespace OneSync.UI
                     entry.EditMode = true;
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //Do nothing.
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    showErrorMsg(ex.Message);
+                });
             }
         }
 
@@ -289,11 +319,21 @@ namespace OneSync.UI
 
                 if (!syncSourceProvider.DeleteSyncSourceInIntermediateStorage(entry.SyncJob.SyncSource))
                     throw new MetadataFileException("Metadata file might be missing or corrupted!!!");
-                    
+
+            }
+            catch (MetadataFileException mfe)
+            {
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    showErrorMsg(mfe.Message);
+                });
             }
             catch (Exception ex)
             {
-                showErrorMsg(ex.Message);
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    showErrorMsg(ex.Message);
+                });
             }
         }
 
@@ -416,9 +456,9 @@ namespace OneSync.UI
                     showErrorMsg("There is no log for this job currently.");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //Do nothing.
+                showErrorMsg(ex.Message);
             }
         }
 
@@ -516,9 +556,9 @@ namespace OneSync.UI
                 // Run sync
                 syncWorker.RunWorkerAsync(selectedEntries);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //Do nothing.
+                showErrorMsg(ex.Message);
             }
         }
 
@@ -552,6 +592,14 @@ namespace OneSync.UI
                 entry.SyncAgent.Synchronize(entry.SyncJob.SyncPreviewResult);
                 entry.Error = null;
             }
+            catch (MetadataFileException ex)
+            {
+                entry.Error = ex;
+                entry.ProgressBarValue = 100;
+                entry.ProgressBarColor = "Red";
+                entry.ProgressBarMessage = "Error Reported: " + ex.Message;
+                showErrorMsg(ex.Message);
+            }
             catch (Community.CsharpSqlite.SQLiteClient.SqliteSyntaxException ex)
             {
                 entry.Error = ex;
@@ -560,6 +608,10 @@ namespace OneSync.UI
                 string errorMsg = "Error Reported: " + ex.Message;
                 entry.ProgressBarMessage = errorMsg;
                 showErrorMsg(errorMsg);
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    showErrorMsg("Metadata file is missing or corrupted");
+                });                
             }
             catch (Exception ex)
             {
@@ -569,6 +621,10 @@ namespace OneSync.UI
                 string errorMsg = "Error Reported: " + ex.Message;
                 entry.ProgressBarMessage = errorMsg;
                 showErrorMsg(errorMsg);
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    showErrorMsg(ex.Message);
+                });    
             }
 
             if (syncWorker.CancellationPending)
@@ -622,8 +678,9 @@ namespace OneSync.UI
                     syncWorker.RunWorkerAsync(jobEntries);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                showErrorMsg(ex.Message);
             }
         }
 
