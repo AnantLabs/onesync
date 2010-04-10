@@ -278,7 +278,7 @@ namespace OneSync.UI
                     SyncClient.GetSyncSourceProvider(entry.IntermediaryStoragePath);
 
                 if (!syncSourceProvider.DeleteSyncSourceInIntermediateStorage(entry.SyncJob.SyncSource))
-                    throw new MetadataFileException("Metadata file might be mission or corrupted!!!");
+                    throw new MetadataFileException("Metadata file might be missing or corrupted!!!");
                     
             }
             catch (Exception ex)
