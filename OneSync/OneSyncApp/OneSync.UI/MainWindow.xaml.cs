@@ -337,18 +337,19 @@ namespace OneSync.UI
                 entry.SyncJob.Name = entry.NewJobName;
                 entry.SyncJob.IntermediaryStorage.Path = entry.NewIntermediaryStoragePath;
                 entry.SyncJob.SyncSource.Path = entry.NewSyncSource;
+                
                 jobManager.Update(entry.SyncJob);
                 entry.InfoChanged(); /* Force databinding to refresh */
 
                 if (!entry.SyncJob.IntermediaryStorage.Path.Equals(oldIStorage))
                 {
                     try
-                    {
+                    {                        
                         if (!Directory.Exists(oldIStorage) ||
                             !Files.FileUtils.MoveFolder(oldIStorage, entry.SyncJob.IntermediaryStorage.Path))
                             throw new Exception();
                     }
-                    catch (Exception) {
+                    catch (Exception ex) {
                         this.Dispatcher.Invoke((Action)delegate
                         {
                             showErrorMsg("Can't move file(s) to new intermediary storage location. Please do it manually");

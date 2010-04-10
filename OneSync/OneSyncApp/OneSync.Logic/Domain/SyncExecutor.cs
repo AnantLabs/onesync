@@ -163,7 +163,9 @@ namespace OneSync.Synchronization
                 if (!Files.FileUtils.Delete(absolutePathInSyncSource, true))
                     throw new Exception("Can't delete file " + absolutePathInSyncSource);
                 transaction.Commit();
-                //Files.FileUtils.DeleteFileAndFolderIfEmpty(job.SyncSource.Path, absolutePathInSyncSource, true);
+                Files.FileUtils.DeleteFileAndFolderIfEmpty(job.IntermediaryStorage.DirtyFolderPath, 
+                    job.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath
+                    , true);
             }
             catch (Exception)
             {
