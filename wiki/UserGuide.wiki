@@ -27,7 +27,7 @@ This guide gives you an opportunity to learn the core features of OneSync. Just 
 
 ===The OneSync Concepts===
 
-OneSync is working based on two important concepts. These are the two concepts that make OneSync different from other sync tools such as Live Mesh, Sync Toy and so on.
+OneSync is working based on two important concepts. These are the concepts that distinguish OneSync from other sync tools such as Live Mesh, Sync Toy and so on.
 
 The first concept is called the *Light-weight Sync*. OneSync tries to make optimal use of the intermediate storage. Hence, only your modified files will be uploaded to or downloaded from the intermediate storage. This will not only prevent storing duplicated copies of your files on the intermediate storage but also make the whole sync process faster.
 
