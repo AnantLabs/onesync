@@ -27,13 +27,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_938CED5A6F6FC60BB686E4B144BAB1D0"
+        "MsmKey" = "8:_6ACFB0F10014E1330113E9E759FBCFD4"
         "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_B42CAA86EB813D4711D00B5A82A25746"
+        "MsmKey" = "8:_6ACFB0F10014E1330113E9E759FBCFD4"
+        "OwnerKey" = "8:_AFC484BCCB68A0A0280E2EE6AD185C47"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_AFC484BCCB68A0A0280E2EE6AD185C47"
         "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -45,19 +51,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_ED93695F2D660F84D78704E47D04A799"
-        "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_ED93695F2D660F84D78704E47D04A799"
-        "OwnerKey" = "8:_B42CAA86EB813D4711D00B5A82A25746"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FF88D1FCC1F84143B1EADC788344A245"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -70,19 +70,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_B42CAA86EB813D4711D00B5A82A25746"
+        "OwnerKey" = "8:_AFC484BCCB68A0A0280E2EE6AD185C47"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_ED93695F2D660F84D78704E47D04A799"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_938CED5A6F6FC60BB686E4B144BAB1D0"
+        "OwnerKey" = "8:_6ACFB0F10014E1330113E9E759FBCFD4"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -258,20 +252,20 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_938CED5A6F6FC60BB686E4B144BAB1D0"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6ACFB0F10014E1330113E9E759FBCFD4"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:KtmIntegration, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Community.CsharpSqlite, Version=3.6.22.1, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_938CED5A6F6FC60BB686E4B144BAB1D0"
+                    "_6ACFB0F10014E1330113E9E759FBCFD4"
                     {
-                    "Name" = "8:KtmIntegration.dll"
+                    "Name" = "8:Community.CsharpSqlite.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:KtmIntegration.dll"
+            "SourcePath" = "8:Community.CsharpSqlite.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_E017F1941B1444CBBF2A995811C34F54"
@@ -289,14 +283,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B42CAA86EB813D4711D00B5A82A25746"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_AFC484BCCB68A0A0280E2EE6AD185C47"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Community.CsharpSqlite.SQLiteClient, Version=3.6.22.3, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
-                    "_B42CAA86EB813D4711D00B5A82A25746"
+                    "_AFC484BCCB68A0A0280E2EE6AD185C47"
                     {
                     "Name" = "8:Community.CsharpSqlite.SQLiteClient.dll"
                     "Attributes" = "3:512"
@@ -340,21 +334,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_ED93695F2D660F84D78704E47D04A799"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FF88D1FCC1F84143B1EADC788344A245"
             {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Community.CsharpSqlite, Version=3.6.22.1, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_ED93695F2D660F84D78704E47D04A799"
-                    {
-                    "Name" = "8:Community.CsharpSqlite.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Community.CsharpSqlite.dll"
-            "TargetName" = "8:"
+            "SourcePath" = "8:..\\OneSync.chm"
+            "TargetName" = "8:OneSync.chm"
             "Tag" = "8:"
             "Folder" = "8:_E017F1941B1444CBBF2A995811C34F54"
             "Condition" = "8:"
@@ -368,7 +351,7 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
         }
