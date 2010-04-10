@@ -23,7 +23,11 @@ namespace OneSync.Synchronization
     public delegate void SyncFileChangedHandler(object sender, SyncFileChangedEventArgs args);
     #endregion
 
-    public class FileSyncAgent
+
+    /// <summary>
+    /// 
+    /// </summary>    
+    public class FileSyncAgent 
     {
         #region Events
         public event SyncCompletedHandler SyncCompleted;
