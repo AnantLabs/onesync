@@ -68,10 +68,7 @@ namespace OneSync.UI
 
             // Configure the timer to check the Dropbox status
             timerDropbox = new DispatcherTimer();
-            timerDropbox.Tick += new EventHandler(delegate(object s, EventArgs e)
-                {
-                    dropboxStatusChecking();
-                });
+            timerDropbox.Tick += new EventHandler((sender, e) => dropboxStatusChecking());
             timerDropbox.Interval = TimeSpan.FromMilliseconds(1000);
 
             // Set-up data bindings
