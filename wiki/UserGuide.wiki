@@ -90,7 +90,8 @@ The following diagram describes some of the things that you will see when you cl
 [http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot3.jpg]
 
  # *Skip* - Skip syncing certain files.
- # *Filter* - Filter the sync action that will be carried out.
+ # *Filter by Action* - Choose one from the list and the preview will only show the corresponding actions.
+ # *Filter by Search* - The preview will show files whose names match the text in the box.
  # *Conflict Resolution* - The way to resolve conflicts, if any.
  # *Done* - Save and close the window.
 
