@@ -208,6 +208,7 @@
     <Content Include="OneSync.Lib\Community.CsharpSqlite.dll" />
     <Content Include="OneSync.Lib\Community.CsharpSqlite.SQLiteClient.dll" />
     <Content Include="OneSync.Lib\FSync.Files.dll" />
+    <Resource Include="OneSync.UI\Resource\OneSyncHelp.png" />
     <Resource Include="OneSync.UI\Resource\save.png" />
     <Resource Include="OneSync.UI\Resource\delete.png" />
     <Resource Include="OneSync.UI\Resource\edit.png" />

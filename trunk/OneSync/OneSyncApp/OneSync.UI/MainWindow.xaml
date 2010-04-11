@@ -241,6 +241,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			<Label Grid.Row="3" x:Name="lblSyncJobName" Style="{StaticResource blueBoldLabel}" Content="" Margin="237.217,34.015,104,0" VerticalAlignment="Top" Height="25.99"/>
 			<Label Grid.Row="3" x:Name="lblStatus" Content="" FontSize="10.667" Margin = "130.398,69.251,54.602,47.763" />
 			<Label Grid.Row="3" x:Name="lblSubStatus" Content=""  FontSize="10.667" Margin = "130.398,0,54.602,33" VerticalAlignment="Bottom" Height="24.739" />
+			<Image x:Name="btnHelp" HorizontalAlignment="Right" Margin="0,0,0,12" Width="18" Source="Resource/OneSyncHelp.png" RenderTransformOrigin="1.278,0.611" Cursor="Hand" ToolTip="Help" MouseDown="btnHelp_MouseDown"/>
 		</Grid>
 	</Grid>
 </Window>
