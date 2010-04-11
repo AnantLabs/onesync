@@ -73,7 +73,10 @@ namespace OneSync.UI
             timerDropbox.Interval = TimeSpan.FromMilliseconds(1000);
 
             _SyncJobEntries.CollectionChanged += (sender, e) => refreshCombobox();
-
+			
+			// Do not show the help button if the help file is not there
+			if (!File.Exists(STARTUP_PATH + @"\OneSync.chm"))
+               	btnHelp.Visibility = Visibility.Hidden;
 
             // Set-up data bindings
             listAllSyncJobs.ItemsSource = this.SyncJobEntries;
@@ -946,6 +949,15 @@ namespace OneSync.UI
                 btnSyncStatic.Visibility = Visibility.Visible;
                 txtBlkProceed.Text = "Sync Selected Jobs";
             }
+        }
+
+        private void btnHelp_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+        	showErrorMsg("");
+			if (File.Exists(STARTUP_PATH + @"\OneSync.chm"))
+          		Process.Start(STARTUP_PATH + @"\OneSync.chm");
+			else
+				showErrorMsg("The offline help file is not available");
         }
 
 	}
