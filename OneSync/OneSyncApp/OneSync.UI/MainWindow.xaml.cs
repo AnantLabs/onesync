@@ -326,19 +326,7 @@ namespace OneSync.UI
             {
                 showErrorMsg(errorMsg);
                 return false;
-            }
-
-            try
-            {
-                if (!Directory.Exists(intStorage))
-                    Directory.CreateDirectory(intStorage);
-            }
-            catch (Exception)
-            {
-                showErrorMsg("Unable to create directory " + intStorage);
-                return false;
-            }
-            
+            }            
 
             errorMsg = Validator.validateSyncDirs(syncSource, intStorage);
             if (errorMsg != null)
@@ -580,7 +568,7 @@ namespace OneSync.UI
 
                 this.Dispatcher.Invoke((Action)delegate
                 {
-                    string errorMsg = "Error Reported: " + ex.Message;
+                    string errorMsg = "The data.md file of sync job " + entry.JobName + " is believed to be missing. Please check your intermediate storage folder";
                     entry.ProgressBarMessage = errorMsg;
                     showErrorMsg(errorMsg);
                 });   
@@ -593,7 +581,7 @@ namespace OneSync.UI
                 
                 this.Dispatcher.Invoke((Action)delegate
                 {
-                    string errorMsg = "Error Reported: " + ex.Message;
+                    string errorMsg = "The data.md file is missing or corrupted. Please delete this job: " + entry.JobName;
                     entry.ProgressBarMessage = errorMsg;
                     showErrorMsg(errorMsg);
                 });                
@@ -605,7 +593,7 @@ namespace OneSync.UI
                 entry.ProgressBarValue = 100;
                 entry.ProgressBarColor = "Red";
                 if (ex.GetType() == typeof(OutOfDiskSpaceException))
-                    errorMsg = "Not enough space in intermediate storage: " + entry.IntermediaryStoragePath;
+                    errorMsg = "Not enough space in intermediate storage: " + entry.IntermediaryStoragePath + ". So job " + entry.JobName + " cannot be completed. Please use a bigger drive for this job";
                 else
                     errorMsg = "Error Reported: " + ex.Message;
                 this.Dispatcher.Invoke((Action)delegate
@@ -779,7 +767,7 @@ namespace OneSync.UI
             }
             catch (Exception)
             {
-                showErrorMsg("Error loading profiles.");
+                showErrorMsg("We have problem loading the sync jobs. Please delete the data.md file from " + STARTUP_PATH);
             }
         }
 

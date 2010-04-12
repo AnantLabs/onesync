@@ -189,6 +189,10 @@ namespace OneSync.Synchronization
                     }                      
                 }
             }
+            catch (OutOfDiskSpaceException)
+            {
+                throw;
+            }
             catch (Exception){}
             finally
             {
