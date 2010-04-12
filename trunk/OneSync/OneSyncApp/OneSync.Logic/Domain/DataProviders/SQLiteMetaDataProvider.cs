@@ -26,11 +26,6 @@ namespace OneSync.Synchronization
         public SQLiteMetaDataProvider(string storagePath, string rootPath)
             : base(storagePath, rootPath)
         {
-            // Create database schema if necessary
-            /*
-            FileInfo fi = new FileInfo(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
-            if (!fi.Exists) { fi.Directory.Create(); }
-             */
         }
 
         #region Load Metadata
@@ -48,26 +43,27 @@ namespace OneSync.Synchronization
         public override FileMetaData LoadFileMetadata(string currId, SourceOption option)
         {
             string opt = (option == SourceOption.SOURCE_ID_NOT_EQUALS) ? " <> " : " = ";
-            FileMetaData mData = new FileMetaData(currId, this.RootPath);
+            var mData = new FileMetaData(currId, this.RootPath);
 
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
+            var db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
-                string cmdText = "SELECT * FROM " + Configuration.TBL_METADATA +
-                                 " WHERE " + Configuration.COL_SOURCE_ID + opt + " @sourceId";
+                string cmdText = string.Format("SELECT * FROM {0} WHERE {1}{2} @sourceId", Configuration.TBL_METADATA, Configuration.COL_SOURCE_ID, opt);
 
-                SqliteParameterCollection paramList = new SqliteParameterCollection();
-                paramList.Add(new SqliteParameter("@sourceId", DbType.String) { Value = currId });
+                var paramList = new SqliteParameterCollection
+                                                          {
+                                                              new SqliteParameter("@sourceId", DbType.String)
+                                                                  {Value = currId}
+                                                          };
 
-                db.ExecuteReader(cmdText, paramList, reader =>
-                {
-                    mData.MetaDataItems.Add(new FileMetaDataItem(
-                        (string)reader[Configuration.COL_SOURCE_ID],
-                        this.RootPath + (string)reader[Configuration.COL_RELATIVE_PATH], (string)reader[Configuration.COL_RELATIVE_PATH],
-                        (string)reader[Configuration.COL_HASH_CODE], (DateTime)reader[Configuration.COL_LAST_MODIFIED_TIME],
-                        Convert.ToUInt32(reader[Configuration.COL_NTFS_ID1]), Convert.ToUInt32(reader[Configuration.COL_NTFS_ID2])));
-                }
-                );
+                db.ExecuteReader(cmdText, paramList, reader => mData.MetaDataItems.Add(new FileMetaDataItem(
+                                                                                           (string) reader[Configuration.COL_SOURCE_ID],
+                                                                                           this.RootPath + (string) reader[Configuration.COL_RELATIVE_PATH],
+                                                                                           (string) reader[Configuration.COL_RELATIVE_PATH],
+                                                                                           (string) reader[Configuration.COL_HASH_CODE],
+                                                                                           (DateTime) reader[Configuration.COL_LAST_MODIFIED_TIME],
+                                                                                           Convert.ToUInt32(reader[Configuration.COL_NTFS_ID1]),
+                                                                                           Convert.ToUInt32(reader[Configuration.COL_NTFS_ID2]))));
             }
             return mData;
         }
@@ -75,32 +71,22 @@ namespace OneSync.Synchronization
         public override FolderMetadata LoadFolderMetadata(string currId, SourceOption option)
         {
             string opt = (option == SourceOption.SOURCE_ID_NOT_EQUALS) ? " <> " : " = ";
-            FolderMetadata folderMetadata = new FolderMetadata(currId, this.RootPath);
+            var folderMetadata = new FolderMetadata(currId, this.RootPath);
 
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
+            var db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 string cmdText = "SELECT * FROM " + Configuration.TLB_FOLDERMETADATA +
                     " WHERE " + Configuration.COL_SOURCE_ID + opt + " @sourceId";
-                SqliteParameterCollection paramList = new SqliteParameterCollection();
-                paramList.Add(new SqliteParameter("@sourceId", DbType.String) { Value = currId });
-                db.ExecuteReader(cmdText, paramList, reader =>
-                {
-                    folderMetadata.FolderMetadataItems.Add(
-                        new FolderMetadataItem(
-                            (string)reader[Configuration.COL_SOURCE_ID],
-                            (string)reader[Configuration.COL_FOLDER_RELATIVE_PATH]));
-                }
-                );
+                var paramList = new SqliteParameterCollection
+                                    {new SqliteParameter("@sourceId", DbType.String) {Value = currId}};
+                db.ExecuteReader(cmdText, paramList, reader => folderMetadata.FolderMetadataItems.Add(
+                                                                   new FolderMetadataItem(
+                                                                       (string)reader[Configuration.COL_SOURCE_ID],
+                                                                       (string)reader[Configuration.COL_FOLDER_RELATIVE_PATH])));
             }
             return folderMetadata;
         }
-
-
-
-
-
-
         #endregion Load Metadata
 
         #region Add Metadata
@@ -117,21 +103,21 @@ namespace OneSync.Synchronization
         /// <returns></returns>
         public bool Add(IList<FolderMetadataItem> folders)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            var db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
-                SqliteTransaction trasaction = (SqliteTransaction)con.BeginTransaction();
+                var trasaction = (SqliteTransaction)con.BeginTransaction();
                 try
                 {
+                    string cmdText = string.Format("INSERT INTO {0}( {1},{2})VALUES (@source_id , @relative_path)", Configuration.TLB_FOLDERMETADATA, Configuration.COL_SOURCE_ID, Configuration.COL_FOLDER_RELATIVE_PATH);
                     foreach (FolderMetadataItem item in folders)
                     {
-                        string cmdText = "INSERT INTO " + Configuration.TLB_FOLDERMETADATA +
-                                     "( " + Configuration.COL_SOURCE_ID + "," + Configuration.COL_FOLDER_RELATIVE_PATH + ")" +
-                                     "VALUES (@source_id , @relative_path)";
-
-                        SqliteParameterCollection paramList = new SqliteParameterCollection();
-                        paramList.Add(new SqliteParameter("@source_id", DbType.String) { Value = item.SourceId });
-                        paramList.Add(new SqliteParameter("@relative_path", DbType.String) { Value = item.RelativePath });
+                        var paramList = new SqliteParameterCollection
+                                            {
+                                                new SqliteParameter("@source_id", DbType.String) {Value = item.SourceId},
+                                                new SqliteParameter("@relative_path", DbType.String)
+                                                    {Value = item.RelativePath}
+                                            };
                         db.ExecuteNonQuery(cmdText, paramList);
                     }
                     trasaction.Commit();
@@ -154,14 +140,14 @@ namespace OneSync.Synchronization
         /// <returns></returns>
         public bool Add(IList<FolderMetadataItem> folders, SqliteConnection con)
         {
+            const string cmdText = "INSERT INTO " + Configuration.TLB_FOLDERMETADATA +
+                                   "( " + Configuration.COL_SOURCE_ID + "," + Configuration.COL_FOLDER_RELATIVE_PATH + ")" +
+                                   "VALUES (@source_id , @relative_path)";
             try
             {
                 foreach (FolderMetadataItem item in folders)
                 {
-                    string cmdText = "INSERT INTO " + Configuration.TLB_FOLDERMETADATA +
-                                     "( " + Configuration.COL_SOURCE_ID + "," + Configuration.COL_FOLDER_RELATIVE_PATH + ")" +
-                                     "VALUES (@source_id , @relative_path)";
-                    using (SqliteCommand cmd = new SqliteCommand(cmdText, con))
+                    using (var cmd = new SqliteCommand(cmdText, con))
                     {
                         cmd.Parameters.Add(new SqliteParameter("@source_id", DbType.String) { Value = item.SourceId });
                         cmd.Parameters.Add(new SqliteParameter("@relative_path", DbType.String) { Value = item.RelativePath });
@@ -181,29 +167,32 @@ namespace OneSync.Synchronization
         /// <returns></returns>
         public override bool Add(IList<FileMetaDataItem> mData)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            var db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
-                SqliteTransaction trasaction = (SqliteTransaction)con.BeginTransaction();
+                var trasaction = (SqliteTransaction)con.BeginTransaction();
                 try
                 {
+                    const string cmdText = "INSERT INTO " + Configuration.TBL_METADATA +
+                                           "( " + Configuration.COL_SOURCE_ID + "," + Configuration.COL_RELATIVE_PATH + "," +
+                                           Configuration.COL_HASH_CODE + "," +
+                                           Configuration.COL_LAST_MODIFIED_TIME + "," +
+                                           Configuration.COL_NTFS_ID1 + "," +
+                                           Configuration.COL_NTFS_ID2 + ")" +
+                                           "VALUES (@source_id , @relative_path, @hash_code, @last_modified_time, @ntfs_id1, @ntfs_id2) ";
                     foreach (FileMetaDataItem item in mData)
                     {
-                        string cmdText = "INSERT INTO " + Configuration.TBL_METADATA +
-                                     "( " + Configuration.COL_SOURCE_ID + "," + Configuration.COL_RELATIVE_PATH + "," +
-                                     Configuration.COL_HASH_CODE + "," +
-                                     Configuration.COL_LAST_MODIFIED_TIME + "," +
-                                     Configuration.COL_NTFS_ID1 + "," +
-                                     Configuration.COL_NTFS_ID2 + ")" +
-                                     "VALUES (@source_id , @relative_path, @hash_code, @last_modified_time, @ntfs_id1, @ntfs_id2) ";
-
-                        SqliteParameterCollection paramList = new SqliteParameterCollection();
-                        paramList.Add(new SqliteParameter("@source_id", DbType.String) { Value = item.SourceId });
-                        paramList.Add(new SqliteParameter("@relative_path", DbType.String) { Value = item.RelativePath });
-                        paramList.Add(new SqliteParameter("@hash_code", DbType.String) { Value = item.HashCode });
-                        paramList.Add(new SqliteParameter("@last_modified_time", DbType.DateTime) { Value = item.LastModifiedTime });
-                        paramList.Add(new SqliteParameter("@ntfs_id1", DbType.Int32) { Value = item.NTFS_ID1 });
-                        paramList.Add(new SqliteParameter("@ntfs_id2", DbType.Int32) { Value = item.NTFS_ID2 });
+                        var paramList = new SqliteParameterCollection
+                                            {
+                                                new SqliteParameter("@source_id", DbType.String) {Value = item.SourceId},
+                                                new SqliteParameter("@relative_path", DbType.String)
+                                                    {Value = item.RelativePath},
+                                                new SqliteParameter("@hash_code", DbType.String) {Value = item.HashCode},
+                                                new SqliteParameter("@last_modified_time", DbType.DateTime)
+                                                    {Value = item.LastModifiedTime},
+                                                new SqliteParameter("@ntfs_id1", DbType.Int32) {Value = item.NTFS_ID1},
+                                                new SqliteParameter("@ntfs_id2", DbType.Int32) {Value = item.NTFS_ID2}
+                                            };
 
                         db.ExecuteNonQuery(cmdText, paramList);
                     }
@@ -215,7 +204,6 @@ namespace OneSync.Synchronization
                     return false;
                 }
             }
-
             return true;
         }
 
@@ -228,18 +216,18 @@ namespace OneSync.Synchronization
         /// <returns></returns>
         public bool Add(IList<FileMetaDataItem> mData, SqliteConnection con)
         {
+            const string cmdText = "INSERT INTO " + Configuration.TBL_METADATA +
+                                   "( " + Configuration.COL_SOURCE_ID + "," + Configuration.COL_RELATIVE_PATH + "," +
+                                   Configuration.COL_HASH_CODE + "," +
+                                   Configuration.COL_LAST_MODIFIED_TIME + "," +
+                                   Configuration.COL_NTFS_ID1 + "," +
+                                   Configuration.COL_NTFS_ID2 + ")" +
+                                   "VALUES (@source_id , @relative_path, @hash_code, @last_modified_time, @ntfs_id1, @ntfs_id2) ";
             try
             {
                 foreach (FileMetaDataItem item in mData)
                 {
-                    string cmdText = "INSERT INTO " + Configuration.TBL_METADATA +
-                                     "( " + Configuration.COL_SOURCE_ID + "," + Configuration.COL_RELATIVE_PATH + "," +
-                                     Configuration.COL_HASH_CODE + "," +
-                                     Configuration.COL_LAST_MODIFIED_TIME + "," +
-                                     Configuration.COL_NTFS_ID1 + "," +
-                                     Configuration.COL_NTFS_ID2 + ")" +
-                                     "VALUES (@source_id , @relative_path, @hash_code, @last_modified_time, @ntfs_id1, @ntfs_id2) ";
-                    using (SqliteCommand cmd = new SqliteCommand(cmdText, con))
+                    using (var cmd = new SqliteCommand(cmdText, con))
                     {
                         cmd.Parameters.Add(new SqliteParameter("@source_id", DbType.String) { Value = item.SourceId });
                         cmd.Parameters.Add(new SqliteParameter("@relative_path", DbType.String) { Value = item.RelativePath });
@@ -250,7 +238,6 @@ namespace OneSync.Synchronization
                         cmd.ExecuteNonQuery();
                     }
                 }
-
             }
             catch (Exception)
             {
@@ -270,23 +257,25 @@ namespace OneSync.Synchronization
         public override bool Delete(IList<FileMetaDataItem> items)
         {
             // All deletions are atomic
+            const string cmdText = "DELETE FROM " + Configuration.TBL_METADATA +
+                                   " WHERE " + Configuration.COL_SOURCE_ID + " = @sourceId AND " +
+                                   Configuration.COL_RELATIVE_PATH + " = @path";
 
-            SQLiteAccess dbAccess = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            var dbAccess = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
 
             using (SqliteConnection con = dbAccess.NewSQLiteConnection())
             {
-                SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
+                var transaction = (SqliteTransaction)con.BeginTransaction();
+                
                 try
                 {
                     foreach (FileMetaDataItem item in items)
                     {
-                        string cmdText = "DELETE FROM " + Configuration.TBL_METADATA +
-                                          " WHERE " + Configuration.COL_SOURCE_ID + " = @sourceId AND " +
-                                          Configuration.COL_RELATIVE_PATH + " = @path";
-
-                        SqliteParameterCollection paramList = new SqliteParameterCollection();
-                        paramList.Add(new SqliteParameter("@sourceId", DbType.String) { Value = item.SourceId });
-                        paramList.Add(new SqliteParameter("@path", DbType.String) { Value = item.RelativePath });
+                        var paramList = new SqliteParameterCollection
+                                            {
+                                                new SqliteParameter("@sourceId", DbType.String) {Value = item.SourceId},
+                                                new SqliteParameter("@path", DbType.String) {Value = item.RelativePath}
+                                            };
                         dbAccess.ExecuteNonQuery(cmdText, paramList);
                     }
                     transaction.Commit();
@@ -294,11 +283,9 @@ namespace OneSync.Synchronization
                 catch (Exception)
                 {
                     transaction.Rollback();
-                    // Log error??
                     return false;
                 }
             }
-
             return true;
         }
 
@@ -310,20 +297,19 @@ namespace OneSync.Synchronization
         /// <returns></returns>
         public bool Delete(IList<FileMetaDataItem> items, SqliteConnection con)
         {
+            const string cmdText = "DELETE FROM " + Configuration.TBL_METADATA +
+                                   " WHERE " + Configuration.COL_SOURCE_ID + " = @sourceId AND " +
+                                   Configuration.COL_RELATIVE_PATH + " = @path";
+
             try
             {
                 foreach (FileMetaDataItem item in items)
-                {
-                    string cmdText = "DELETE FROM " + Configuration.TBL_METADATA +
-                                          " WHERE " + Configuration.COL_SOURCE_ID + " = @sourceId AND " +
-                                          Configuration.COL_RELATIVE_PATH + " = @path";
-                    using (SqliteCommand cmd = new SqliteCommand(cmdText, con))
+                    using (var cmd = new SqliteCommand(cmdText, con))
                     {
-                        cmd.Parameters.Add(new SqliteParameter("@sourceId", DbType.String) { Value = item.SourceId });
-                        cmd.Parameters.Add(new SqliteParameter("@path", DbType.String) { Value = item.RelativePath });
+                        cmd.Parameters.Add(new SqliteParameter("@sourceId", DbType.String) {Value = item.SourceId});
+                        cmd.Parameters.Add(new SqliteParameter("@path", DbType.String) {Value = item.RelativePath});
                         cmd.ExecuteNonQuery();
                     }
-                }
             }
             catch (Exception)
             { return false; }
@@ -333,23 +319,24 @@ namespace OneSync.Synchronization
         public bool Delete(IList<FolderMetadataItem> items)
         {
             // All deletions are atomic
+            const string cmdText = "DELETE FROM " + Configuration.TLB_FOLDERMETADATA +
+                                   " WHERE " + Configuration.COL_SOURCE_ID + " = @sourceId AND " +
+                                   Configuration.COL_RELATIVE_PATH + " = @path";
 
-            SQLiteAccess dbAccess = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            var dbAccess = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
 
             using (SqliteConnection con = dbAccess.NewSQLiteConnection())
             {
-                SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
+                var transaction = (SqliteTransaction)con.BeginTransaction();
                 try
                 {
                     foreach (FolderMetadataItem item in items)
                     {
-                        string cmdText = "DELETE FROM " + Configuration.TLB_FOLDERMETADATA +
-                                          " WHERE " + Configuration.COL_SOURCE_ID + " = @sourceId AND " +
-                                          Configuration.COL_RELATIVE_PATH + " = @path";
-
-                        SqliteParameterCollection paramList = new SqliteParameterCollection();
-                        paramList.Add(new SqliteParameter("@sourceId", DbType.String) { Value = item.SourceId });
-                        paramList.Add(new SqliteParameter("@path", DbType.String) { Value = item.RelativePath });
+                        var paramList = new SqliteParameterCollection
+                                            {
+                                                new SqliteParameter("@sourceId", DbType.String) {Value = item.SourceId},
+                                                new SqliteParameter("@path", DbType.String) {Value = item.RelativePath}
+                                            };
                         dbAccess.ExecuteNonQuery(cmdText, paramList);
                     }
                     transaction.Commit();
@@ -357,25 +344,22 @@ namespace OneSync.Synchronization
                 catch (Exception)
                 {
                     transaction.Rollback();
-                    // Log error??
                     return false;
                 }
             }
-
             return true;
         }
 
         public bool Delete(IList<FolderMetadataItem> items, SqliteConnection con)
         {
+            const string cmdText = "DELETE FROM " + Configuration.TLB_FOLDERMETADATA +
+                                   " WHERE " + Configuration.COL_SOURCE_ID + " = @sourceId AND " +
+                                   Configuration.COL_RELATIVE_PATH + " = @path";
             try
             {
                 foreach (FolderMetadataItem item in items)
                 {
-                    string cmdText = "DELETE FROM " + Configuration.TLB_FOLDERMETADATA +
-                                          " WHERE " + Configuration.COL_SOURCE_ID + " = @sourceId AND " +
-                                          Configuration.COL_RELATIVE_PATH + " = @path";
-
-                    using (SqliteCommand cmd = new SqliteCommand(cmdText, con))
+                    using (var cmd = new SqliteCommand(cmdText, con))
                     {
                         cmd.Parameters.Add(new SqliteParameter("@sourceId", DbType.String) { Value = item.SourceId });
                         cmd.Parameters.Add(new SqliteParameter("@path", DbType.String) { Value = item.RelativePath });
@@ -387,12 +371,7 @@ namespace OneSync.Synchronization
             { return false; }
             return true;
         }
-
         #endregion Delete metadata
-
-
-
-
 
         #region Update Metadata
         /// <summary>
@@ -403,10 +382,10 @@ namespace OneSync.Synchronization
         /// <returns></returns>
         public override bool Update(Metadata oldMetadata, Metadata newMetada)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            var db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
-                SqliteTransaction trasaction = (SqliteTransaction)con.BeginTransaction();
+                var trasaction = (SqliteTransaction)con.BeginTransaction();
                 // TODO: make 3 actions atomic
                 try
                 {
@@ -428,20 +407,18 @@ namespace OneSync.Synchronization
         /// <summary>
         /// Update folder metadata
         /// </summary>
-        /// <param name="oldItems"></param>
-        /// <param name="newItems"></param>
         /// <returns></returns>
         private bool UpdateFolderMetadata(FolderMetadata oldMetadata, FolderMetadata newMetadata, SqliteConnection con)
         {
             //Find the metadata items that in the current folder only
-            IEnumerable<FolderMetadataItem> newOnly = from _new in newMetadata.FolderMetadataItems
-                                                      where !oldMetadata.FolderMetadataItems.Contains(_new, new FolderMetadataItemComparer())
-                                                      select _new;
+            IEnumerable<FolderMetadataItem> newOnly =
+                newMetadata.FolderMetadataItems.Where(
+                    @new => !oldMetadata.FolderMetadataItems.Contains(@new, new FolderMetadataItemComparer()));
 
             //find metadata items that not in the current folder but metadata store
-            IEnumerable<FolderMetadataItem> oldOnly = from _old in oldMetadata.FolderMetadataItems
-                                                      where !newMetadata.FolderMetadataItems.Contains(_old, new FolderMetadataItemComparer())
-                                                      select _old;
+            IEnumerable<FolderMetadataItem> oldOnly =
+                oldMetadata.FolderMetadataItems.Where(
+                    old => !newMetadata.FolderMetadataItems.Contains(old, new FolderMetadataItemComparer()));
             try
             {
                 this.Add(newOnly.ToList(), con);
@@ -460,19 +437,19 @@ namespace OneSync.Synchronization
             newMetadata.FolderMetadataItems.ToList().Sort(new FolderMetadataItemComparer());
 
             //Find the metadata items that in the current folder only
-            IEnumerable<FolderMetadataItem> newOnly = from _new in newMetadata.FolderMetadataItems
-                                                      where !oldMetadata.FolderMetadataItems.Contains(_new, new FolderMetadataItemComparer())
-                                                      select _new;
+            IEnumerable<FolderMetadataItem> newOnly =
+                newMetadata.FolderMetadataItems.Where(
+                    @new => !oldMetadata.FolderMetadataItems.Contains(@new, new FolderMetadataItemComparer()));
 
             //find metadata items that not in the current folder but metadata store
-            IEnumerable<FolderMetadataItem> oldOnly = from _old in oldMetadata.FolderMetadataItems
-                                                      where !newMetadata.FolderMetadataItems.Contains(_old, new FolderMetadataItemComparer())
-                                                      select _old;
+            IEnumerable<FolderMetadataItem> oldOnly =
+                oldMetadata.FolderMetadataItems.Where(
+                    old => !newMetadata.FolderMetadataItems.Contains(old, new FolderMetadataItemComparer()));
 
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
-            using (SqliteConnection con = db.NewSQLiteConnection())
+            var db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            using (var con = db.NewSQLiteConnection())
             {
-                SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
+                var transaction = (SqliteTransaction)con.BeginTransaction();
                 try
                 {
                     this.Add(newOnly.ToList(), con);
@@ -485,23 +462,20 @@ namespace OneSync.Synchronization
                     return false;
                 }
             }
-
             return true;
         }
 
 
         public bool Update(IList<FileMetaDataItem> items, SqliteConnection con)
         {
+            string cmdText = string.Format("UPDATE {0} SET {1} = @hash, {2} = @lmf WHERE {3} = @rel AND {4} = @sourceId",
+                                           Configuration.TBL_METADATA, Configuration.COL_HASH_CODE,
+                                           Configuration.COL_LAST_MODIFIED_TIME, Configuration.COL_RELATIVE_PATH, Configuration.COL_SOURCE_ID);
             try
             {
                 foreach (FileMetaDataItem item in items)
                 {
-                    string cmdText = "UPDATE " + Configuration.TBL_METADATA +
-                                         " SET " + Configuration.COL_HASH_CODE + " = @hash, " +
-                                         Configuration.COL_LAST_MODIFIED_TIME + " = @lmf" +
-                                         " WHERE " + Configuration.COL_RELATIVE_PATH + " = @rel AND " +
-                                         Configuration.COL_SOURCE_ID + " = @sourceId";
-                    using (SqliteCommand cmd = new SqliteCommand(cmdText, con))
+                    using (var cmd = new SqliteCommand(cmdText, con))
                     {
                         cmd.Parameters.Add(new SqliteParameter("@hash", DbType.String) { Value = item.HashCode });
                         cmd.Parameters.Add(new SqliteParameter("@lmf", DbType.DateTime) { Value = item.LastModifiedTime });
@@ -526,21 +500,20 @@ namespace OneSync.Synchronization
 
             //Get newly created items by comparing relative paths
             //newOnly is metadata item in current metadata but not in old one
-            IEnumerable<FileMetaDataItem> newOnly = from _new in newMetadata.MetaDataItems
-                                                    where !oldMetadata.MetaDataItems.Contains(_new, new FileMetaDataItemComparer())
-                                                    select _new;
+            IEnumerable<FileMetaDataItem> newOnly =
+                newMetadata.MetaDataItems.Where(
+                    @new => !oldMetadata.MetaDataItems.Contains(@new, new FileMetaDataItemComparer()));
 
             //Get deleted items           
-            IEnumerable<FileMetaDataItem> oldOnly = from old in oldMetadata.MetaDataItems
-                                                    where !newMetadata.MetaDataItems.Contains(old, new FileMetaDataItemComparer())
-                                                    select old;
+            IEnumerable<FileMetaDataItem> oldOnly =
+                oldMetadata.MetaDataItems.Where(
+                    old => !newMetadata.MetaDataItems.Contains(old, new FileMetaDataItemComparer()));
 
             //get the items from 2 metadata with same relative paths but different hashes.
-            IEnumerable<FileMetaDataItem> bothModified = from _new in newMetadata.MetaDataItems
-                                                         from old in oldMetadata.MetaDataItems
-                                                         where _new.RelativePath.Equals((old).RelativePath)
-                                                         && !_new.HashCode.Equals(old.HashCode)
-                                                         select _new;
+            IEnumerable<FileMetaDataItem> bothModified = newMetadata.MetaDataItems.SelectMany(
+                @new => oldMetadata.MetaDataItems, (@new, old) => new {@new, old}).Where(
+                @t => @t.@new.RelativePath.Equals((@t.old).RelativePath)
+                      && !@t.@new.HashCode.Equals(@t.old.HashCode)).Select(@t => @t.@new);
 
             try
             {
