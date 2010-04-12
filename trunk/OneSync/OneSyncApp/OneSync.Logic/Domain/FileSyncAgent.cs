@@ -170,9 +170,7 @@ namespace OneSync.Synchronization
                         else if (action.ChangeType == ChangeType.DELETED || action.ChangeType == ChangeType.RENAMED)
                         {
                             OnSyncFileChanged(new SyncFileChangedEventArgs(ChangeType.DELETED, action.RelativeFilePath));
-                            actProvider.Add(action);
-
-                            workItem++;
+                            actProvider.Add(action);                           
                             OnProgressChanged(new SyncProgressChangedEventArgs(workItem, totalWorkItems));
                         }
                         else SyncExecutor.UpdateTableAction(action, _job);
