@@ -26,14 +26,16 @@
 				<RowDefinition Height="42"/>
 			</Grid.RowDefinitions>
 			<TextBlock Foreground="Blue" FontSize="14" Text="Sync Preview" />
+			<TextBlock x:Name="txtError" HorizontalAlignment="Right" Foreground="#FFB90000" FontSize="10.667" FontStyle="Italic" FontWeight="Bold" Text="Error" Visibility="hidden" />
 			<Grid Grid.Row="1" d:LayoutOverrides="Height">
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="40"/>
+					<ColumnDefinition Width="65"/>
 					<ColumnDefinition Width="150"/>
+					<ColumnDefinition Width="60"/>
 					<ColumnDefinition Width="150"/>
 					<ColumnDefinition Width="Auto"/>
 				</Grid.ColumnDefinitions>
-				<TextBlock FontSize="12" Text="Filter" VerticalAlignment="Center" />
+				<TextBlock FontSize="12" Text="Filter Type:" VerticalAlignment="Center" />
 				<ComboBox Margin="0,0,10,0" SelectedIndex="0" Grid.Column="1" x:Name="cmbFilter" Height="21.96" SelectionChanged="cmbFilter_SelectionChanged">
 					<ComboBoxItem Content="Show All"/>
 					<ComboBoxItem Content="Conflict Files"/>
@@ -41,7 +43,8 @@
 					<ComboBoxItem Content="Delete Only"/>
 					<ComboBoxItem Content="Rename Only"/>
 				</ComboBox>
-				<TextBox Grid.Column="2" Foreground="#FF808080" x:Name="txtFilter" Height="21.96" TextChanged="txtFilter_TextChanged" GotFocus="txtFilter_GotFocus"/>
+				<TextBlock Grid.Column="2" FontSize="12" Text="Filter Text:" VerticalAlignment="Center" />
+				<TextBox Grid.Column="3" Foreground="#FF808080" x:Name="txtFilter" Height="21.96" TextChanged="txtFilter_TextChanged" GotFocus="txtFilter_GotFocus"/>
 			</Grid>
 			<ProgressBar x:Name="pb" Margin="0,16.266,45.26,8" Grid.Row="3" IsIndeterminate="True" Visibility="Hidden"/>
 			<TextBlock HorizontalAlignment="Right" Margin="0,16.266,8,8" Text="Done" Grid.Row="3" x:Name="txtBlkDone" TextDecorations="Underline" FontSize="13.333" Cursor="Hand" Foreground="#FF0000B9" FontWeight="Bold"  MouseDown="txtBlkDone_MouseDown" d:LayoutOverrides="Height"/>

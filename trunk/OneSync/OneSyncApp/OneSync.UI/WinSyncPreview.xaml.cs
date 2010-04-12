@@ -7,6 +7,7 @@ using OneSync.Synchronization;
 using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel;
+using System.IO;
 
 namespace OneSync.UI
 {
@@ -34,7 +35,10 @@ namespace OneSync.UI
 
             if (tbManager != null) tbManager.SetProgressState(TaskbarProgressBarState.Indeterminate);
             pb.Visibility = Visibility.Visible;
-            previewWorker.RunWorkerAsync();
+
+            // Check job parameters
+            if (jobValid(_job))
+                previewWorker.RunWorkerAsync();
 		}
 
         void previewWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -50,14 +54,27 @@ namespace OneSync.UI
 
         }
 
+        private bool jobValid(SyncJob job)
+        {
+            if (!Directory.Exists(job.IntermediaryStorage.Path))
+            {
+                showErrorMsg("Intermediary storage path: \"" + job.IntermediaryStorage.Path +
+                             "\" not found.");
+                return false;
+            }
+            return true;
+        }
+
         void previewWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            if (tbManager != null) tbManager.SetProgressState(TaskbarProgressBarState.NoProgress);
+            pb.Visibility = Visibility.Hidden;
+
 			previewUIUpdate(true);
+
             if (e.Error != null)
             {
-                // Log error
-                if (tbManager != null) tbManager.SetProgressState(TaskbarProgressBarState.NoProgress);
-                pb.Visibility = Visibility.Hidden;
+                showErrorMsg("Unable to generate preview: " + e.Error.Message);
                 return;
             }
 
@@ -68,8 +85,19 @@ namespace OneSync.UI
             this.allActions = result.GetAllActions();
             lvPreview.ItemsSource = this.allActions;
 
-            if (tbManager != null) tbManager.SetProgressState(TaskbarProgressBarState.NoProgress);
-            pb.Visibility = Visibility.Hidden;
+        }
+
+        private void showErrorMsg(string errorMsg)
+        {
+            if (string.IsNullOrEmpty(errorMsg))
+                txtError.Visibility = Visibility.Hidden;
+            else
+            {
+                txtError.Text = errorMsg;
+                txtError.Visibility = Visibility.Visible;
+                if (tbManager != null) tbManager.SetProgressState(TaskbarProgressBarState.NoProgress);
+                pb.Visibility = Visibility.Hidden;
+            }
         }
 		
 		void previewUIUpdate(bool isEnable)
@@ -91,7 +119,7 @@ namespace OneSync.UI
 
         private void filter()
         {
-            if (txtFilter == null) return; 
+            if (txtFilter == null || allActions == null) return; 
             string searchTerm = txtFilter.Text.Trim().ToLower();
 
             if (cmbFilter.SelectedIndex == 0)
