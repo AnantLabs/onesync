@@ -117,8 +117,6 @@ namespace OneSync.Synchronization
                 ExecuteDeleteActions(previewResult.ItemsToDelete, syncResult);
                 ExecuteRenameActions(previewResult.ItemsToRename, syncResult);
                 ExecuteConflictActions(previewResult.ConflictItems, syncResult);
-
-                SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(_job.IntermediaryStorage.Path);
             }
             catch (Exception){}
             finally
