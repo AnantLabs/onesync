@@ -203,7 +203,7 @@ namespace OneSync.UI
             }
             catch (Exception)
             {
-                showErrorMsg("The selected folder path is invalid.");
+                showErrorMsg("The selected folder path is invalid");
             }
         }
 
@@ -296,7 +296,7 @@ namespace OneSync.UI
                 if (result == MessageBoxResult.No) return;
 
                 if (!jobManager.Delete(entry.SyncJob))
-                    showErrorMsg("Unable to delete sync job at this moment.");
+                    showErrorMsg("Unable to delete sync job at this moment");
                 else
                     this.SyncJobEntries.Remove(entry);
 
@@ -306,7 +306,7 @@ namespace OneSync.UI
                     SyncClient.GetSyncSourceProvider(entry.IntermediaryStoragePath);
 
                 if (!syncSourceProvider.DeleteSyncSourceInIntermediateStorage(entry.SyncJob.SyncSource))
-                    throw new MetadataFileException("Metadata file might be missing or corrupted");
+                    throw new MetadataFileException("The data.md file might be missing or corrupted");
 
             }
             catch (MetadataFileException mfe)
