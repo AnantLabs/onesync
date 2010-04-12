@@ -410,9 +410,9 @@ namespace OneSync
             if (logActivity.Count != 0)
             {
                 XmlElement startTimeNode = xmlLogDoc.CreateElement("starttime");
-                startTimeNode.InnerText = startTime.ToShortTimeString();
+                startTimeNode.InnerText = startTime.ToLongTimeString();
                 XmlElement endTimeNode = xmlLogDoc.CreateElement("endtime");
-                endTimeNode.InnerText = endTime.ToShortTimeString();
+                endTimeNode.InnerText = endTime.ToLongTimeString();
 
                 // Append nodes
                 syncSessionNode.AppendChild(startTimeNode);
