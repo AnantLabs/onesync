@@ -81,22 +81,42 @@ namespace OneSync.UI
             // Set-up data bindings
             listAllSyncJobs.ItemsSource = this.SyncJobEntries;
             LoadSyncJobs();
+
+            // Start the Dropbox checker now.
+            timerDropbox.Start();
         }
 
         private void dropboxStatusChecking()
         {
             try
             {
+                bool isStillOneWaitingForDropbox = false;
                 foreach (UISyncJobEntry entry in SyncJobEntries)
+                {
                     if (entry.DropboxStatus == OneSync.DropboxStatus.SYNCHRONIZING)
+                    {
+                        isStillOneWaitingForDropbox = true;
+                        entry.ProgressBarMessage = "Syncing through Dropbox now";
                         entry.ProgressBarColor = "Yellow";
+                    }
                     else if (entry.DropboxStatus == OneSync.DropboxStatus.UP_TO_DATE)
                     {
                         if (entry.Error == null)
+                        {
+                            entry.ProgressBarMessage = "Syncing through Dropbox is done";
                             entry.ProgressBarColor = "#FF01D328";
+                        }
                         else
+                        {
+                            entry.ProgressBarMessage = "Syncing through Dropbox is done but with error";
                             entry.ProgressBarColor = "Red";
+                        }
                     }
+                }
+                if (isStillOneWaitingForDropbox)
+                    lblStatus.Content = "All files are synced but they are still being uploaded to the Dropbox server";
+                else
+                    lblStatus.Content = "Synchronization completed.";
             }
             catch(Exception) { }            
         }
@@ -287,7 +307,7 @@ namespace OneSync.UI
                     SyncClient.GetSyncSourceProvider(entry.IntermediaryStoragePath);
 
                 if (!syncSourceProvider.DeleteSyncSourceInIntermediateStorage(entry.SyncJob.SyncSource))
-                    throw new MetadataFileException("Metadata file might be missing or corrupted!!!");
+                    throw new MetadataFileException("Metadata file might be missing or corrupted");
 
             }
             catch (MetadataFileException mfe)
@@ -308,10 +328,15 @@ namespace OneSync.UI
                 showErrorMsg(errorMsg);
                 return false;
             }
-            
-            if (!Directory.Exists(intStorage))
+
+            try
             {
-                showErrorMsg("Intermediary storage: " + intStorage + " doesn't exist.");
+                if (!Directory.Exists(intStorage))
+                    Directory.CreateDirectory(intStorage);
+            }
+            catch (Exception)
+            {
+                showErrorMsg("Unable to create directory " + intStorage);
                 return false;
             }
             
@@ -556,7 +581,7 @@ namespace OneSync.UI
 
                 this.Dispatcher.Invoke((Action)delegate
                 {
-                    string errorMsg = ex.Message;
+                    string errorMsg = "Error Reported: " + ex.Message;
                     entry.ProgressBarMessage = errorMsg;
                     showErrorMsg(errorMsg);
                 });   
@@ -569,7 +594,7 @@ namespace OneSync.UI
                 
                 this.Dispatcher.Invoke((Action)delegate
                 {
-                    string errorMsg = ex.Message;
+                    string errorMsg = "Error Reported: " + ex.Message;
                     entry.ProgressBarMessage = errorMsg;
                     showErrorMsg(errorMsg);
                 });                
@@ -583,7 +608,7 @@ namespace OneSync.UI
                 if (ex.GetType() == typeof(OutOfDiskSpaceException))
                     errorMsg = "Not enough space in intermediate storage: " + entry.IntermediaryStoragePath;
                 else
-                    errorMsg = ex.Message;
+                    errorMsg = "Error Reported: " + ex.Message;
                 this.Dispatcher.Invoke((Action)delegate
                 {
                     entry.ProgressBarMessage = errorMsg;
@@ -597,7 +622,9 @@ namespace OneSync.UI
                 jobEntries.Clear();
                 jobEntries.Enqueue(currentSyncJobEntry);
             }
+
             e.Result = jobEntries;
+            
         }
 
         void syncWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -631,9 +658,6 @@ namespace OneSync.UI
                     SetControlsEnabledState(false, true);
                     lblStatus.Content = "Synchronization completed.";
                     lblSubStatus.Content = "";
-
-                    // Start the Dropbox checker now.
-                    timerDropbox.Start();
 
                     //listAllSyncJobs.IsEnabled = true;
                 }
