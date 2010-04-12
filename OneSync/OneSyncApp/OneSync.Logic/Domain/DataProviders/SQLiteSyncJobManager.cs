@@ -226,7 +226,7 @@ namespace OneSync.Synchronization
                 Console.WriteLine(ex.Message);
                 if (transaction2 != null) transaction2.Rollback();
                 if (transaction1 != null) transaction1.Rollback();
-                throw new DatabaseException("Database exception");
+                throw new DatabaseException("Database exception: Please check your job name and folder directories for selected jobs");
             }
             finally
             {
