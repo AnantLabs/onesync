@@ -308,15 +308,10 @@ namespace OneSync.UI
                 showErrorMsg(errorMsg);
                 return false;
             }
-
-            try
+            
+            if (!Directory.Exists(intStorage))
             {
-                if (!Directory.Exists(intStorage))
-                    Directory.CreateDirectory(intStorage);
-            }
-            catch (Exception)
-            {
-                showErrorMsg("Unable to create directory " + intStorage);
+                showErrorMsg("Intermediary storage: " + intStorage + " doesn't exist.");
                 return false;
             }
             
@@ -561,7 +556,7 @@ namespace OneSync.UI
 
                 this.Dispatcher.Invoke((Action)delegate
                 {
-                    string errorMsg = "Error Reported: " + ex.Message;
+                    string errorMsg = ex.Message;
                     entry.ProgressBarMessage = errorMsg;
                     showErrorMsg(errorMsg);
                 });   
@@ -574,7 +569,7 @@ namespace OneSync.UI
                 
                 this.Dispatcher.Invoke((Action)delegate
                 {
-                    string errorMsg = "Error Reported: " + ex.Message;
+                    string errorMsg = ex.Message;
                     entry.ProgressBarMessage = errorMsg;
                     showErrorMsg(errorMsg);
                 });                
@@ -588,7 +583,7 @@ namespace OneSync.UI
                 if (ex.GetType() == typeof(OutOfDiskSpaceException))
                     errorMsg = "Not enough space in intermediate storage: " + entry.IntermediaryStoragePath;
                 else
-                    errorMsg = "Error Reported: " + ex.Message;
+                    errorMsg = ex.Message;
                 this.Dispatcher.Invoke((Action)delegate
                 {
                     entry.ProgressBarMessage = errorMsg;
@@ -602,9 +597,7 @@ namespace OneSync.UI
                 jobEntries.Clear();
                 jobEntries.Enqueue(currentSyncJobEntry);
             }
-
             e.Result = jobEntries;
-            
         }
 
         void syncWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
