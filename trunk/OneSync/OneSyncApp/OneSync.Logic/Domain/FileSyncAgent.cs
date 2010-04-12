@@ -164,7 +164,7 @@ namespace OneSync.Synchronization
                         FileMetaDataItem item = new FileMetaDataItem("", "", action.RelativeFilePath, action.FileHash, DateTime.Now, 0, 0);
                         
                         OnSyncFileChanged(new SyncFileChangedEventArgs(ChangeType.NEWLY_CREATED, action.RelativeFilePath));
-                        
+
                         if (action.ChangeType == ChangeType.NEWLY_CREATED && !mdStorage.FileMetadata.MetaDataItems.Contains(item, new FileMetaDataItemComparer()))
                             SyncExecutor.CopyToDirtyFolderAndUpdateActionTable(action, _job);
                         else if (action.ChangeType == ChangeType.DELETED || action.ChangeType == ChangeType.RENAMED)
@@ -175,6 +175,7 @@ namespace OneSync.Synchronization
                             workItem++;
                             OnProgressChanged(new SyncProgressChangedEventArgs(workItem, totalWorkItems));
                         }
+                        else SyncExecutor.UpdateTableAction(action, _job);
 
                         generateActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "SUCCESS"));
                     }
