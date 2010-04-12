@@ -111,15 +111,22 @@ namespace OneSync.Synchronization
 
             currentProgress = 0;
 
-            ExecuteCreateActions(previewResult.ItemsToCopyOver, syncResult);
-            ExecuteDeleteActions(previewResult.ItemsToDelete, syncResult);
-            ExecuteRenameActions(previewResult.ItemsToRename, syncResult);
-            ExecuteConflictActions(previewResult.ConflictItems, syncResult);
+            try
+            {
+                ExecuteCreateActions(previewResult.ItemsToCopyOver, syncResult);
+                ExecuteDeleteActions(previewResult.ItemsToDelete, syncResult);
+                ExecuteRenameActions(previewResult.ItemsToRename, syncResult);
+                ExecuteConflictActions(previewResult.ConflictItems, syncResult);
 
-            // Add to log
-            Log.AddToLog(_job.SyncSource.Path, _job.IntermediaryStorage.Path,
-                         _job.Name, log, Log.From, log.Count, starTtime, DateTime.Now);
-
+            }
+            catch (Exception){}
+            finally
+            {
+                // Add to log
+                Log.AddToLog(_job.SyncSource.Path, _job.IntermediaryStorage.Path,
+                             _job.Name, log, Log.From, log.Count, starTtime, DateTime.Now);
+            }           
+            
             return syncResult;
         }
 
@@ -203,9 +210,7 @@ namespace OneSync.Synchronization
                     }                      
                 }
             }
-            catch (Exception)
-            {
-            }
+            catch (Exception){}
             finally
             {
                 Log.AddToLog(_job.SyncSource.Path, _job.IntermediaryStorage.Path,
