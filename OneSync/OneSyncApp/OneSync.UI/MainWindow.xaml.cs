@@ -81,9 +81,6 @@ namespace OneSync.UI
             // Set-up data bindings
             listAllSyncJobs.ItemsSource = this.SyncJobEntries;
             LoadSyncJobs();
-
-            // Start the Dropbox checker now.
-            timerDropbox.Start();
         }
 
         private void dropboxStatusChecking()
@@ -545,6 +542,9 @@ namespace OneSync.UI
 
         void syncWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+            //Stop the Dropbox checker.
+            timerDropbox.Stop();
+
             Queue<UISyncJobEntry> jobEntries = e.Argument as Queue<UISyncJobEntry>;
             if (jobEntries == null || jobEntries.Count <= 0) return;
 
@@ -651,6 +651,9 @@ namespace OneSync.UI
                 // Check for more sync jobs to run or whether cancel pending
                 if (jobEntries.Count <= 0)
                 {
+                    // Start the Dropbox checker now.
+                    timerDropbox.Start();
+
                     // Update UI and hide sync progress controls
                     SetControlsEnabledState(false, true);
                     lblStatus.Content = "Synchronization completed.";
