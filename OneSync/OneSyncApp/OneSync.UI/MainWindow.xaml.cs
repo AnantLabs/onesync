@@ -88,7 +88,15 @@ namespace OneSync.UI
             try
             {
                 foreach (UISyncJobEntry entry in SyncJobEntries)
-                    entry.ProgressBarColor = entry.Error == null ? "#FF01D328" : "Red";
+                    if (entry.DropboxStatus == OneSync.DropboxStatus.SYNCHRONIZING)
+                        entry.ProgressBarColor = "Yellow";
+                    else if (entry.DropboxStatus == OneSync.DropboxStatus.UP_TO_DATE)
+                    {
+                        if (entry.Error == null)
+                            entry.ProgressBarColor = "#FF01D328";
+                        else
+                            entry.ProgressBarColor = "Red";
+                    }
             }
             catch(Exception) { }            
         }
