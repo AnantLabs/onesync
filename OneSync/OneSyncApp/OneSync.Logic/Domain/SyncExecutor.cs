@@ -181,9 +181,11 @@ namespace OneSync.Synchronization
                 if (!Files.FileUtils.Delete(absolutePathInSyncSource, true))
                     throw new Exception("Can't delete file " + absolutePathInSyncSource);
                 transaction.Commit();
+                /*
                 Files.FileUtils.DeleteFileAndFolderIfEmpty(job.IntermediaryStorage.DirtyFolderPath, 
                     job.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath
                     , true);
+                 */
             }
             catch (Exception)
             {
@@ -221,11 +223,10 @@ namespace OneSync.Synchronization
             try
             {
                 //Files.FileUtils.DeleteEmptyFolderRecursively(baseFolder, new DirectoryInfo(absolutePath), forceToDelete);
-                Directory.Delete(absolutePath, false);
-
+                Files.FileUtils.DeleteFolder(absolutePath, true);
+                DirectoryInfo info = new DirectoryInfo(absolutePath);                
             }
             catch (Exception) { return false; }
-
             return true;
         }
 
@@ -265,6 +266,8 @@ namespace OneSync.Synchronization
                 if (con != null) con.Dispose();
             }
         }
+
+        
 
     }
 }
