@@ -37,42 +37,37 @@ namespace OneSync.Synchronization
         public event SyncFileChangedHandler SyncFileChanged;
         #endregion Events
 
-        private delegate void ExecuteActionsCallback(SyncAction action);
-        private List<LogActivity> log;
         private SyncJob _job;
 
-        // To keep track of sync progress
-        int totalProgress = 0, currentProgress = 0;
+        /* To keep track of progress */
+        private int totalProgress = 0, currentProgress = 0;
+
+        /* Providers */
+        SyncActionsProvider actProvider;
+        MetaDataProvider mdProvider;
+
+        private List<LogActivity> log = new List<LogActivity>();
+
+        private delegate void ExecuteActionsCallback(SyncAction action);
 
         // Constructor
         public FileSyncAgent(SyncJob job)
         {
             this._job = job;
+
+            // Instantiates providers
+            actProvider = SyncClient.GetSyncActionsProvider(this._job.IntermediaryStorage.Path);
+            mdProvider = SyncClient.GetMetaDataProvider(_job.IntermediaryStorage.Path, _job.SyncSource.ID);
         }
 
         /// <summary>
-        /// This method apply patches and generating new patches
-        /// </summary>
-        public void Synchronize(SyncPreviewResult preview)
-        {
-            OnStatusChanged(new SyncStatusChangedEventArgs("Applying patch"));
-            Apply(preview);
-            SyncEmptyFolders();
-            OnStatusChanged(new SyncStatusChangedEventArgs("Generating patch"));
-            Generate();
-            OnSyncCompleted(new SyncCompletedEventArgs());
-        }
-
-        /// <summary>
-        /// Generate the sync preview that contains sync actions to be executed.
+        /// Generate the sync preview containing actions to be executed.
+        /// The returned SyncPreviewResult can then be passed to Synchronize method
+        /// as an argument for the actions to be executed.
         /// </summary>
         public SyncPreviewResult GenerateSyncPreview()
         {
             OnStatusChanged(new SyncStatusChangedEventArgs("Preparing to sync"));
-
-            // Instantiates providers
-            SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(this._job.IntermediaryStorage.Path);
-            MetaDataProvider mdProvider = SyncClient.GetMetaDataProvider(_job.IntermediaryStorage.Path, _job.SyncSource.ID);
 
             // Load actions to be executed.
             IList<SyncAction> actions = actProvider.Load(_job.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
@@ -90,176 +85,147 @@ namespace OneSync.Synchronization
         }
 
         /// <summary>
-        /// Carry out the sync actions
-        /// The previewResult contains 3 categories of items (copy over, delete, create new)
+        /// Executes synchronization based on the SyncPreviewResult as well
+        /// as generate patch for other folder.
         /// </summary>
-        private SyncResult Apply(SyncPreviewResult previewResult)
+        /// <param name="preview">SyncPreviewResult to be executed.</param>
+        public void Synchronize(SyncPreviewResult preview)
         {
-            DateTime starTtime = DateTime.Now;
-            SyncResult syncResult = new SyncResult();
+            OnStatusChanged(new SyncStatusChangedEventArgs("Applying patch"));
+            ApplyPatch(preview);
+            SyncEmptyFolders();
+            OnStatusChanged(new SyncStatusChangedEventArgs("Generating patch"));
+            GeneratePatch();
+            OnSyncCompleted(new SyncCompletedEventArgs());
+        }
+
+        /// <summary>
+        /// Execute actions of the sync preview result. The actions to be executed
+        /// file copy, deletion or rename
+        /// </summary>
+        private void ApplyPatch(SyncPreviewResult previewResult)
+        {
+            DateTime startTime = DateTime.Now;
 
             // Create a new list of log
-            log = new List<LogActivity>();
+            log.Clear();
 
             totalProgress = previewResult.ItemsCount;
-
             if (totalProgress == 0)
             {
                 OnProgressChanged(new SyncProgressChangedEventArgs(1, 1));
-                return syncResult;
+                return;
             }
 
             currentProgress = 0;
 
             try
             {
-                ExecuteCreateActions(previewResult.ItemsToCopyOver, syncResult);
-                ExecuteDeleteActions(previewResult.ItemsToDelete, syncResult);
-                ExecuteRenameActions(previewResult.ItemsToRename, syncResult);
-                ExecuteConflictActions(previewResult.ConflictItems, syncResult);
+                ExecuteCreateActions(previewResult.ItemsToCopyOver);
+                ExecuteDeleteActions(previewResult.ItemsToDelete);
+                ExecuteRenameActions(previewResult.ItemsToRename);
+                ExecuteConflictActions(previewResult.ConflictItems);
             }
             catch (Exception){}
             finally
             {
-                // Add to log
-                Log.AddToLog(_job.SyncSource.Path, _job.IntermediaryStorage.Path,
-                             _job.Name, log, Log.From, log.Count, starTtime, DateTime.Now);
+                writeLog(startTime);
             }
-            return syncResult;
         }
 
         /// <summary>
         /// Generate patches 
         /// </summary>
-        private void Generate()
+        private void GeneratePatch()
         {
-            IList<SyncAction> newActions = GenerateActions();
+            // Delete previously saved actions
+            actProvider.Delete(_job.SyncSource.ID, SourceOption.SOURCE_ID_EQUALS);
 
-            SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(_job.IntermediaryStorage.Path);
-            DeleteSavedActions(actProvider);
+            // Generate new actions
+            IList<SyncAction> newActions = GenerateActions();
             
-            int totalWorkItems = newActions.Count;
-            if (totalWorkItems == 0)
+            if (newActions.Count == 0)
             {
                 OnProgressChanged(new SyncProgressChangedEventArgs(1, 1));
                 return;
             }
 
-            // Logging
-            List<LogActivity> generateActivities = new List<LogActivity>();
-            DateTime starttime = DateTime.Now;
+            // Clear log
+            log.Clear();
+            DateTime startTime = DateTime.Now;
 
-            int workItem = 0;
-
-            Metadata mdStorage = MetaDataProvider.Generate(_job.IntermediaryStorage.DirtyFolderPath, "", false);
             try
             {
-                foreach (SyncAction action in newActions)
-                {
-                    workItem++;
-                    OnProgressChanged(new SyncProgressChangedEventArgs(workItem, totalWorkItems));
-
-                    try
-                    {
-                        FileMetaDataItem item = new FileMetaDataItem("", "", action.RelativeFilePath, action.FileHash, DateTime.Now, 0, 0);
-                        
-                        OnSyncFileChanged(new SyncFileChangedEventArgs(ChangeType.NEWLY_CREATED, action.RelativeFilePath));
-
-                        if (action.ChangeType == ChangeType.NEWLY_CREATED && !mdStorage.FileMetadata.MetaDataItems.Contains(item, new FileMetaDataItemComparer()))
-                            SyncExecutor.CopyToDirtyFolderAndUpdateActionTable(action, _job);
-                        else if (action.ChangeType == ChangeType.DELETED || action.ChangeType == ChangeType.RENAMED)
-                        {
-                            OnSyncFileChanged(new SyncFileChangedEventArgs(ChangeType.DELETED, action.RelativeFilePath));
-                            actProvider.Add(action);                           
-                            OnProgressChanged(new SyncProgressChangedEventArgs(workItem, totalWorkItems));
-                        }
-                        else SyncExecutor.UpdateTableAction(action, _job);
-
-                        generateActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "SUCCESS"));
-                    }
-                    catch (OutOfDiskSpaceException)
-                    {
-                        throw;
-                    }
-                    catch (Exception)
-                    {
-                        generateActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "FAIL"));
-                    }                      
-                }
+                SaveActionsAndDirtyFiles(newActions);
             }
-            catch (OutOfDiskSpaceException)
-            {
-                throw;
-            }
-            catch (Exception){}
+            catch (OutOfDiskSpaceException) { throw; }
+            catch (Exception) { }
             finally
             {
-                Log.AddToLog(_job.SyncSource.Path, _job.IntermediaryStorage.Path,
-                            _job.Name, generateActivities, Log.To, generateActivities.Count, starttime, DateTime.Now);
+                writeLog(startTime);
             }
-            
         }
 
-        private Metadata UpdateSyncSourceMetadata(MetaDataProvider mdProvider)
+        private void SaveActionsAndDirtyFiles(IList<SyncAction> actions)
         {
-            //read metadata of the current folder stored in the database
-            Metadata mdCurrentOld = mdProvider.Load(_job.SyncSource.ID, SourceOption.SOURCE_ID_EQUALS);
+            Metadata mdStorage = MetaDataProvider.Generate(_job.IntermediaryStorage.DirtyFolderPath, "", false);
 
-            //read metadata of the current folder in file system 
-            Metadata mdCurrent = MetaDataProvider.Generate(_job.SyncSource.Path, _job.SyncSource.ID, false);
+            int totalProgress = actions.Count;
+            int currProgress = 0;
+            foreach (SyncAction a in actions)
+            {
+                try
+                {
+                    OnProgressChanged(new SyncProgressChangedEventArgs(++currProgress, totalProgress));
+                    OnSyncFileChanged(new SyncFileChangedEventArgs(a.ChangeType, a.RelativeFilePath));
 
-            //Update metadata 
-            mdProvider.Update(mdCurrentOld, mdCurrent);
+                    FileMetaDataItem item = new FileMetaDataItem("", "", a.RelativeFilePath, a.FileHash, DateTime.Now, 0, 0);
 
-            return mdCurrent;
+                    if (a.ChangeType == ChangeType.NEWLY_CREATED && !mdStorage.FileMetadata.MetaDataItems.Contains(item, new FileMetaDataItemComparer()))
+                        SyncExecutor.CopyToDirtyFolderAndUpdateActionTable(a, _job);
+                    else
+                        actProvider.Add(a);
+
+                    log.Add(new LogActivity(a.RelativeFilePath, a.ChangeType.ToString(), "SUCCESS"));
+                }
+                catch (OutOfDiskSpaceException)
+                {
+                    throw;
+                }
+                catch (Exception)
+                {
+                    log.Add(new LogActivity(a.RelativeFilePath, a.ChangeType.ToString(), "FAIL"));
+                }
+            }
         }
 
-        private IList<SyncAction> GenerateActions()
+        private void ExecuteCreateActions(IList<SyncAction> copyList)
         {
-            MetaDataProvider mdProvider = SyncClient.GetMetaDataProvider(_job.IntermediaryStorage.Path, _job.SyncSource.Path);
-
-            Metadata mdCurrent = UpdateSyncSourceMetadata(mdProvider);
-            Metadata mdOther = mdProvider.Load(_job.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
-
-            //generate list of sync actions by comparing 2 metadata
-            FileMetaDataComparer actionGenerator = new FileMetaDataComparer(mdCurrent.FileMetadata, mdOther.FileMetadata);
-            
-            return actionGenerator.Generate();
-        }
-
-        private void DeleteSavedActions(SyncActionsProvider actProvider)
-        {
-            //delete actions of previous sync
-            actProvider.Delete(_job.SyncSource.ID, SourceOption.SOURCE_ID_EQUALS);
-        }
-
-        private void ExecuteCreateActions(IList<SyncAction> copyList, SyncResult syncResult)
-        {
-            ExecuteActions(copyList, syncResult, a =>
+            ExecuteActions(copyList, a =>
             {
                 SyncExecutor.CopyToSyncFolderAndUpdateActionTable((CreateAction)a, _job);
             });
         }
 
-        private void ExecuteDeleteActions(IList<SyncAction> deleteList, SyncResult syncResult)
+        private void ExecuteDeleteActions(IList<SyncAction> deleteList)
         {
-            ExecuteActions(deleteList, syncResult, a =>
+            ExecuteActions(deleteList, a =>
             {
                 SyncExecutor.DeleteInSyncFolderAndUpdateActionTable((DeleteAction)a, _job);
             });
         }
 
-        private void ExecuteRenameActions(IList<SyncAction> renameList, SyncResult syncResult)
+        private void ExecuteRenameActions(IList<SyncAction> renameList)
         {
-            ExecuteActions(renameList, syncResult, a =>
+            ExecuteActions(renameList, a =>
             {
                 SyncExecutor.RenameInSyncFolderAndUpdateActionTable((RenameAction)a, _job);
             });
         }
 
-        private void ExecuteConflictActions(IList<SyncAction> conflictList, SyncResult syncResult)
+        private void ExecuteConflictActions(IList<SyncAction> conflictList)
         {
-            ExecuteActions(conflictList, syncResult, a =>
+            ExecuteActions(conflictList, a =>
             {
                 if (a.ChangeType == ChangeType.NEWLY_CREATED)
                 {
@@ -282,33 +248,29 @@ namespace OneSync.Synchronization
             });
         }
 
-        private void ExecuteActions(IList<SyncAction> actionsList, SyncResult syncResult, ExecuteActionsCallback exe)
+        private void ExecuteActions(IList<SyncAction> actionsList, ExecuteActionsCallback exe)
         {
             foreach (SyncAction action in actionsList)
             {
                 currentProgress++;
                 OnProgressChanged(new SyncProgressChangedEventArgs(currentProgress, totalProgress));
+                OnSyncFileChanged(new SyncFileChangedEventArgs(action.ChangeType, action.RelativeFilePath));
 
                 if (action.Skip)
-                {
-                    syncResult.Skipped.Add(action);
+                {                    
                     log.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "SKIPPED"));
                     continue;
                 }
-
-                OnSyncFileChanged(new SyncFileChangedEventArgs(action.ChangeType, action.RelativeFilePath));
 
                 string logStatus = "";
                 try
                 {
                     if (exe != null) exe(action);
-                    syncResult.Ok.Add(action);
                     logStatus = "SUCCESS";
                 }
                 catch (Exception)
                 {
                     logStatus = "FAIL";
-                    syncResult.Errors.Add(action);
                 }
                 finally
                 {
@@ -319,13 +281,45 @@ namespace OneSync.Synchronization
             }
         }
 
+        private Metadata UpdateSyncSourceMetadata()
+        {
+            //read metadata of the current folder stored in the database
+            Metadata mdCurrentOld = mdProvider.Load(_job.SyncSource.ID, SourceOption.SOURCE_ID_EQUALS);
+
+            //read metadata of the current folder in file system 
+            Metadata mdCurrent = MetaDataProvider.Generate(_job.SyncSource.Path, _job.SyncSource.ID, false);
+
+            //Update metadata 
+            mdProvider.Update(mdCurrentOld, mdCurrent);
+
+            return mdCurrent;
+        }
+
+        /// <summary>
+        /// Generates SyncActions to be executed by other PC by comparing the metadata 
+        /// of current SyncSource and the metadata of other PC.
+        /// </summary>
+        private IList<SyncAction> GenerateActions()
+        {
+            Metadata mdCurrent = UpdateSyncSourceMetadata();
+            Metadata mdOther = mdProvider.Load(_job.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
+
+            //generate list of sync actions by comparing 2 metadata
+            FileMetaDataComparer actionGenerator = new FileMetaDataComparer(mdCurrent.FileMetadata, mdOther.FileMetadata);
+
+            return actionGenerator.Generate();
+        }
+
+        private void writeLog(DateTime startTime)
+        {
+            Log.AddToLog(_job.SyncSource.Path, _job.IntermediaryStorage.Path,
+                            _job.Name, log, Log.To, log.Count, startTime, DateTime.Now);
+        }
+
         private void SyncEmptyFolders()
         {
             //read metadata of the current folder in file system 
             FolderMetadata currentItems = MetaDataProvider.GenerateFolderMetadata(_job.SyncSource.Path, _job.SyncSource.ID, false);
-
-            //read metadata of the current folder stored in the database
-            MetaDataProvider mdProvider = SyncClient.GetMetaDataProvider(_job.IntermediaryStorage.Path, _job.SyncSource.Path);
 
             FolderMetadata oldCurrentItems = mdProvider.LoadFolderMetadata(_job.SyncSource.ID, SourceOption.SOURCE_ID_EQUALS);
             FolderMetadata otherItems = mdProvider.LoadFolderMetadata(_job.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
