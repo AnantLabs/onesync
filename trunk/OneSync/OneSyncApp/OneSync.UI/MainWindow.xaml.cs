@@ -545,9 +545,6 @@ namespace OneSync.UI
 
         void syncWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            //Stop the Dropbox checker.
-            timerDropbox.Stop();
-
             Queue<UISyncJobEntry> jobEntries = e.Argument as Queue<UISyncJobEntry>;
             if (jobEntries == null || jobEntries.Count <= 0) return;
 
