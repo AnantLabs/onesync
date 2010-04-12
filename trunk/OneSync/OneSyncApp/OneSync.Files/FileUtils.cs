@@ -132,6 +132,17 @@ namespace OneSync.Files
             }
         }
 
+        public static void DeleteFolder(string absolutePath, bool forceToDelete)
+        {
+            if (!IsDirectoryEmpty(absolutePath)) return;
+            DirectoryInfo dirInfo = new DirectoryInfo(absolutePath);
+            if (dirInfo.Exists & IsDirectoryReadOnly (absolutePath))            
+                dirInfo.Attributes &= ~FileAttributes.ReadOnly;
+
+            dirInfo.Delete(); 
+            
+        }
+
         /// <summary>
         /// Get list of files in a folder 
         /// exclude hidden files
@@ -320,6 +331,14 @@ namespace OneSync.Files
         {
             DirectoryInfo dirInfo = new DirectoryInfo(absolutePath);
             return ((dirInfo.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden) ? true : false;
+        }
+
+
+        [DllImport("shlwapi.dll", CharSet = CharSet.Auto)]
+        internal extern static bool PathIsDirectoryEmpty(string pszPath);
+        public static bool IsDirectoryEmpty(string absolutePath)
+        {
+            return PathIsDirectoryEmpty(absolutePath);
         }
 
         /// <summary>
