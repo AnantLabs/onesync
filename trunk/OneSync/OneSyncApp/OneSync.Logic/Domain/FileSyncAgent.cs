@@ -161,50 +161,57 @@ namespace OneSync.Synchronization
 
             int workItem = 0;
 
-            foreach (SyncAction action in newActions)
+
+            try
             {
-                workItem++;
-                OnProgressChanged(new SyncProgressChangedEventArgs(workItem, totalWorkItems));
-
-                try
+                foreach (SyncAction action in newActions)
                 {
-                    FileMetaDataItem item = new FileMetaDataItem("", "", action.RelativeFilePath, action.FileHash, DateTime.Now, 0, 0);
-                    #region newly created action
-                    OnSyncFileChanged(new SyncFileChangedEventArgs(ChangeType.NEWLY_CREATED, action.RelativeFilePath));
-                    if (action.ChangeType == ChangeType.NEWLY_CREATED && !metadataInIStorage.FileMetadata.MetaDataItems.Contains(item, new FileMetaDataItemComparer()))
+                    workItem++;
+                    OnProgressChanged(new SyncProgressChangedEventArgs(workItem, totalWorkItems));
+
+                    try
                     {
-                        SyncExecutor.CopyToDirtyFolderAndUpdateActionTable(action, _job);
-                    }
-                    #endregion newly created action
+                        FileMetaDataItem item = new FileMetaDataItem("", "", action.RelativeFilePath, action.FileHash, DateTime.Now, 0, 0);
+                        #region newly created action
+                        OnSyncFileChanged(new SyncFileChangedEventArgs(ChangeType.NEWLY_CREATED, action.RelativeFilePath));
+                        if (action.ChangeType == ChangeType.NEWLY_CREATED && !metadataInIStorage.FileMetadata.MetaDataItems.Contains(item, new FileMetaDataItemComparer()))
+                        {
+                            SyncExecutor.CopyToDirtyFolderAndUpdateActionTable(action, _job);
+                        }
+                        #endregion newly created action
 
-                    #region delete/rename action
-                    else if (action.ChangeType == ChangeType.DELETED || action.ChangeType == ChangeType.RENAMED)
+                        #region delete/rename action
+                        else if (action.ChangeType == ChangeType.DELETED || action.ChangeType == ChangeType.RENAMED)
+                        {
+                            OnSyncFileChanged(new SyncFileChangedEventArgs(ChangeType.DELETED, action.RelativeFilePath));
+                            actProvider.Add(action);
+
+                            workItem++;
+                            OnProgressChanged(new SyncProgressChangedEventArgs(workItem, totalWorkItems));
+                        }
+                        #endregion delete action
+
+                        generateActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "SUCCESS"));
+                    }
+                    catch (OutOfDiskSpaceException)
                     {
-                        OnSyncFileChanged(new SyncFileChangedEventArgs(ChangeType.DELETED, action.RelativeFilePath));
-                        actProvider.Add(action);
-
-                        workItem++;
-                        OnProgressChanged(new SyncProgressChangedEventArgs(workItem, totalWorkItems));
+                        throw;
                     }
-                    #endregion delete action
-
-                    generateActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "SUCCESS"));
-                }
-                catch (OutOfDiskSpaceException)
-                {
-                    throw;
-                }
-                catch (Exception)
-                {
-                    generateActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "FAIL"));
-                }
-                finally
-                {
-                    // Add to log
-                    Log.AddToLog(_job.SyncSource.Path, _job.IntermediaryStorage.Path,
-                        _job.Name, generateActivities, Log.To, generateActivities.Count, starttime, DateTime.Now);
+                    catch (Exception)
+                    {
+                        generateActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "FAIL"));
+                    }                      
                 }
             }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                Log.AddToLog(_job.SyncSource.Path, _job.IntermediaryStorage.Path,
+                            _job.Name, generateActivities, Log.To, generateActivities.Count, starttime, DateTime.Now);
+            }
+            
         }
 
         private void ExecuteCreateActions(IList<SyncAction> copyList, SyncResult syncResult)
