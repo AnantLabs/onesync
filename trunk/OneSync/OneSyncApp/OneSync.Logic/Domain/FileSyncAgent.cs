@@ -168,7 +168,6 @@ namespace OneSync.Synchronization
 
             int workItem = 0;
 
-
             try
             {
                 foreach (SyncAction action in newActions)
@@ -268,11 +267,6 @@ namespace OneSync.Synchronization
             });
         }
 
-        private void ExecuteConflictRenameAction(SyncAction action, SyncResult syncResult)
-        {
-            throw new NotImplementedException();
-        }
-
         private void ExecuteActions(IList<SyncAction> actionsList, SyncResult syncResult, ExecuteActionsCallback exe)
         {
             foreach (SyncAction action in actionsList)
@@ -292,9 +286,8 @@ namespace OneSync.Synchronization
                 string logStatus = "";
                 try
                 {
-                    exe(action);
+                    if (exe != null) exe(action);
                     syncResult.Ok.Add(action);
-
                     logStatus = "SUCCESS";
                 }
                 catch (Exception)
