@@ -19,12 +19,12 @@ namespace OneSync.Synchronization
             string absolutePathInSyncSource = job.SyncSource.Path + action.RelativeFilePath;
             string absolutePathInImediateStorage = job.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
 
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME),true);
-            SqliteConnection con = db.NewSQLiteConnection();
-            SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
+            var db = new SQLiteAccess(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME),true);
+            var con = db.NewSQLiteConnection();
+            var transaction = (SqliteTransaction)con.BeginTransaction();
             try
             {
-                SQLiteSyncActionsProvider actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
+                var actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
                 actProvider.Add(action, con);
 
                 if (!FileUtils.Copy(absolutePathInSyncSource, absolutePathInImediateStorage, true))
@@ -49,13 +49,8 @@ namespace OneSync.Synchronization
 
         public static void UpdateTableAction(SyncAction action, SyncJob job)
         {
-            try
-            {
-                SQLiteSyncActionsProvider actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
-                actProvider.Add(action);
-            }
-            catch (Exception)
-            { throw; }
+            var actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
+            actProvider.Add(action);
         }
 
 

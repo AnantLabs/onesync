@@ -9,15 +9,11 @@
  *  +Files/folders permission check
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Security.Cryptography;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
-using System.Security.AccessControl;
-using System.Security.Permissions;
+using System.Security;
+using System.Security.Cryptography;
 
 namespace OneSync.Files
 {
@@ -26,37 +22,20 @@ namespace OneSync.Files
     /// </summary>
     public class FileUtils
     {
-        private const int MEGABYTES_TO_BYTES_FACTOR = 1024 * 1024;
-        private const int STREAM_LIMIT = 50 * MEGABYTES_TO_BYTES_FACTOR;
-
         [DllImport("kernel32.dll", SetLastError = true)]
-        static extern bool GetFileInformationByHandle(IntPtr hFile,
-           out BY_HANDLE_FILE_INFORMATION lpFileInformation);
+        private static extern bool GetFileInformationByHandle(IntPtr hFile,
+                                                              out BY_HANDLE_FILE_INFORMATION lpFileInformation);
 
         /* MSDN Reference:
          * http://msdn.microsoft.com/en-us/library/aa363788(VS.85).aspx
          * http://msdn.microsoft.com/en-us/library/aa364952(VS.85).aspx
          * */
 
-        struct BY_HANDLE_FILE_INFORMATION
-        {
-            public uint FileAttributes;
-            public Int64 CreationTime;
-            public Int64 LastAccessTime;
-            public Int64 LastWriteTime;
-            public uint VolumeSerialNumber;
-            public uint FileSizeHigh;
-            public uint FileSizeLow;
-            public uint NumberOfLinks;
-            public uint FileIndexHigh;
-            public uint FileIndexLow;
-        }
-
         /// <summary>
         /// Compute the hash of content of any given file
         /// </summary>
         /// <param name="path"></param>
-        /// <returns></returns>
+        /// <returns></returns>      
         public static string GetFileHash(string path)
         {
             string hashString = "";
@@ -76,19 +55,24 @@ namespace OneSync.Files
         /// <returns></returns>
         public static bool Delete(string absolutePath, bool forceToDelete)
         {
+            /*
             if (IsOpen(absolutePath))
                 throw new FileInUseException("File " + absolutePath + " is in use by another process");
+             */
+            /*
             if (IsFileReadOnly(absolutePath) && forceToDelete && File.Exists(absolutePath))
             {
-                FileInfo fileInfo = new FileInfo(absolutePath);
-                fileInfo.IsReadOnly = !forceToDelete;
-            }
+             */
+            var fileInfo = new FileInfo(absolutePath);
+            if (forceToDelete) fileInfo.IsReadOnly = !forceToDelete;
+
             try
             {
                 File.Delete(absolutePath);
                 return true;
             }
-            catch (Exception) { return false; }
+            catch (Exception)
+            {return false;}
         }
 
         /// <summary>
@@ -96,22 +80,26 @@ namespace OneSync.Files
         /// If the folder contains this file is empty after the file is deleted, the folder is deleted as well.
         /// </summary>
         /// <param name="absolutePath"></param>
+        /// <param name="baseFolder"></param>
+        /// <param name="forceToDelete"></param>
         public static bool DeleteFileAndFolderIfEmpty(string baseFolder, string absolutePath, bool forceToDelete)
         {
             try
             {
-                DirectoryInfo dirInfo = new DirectoryInfo(new FileInfo(absolutePath).Directory.FullName);
+                var dirInfo = new DirectoryInfo(new FileInfo(absolutePath).Directory.FullName);
                 if (File.Exists(absolutePath)) Delete(absolutePath, forceToDelete);
                 try
                 {
                     //delete empty folder recursively 
                     DeleteEmptyFolderRecursively(baseFolder, dirInfo, forceToDelete);
                 }
-                catch (Exception) { }
+                catch (Exception){}
                 return true;
             }
             catch (Exception)
-            { return false; }
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -119,28 +107,30 @@ namespace OneSync.Files
         /// </summary>
         /// <param name="baseFolder"></param>
         /// <param name="dir"></param>
+        /// <param name="forceToDelete"></param>
         public static void DeleteEmptyFolderRecursively(string baseFolder, DirectoryInfo dir, bool forceToDelete)
         {
-            if (dir.GetFiles().Length == 0
-            && dir.GetDirectories().Length == 0
-            && !dir.FullName.Equals(baseFolder))
+            if (IsDirectoryEmpty(dir.FullName) & !dir.FullName.Equals(baseFolder))
             {
-                if (Files.FileUtils.IsDirectoryReadOnly(dir.FullName) && forceToDelete)
+                if (IsDirectoryReadOnly(dir.FullName) && forceToDelete)
                     dir.Attributes &= ~FileAttributes.ReadOnly;
                 dir.Delete();
                 DeleteEmptyFolderRecursively(baseFolder, dir.Parent, forceToDelete);
             }
         }
 
+        /// <summary>
+        /// Delete a folder given an absolute path
+        /// </summary>
+        /// <param name="absolutePath"></param>
+        /// <param name="forceToDelete"></param>
         public static void DeleteFolder(string absolutePath, bool forceToDelete)
         {
             if (!IsDirectoryEmpty(absolutePath)) return;
-            DirectoryInfo dirInfo = new DirectoryInfo(absolutePath);
-            if (dirInfo.Exists & IsDirectoryReadOnly (absolutePath))            
+            var dirInfo = new DirectoryInfo(absolutePath);
+            if (dirInfo.Exists & IsDirectoryReadOnly(absolutePath))
                 dirInfo.Attributes &= ~FileAttributes.ReadOnly;
-
-            dirInfo.Delete(); 
-            
+            dirInfo.Delete();
         }
 
         /// <summary>
@@ -152,7 +142,7 @@ namespace OneSync.Files
         public static FileInfo[] GetFilesExcludeHidden(string absolutePath)
         {
             return (new DirectoryInfo(absolutePath).GetFiles("*.*", SearchOption.AllDirectories)
-                .Where(f => (f.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)).ToArray<FileInfo>();
+                .Where(f => (f.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)).ToArray();
         }
 
         /// <summary>
@@ -163,30 +153,7 @@ namespace OneSync.Files
         public static DirectoryInfo[] GetDirectoriesExcludeHidden(string absolutePath)
         {
             return (new DirectoryInfo(absolutePath).GetDirectories("*.*", SearchOption.AllDirectories)
-                .Where(f => (f.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)).ToArray<DirectoryInfo>();
-        }
-
-        private static string GetDoubleHash(string path)
-        {
-            long fileSize = new FileInfo(path).Length;
-            int numberOfThreads = Convert.ToInt32((fileSize % STREAM_LIMIT) + 1);
-            int startIndex = 0;
-            for (int x = 0; x < numberOfThreads && startIndex <= fileSize; x++)
-            {
-                //PartialFileStream stream = new PartialFileStream(path, FileMode.Open, startIndex, STREAM_LIMIT - 1);
-
-
-                startIndex += STREAM_LIMIT - 1;
-            }
-            return "";
-        }
-
-        public static void PartialHash(Stream stream)
-        {
-            StringBuilder builder = new StringBuilder();
-            MD5 md5Hasher = new MD5CryptoServiceProvider();
-            byte[] hashBytes = md5Hasher.ComputeHash(stream);
-            foreach (byte b in hashBytes) builder.Append(String.Format("{0:x2}", b));
+                .Where(f => (f.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)).ToArray();
         }
 
         /// <summary>
@@ -197,8 +164,9 @@ namespace OneSync.Files
         /// <returns></returns>
         public static string GetRelativePath(string baseDirectory, string fullPath)
         {
-            if (fullPath.Contains(baseDirectory)) return fullPath.Substring(baseDirectory.Length, fullPath.Length - baseDirectory.Length);
-            else return "";
+            if (fullPath.Contains(baseDirectory))
+                return fullPath.Substring(baseDirectory.Length, fullPath.Length - baseDirectory.Length);
+            return "";
         }
 
         /// <summary>
@@ -211,9 +179,8 @@ namespace OneSync.Files
         /// <exception cref="FileInUseException"></exception>
         public static bool Copy(string source, string destination, bool forceToCopy)
         {
-            if (!File.Exists(source)) throw new FileNotFoundException(source);
-            if (IsOpen(source)) throw new FileInUseException("File " + source + " is being opened");
-            if (IsOpen(source) || IsOpen(destination)) throw new FileInUseException("File is currently open");
+            //if (IsOpen(source)) throw new FileInUseException("File " + source + " is being opened");
+            //if (IsOpen(source) || IsOpen(destination)) throw new FileInUseException("File is currently open");
 
             //extract the directory lead to destination
             string directory = destination.Substring(0, destination.LastIndexOf('\\'));
@@ -221,40 +188,54 @@ namespace OneSync.Files
             //overwriten on exist            
             try
             {
-                FileInfo info = new FileInfo(destination);
-                if (File.Exists(destination) && info.IsReadOnly) { info.IsReadOnly = !forceToCopy; }
-                File.Copy(source, destination, true);
+                var info = new FileInfo(destination);
+                /*
+                if (File.Exists(destination) && info.IsReadOnly)
+                {
+                    info.IsReadOnly = !forceToCopy;
+                }*/
+                File.Copy(source, destination, forceToCopy);
                 return true;
             }
             catch (Exception ex)
             {
                 // Check for not enough space on the disk.
-                if ((uint)Marshal.GetHRForException(ex) == 0x80070070)
+                if ((uint) Marshal.GetHRForException(ex) == 0x80070070)
                     throw new OutOfDiskSpaceException();
-
-                return false; 
+                return false;
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="oldPath"></param>
+        /// <param name="newPath"></param>
+        /// <param name="forceToRename"></param>
+        /// <returns></returns>
+        /// <exception cref="FileInUseException"></exception>
         public static bool Move(string oldPath, string newPath, bool forceToRename)
         {
-            if (!File.Exists(oldPath)) throw new FileNotFoundException(oldPath);
-            if (IsOpen(oldPath)) throw new FileInUseException("File " + oldPath + " is being opened");
-
+            //if (IsOpen(oldPath)) throw new FileInUseException("File " + oldPath + " is being opened");
             //extract the directory lead to destination
             string directory = newPath.Substring(0, newPath.LastIndexOf('\\'));
             if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
             //overwriten on exist
             try
             {
-                FileInfo info = new FileInfo(newPath);
-                if (info.Exists && info.IsReadOnly) { info.IsReadOnly = !forceToRename; }
+                var info = new FileInfo(newPath);
+                /*if (info.Exists && info.IsReadOnly)
+                {
+                    info.IsReadOnly = !forceToRename;
+                }*/
                 File.Delete(newPath);
                 File.Move(oldPath, newPath);
                 return true;
             }
-            catch (Exception) { return false; }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -263,17 +244,19 @@ namespace OneSync.Files
         /// <param name="source"></param>
         /// <param name="destination"></param>
         /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="PathTooLongException"></exception>
         public static bool DuplicateRename(string source, string destination)
-        {   
+        {
             string directory = Path.GetDirectoryName(destination);
             string fileName = Path.GetFileNameWithoutExtension(destination);
             string extension = Path.GetExtension(destination);
 
             fileName += "[conflicted-copy-" + string.Format("{0:yyyy-MM-dd-hh-mm-ss}", DateTime.Now) + "]";
             destination = directory + "\\" + fileName + extension;
-            
+
             if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
-            
+
             return Move(source, destination, false);
         }
 
@@ -291,7 +274,7 @@ namespace OneSync.Files
             UInt64 uid = 0;
 
             // Assume that file path is valid and file exists.
-            using (FileStream fs = new FileStream(filePath, FileMode.Open))
+            using (var fs = new FileStream(filePath, FileMode.Open))
             {
                 GetFileInformationByHandle(fs.SafeFileHandle.DangerousGetHandle(), out info);
             }
@@ -307,9 +290,16 @@ namespace OneSync.Files
         /// </summary>
         /// <param name="absolutePath"></param>
         /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="NotSupportedException"></exception>
+        /// <exception cref="FileNotFoundException"></exception>
+        /// <exception cref="PathTooLongException"></exception>
+        /// <exception cref="DirectoryNotFoundException"></exception>
         public static bool IsFileReadOnly(string absolutePath)
         {
-            return ((File.GetAttributes(absolutePath) & FileAttributes.ReadOnly) == FileAttributes.ReadOnly) ? true : false;
+            return ((File.GetAttributes(absolutePath) & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                       ? true
+                       : false;
         }
 
         /// <summary>
@@ -317,6 +307,11 @@ namespace OneSync.Files
         /// </summary>
         /// <param name="absolutePath"></param>
         /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="NotSupportedException"></exception>
+        /// <exception cref="FileNotFoundException"></exception>
+        /// <exception cref="PathTooLongException"></exception>
+        /// <exception cref="DirectoryNotFoundException"></exception>
         public static bool IsFileHidden(string absolutePath)
         {
             return ((File.GetAttributes(absolutePath) & FileAttributes.Hidden) == FileAttributes.Hidden) ? true : false;
@@ -327,15 +322,20 @@ namespace OneSync.Files
         /// </summary>
         /// <param name="absolutePath"></param>
         /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="SecurityException"></exception>
+        /// <exception cref="AugmentException"></exception>
+        /// <exception cref="PathTooLongException"></exception>
         public static bool IsDirectoryHidden(string absolutePath)
         {
-            DirectoryInfo dirInfo = new DirectoryInfo(absolutePath);
+            var dirInfo = new DirectoryInfo(absolutePath);
             return ((dirInfo.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden) ? true : false;
         }
 
 
         [DllImport("shlwapi.dll", CharSet = CharSet.Auto)]
-        internal extern static bool PathIsDirectoryEmpty(string pszPath);
+        internal static extern bool PathIsDirectoryEmpty(string pszPath);
+
         public static bool IsDirectoryEmpty(string absolutePath)
         {
             return PathIsDirectoryEmpty(absolutePath);
@@ -346,9 +346,13 @@ namespace OneSync.Files
         /// </summary>
         /// <param name="absolutePath"></param>
         /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="SecurityException"></exception>
+        /// <exception cref="AugmentException"></exception>
+        /// <exception cref="PathTooLongException"></exception>
         public static bool IsDirectoryReadOnly(string absolutePath)
         {
-            DirectoryInfo dirInfo = new DirectoryInfo(absolutePath);
+            var dirInfo = new DirectoryInfo(absolutePath);
             return ((dirInfo.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly) ? true : false;
         }
 
@@ -356,10 +360,9 @@ namespace OneSync.Files
         /// Test whether a file with absolute path is open/in use
         /// </summary>
         /// <param name="absolutePath"></param>
-        /// <returns></returns>
+        /// <returns></returns>        
         public static bool IsOpen(string absolutePath)
         {
-            if (!File.Exists(absolutePath)) return false;
             FileStream fs = null;
             try
             {
@@ -367,44 +370,46 @@ namespace OneSync.Files
                 return false;
             }
             catch (Exception)
-            { return true; }
+            {return true;}
             finally
-            { if (fs != null) fs.Dispose(); }
+            {if (fs != null) fs.Dispose();}
         }
 
         /// <summary>
-        /// 
+        /// Move contents from a folder to another one
         /// </summary>
         /// <param name="sourceDir"></param>
         /// <param name="destinationDir"></param>
         /// <returns></returns>
         public static bool MoveFolder(string sourceDir, string destinationDir)
         {
-            try
+            bool succeeded = true;
+            //may throw unauthorize access here
+            FileInfo[] fileInfos = new DirectoryInfo(sourceDir).GetFiles("*.*", SearchOption.AllDirectories);
+            foreach (FileInfo info in fileInfos)
             {
-                FileInfo[] fileInfos = new DirectoryInfo(sourceDir).GetFiles("*.*", SearchOption.AllDirectories);
-                foreach (FileInfo info in fileInfos)
-                {
-                    string absolutePathInDestination = info.FullName.Replace(sourceDir, destinationDir);
-                    try
-                    {
-                        Copy(info.FullName, absolutePathInDestination, false);
-                    }
-                    catch (OutOfDiskSpaceException)
-                    {
-                        throw;
-                    }
-                    catch (Exception)
-                    {
-
-                    }
-                }
-                return true;
+                string absolutePathInDestination = info.FullName.Replace(sourceDir, destinationDir);
+                try{ Copy(info.FullName, absolutePathInDestination, false);}
+                catch (OutOfDiskSpaceException){throw;}
+                catch (Exception){succeeded = false;}
             }
-            catch (Exception)
-            {
-                return false;
-            }
+            return succeeded;
         }
+
+        #region Nested type: BY_HANDLE_FILE_INFORMATION
+        private struct BY_HANDLE_FILE_INFORMATION
+        {
+            public Int64 CreationTime;
+            public uint FileAttributes;
+            public uint FileIndexHigh;
+            public uint FileIndexLow;
+            public uint FileSizeHigh;
+            public uint FileSizeLow;
+            public Int64 LastAccessTime;
+            public Int64 LastWriteTime;
+            public uint NumberOfLinks;
+            public uint VolumeSerialNumber;
+        }
+        #endregion
     }
 }

@@ -113,20 +113,16 @@ namespace OneSync.Synchronization
         /// <param name="fromPath">Root path of files which metadata is to be generated.</param>
         /// <param name="id">Id of metadata to be generated.</param>
         /// <returns>MetaData of all files specified in root path.</returns>
-        public static Metadata Generate(string fromPath, string id, bool excludeHidden)
+        public static Metadata Generate(string fromPath, string id, bool excludeHidden, bool createIfNotExist)
         {
+            if (!Directory.Exists((fromPath)) && createIfNotExist)
+                Directory.CreateDirectory((fromPath));
             return new Metadata(GenerateFileMetadata(fromPath, id, excludeHidden), GenerateFolderMetadata(fromPath, id, excludeHidden));
         }
 
-        public static FileMetaData GenerateFileMetadata(string fromPath, string id, bool excludeHidden)
-        {
-            if (!Directory.Exists(fromPath))
-            {
-                try
-                { Directory.CreateDirectory(fromPath); }
-                catch (Exception) { throw; }
-            }
 
+        public static FileMetaData GenerateFileMetadata(string fromPath, string id, bool excludeHidden)
+        {            
             FileMetaData fileMetadata = new FileMetaData(id, fromPath);
 
             DirectoryInfo di = new DirectoryInfo(fromPath);
@@ -149,13 +145,7 @@ namespace OneSync.Synchronization
 
 
         public static FolderMetadata GenerateFolderMetadata(string fromPath, string id, bool excludeHidden)
-        {
-            if (!Directory.Exists(fromPath))
-            {
-                try
-                { Directory.CreateDirectory(fromPath); }
-                catch (Exception) { throw; }
-            }
+        {            
             FolderMetadata folderMetadata = new FolderMetadata(id, fromPath);
 
             DirectoryInfo di = new DirectoryInfo(fromPath);
