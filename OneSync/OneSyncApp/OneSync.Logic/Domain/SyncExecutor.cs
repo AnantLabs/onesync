@@ -47,6 +47,18 @@ namespace OneSync.Synchronization
             }
         }
 
+        public static void UpdateTableAction(SyncAction action, SyncJob job)
+        {
+            try
+            {
+                SQLiteSyncActionsProvider actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
+                actProvider.Add(action);
+            }
+            catch (Exception)
+            { throw; }
+        }
+
+
         /// <summary>
         /// Copy a file from sync folder and update action table
         /// </summary>
