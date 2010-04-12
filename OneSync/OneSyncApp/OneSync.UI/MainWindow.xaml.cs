@@ -376,6 +376,23 @@ namespace OneSync.UI
                         });
                     }
                 }
+
+                if (!entry.SyncJob.SyncSource.Path.Equals(oldSyncSource))
+                {
+                    try
+                    {
+                        if (!Directory.Exists(oldSyncSource) ||
+                            !Files.FileUtils.MoveFolder(oldSyncSource, entry.SyncJob.SyncSource.Path))
+                            throw new Exception();
+                    }
+                    catch (Exception)
+                    {
+                        this.Dispatcher.Invoke((Action)delegate
+                        {
+                            showErrorMsg("Can't move file(s) to new sync source location. Please do it manually");
+                        });
+                    }
+                }
                 e.Result = entry;
             }
             catch (Exception ee)
