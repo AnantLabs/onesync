@@ -907,7 +907,10 @@ namespace OneSync.UI
                     if (tb == null) return;
 
                     if (Directory.Exists(folders[0]))
+                    {
                         tb.Text = folders[0];
+                        tb.Focus();
+                    }
                 }
                 else 
                 {
