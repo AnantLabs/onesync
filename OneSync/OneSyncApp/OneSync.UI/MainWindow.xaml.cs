@@ -252,7 +252,8 @@ namespace OneSync.UI
         }
 
         private void edit_MouseDown(object sender, MouseButtonEventArgs e)
-        {           
+        {
+            showErrorMsg("");
             try
             {
                 if (sender.GetType() == typeof(TextBlock) && e.ClickCount == 1)
@@ -273,6 +274,7 @@ namespace OneSync.UI
 
         private void imgDelete_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            showErrorMsg("");
             try
             {
                 Image img = (Image)e.Source;

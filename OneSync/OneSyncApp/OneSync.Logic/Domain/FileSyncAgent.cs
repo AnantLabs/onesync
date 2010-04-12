@@ -118,6 +118,7 @@ namespace OneSync.Synchronization
                 ExecuteRenameActions(previewResult.ItemsToRename, syncResult);
                 ExecuteConflictActions(previewResult.ConflictItems, syncResult);
 
+                SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(_job.IntermediaryStorage.Path);
             }
             catch (Exception){}
             finally
@@ -125,8 +126,7 @@ namespace OneSync.Synchronization
                 // Add to log
                 Log.AddToLog(_job.SyncSource.Path, _job.IntermediaryStorage.Path,
                              _job.Name, log, Log.From, log.Count, starTtime, DateTime.Now);
-            }           
-            
+            }
             return syncResult;
         }
 
@@ -135,39 +135,25 @@ namespace OneSync.Synchronization
         /// </summary>
         private void Generate()
         {
-            //read metadata of the current folder in file system 
-            Metadata currentItems = MetaDataProvider.Generate(_job.SyncSource.Path, _job.SyncSource.ID, false);
-            Metadata metadataInIStorage = MetaDataProvider.Generate(_job.IntermediaryStorage.DirtyFolderPath, "", false);
+            IList<SyncAction> newActions = GenerateActions();
 
-
-            //read metadata of the current folder stored in the database
-            MetaDataProvider mdProvider = SyncClient.GetMetaDataProvider(_job.IntermediaryStorage.Path, _job.SyncSource.Path);
-            Metadata storedItems = mdProvider.Load(_job.SyncSource.ID, SourceOption.SOURCE_ID_EQUALS);
-
-            //Update metadata 
-            mdProvider.Update(storedItems, currentItems);
-
-            storedItems = mdProvider.Load(_job.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
-            FileMetaDataComparer actionGenerator = new FileMetaDataComparer(currentItems.FileMetadata, storedItems.FileMetadata);
-
-            //generate list of sync actions by comparing 2 metadata
-
-            IList<SyncAction> newActions = actionGenerator.Generate();
-
-            //delete actions of previous sync
             SyncActionsProvider actProvider = SyncClient.GetSyncActionsProvider(_job.IntermediaryStorage.Path);
-            actProvider.Delete(_job.SyncSource.ID, SourceOption.SOURCE_ID_EQUALS);
+            DeleteSavedActions(actProvider);
+            
+            int totalWorkItems = newActions.Count;
+            if (totalWorkItems == 0)
+            {
+                OnProgressChanged(new SyncProgressChangedEventArgs(1, 1));
+                return;
+            }
 
             // Logging
             List<LogActivity> generateActivities = new List<LogActivity>();
             DateTime starttime = DateTime.Now;
 
-            int totalWorkItems = newActions.Count;
-            if (totalWorkItems == 0)
-                OnProgressChanged(new SyncProgressChangedEventArgs(1, 1));
-
             int workItem = 0;
 
+            Metadata mdStorage = MetaDataProvider.Generate(_job.IntermediaryStorage.DirtyFolderPath, "", false);
             try
             {
                 foreach (SyncAction action in newActions)
@@ -178,15 +164,11 @@ namespace OneSync.Synchronization
                     try
                     {
                         FileMetaDataItem item = new FileMetaDataItem("", "", action.RelativeFilePath, action.FileHash, DateTime.Now, 0, 0);
-                        #region newly created action
+                        
                         OnSyncFileChanged(new SyncFileChangedEventArgs(ChangeType.NEWLY_CREATED, action.RelativeFilePath));
-                        if (action.ChangeType == ChangeType.NEWLY_CREATED && !metadataInIStorage.FileMetadata.MetaDataItems.Contains(item, new FileMetaDataItemComparer()))
-                        {
+                        
+                        if (action.ChangeType == ChangeType.NEWLY_CREATED && !mdStorage.FileMetadata.MetaDataItems.Contains(item, new FileMetaDataItemComparer()))
                             SyncExecutor.CopyToDirtyFolderAndUpdateActionTable(action, _job);
-                        }
-                        #endregion newly created action
-
-                        #region delete/rename action
                         else if (action.ChangeType == ChangeType.DELETED || action.ChangeType == ChangeType.RENAMED)
                         {
                             OnSyncFileChanged(new SyncFileChangedEventArgs(ChangeType.DELETED, action.RelativeFilePath));
@@ -195,7 +177,6 @@ namespace OneSync.Synchronization
                             workItem++;
                             OnProgressChanged(new SyncProgressChangedEventArgs(workItem, totalWorkItems));
                         }
-                        #endregion delete action
 
                         generateActivities.Add(new LogActivity(action.RelativeFilePath, action.ChangeType.ToString(), "SUCCESS"));
                     }
@@ -216,6 +197,39 @@ namespace OneSync.Synchronization
                             _job.Name, generateActivities, Log.To, generateActivities.Count, starttime, DateTime.Now);
             }
             
+        }
+
+        private Metadata UpdateSyncSourceMetadata(MetaDataProvider mdProvider)
+        {
+            //read metadata of the current folder stored in the database
+            Metadata mdCurrentOld = mdProvider.Load(_job.SyncSource.ID, SourceOption.SOURCE_ID_EQUALS);
+
+            //read metadata of the current folder in file system 
+            Metadata mdCurrent = MetaDataProvider.Generate(_job.SyncSource.Path, _job.SyncSource.ID, false);
+
+            //Update metadata 
+            mdProvider.Update(mdCurrentOld, mdCurrent);
+
+            return mdCurrent;
+        }
+
+        private IList<SyncAction> GenerateActions()
+        {
+            MetaDataProvider mdProvider = SyncClient.GetMetaDataProvider(_job.IntermediaryStorage.Path, _job.SyncSource.Path);
+
+            Metadata mdCurrent = UpdateSyncSourceMetadata(mdProvider);
+            Metadata mdOther = mdProvider.Load(_job.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
+
+            //generate list of sync actions by comparing 2 metadata
+            FileMetaDataComparer actionGenerator = new FileMetaDataComparer(mdCurrent.FileMetadata, mdOther.FileMetadata);
+            
+            return actionGenerator.Generate();
+        }
+
+        private void DeleteSavedActions(SyncActionsProvider actProvider)
+        {
+            //delete actions of previous sync
+            actProvider.Delete(_job.SyncSource.ID, SourceOption.SOURCE_ID_EQUALS);
         }
 
         private void ExecuteCreateActions(IList<SyncAction> copyList, SyncResult syncResult)
