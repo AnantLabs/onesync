@@ -11,7 +11,8 @@ The following outlines of OneSync synchronization algorithm and logic.
     * [SyncLogic#3.2_Updating_of_metadata 2.2 Updating of metadata]
   * [SyncLogic#4._Generating_Patch 4. Generating Patch]
     * [SyncLogic#4.1_Comparing_Metadata 4.1 Comparing Metadata]
-    * [SyncLogic#4.2_Creating_SyncActions 4.2 Creating SyncActions]
+    * [SyncLogic#4.2_Creating_SyncActions 4.3 Creating SyncActions]
+    * [SyncLogic#4.3_Rename_Detection 4.2 Rename Detection]
 
 = 1. Overview =
 
@@ -120,3 +121,11 @@ Of course, the above might not be the most efficient query. There are still room
 == 4.2 Creating !SyncActions ==
 
 For each difference, a corresponding !SyncAction will be generated to resolve this difference. In this stage only files in the current PC could be associated with a !SyncAction. These !SyncActions, together with its associated file (if any) can be considered to be the patch for other PC.
+
+== 4.3 Rename Detection ==
+
+A Rename action is seen to be equivalent to a Delete action followed by a Create action of the same file. Therefore, Rename actions are generated last. In current implementation, the File Hash is used to determined whether the files are the deleted and created file are the same (and hence constitute a rename action).
+
+It is to be noted that for this implementation, user might not has renamed the file but has explicitly deleted it and created a same file with the same contents (and hence the same hash). However, !OneSync will still detect it as a rename operation and after synchronization, the state of the filesystem will still be consistent.
+
+A better solution might be to use the unique Id of the file, which is outlined in the [http://msdn.microsoft.com/en-us/library/aa363788(VS.85).aspx MSDN documentation]. While the Win32 method is implemented in `FileUtil` class, it is not used in the current implementation as it is applicable for NTFS filesystem only. It can be considered in future versions though.
