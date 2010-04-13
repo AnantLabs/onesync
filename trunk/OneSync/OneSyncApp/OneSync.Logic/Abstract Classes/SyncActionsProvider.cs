@@ -156,12 +156,16 @@ namespace OneSync.Synchronization
             // Sort longer list for efficiency
             longList.Sort(hashComparer);
 
+
             foreach (SyncAction a in shortList)
             {
                 // Find if a file with same hash exist in other list
-                int index = longList.BinarySearch(a, hashComparer);
+                int index = longList.BinarySearch(shortList[i], hashComparer);
                 if (index >= 0)
-                    CreateRenameActions(a, longList[index], actions);
+                {
+                    CreateRenameActions(shortList[i], longList[index], actions);
+                    longList.RemoveAt(index);
+                }
             }
         }
 
