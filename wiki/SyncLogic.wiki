@@ -9,9 +9,9 @@ The following outlines of OneSync synchronization algorithm and logic.
   * [SyncLogic#3._Applying_Patch 3. Applying Patch]
     * [SyncLogic#3.1_Executing_SyncActions 2.1 Executing SyncActions]
     * [SyncLogic#3.2_Updating_of_metadata 2.2 Updating of metadata]
-  * [SyncLogic#3._Generating_Patch 3. Generating Patch]
-    * [SyncLogic#3.1_Comparing_Metadata 3.1 Comparing Metadata]
-    * [SyncLogic#3.2_Creating_SyncActions 3.2 Creating SyncActions]
+  * [SyncLogic#4._Generating_Patch 4. Generating Patch]
+    * [SyncLogic#4.1_Comparing_Metadata 4.1 Comparing Metadata]
+    * [SyncLogic#4.2_Creating_SyncActions 4.2 Creating SyncActions]
 
 = 1. Overview =
 
@@ -84,14 +84,37 @@ After the !SyncActions are executed, the !SyncActions and any associated files a
 
 As the actions are being executed, the corresponding metadata will be updated as well. This is to allow for comparison by the other PC for detection of the dirty files (i.e. files changed since last synchronization is run).
 
-= 2. Generating Patch =
+= 4. Generating Patch =
 
 This is the stage where the !SyncActions for the other folder/PC is being generated.
 
-== 2.1 Comparing Metadata ==
+== 4.1 Comparing Metadata ==
 
 The saved metadata of the other PC is being compared with the current filesystem of the file being synchronized. The purpose is to detect all the differences in the filesystem of the folder being synchronized and the filesystem of the other PC.
 
-== 2.2 Creating !SyncActions ==
+The `FileMetaDataComparer` class is used to determine the differences between 2 !FileMetaData (labelled _left_ and _right_). The result of the comparison comprises of 3 lists:
+  * Files that exists in the left only
+  * Files that exists in the right only
+  * Files that exists in both but are modified
+
+LINQ is used to expressed the above queries:
+
+{{{
+var rightOnly = from i in right.MetaDataItems
+                where !left.MetaDataItems.Contains(i, comparer)
+                select i;
+
+var leftOnly = from i in left.MetaDataItems
+               where !right.MetaDataItems.Contains(i, comparer)
+               select i;
+
+var both = from @new in left.MetaDataItems
+           join @old in right.MetaDataItems
+           on @new.RelativePath equals @old.RelativePath
+           where !(@new.HashCode.Equals(@new.HashCode))
+           select @new;
+}}}
+
+== 4.2 Creating !SyncActions ==
 
 For each difference, a corresponding !SyncAction will be generated to resolve this difference. In this stage only files in the current PC could be associated with a !SyncAction. These !SyncActions, together with its associated file (if any) can be considered to be the patch for other PC.
