@@ -168,7 +168,6 @@ namespace OneSync.Synchronization
                 cmd.ExecuteNonQuery();
                 return true;
             }
-            
         }
 
         /// <summary>

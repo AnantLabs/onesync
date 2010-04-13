@@ -177,6 +177,12 @@ namespace OneSync.UI
                 {
                     showErrorMsg(syncJobException.Message);
                 });
+            }catch(Exception exception)
+            {
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    showErrorMsg(exception.Message);
+                });
             }
 
 
@@ -255,8 +261,10 @@ namespace OneSync.UI
             {
                 showErrorMsg(sje.Message);
             }
-                 
-            
+            catch(Exception ex)
+            {
+                showErrorMsg(ex.Message);
+            }
         }
 
         private void edit_MouseDown(object sender, MouseButtonEventArgs e)
@@ -316,6 +324,10 @@ namespace OneSync.UI
             catch(SqliteSyntaxException sqliteSyntaxException)
             {
                 showErrorMsg("Metadata file is missing or corrupted");
+            }
+            catch(Exception exception)
+            {
+                showErrorMsg(exception.Message);
             }
         }
         /*
@@ -430,24 +442,25 @@ namespace OneSync.UI
                     entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
                     entry.SyncJob.SyncSource.Path = oldSyncSource;
                     entry.InfoChanged();
-                    showErrorMsg(profileNameExistException.Message);
-                    SetControlsEnabledState(false, true);
+                    this.Dispatcher.Invoke((Action)delegate
+                    {
+                        showErrorMsg(profileNameExistException.Message);
+                        SetControlsEnabledState(false, true);
+                    });
                 });
             }
-                
-            /*
             catch (Exception ee)
             {
                 entry.SyncJob.Name = oldSyncJobName;
                 entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
                 entry.SyncJob.SyncSource.Path = oldSyncSource;
-                entry.InfoChanged();  Force databinding to refresh 
+                entry.InfoChanged();
                 this.Dispatcher.Invoke((Action)delegate
                 {
                     showErrorMsg(ee.Message);
                     SetControlsEnabledState(false, true);
                 });
-            }*/ 
+            }
         }
 
         void editJobWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -560,9 +573,9 @@ namespace OneSync.UI
                 entry.ProgressBarVisibility = Visibility.Hidden;
 
             UISyncJobEntry currentJobEntry = null;
-
+            try
+            {
                 currentJobEntry = selectedEntries.Peek();
-
                 // Update UI
                 UpdateSyncInfoUI(currentJobEntry.SyncJob);
                 SetControlsEnabledState(true, false);
@@ -570,16 +583,15 @@ namespace OneSync.UI
 
                 // Run sync
                 syncWorker.RunWorkerAsync(selectedEntries);
-            
-                /*
-            catch (Exception ex)
+            }
+            catch(Exception exception)
             {
                 string errorMsg = Validator.validateSyncDirs(currentJobEntry.SyncSource, currentJobEntry.IntermediaryStoragePath);
                 if (errorMsg != null)
                     showErrorMsg(errorMsg);
                 else
-                    showErrorMsg(ex.Message);
-            }*/
+                    showErrorMsg(exception.Message);
+            }
         }
 
         void syncWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -665,7 +677,6 @@ namespace OneSync.UI
                     showErrorMsg(errorMsg);
                 });    
             }
-            /*
             catch (Exception ex)
             {
                 string errorMsg;
@@ -681,7 +692,7 @@ namespace OneSync.UI
                     entry.ProgressBarMessage = errorMsg;
                     showErrorMsg(errorMsg);
                 });    
-            }*/
+            }
 
             if (syncWorker.CancellationPending)
             {
@@ -923,6 +934,14 @@ namespace OneSync.UI
                     showErrorMsg(profileNameExistException.Message);
                     entry.EditMode = false;
                     SetControlsEnabledState(false, true);
+                });
+                return false;
+            }
+            catch(Exception exception)
+            {
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    showErrorMsg(exception.Message);
                 });
                 return false;
             }

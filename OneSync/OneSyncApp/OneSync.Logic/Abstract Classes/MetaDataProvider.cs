@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Security.Principal;
+using System.Security.AccessControl;
 
 namespace OneSync.Synchronization
 {
@@ -120,12 +122,23 @@ namespace OneSync.Synchronization
             return new Metadata(GenerateFileMetadata(fromPath, id, excludeHidden), GenerateFolderMetadata(fromPath, id, excludeHidden));
         }
 
+        private static void AddDirectorySecurity (string absolutePath)
+        {
+            WindowsIdentity identity = WindowsIdentity.GetCurrent();
+            SecurityIdentifier id = identity.User;
+            DirectorySecurity directorySecurity = Directory.GetAccessControl(absolutePath);
+            FileSystemAccessRule rule = new FileSystemAccessRule(id, FileSystemRights.Read,AccessControlType.Allow);
+            directorySecurity.AddAccessRule(rule);
+            Directory.SetAccessControl(absolutePath,directorySecurity);
+        }
 
         public static FileMetaData GenerateFileMetadata(string fromPath, string id, bool excludeHidden)
         {            
             FileMetaData fileMetadata = new FileMetaData(id, fromPath);
 
             DirectoryInfo di = new DirectoryInfo(fromPath);
+
+            AddDirectorySecurity(fromPath);
 
             FileInfo[] files = null;
 
@@ -163,6 +176,9 @@ namespace OneSync.Synchronization
 
             DirectoryInfo di = new DirectoryInfo(fromPath);
             DirectoryInfo[] directories = null;
+
+            AddDirectorySecurity(fromPath);
+
             directories = di.GetDirectories("*.*", SearchOption.AllDirectories);
             
             if (directories == null) return new FolderMetadata( id, fromPath );
