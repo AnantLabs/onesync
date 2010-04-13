@@ -122,7 +122,7 @@ The OneSync Window will pop up. Enter the profile name, directory of the folder 
 
 [http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot5.jpg]
 
-After a few seconds (unless your sync source folder is huge), sync process will be done successfully. =)
+After a few moments (unless your sync source folder is huge), sync process will be done successfully. =)
 
 [http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot6.jpg]
 
