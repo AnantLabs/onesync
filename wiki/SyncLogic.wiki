@@ -11,8 +11,8 @@ The following outlines of OneSync synchronization algorithm and logic.
     * [SyncLogic#3.2_Updating_of_metadata 2.2 Updating of metadata]
   * [SyncLogic#4._Generating_Patch 4. Generating Patch]
     * [SyncLogic#4.1_Comparing_Metadata 4.1 Comparing Metadata]
-    * [SyncLogic#4.2_Creating_SyncActions 4.3 Creating SyncActions]
-    * [SyncLogic#4.3_Rename_Detection 4.2 Rename Detection]
+    * [SyncLogic#4.2_Creating_SyncActions 4.2 Creating SyncActions]
+    * [SyncLogic#4.3_Rename_Detection 4.3 Rename Detection]
 
 = 1. Overview =
 
