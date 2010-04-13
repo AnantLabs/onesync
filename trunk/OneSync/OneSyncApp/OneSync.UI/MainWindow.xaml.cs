@@ -896,9 +896,14 @@ namespace OneSync.UI
                     BackgroundWorker editJobWorker = new BackgroundWorker();
                     editJobWorker.DoWork += new DoWorkEventHandler(editJobWorker_DoWork);
                     editJobWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(editJobWorker_RunWorkerCompleted);
-    
+
                     SetControlsEnabledState(false, false);
                     editJobWorker.RunWorkerAsync(entry);
+                }
+                else
+                {
+                    entry.EditMode = false;
+                    SetControlsEnabledState(false, true);
                 }
             }
             catch (SyncJobException syncJobException)
@@ -906,6 +911,8 @@ namespace OneSync.UI
                 this.Dispatcher.Invoke((Action)delegate
                 {
                     showErrorMsg(syncJobException.Message);
+                    entry.EditMode = false;
+                    SetControlsEnabledState(false, true);
                 });                
                 return false;
             }
@@ -914,6 +921,8 @@ namespace OneSync.UI
                 this.Dispatcher.Invoke((Action)delegate
                 {
                     showErrorMsg(profileNameExistException.Message);
+                    entry.EditMode = false;
+                    SetControlsEnabledState(false, true);
                 });
                 return false;
             }
