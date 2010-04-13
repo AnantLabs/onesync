@@ -5,3 +5,15 @@
 Currently, similar files are detected using File Hash. So a 'real' rename operation cannot be really identified.
 
 A better solution might be to use the file ID of a file which according to the [http://msdn.microsoft.com/en-us/library/aa363788(VS.85).aspx MSDN documentation], "keeps the same file ID until it is deleted". The Win32 method `GetFileInformationByHandle` for getting the file ID is outlined [http://msdn.microsoft.com/en-us/library/aa364952(VS.85).aspx here] is implemented in the `FileUtil` class but is not used as it is only applicable for NTFS filesystem only. It could be possibly used in conjunction with current techniques in future versions.
+
+= Transactional Enhancements =
+
+"Applications use transactions to group operations on resources and ensure that the operations either succeed or fail as a single unit (that is, atomically)."
+
+_Reference: [http://msdn.microsoft.com/en-us/library/cc303702.aspx http://msdn.microsoft.com/en-us/library/cc303702.aspx]_
+
+The implementation uses [http://go.microsoft.com/fwlink/?LinkID=109497 Kernel Transaction Manager] (KTM) and [http://go.microsoft.com/fwlink/?LinkID=109496 Transactional NTFS] (TxF). This was implemented but was removed after revision r341. While it was working, KTM is only supported on Windows Vista / Windows 2008 and later version of Windows. Furthermore, it requires KTM services to be running. It was removed for better compatibility.
+
+Nevertheless, it will increase the robustness and reliability of synchronization if it is implemented.
+
+
