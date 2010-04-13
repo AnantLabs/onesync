@@ -128,12 +128,9 @@ namespace OneSync.Synchronization
             DirectoryInfo di = new DirectoryInfo(fromPath);
 
             FileInfo[] files = null;
-            try
-            {
-                files = di.GetFiles("*.*", SearchOption.AllDirectories);
-            }
-            catch (Exception)
-            {}
+
+            files = di.GetFiles("*.*", SearchOption.AllDirectories);
+            
             if (files == null) return new FileMetaData(id, fromPath);
             IEnumerable<FileInfo> noHiddenFiles = from file in files
                                                   where excludeHidden ? ((!Files.FileUtils.IsFileHidden(file.FullName)) && excludeHidden) : !excludeHidden
@@ -166,12 +163,7 @@ namespace OneSync.Synchronization
 
             DirectoryInfo di = new DirectoryInfo(fromPath);
             DirectoryInfo[] directories = null;
-            try
-            {
-                directories = di.GetDirectories("*.*", SearchOption.AllDirectories);
-            }
-            catch (Exception)
-            {}
+            directories = di.GetDirectories("*.*", SearchOption.AllDirectories);
             
             if (directories == null) return new FolderMetadata( id, fromPath );
             IEnumerable<DirectoryInfo> noHiddenDirectories = from dir in directories
