@@ -43,6 +43,15 @@ namespace OneSync.UI
 		{
             this.InitializeComponent();
 
+            string RunningProcess = Process.GetCurrentProcess().ProcessName;
+            Process[] processes = Process.GetProcessesByName(RunningProcess);
+
+            if (processes.Length > 1)
+            {
+                MessageBox.Show("OneSync is already running", "Stop", MessageBoxButton.OK);
+                Application.Current.Shutdown();
+            }
+
             // Get current synchronization directory from command line arguments.
             // Default sync directory is current directory of app.
             string[] args = System.Environment.GetCommandLineArgs();
