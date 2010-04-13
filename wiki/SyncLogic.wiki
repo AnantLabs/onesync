@@ -97,7 +97,7 @@ The `FileMetaDataComparer` class is used to determine the differences between 2 
   * Files that exists in the right only
   * Files that exists in both but are modified
 
-LINQ is used to expressed the above queries:
+LINQ is used to express the above queries:
 
 {{{
 var rightOnly = from i in right.MetaDataItems
@@ -114,6 +114,8 @@ var both = from @new in left.MetaDataItems
            where !(@new.HashCode.Equals(@new.HashCode))
            select @new;
 }}}
+
+Of course, the above might not be the most efficient query. There are still room for optimization of the search.
 
 == 4.2 Creating !SyncActions ==
 
