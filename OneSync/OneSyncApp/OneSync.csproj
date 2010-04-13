@@ -142,6 +142,7 @@
     <Compile Include="OneSync.Logic\Domain\SyncPreviewResult.cs" />
     <Compile Include="OneSync.Logic\Domain\SyncSource.cs" />
     <Compile Include="OneSync.Logic\Exceptions\DatabaseException.cs" />
+    <Compile Include="OneSync.Logic\Exceptions\SyncJobException.cs" />
     <Compile Include="OneSync.Logic\Exceptions\MetadataFileError.cs" />
     <Compile Include="OneSync.Files\OutOfDiskSpaceException.cs" />
     <Compile Include="OneSync.Logic\Exceptions\ProfileNameExistsException.cs" />

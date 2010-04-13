@@ -54,7 +54,6 @@ namespace OneSync.UI
                 txtSyncJobName.Text = System.IO.Path.GetFileName(args[1]);
                 txtSource.Text = args[1];
                 txtSource.Focus();
-                //txtSource.Select(txtSource.Text.Length, 0);
             }
 
             // Tag each browse button to corr TextBox
@@ -120,22 +119,16 @@ namespace OneSync.UI
 
         private void refreshCombobox() 
         {
-            try
+            ///TODO: Add Exception
+            txtSource.Items.Clear();
+            txtIntStorage.Items.Clear();
+            foreach (UISyncJobEntry entry in SyncJobEntries)
             {
-                txtSource.Items.Clear();
-                txtIntStorage.Items.Clear();
-                foreach (UISyncJobEntry entry in SyncJobEntries)
-                {
-                    if (!txtSource.Items.Contains(entry.SyncSource))
-                        txtSource.Items.Add(entry.SyncSource);
+                if (!txtSource.Items.Contains(entry.SyncSource))
+                    txtSource.Items.Add(entry.SyncSource);
 
-                    if (!txtIntStorage.Items.Contains(entry.IntermediaryStoragePath))
-                        txtIntStorage.Items.Add(entry.IntermediaryStoragePath);
-                }
-            }
-            catch (Exception ex)
-            {
-                //showErrorMsg(ex.Message);
+                if (!txtIntStorage.Items.Contains(entry.IntermediaryStoragePath))
+                    txtIntStorage.Items.Add(entry.IntermediaryStoragePath);
             }
         }
 
@@ -166,14 +159,23 @@ namespace OneSync.UI
             foreach (UISyncJobEntry entry in listAllSyncJobs.Items)
                 entry.EditMode = false;
 
-            Synchronize(selectedJobs);
-            //listAllSyncJobs.IsEnabled = false;
+            try
+            {
+                Synchronize(selectedJobs);
+            }catch(SyncJobException syncJobException)
+            {
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    showErrorMsg(syncJobException.Message);
+                });
+            }
+
+
         }
 
 		private void btnBrowse_Click(object sender, System.Windows.RoutedEventArgs e)
         {           
-            try
-            {
+            //TODO: Add try catch
                 ComboBox cb = ((Button)sender).Tag as ComboBox;
                 if (cb == null)
                 {
@@ -200,11 +202,7 @@ namespace OneSync.UI
                         //tb.CaretIndex = tb.Text.Length;
                     }
                 }
-            }
-            catch (Exception)
-            {
-                showErrorMsg("The selected folder path is invalid");
-            }
+            
         }
 
         void editControls_Loaded(object sender, RoutedEventArgs e)
@@ -227,13 +225,12 @@ namespace OneSync.UI
             string syncSourceDir = txtSource.Text.Trim();
             string intStorageDir = txtIntStorage.Text.Trim();
 
-            if (!validateSyncJobParams(syncJobName, syncSourceDir, intStorageDir))
-                return;
-
-
             //Create new sync job if all three inputs mentioned above are valid.
             try
             {
+                if (!Validator.SyncJobParamsValidated(syncJobName, syncSourceDir, intStorageDir))
+                    return;
+
                 SyncJob job = jobManager.CreateSyncJob(syncJobName, syncSourceDir, intStorageDir);
                 UISyncJobEntry entry = new UISyncJobEntry(job) { IsSelected = true };
                 SyncJobEntries.Add(entry);
@@ -245,17 +242,18 @@ namespace OneSync.UI
             {
                 showErrorMsg(ex.Message);
             }
-            catch (Exception ex)
+            catch(SyncJobException sje)
             {
-                showErrorMsg(ex.Message);
+                showErrorMsg(sje.Message);
             }
+                 
+            
         }
 
         private void edit_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            //TODO: Add try catch
             showErrorMsg("");
-            try
-            {
                 if (sender.GetType() == typeof(TextBlock) && e.ClickCount == 1)
                     return;
 
@@ -265,11 +263,6 @@ namespace OneSync.UI
                 UISyncJobEntry entry  = (UISyncJobEntry)img.DataContext;
 
                 entry.EditMode = !(entry.EditMode && saveSyncJob(entry));
-            }
-            catch (Exception ex)
-            {
-                showErrorMsg(ex.Message);
-            }
         }
 
         private void imgDelete_MouseDown(object sender, MouseButtonEventArgs e)
@@ -305,20 +298,18 @@ namespace OneSync.UI
                 SyncSourceProvider syncSourceProvider =
                     SyncClient.GetSyncSourceProvider(entry.IntermediaryStoragePath);
 
-                if (!syncSourceProvider.DeleteSyncSourceInIntermediateStorage(entry.SyncJob.SyncSource))
-                    throw new MetadataFileException("The data.md file might be missing or corrupted");
-
+                syncSourceProvider.DeleteSyncSourceInIntermediateStorage(entry.SyncJob.SyncSource);
             }
             catch (MetadataFileException mfe)
             {
-                showErrorMsg(mfe.Message);
+                showErrorMsg("Metadata file is missing or corrupted");
             }
-            catch (Exception ex)
+            catch(SqliteSyntaxException sqliteSyntaxException)
             {
-                showErrorMsg(ex.Message);
+                showErrorMsg("Metadata file is missing or corrupted");
             }
         }
-
+        /*
         private bool validateSyncJobParams(string jobName, string syncSource, string intStorage)
         {
             string errorMsg = Validator.validateSyncJobName(jobName);
@@ -337,7 +328,9 @@ namespace OneSync.UI
 
             return true;
         }
+        */
 
+        
         void editJobWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             this.Dispatcher.Invoke((Action)delegate
@@ -347,66 +340,78 @@ namespace OneSync.UI
 
             UISyncJobEntry entry = e.Argument as UISyncJobEntry;
             if (entry == null) return;
-
-            string oldSyncJobName = entry.SyncJob.Name;
+            
             string oldIStorage = entry.SyncJob.IntermediaryStorage.Path;
             string oldSyncSource = entry.SyncJob.SyncSource.Path;
+            string oldSyncJobName = entry.SyncJob.Name;
+            
+            entry.SyncJob.Name = entry.NewJobName;
+            entry.SyncJob.IntermediaryStorage.Path = entry.NewIntermediaryStoragePath;
+            entry.SyncJob.SyncSource.Path = entry.NewSyncSource;
+           try
+           {
+               jobManager.Update(entry.SyncJob);
+               entry.InfoChanged(); /* Force databinding to refresh */
 
-            try
+               if (!entry.SyncJob.IntermediaryStorage.Path.Equals(oldIStorage))
+               {
+                   try
+                   {
+                       if (!Files.FileUtils.MoveFolder(oldIStorage, entry.SyncJob.IntermediaryStorage.Path))
+                           throw new SyncJobException("File(s) can't be moved to " + entry.SyncJob.IntermediaryStorage.Path + ". Please do it manually");
+                   }
+                   catch (SyncJobException ex)
+                   {
+                       this.Dispatcher.Invoke((Action)delegate
+                       {
+                           showErrorMsg(ex.Message);
+                       });
+                   }
+               }
+
+               if (!entry.SyncJob.SyncSource.Path.Equals(oldSyncSource))
+               {
+                   try
+                   {
+                       if (!Files.FileUtils.MoveFolder(oldSyncSource, entry.SyncJob.SyncSource.Path))
+                           throw new SyncJobException("File(s) can't be moved to " + entry.SyncJob.SyncSource.Path + ". Please do it manually");
+                   }
+                   catch (SyncJobException sje)
+                   {
+                       this.Dispatcher.Invoke((Action)delegate
+                       {
+                           showErrorMsg(sje.Message);
+                       });
+                   }
+               }
+               e.Result = entry;
+           }
+            catch(ProfileNameExistException profileNameExistException)
             {
-                entry.SyncJob.Name = entry.NewJobName;
-                entry.SyncJob.IntermediaryStorage.Path = entry.NewIntermediaryStoragePath;
-                entry.SyncJob.SyncSource.Path = entry.NewSyncSource;
-                
-                jobManager.Update(entry.SyncJob);
-                entry.InfoChanged(); /* Force databinding to refresh */
-
-                if (!entry.SyncJob.IntermediaryStorage.Path.Equals(oldIStorage))
+                this.Dispatcher.Invoke((Action)delegate
                 {
-                    try
-                    {                        
-                        if (!Directory.Exists(oldIStorage) ||
-                            !Files.FileUtils.MoveFolder(oldIStorage, entry.SyncJob.IntermediaryStorage.Path))
-                            throw new Exception();
-                    }
-                    catch (Exception ex) {
-                        this.Dispatcher.Invoke((Action)delegate
-                        {
-                            showErrorMsg("Can't move file(s) to new intermediary storage location. Please do it manually");
-                        });
-                    }
-                }
-
-                if (!entry.SyncJob.SyncSource.Path.Equals(oldSyncSource))
-                {
-                    try
-                    {
-                        if (!Directory.Exists(oldSyncSource) ||
-                            !Files.FileUtils.MoveFolder(oldSyncSource, entry.SyncJob.SyncSource.Path))
-                            throw new Exception();
-                    }
-                    catch (Exception)
-                    {
-                        this.Dispatcher.Invoke((Action)delegate
-                        {
-                            showErrorMsg("Can't move file(s) to new sync source location. Please do it manually");
-                        });
-                    }
-                }
-                e.Result = entry;
+                    entry.SyncJob.Name = oldSyncJobName;
+                    entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
+                    entry.SyncJob.SyncSource.Path = oldSyncSource;
+                    entry.InfoChanged();
+                    showErrorMsg(profileNameExistException.Message);
+                    SetControlsEnabledState(false, true);
+                });
             }
+                
+            /*
             catch (Exception ee)
             {
                 entry.SyncJob.Name = oldSyncJobName;
                 entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
                 entry.SyncJob.SyncSource.Path = oldSyncSource;
-                entry.InfoChanged(); /* Force databinding to refresh */
+                entry.InfoChanged();  Force databinding to refresh 
                 this.Dispatcher.Invoke((Action)delegate
                 {
                     showErrorMsg(ee.Message);
                     SetControlsEnabledState(false, true);
                 });
-            } 
+            }*/ 
         }
 
         void editJobWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -425,8 +430,6 @@ namespace OneSync.UI
         {
             showErrorMsg(""); //Clear error msg
 
-            try
-            {
                 TextBlock clickedBlock = (TextBlock)e.Source;
                 UISyncJobEntry entry = clickedBlock.DataContext as UISyncJobEntry;
 
@@ -435,11 +438,8 @@ namespace OneSync.UI
                     Log.ShowLog(entry.SyncSource);
                 else
                     showErrorMsg("There is no log for this job currently.");
-            }
-            catch (Exception ex)
-            {
-                showErrorMsg(ex.Message);
-            }
+            
+            
         }
 
         private void textBoxPreview_MouseDown(object sender, MouseButtonEventArgs e)
@@ -525,8 +525,6 @@ namespace OneSync.UI
 
             UISyncJobEntry currentJobEntry = null;
 
-            try
-            {
                 currentJobEntry = selectedEntries.Peek();
 
                 // Update UI
@@ -536,7 +534,8 @@ namespace OneSync.UI
 
                 // Run sync
                 syncWorker.RunWorkerAsync(selectedEntries);
-            }
+            
+                /*
             catch (Exception ex)
             {
                 string errorMsg = Validator.validateSyncDirs(currentJobEntry.SyncSource, currentJobEntry.IntermediaryStoragePath);
@@ -544,7 +543,7 @@ namespace OneSync.UI
                     showErrorMsg(errorMsg);
                 else
                     showErrorMsg(ex.Message);
-            }
+            }*/
         }
 
         void syncWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -577,19 +576,6 @@ namespace OneSync.UI
                 entry.SyncAgent.Synchronize(entry.SyncJob.SyncPreviewResult);
                 entry.Error = null;
             }
-            catch (MetadataFileException ex)
-            {
-                entry.Error = ex;
-                entry.ProgressBarValue = 100;
-                entry.ProgressBarColor = "Red";
-
-                this.Dispatcher.Invoke((Action)delegate
-                {
-                    string errorMsg = "The data.md file of sync job " + entry.JobName + " is believed to be missing. Please check your intermediate storage folder";
-                    entry.ProgressBarMessage = errorMsg;
-                    showErrorMsg(errorMsg);
-                });   
-            }
             catch (Community.CsharpSqlite.SQLiteClient.SqliteSyntaxException ex)
             {
                 entry.Error = ex;
@@ -598,11 +584,38 @@ namespace OneSync.UI
                 
                 this.Dispatcher.Invoke((Action)delegate
                 {
-                    string errorMsg = "The data.md file is missing or corrupted. Please delete this job: " + entry.JobName;
+                    string errorMsg = "Metadata file is missing or corrupted";
                     entry.ProgressBarMessage = errorMsg;
                     showErrorMsg(errorMsg);
                 });                
             }
+            catch(System.IO.DirectoryNotFoundException ex)
+            {
+                entry.Error = ex;
+                entry.ProgressBarValue = 100;
+                entry.ProgressBarColor = "Red";
+
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    string errorMsg = "Directory not found: " + ex.Message;
+                    entry.ProgressBarMessage = errorMsg;
+                    showErrorMsg(errorMsg);
+                });                
+            }
+            catch(SyncJobException syncJobException)
+            {
+                entry.Error = syncJobException;
+                entry.ProgressBarValue = 100;
+                entry.ProgressBarColor = "Red";
+
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    string errorMsg = syncJobException.Message;
+                    entry.ProgressBarMessage = errorMsg;
+                    showErrorMsg(errorMsg);
+                });                
+            }
+            /*
             catch (Exception ex)
             {
                 string errorMsg;
@@ -618,7 +631,7 @@ namespace OneSync.UI
                     entry.ProgressBarMessage = errorMsg;
                     showErrorMsg(errorMsg);
                 });    
-            }
+            }*/
 
             if (syncWorker.CancellationPending)
             {
@@ -633,8 +646,6 @@ namespace OneSync.UI
 
         void syncWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            try
-            {
                 if (e.Error != null)
                 {
                     return;
@@ -673,11 +684,8 @@ namespace OneSync.UI
                     UpdateSyncInfoUI(jobEntries.Peek().SyncJob);
                     syncWorker.RunWorkerAsync(jobEntries);
                 }
-            }
-            catch (Exception ex)
-            {
-                showErrorMsg(ex.Message);
-            }
+            
+            
         }
 
         private void AddAgentEventHandler(FileSyncAgent agent)
@@ -774,18 +782,12 @@ namespace OneSync.UI
         public void LoadSyncJobs()
         {
             string syncSourceDir = txtSource.Text.Trim();
-            try
-            {
                 IList<SyncJob> jobs = jobManager.LoadAllJobs();
                 sortJobs(jobs);
 
                 foreach (SyncJob job in jobs)
                     SyncJobEntries.Add(new UISyncJobEntry(job));
-            }
-            catch (Exception)
-            {
-                showErrorMsg("We have problem loading the sync jobs. Please delete the data.md file from " + STARTUP_PATH);
-            }
+            
         }
 
         private void MoveJobEntry(UISyncJobEntry entry, int delta)
@@ -836,16 +838,35 @@ namespace OneSync.UI
 
             string syncSourceDir = txtSource.Text;
             string intStorageDir = txtIntStorage.Text;
-            if (!validateSyncJobParams(entry.NewJobName, entry.NewSyncSource, entry.NewIntermediaryStoragePath))
+            
+            try
+            {
+                if (Validator.SyncJobParamsValidated(entry.NewJobName, entry.NewSyncSource, entry.NewIntermediaryStoragePath))
+                {
+                    BackgroundWorker editJobWorker = new BackgroundWorker();
+                    editJobWorker.DoWork += new DoWorkEventHandler(editJobWorker_DoWork);
+                    editJobWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(editJobWorker_RunWorkerCompleted);
+    
+                    SetControlsEnabledState(false, false);
+                    editJobWorker.RunWorkerAsync(entry);
+                }
+            }
+            catch (SyncJobException syncJobException)
+            {
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    showErrorMsg(syncJobException.Message);
+                });                
                 return false;
-
-            BackgroundWorker editJobWorker = new BackgroundWorker();
-            editJobWorker.DoWork += new DoWorkEventHandler(editJobWorker_DoWork);
-            editJobWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(editJobWorker_RunWorkerCompleted);
-
-            SetControlsEnabledState(false, false);
-            editJobWorker.RunWorkerAsync(entry);
-
+            }
+            catch(ProfileNameExistException profileNameExistException)
+            {
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    showErrorMsg(profileNameExistException.Message);
+                });
+                return false;
+            }
             return true;
         }
 

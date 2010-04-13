@@ -43,7 +43,7 @@ namespace OneSync.Synchronization
         public override FileMetaData LoadFileMetadata(string currId, SourceOption option)
         {
             string opt = (option == SourceOption.SOURCE_ID_NOT_EQUALS) ? " <> " : " = ";
-            var mData = new FileMetaData(currId, this.RootPath);
+            var mData = new FileMetaData(currId, RootPath);
 
             var db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection())
@@ -103,7 +103,7 @@ namespace OneSync.Synchronization
         /// <returns></returns>
         public bool Add(IList<FolderMetadataItem> folders)
         {
-            var db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            var db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 var trasaction = (SqliteTransaction)con.BeginTransaction();
@@ -167,7 +167,7 @@ namespace OneSync.Synchronization
         /// <returns></returns>
         public override bool Add(IList<FileMetaDataItem> mData)
         {
-            var db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            var db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 var trasaction = (SqliteTransaction)con.BeginTransaction();
@@ -261,7 +261,7 @@ namespace OneSync.Synchronization
                                    " WHERE " + Configuration.COL_SOURCE_ID + " = @sourceId AND " +
                                    Configuration.COL_RELATIVE_PATH + " = @path";
 
-            var dbAccess = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            var dbAccess = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
 
             using (SqliteConnection con = dbAccess.NewSQLiteConnection())
             {
@@ -323,7 +323,7 @@ namespace OneSync.Synchronization
                                    " WHERE " + Configuration.COL_SOURCE_ID + " = @sourceId AND " +
                                    Configuration.COL_RELATIVE_PATH + " = @path";
 
-            var dbAccess = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            var dbAccess = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
 
             using (SqliteConnection con = dbAccess.NewSQLiteConnection())
             {
@@ -382,7 +382,7 @@ namespace OneSync.Synchronization
         /// <returns></returns>
         public override bool Update(Metadata oldMetadata, Metadata newMetada)
         {
-            var db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            var db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 var trasaction = (SqliteTransaction)con.BeginTransaction();
@@ -446,7 +446,7 @@ namespace OneSync.Synchronization
                 oldMetadata.FolderMetadataItems.Where(
                     old => !newMetadata.FolderMetadataItems.Contains(old, new FolderMetadataItemComparer()));
 
-            var db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            var db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (var con = db.NewSQLiteConnection())
             {
                 var transaction = (SqliteTransaction)con.BeginTransaction();
@@ -534,33 +534,17 @@ namespace OneSync.Synchronization
             oldMetadata.MetaDataItems.ToList().Sort(new FileMetaDataItemComparer());
             newMetadata.MetaDataItems.ToList().Sort(new FileMetaDataItemComparer());
 
-            //Get newly created items by comparing relative paths
-            //newOnly is metadata item in current metadata but not in old one
-            IEnumerable<FileMetaDataItem> newOnly = from _new in newMetadata.MetaDataItems
-                                                    where !oldMetadata.MetaDataItems.Contains(_new, new FileMetaDataItemComparer())
-                                                    select _new;
+            var mdComparer = new FileMetaDataComparer(oldMetadata, newMetadata);
 
-            //Get deleted items           
-            IEnumerable<FileMetaDataItem> oldOnly = from old in oldMetadata.MetaDataItems
-                                                    where !newMetadata.MetaDataItems.Contains(old, new FileMetaDataItemComparer())
-                                                    select old;
-
-            //get the items from 2 metadata with same relative paths but different hashes.
-            IEnumerable<FileMetaDataItem> bothModified = from _new in newMetadata.MetaDataItems
-                                                         from old in oldMetadata.MetaDataItems
-                                                         where _new.RelativePath.Equals((old).RelativePath)
-                                                         && !_new.HashCode.Equals(old.HashCode)
-                                                         select _new;
-
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
+            var db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
-                SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
+                var transaction = (SqliteTransaction)con.BeginTransaction();
                 try
                 {
-                    this.Add(newOnly.ToList(), con);
-                    this.Delete(oldOnly.ToList(), con);
-                    this.Update(bothModified.ToList(), con);
+                    this.Add(mdComparer.RightOnly.ToList(), con);
+                    this.Delete(mdComparer.LeftOnly.ToList(), con);
+                    this.Update(mdComparer.BothModified.ToList(), con);
                     transaction.Commit();
                 }
                 catch (Exception)
@@ -617,7 +601,7 @@ namespace OneSync.Synchronization
         /// </summary>
         public override void CreateSchema()
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 string cmdText = "CREATE TABLE IF NOT EXISTS " + Configuration.TBL_METADATA +

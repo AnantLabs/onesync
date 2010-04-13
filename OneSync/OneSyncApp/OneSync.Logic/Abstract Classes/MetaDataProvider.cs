@@ -136,14 +136,23 @@ namespace OneSync.Synchronization
             // TODO: Implement ntfs id
             foreach (FileInfo f in files)
             {
-                fileMetadata.MetaDataItems.Add(new FileMetaDataItem(id, f.FullName,
-                    OneSync.Files.FileUtils.GetRelativePath(fromPath, f.FullName), Files.FileUtils.GetFileHash(f.FullName),
-                    f.LastWriteTime, (uint)0, (uint)0));
+                try
+                {
+                    fileMetadata.MetaDataItems.Add(new FileMetaDataItem(id, f.FullName,
+                        OneSync.Files.FileUtils.GetRelativePath(fromPath, f.FullName), Files.FileUtils.GetFileHash(f.FullName),
+                        f.LastWriteTime, (uint)0, (uint)0));    
+                }catch(Exception){Console.WriteLine(f.FullName);}
             }
             return fileMetadata;
         }
 
-
+        /// <summary>
+        /// Function to generate folder metadata of a given folder
+        /// </summary>
+        /// <param name="fromPath"></param>
+        /// <param name="id"></param>
+        /// <param name="excludeHidden"></param>
+        /// <returns></returns>
         public static FolderMetadata GenerateFolderMetadata(string fromPath, string id, bool excludeHidden)
         {            
             FolderMetadata folderMetadata = new FolderMetadata(id, fromPath);

@@ -50,7 +50,18 @@ namespace OneSync.UI
 				previewUIUpdate(false);
 			});
             FileSyncAgent agent = new FileSyncAgent(_job);
-            _job.SyncPreviewResult = agent.GenerateSyncPreview();
+            try
+            {
+                _job.SyncPreviewResult = agent.GenerateSyncPreview();
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    showErrorMsg("Directory not found: " + ex.Message);
+                });       
+            }
+            
 
         }
 
@@ -78,7 +89,7 @@ namespace OneSync.UI
                 return;
             }
 
-            if (_job == null) return;
+            if (_job == null || _job.SyncPreviewResult == null) return;
 
             // Save results
             SyncPreviewResult result = _job.SyncPreviewResult;
