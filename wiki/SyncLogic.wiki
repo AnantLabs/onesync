@@ -128,4 +128,4 @@ A Rename action is seen to be equivalent to a Delete action followed by a Create
 
 It is to be noted that for this implementation, user might not has renamed the file but has explicitly deleted it and created a same file with the same contents (and hence the same hash). However, !OneSync will still detect it as a rename operation and after synchronization, the state of the filesystem will still be consistent.
 
-A better solution might be to use the unique Id of the file, which is outlined in the [http://msdn.microsoft.com/en-us/library/aa363788(VS.85).aspx MSDN documentation]. While the Win32 method is implemented in `FileUtil` class, it is not used in the current implementation as it is applicable for NTFS filesystem only. It can be considered in future versions though.
+A possible solution might be to use the unique Id of a file. See [FutureImprovements Future Improvements] for more details.
