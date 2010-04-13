@@ -29,12 +29,12 @@ namespace OneSync.Synchronization
             var leftOnly = from i in left.MetaDataItems
                            where !right.MetaDataItems.Contains(i, comparer)
                            select i;
-
-            var both = from @new in left.MetaDataItems
-                       join @old in right.MetaDataItems
-                       on @new.RelativePath equals @old.RelativePath
-                       where !(@new.HashCode.Equals(@new.HashCode))
-                       select @new;
+            
+            var both = from l in left.MetaDataItems
+                       join r in right.MetaDataItems
+                       on l.RelativePath equals r.RelativePath
+                       where l.HashCode != r.HashCode
+                       select l;
 
             this.LeftOnly = new List<FileMetaDataItem>(leftOnly);
             this.RightOnly = new List<FileMetaDataItem>(rightOnly);
