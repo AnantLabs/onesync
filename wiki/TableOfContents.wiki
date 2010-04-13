@@ -9,4 +9,5 @@
   * [SyncLogic Synchronization Logic]
   * [DetailedDesign Detailed Design]
   * [KnownIssues Known Issues]
+  * [FutureImprovements Future Improvements]
   * [Glossary Glossary]
