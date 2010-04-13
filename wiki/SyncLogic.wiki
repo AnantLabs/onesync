@@ -4,11 +4,11 @@
 
 The following outlines of OneSync synchronization algorithm and logic.
 
-  * [SyncLogic#1._Overview Overview]
+  * [SyncLogic#1._Overview 1. Overview]
   * [SyncLogic#2._Sync_Preview 2. Sync Preview]
-  * [SyncLogic#2._Applying_Patch 2. Applying Patch]
-    * [SyncLogic#2.1_Executing_SyncActions 2.1 Executing SyncActions]
-    * [SyncLogic#2.2_Updating_of_metadata 2.2 Updating of metadata]
+  * [SyncLogic#3._Applying_Patch 3. Applying Patch]
+    * [SyncLogic#3.1_Executing_SyncActions 2.1 Executing SyncActions]
+    * [SyncLogic#3.2_Updating_of_metadata 2.2 Updating of metadata]
   * [SyncLogic#3._Generating_Patch 3. Generating Patch]
     * [SyncLogic#3.1_Comparing_Metadata 3.1 Comparing Metadata]
     * [SyncLogic#3.2_Creating_SyncActions 3.2 Creating SyncActions]
@@ -56,26 +56,33 @@ Sequence diagram for `GenerateSyncPreviewResult()`:
 [http://www.comp.nus.edu.sg/~deskoh/devGuide/sd_genPreview.png]
 
 
-= 1. Applying Patch =
+= 3. Applying Patch =
 
 When synchonization starts, OneSync will check if there are any patch to be applied to the current folder being synced. A Patch conceptually refers to !SyncActions to be executed and the (dirty) files that are associated with these !SyncActions.
 
-== 1.1 Executing !SyncActions ==
+Code snippet for `ApplyPatch()`:
+
+{{{
+private void ApplyPatch(SyncPreviewResult previewResult)
+{
+    /* Instantiates logging */
+    ExecuteCreateActions(previewResult.ItemsToCopyOver);
+    ExecuteDeleteActions(previewResult.ItemsToDelete);
+    ExecuteRenameActions(previewResult.ItemsToRename);
+    ExecuteConflictActions(previewResult.ConflictItems);
+    /* Do logging */
+}
+}}}
+
+== 3.1 Executing !SyncActions ==
 
 Each !SyncAction is can be a Copy, Delete or Rename action. 
 
 After the !SyncActions are executed, the !SyncActions and any associated files are deleted from the intermediary storage as they are no longer required.
 
-The following is the sequence diagram for `ApplyPatch()`.
+== 3.2 Updating of metadata =
 
-[http://www.comp.nus.edu.sg/~deskoh/devGuide/sd_apply.png]
-
-
-== 1.2 Updating of metadata =
-
-The metadata of the folder being synchronized will be generated and persisted to the intermediary storage. This metadata can be thought of as the state of the filesystem after the patch from other PC is applied (i.e. after all !SyncActions generated from other PC are executed).
-
-Hence the metadata can be used for comparison by the other PC for detection of the dirty files (i.e. files changed since last synchronization is run).
+As the actions are being executed, the corresponding metadata will be updated as well. This is to allow for comparison by the other PC for detection of the dirty files (i.e. files changed since last synchronization is run).
 
 = 2. Generating Patch =
 
