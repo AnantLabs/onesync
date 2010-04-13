@@ -40,11 +40,6 @@ namespace OneSync.UI
             get { return this._agent; }
         }
 
-        public SyncPreviewResult SyncPreviewResult
-        {
-            get { return this.SyncJob.SyncPreviewResult; }
-        }
-
         public string SyncSource
         {
             get { return this.SyncJob.SyncSource.Path; }
@@ -59,13 +54,6 @@ namespace OneSync.UI
         {
             get { return this.SyncJob.IntermediaryStorage.Path; }
         }
-
-        /*
-        public string JobId
-        {
-            get { return this.SyncJob.ID; }
-        }
-        */
 
         public bool IsSelected
         {
@@ -191,11 +179,6 @@ namespace OneSync.UI
             //OnPropertyChanged("DropboxStatus");
         }
 
-        public void GenerateSyncPreview()
-        {
-            throw new NotImplementedException();
-        }
-
         public static Queue<UISyncJobEntry> GetSelectedJobs(IEnumerable<UISyncJobEntry> entries)
         {
             Queue<UISyncJobEntry> selectedEntries = new Queue<UISyncJobEntry>();
@@ -208,17 +191,6 @@ namespace OneSync.UI
 
             return selectedEntries;
         }
-
-        /*
-        #region IEquatable<UISyncJobEntry> Members
-
-        public bool Equals(UISyncJobEntry other)
-        {
-            return (this.JobId == other.JobId) || (this.JobName.Equals(other.JobName));
-        }
-
-        #endregion
-        */
 
         protected virtual void OnPropertyChanged(string PropertyName)
         {

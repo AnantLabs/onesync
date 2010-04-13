@@ -1,17 +1,10 @@
 ﻿/*
  $Id$
  */
-/*
- *Last edited by Thuat in 29March
- * Changes: Apply method take in SyncPreviewResult as parameter
- */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.Linq;
-using Community.CsharpSqlite.SQLiteClient;
-using Community.CsharpSqlite;
 using OneSync.Files;
 
 namespace OneSync.Synchronization
