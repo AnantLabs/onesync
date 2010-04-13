@@ -640,7 +640,21 @@ namespace OneSync.UI
                     string errorMsg = syncJobException.Message;
                     entry.ProgressBarMessage = errorMsg;
                     showErrorMsg(errorMsg);
-                });                
+                });
+            }
+            catch (OutOfDiskSpaceException ex)
+            {
+
+                string errorMsg;
+                entry.Error = ex;
+                entry.ProgressBarValue = 100;
+                entry.ProgressBarColor = "Red";
+                errorMsg = "Not enough space in intermediate storage: " + entry.IntermediaryStoragePath + ". So job " + entry.JobName + " cannot be completed. Please use a bigger drive for this job";
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    entry.ProgressBarMessage = errorMsg;
+                    showErrorMsg(errorMsg);
+                });    
             }
             /*
             catch (Exception ex)

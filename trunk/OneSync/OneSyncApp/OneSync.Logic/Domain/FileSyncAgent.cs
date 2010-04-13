@@ -92,12 +92,19 @@ namespace OneSync.Synchronization
         /// <param name="preview">SyncPreviewResult to be executed.</param>
         public void Synchronize(SyncPreviewResult preview)
         {
-            OnStatusChanged(new SyncStatusChangedEventArgs("Applying patch"));
-            ApplyPatch(preview);
-            SyncEmptyFolders();
-            OnStatusChanged(new SyncStatusChangedEventArgs("Generating patch"));
-            GeneratePatch();
-            OnSyncCompleted(new SyncCompletedEventArgs());
+            try
+            {
+                OnStatusChanged(new SyncStatusChangedEventArgs("Applying patch"));
+                ApplyPatch(preview);
+                SyncEmptyFolders();
+                OnStatusChanged(new SyncStatusChangedEventArgs("Generating patch"));
+                GeneratePatch();
+                OnSyncCompleted(new SyncCompletedEventArgs());
+            }
+            catch (OutOfDiskSpaceException)
+            {
+                throw;
+            }
         }
 
         /// <summary>
@@ -157,6 +164,10 @@ namespace OneSync.Synchronization
             try
             {
                 SaveActionsAndDirtyFiles(newActions);
+            }
+            catch (OutOfDiskSpaceException)
+            {
+                throw;
             }
             finally
             {
