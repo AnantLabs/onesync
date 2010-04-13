@@ -136,7 +136,7 @@ namespace OneSync.Synchronization
             catch (Exception){}
             finally
             {
-                WriteLog(startTime);
+                WriteLog(startTime, Log.From);
             }
         }
 
@@ -171,7 +171,7 @@ namespace OneSync.Synchronization
             }
             finally
             {
-                WriteLog(startTime);
+                WriteLog(startTime, Log.To);
             }
             
             
@@ -332,10 +332,10 @@ namespace OneSync.Synchronization
                                         differences.BothModified);
         }
 
-        private void WriteLog(DateTime startTime)
+        private void WriteLog(DateTime startTime, string direction)
         {
             Log.AddToLog(_job.SyncSource.Path, _job.IntermediaryStorage.Path,
-                            _job.Name, log, Log.To, log.Count, startTime, DateTime.Now);
+                            _job.Name, log, direction, log.Count, startTime, DateTime.Now);
         }
 
         private void SyncEmptyFolders()
