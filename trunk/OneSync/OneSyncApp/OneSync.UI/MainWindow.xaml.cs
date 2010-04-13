@@ -366,6 +366,19 @@ namespace OneSync.UI
                        {
                            showErrorMsg(ex.Message);
                        });
+                   }catch(DirectoryNotFoundException directoryNotFoundException)
+                   {
+                       this.Dispatcher.Invoke((Action)delegate
+                       {
+                           showErrorMsg(directoryNotFoundException.Message);
+                       });
+                   }
+                   catch(UnauthorizedAccessException unauthorizedAccessException)
+                   {
+                       this.Dispatcher.Invoke((Action)delegate
+                       {
+                           showErrorMsg("Can't move files from old to new intermediary storage");
+                       });
                    }
                }
 
@@ -381,6 +394,20 @@ namespace OneSync.UI
                        this.Dispatcher.Invoke((Action)delegate
                        {
                            showErrorMsg(sje.Message);
+                       });
+                   }
+                   catch (DirectoryNotFoundException directoryNotFoundException)
+                   {
+                       this.Dispatcher.Invoke((Action)delegate
+                       {
+                           showErrorMsg(directoryNotFoundException.Message);
+                       });
+                   }
+                   catch (UnauthorizedAccessException unauthorizedAccessException)
+                   {
+                       this.Dispatcher.Invoke((Action)delegate
+                       {
+                           showErrorMsg("Can't move files from old to new sync source");
                        });
                    }
                }
