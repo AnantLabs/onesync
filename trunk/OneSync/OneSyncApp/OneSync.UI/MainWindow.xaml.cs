@@ -370,14 +370,14 @@ namespace OneSync.UI
                    {
                        this.Dispatcher.Invoke((Action)delegate
                        {
-                           showErrorMsg(directoryNotFoundException.Message);
+                           showErrorMsg("Can't move files from old to new intermediary storage. Please do it manually");
                        });
                    }
                    catch(UnauthorizedAccessException unauthorizedAccessException)
                    {
                        this.Dispatcher.Invoke((Action)delegate
                        {
-                           showErrorMsg("Can't move files from old to new intermediary storage");
+                           showErrorMsg("Can't move files from old to new intermediary storage. Please do it manually");
                        });
                    }
                }
@@ -400,14 +400,14 @@ namespace OneSync.UI
                    {
                        this.Dispatcher.Invoke((Action)delegate
                        {
-                           showErrorMsg(directoryNotFoundException.Message);
+                           showErrorMsg("Can't move files from old to new sync source. Please do it manually");
                        });
                    }
                    catch (UnauthorizedAccessException unauthorizedAccessException)
                    {
                        this.Dispatcher.Invoke((Action)delegate
                        {
-                           showErrorMsg("Can't move files from old to new sync source");
+                           showErrorMsg("Can't move files from old to new sync source. Please do it manually");
                        });
                    }
                }
