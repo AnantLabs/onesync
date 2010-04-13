@@ -61,6 +61,20 @@ namespace OneSync.UI
                     showErrorMsg("Directory not found: " + ex.Message);
                 });       
             }
+            catch(UnauthorizedAccessException unauthorizedAccessException)
+            {
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    showErrorMsg("Directory is inaccessible");
+                });       
+            }
+            catch (Exception exception)
+            {
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    showErrorMsg("Can't generate sync preview");
+                });
+            }
             
 
         }
