@@ -11,21 +11,7 @@ namespace OneSync.Synchronization
     {       
         public SQLiteSyncSourceProvider(string storagePath)
             : base(storagePath)
-        {
-            // Create database schema if necessary
-
-            /*
-            FileInfo fi = new FileInfo(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME));
-
-            if (!fi.Exists)
-            {
-                // If the parent directory already exists, Create() does nothing.
-                fi.Directory.Create();
-            }*/
-
-            // Create table if it does not exist
-            
-        }
+        {}
         
         /// <summary>
         /// This method takes in SQLiteConnection object as a parameter
@@ -89,9 +75,13 @@ namespace OneSync.Synchronization
                         " SET " + Configuration.COL_SOURCE_ABSOLUTE_PATH + " = @path WHERE "
                         + Configuration.COL_SOURCE_ID + " = @id";
 
-                SqliteParameterCollection paramList = new SqliteParameterCollection();
-                paramList.Add(new SqliteParameter("@id", DbType.String) { Value = source.ID });
-                paramList.Add(new SqliteParameter("@path", DbType.String) { Value = source.Path });
+                SqliteParameterCollection paramList = new SqliteParameterCollection
+                                                          {
+                                                              new SqliteParameter("@id", DbType.String)
+                                                                  {Value = source.ID},
+                                                              new SqliteParameter("@path", DbType.String)
+                                                                  {Value = source.Path}
+                                                          };
 
                 db.ExecuteNonQuery(cmdText, false);
             }
@@ -154,7 +144,7 @@ namespace OneSync.Synchronization
             catch (Exception)
             {
                 if ( transaction != null && transaction.Connection.State == ConnectionState.Open)  transaction.Rollback();
-                return false;
+                throw;
             }            
             return true;
         }
@@ -254,9 +244,11 @@ namespace OneSync.Synchronization
                                  "(" + Configuration.COL_SOURCE_ID + "," + Configuration.COL_SOURCE_ABSOLUTE_PATH +
                                  ") VALUES (@id, @path)";
             
-            SqliteParameterCollection paramList = new SqliteParameterCollection ();
-            paramList.Add( new SqliteParameter("@id", DbType.String) { Value = s.ID } );
-            paramList.Add( new SqliteParameter("@path", DbType.String) { Value = s.Path });
+            SqliteParameterCollection paramList = new SqliteParameterCollection
+                                                      {
+                                                          new SqliteParameter("@id", DbType.String) {Value = s.ID},
+                                                          new SqliteParameter("@path", DbType.String) {Value = s.Path}
+                                                      };
 
             SQLiteAccess dbAccess = new SQLiteAccess(Path.Combine (this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = dbAccess.NewSQLiteConnection())

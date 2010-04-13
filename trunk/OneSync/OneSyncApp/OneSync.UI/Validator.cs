@@ -1,14 +1,54 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using System.Security;
+using System.Threading;
+using OneSync.Synchronization;
 
-namespace OneSync.UI
+namespace OneSync.Synchronization
 {
     static class Validator
     {
+        public static bool SyncJobParamsValidated (string name, string sourceAbsolute, string immediate)
+        {
+            if (name == null || name.Equals(String.Empty))
+                throw new SyncJobException("Sync job name can't be empty");
+
+            if (name.Length > 50)
+                throw new SyncJobException("Sync job name can't exceed 50 characters");
+
+            return IsDirectoryValidated(immediate)
+                   && IsDirectoryValidated(sourceAbsolute)
+                   && IsRecursive(sourceAbsolute, immediate);
+        }
+        
+        private static bool IsRecursive (string source, string intermediate)
+        {
+            //Check #3: Check whether the Sync Source Folder and the Intermediate Storage Folder are the subdirectory of each other.
+            if(source.Equals(intermediate))
+                throw new SyncJobException("Source and intermediate path can't be the same");
+
+            if (intermediate.LastIndexOf(@"\") > 0 && source.LastIndexOf(@"\") > 0)
+            {
+                if (source.Equals(intermediate.Substring(0, intermediate.LastIndexOf(@"\")))
+                || intermediate.Equals(source.Substring(0, source.LastIndexOf(@"\"))))
+                    throw new SyncJobException("Sync between folder and its sub-folder is not allowed");
+            }
+            return true;
+        }
+
+        private static bool IsDirectoryValidated (string absolute)
+        {
+            if (absolute == null || absolute.Equals(String.Empty))
+                throw  new SyncJobException("Source or Intermediary storage is empty");
+
+            if (!Directory.Exists(absolute))
+                throw  new SyncJobException("Directory " + absolute + " doesn't exist");
+
+            if (absolute.Length > 260)
+                throw new SyncJobException("The directory length can't exceed " + 260 + " characters");
+            return true;
+        }
+
         public static string validateSyncJobName(string newName)
         {
             string errorMsg = null;

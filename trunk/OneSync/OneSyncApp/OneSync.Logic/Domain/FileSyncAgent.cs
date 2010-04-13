@@ -65,6 +65,7 @@ namespace OneSync.Synchronization
         /// The returned SyncPreviewResult can then be passed to Synchronize method
         /// as an argument for the actions to be executed.
         /// </summary>
+        /// <exception cref="DirectoryNotFoundException"></exception>
         public SyncPreviewResult GenerateSyncPreview()
         {
             OnStatusChanged(new SyncStatusChangedEventArgs("Preparing to sync"));
@@ -118,7 +119,6 @@ namespace OneSync.Synchronization
             }
 
             currentProgress = 0;
-
             try
             {
                 ExecuteCreateActions(previewResult.ItemsToCopyOver);
@@ -129,7 +129,7 @@ namespace OneSync.Synchronization
             catch (Exception){}
             finally
             {
-                writeLog(startTime);
+                WriteLog(startTime);
             }
         }
 
@@ -158,22 +158,28 @@ namespace OneSync.Synchronization
             {
                 SaveActionsAndDirtyFiles(newActions);
             }
-            catch (OutOfDiskSpaceException) { throw; }
-            catch (Exception) { }
             finally
             {
-                writeLog(startTime);
+                WriteLog(startTime);
             }
+            
+            
+            //catch (OutOfDiskSpaceException) { throw; }
+            
+            
         }
 
         private void SaveActionsAndDirtyFiles(IList<SyncAction> actions)
         {
-            Metadata mdStorage = MetaDataProvider.Generate(_job.IntermediaryStorage.DirtyFolderPath, "", false);
+            Metadata mdStorage = MetaDataProvider.Generate(_job.IntermediaryStorage.DirtyFolderPath, "", false, true);
 
             int totalProgress = actions.Count;
             int currProgress = 0;
             foreach (SyncAction a in actions)
             {
+                if (!Validator.SyncJobParamsValidated(_job.Name, _job.IntermediaryStorage.Path, _job.SyncSource.Path))
+                    return;
+
                 try
                 {
                     OnProgressChanged(new SyncProgressChangedEventArgs(++currProgress, totalProgress));
@@ -190,11 +196,13 @@ namespace OneSync.Synchronization
                 }
                 catch (OutOfDiskSpaceException)
                 {
+                    log.Add(new LogActivity(a.RelativeFilePath, a.ChangeType.ToString(),"FAIL"));
                     throw;
                 }
                 catch (Exception)
                 {
                     log.Add(new LogActivity(a.RelativeFilePath, a.ChangeType.ToString(), "FAIL"));
+                    throw;
                 }
             }
         }
@@ -287,7 +295,7 @@ namespace OneSync.Synchronization
             Metadata mdCurrentOld = mdProvider.Load(_job.SyncSource.ID, SourceOption.SOURCE_ID_EQUALS);
 
             //read metadata of the current folder in file system 
-            Metadata mdCurrent = MetaDataProvider.Generate(_job.SyncSource.Path, _job.SyncSource.ID, false);
+            Metadata mdCurrent = MetaDataProvider.Generate(_job.SyncSource.Path, _job.SyncSource.ID, false, false);
 
             //Update metadata 
             mdProvider.Update(mdCurrentOld, mdCurrent);
@@ -305,12 +313,12 @@ namespace OneSync.Synchronization
             Metadata mdOther = mdProvider.Load(_job.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
 
             //generate list of sync actions by comparing 2 metadata
-            FileMetaDataComparer actionGenerator = new FileMetaDataComparer(mdCurrent.FileMetadata, mdOther.FileMetadata);
+            var actionGenerator = new FileMetaDataComparer(mdCurrent.FileMetadata, mdOther.FileMetadata);
 
-            return actionGenerator.Generate();
+            return SyncClient.GetSyncActionsProvider(_job.IntermediaryStorage.Path) .Generate(mdCurrent.FileMetadata, actionGenerator);
         }
 
-        private void writeLog(DateTime startTime)
+        private void WriteLog(DateTime startTime)
         {
             Log.AddToLog(_job.SyncSource.Path, _job.IntermediaryStorage.Path,
                             _job.Name, log, Log.To, log.Count, startTime, DateTime.Now);

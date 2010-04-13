@@ -1,175 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace OneSync.Synchronization
 {
     public class FileMetaDataComparer
     {
-        List<FileMetaDataItem> leftOnly = new List<FileMetaDataItem>();
-        List<FileMetaDataItem> rightOnly = new List<FileMetaDataItem>();
-        List<FileMetaDataItem> bothModified = new List<FileMetaDataItem>();
-        
-        // MetaData of current folder
-        protected FileMetaData left;
-
-        // MetaData from storage (database, file)
-        protected FileMetaData right;
-
+        private List<FileMetaDataItem> leftOnly = new List<FileMetaDataItem>();
+        private List<FileMetaDataItem> rightOnly = new List<FileMetaDataItem>();
+        private List<FileMetaDataItem> bothModified = new List<FileMetaDataItem>();
         /// <summary>
         /// Provides the ...
         /// </summary>
-        /// <param name="current"></param>
-        /// <param name="stored"></param>
         public FileMetaDataComparer(FileMetaData left, FileMetaData right)
         {
-            this.left = left;
-            this.right = right;
-            Compare();
+            Compare(left, right);
         }
-                
-        /// <summary>
-        /// Metadata of current PC
-        /// </summary>
-        public FileMetaData Left
+
+        public List<FileMetaDataItem> LeftOnly
         {
-            get { return this.left; }
+            set { leftOnly = value; }
+            get { return leftOnly; }
         }
-        
-        /// <summary>
-        /// Metadata of other PC
-        /// </summary>
-        public FileMetaData Right
+
+        public List<FileMetaDataItem> RightOnly
         {
-            get { return this.right; }
+            set { rightOnly = value; }
+            get { return rightOnly; }
         }
 
-        public IList<FileMetaDataItem> LeftOnly
+        public List<FileMetaDataItem> BothModified
         {
-            get { return this.leftOnly; }
+            set { bothModified = value; }
+            get { return bothModified; }
         }
 
-        public IList<FileMetaDataItem> RightOnly
+        private void Compare(FileMetaData left, FileMetaData right)
         {
-            get { return this.rightOnly;  }
+            //Get newly created items by comparing relative paths
+            //newOnly is metadata item in current metadata but not in old one
+            IEnumerable<FileMetaDataItem> rightMdOnly =
+                right.MetaDataItems.Where(
+                    value => !left.MetaDataItems.Contains(value, new FileMetaDataItemComparer()));
+
+            //Get deleted items           
+            IEnumerable<FileMetaDataItem> leftMdOnly =
+                left.MetaDataItems.Where(
+                    old => !right.MetaDataItems.Contains(old, new FileMetaDataItemComparer()));
+
+            //get the items from 2 metadata with same relative paths but different hashes.
+            IEnumerable<FileMetaDataItem> bothAreModified = from @new in left.MetaDataItems
+                                                         join @old in right.MetaDataItems on @new.RelativePath
+                                                             equals @old.RelativePath
+                                                         where !(@new.HashCode.Equals(@new.HashCode))
+                                                         select @new;
+            LeftOnly.Clear();
+            LeftOnly.AddRange(leftMdOnly);
+
+            RightOnly.Clear();
+            RightOnly.AddRange(rightMdOnly);
+
+            BothModified.Clear();
+            BothModified.AddRange(bothAreModified);
         }
 
-        public IList<FileMetaDataItem> BothModified
-        {
-            get { return this.bothModified; }
-        }
+      
 
-        private void Compare()
-        {
-            FileMetaDataItemComparer mdItemComparer = new FileMetaDataItemComparer();
-
-            IEnumerable<FileMetaDataItem> leftOnly = from curr in left.MetaDataItems
-                                                     where !right.MetaDataItems.Contains(curr, mdItemComparer)
-                                                     select curr;
-
-            this.leftOnly.AddRange(leftOnly);
-            
-            //Get deleted items 
-            IEnumerable<FileMetaDataItem> rightOnly = from store in right.MetaDataItems
-                                                      where !left.MetaDataItems.Contains(store, mdItemComparer)
-                                                      select store;
-            this.rightOnly.AddRange(rightOnly);
-
-
-            // Since patch is already applied, newly updated files (according using hash)
-            // on current PC (left) should be enumerated to generate the patch
-            IEnumerable<FileMetaDataItem> bothModified = from _right in right.MetaDataItems
-                                                         from _left in left.MetaDataItems
-                                                         where _right.RelativePath.Equals(_left.RelativePath)
-                                                         && !_right.HashCode.Equals(_left.HashCode)
-                                                         select _left;
-
-            this.bothModified.AddRange(bothModified);
-        }
-
-        /// <summary>
-        /// Generates list of sync actions that will synchronize current PC
-        /// and other PC based on the metadata.
-        /// </summary>
-        /// <returns>List of sync actions</returns>
-        public  IList<SyncAction> Generate()
-        {
-
-            IList<SyncAction> actions = new List<SyncAction>();
-
-            /* Keep track of create and delete actions to detect rename */
-            List<SyncAction> createActions = new List<SyncAction>();
-            List<SyncAction> deleteActions = new List<SyncAction>();
-            
-            
-            //Get newly created items by comparing relative paths 
-            foreach (FileMetaDataItem item in LeftOnly )
-            {
-                CreateAction createAction = new CreateAction(0, item.SourceId, item.RelativePath, item.HashCode);
-                actions.Add(createAction);
-                createActions.Add(createAction);
-            }
-
-            foreach (FileMetaDataItem item in RightOnly)
-            {
-                //the source id of this action must be source id of the folder where the item is deleted                 
-                DeleteAction deleteAction = new DeleteAction(0, left.SourceId, item.RelativePath, item.HashCode);
-                actions.Add(deleteAction);
-                deleteActions.Add(deleteAction);
-            }
-
-            foreach (FileMetaDataItem item in BothModified)
-            {
-                CreateAction createAction = new CreateAction(0, item.SourceId, item.RelativePath, item.HashCode);                   
-                actions.Add(createAction);
-            }
-
-            DetectRenameActions(actions, createActions, deleteActions);
-
-            return  actions;
-        }
-
-        private void DetectRenameActions(IList<SyncAction> actions, List<SyncAction> createActions, List<SyncAction> deleteActions)
-        {
-            SyncActionFileHashComparer hashComparer = new SyncActionFileHashComparer();
-            List<SyncAction> longList, shortList;
-
-            if (createActions.Count > deleteActions.Count)
-            {
-                longList = createActions;
-                shortList = deleteActions;
-            }
-            else
-            {
-                longList = deleteActions;
-                shortList = createActions;
-            }
-
-            // Sort longer list for efficiency
-            longList.Sort(hashComparer);
-
-            foreach (SyncAction a in shortList)
-            {
-                // Find if a file with same hash exist in other list
-                int index = longList.BinarySearch(a, hashComparer);
-                if (index  >= 0)
-                    CreateRenameActions(a, longList[index], actions);
-            }
-        }
-
-        private void CreateRenameActions(SyncAction x, SyncAction y, IList<SyncAction> actions)
-        {
-            // remove create and delete actions from global action list
-            // and replace it with rename action
-            actions.Remove(x);
-            actions.Remove(y);
-
-            // Identify which actions is create/delete
-            SyncAction createAction = (x.ChangeType == ChangeType.NEWLY_CREATED) ? x : y;
-            SyncAction deleteAction = (x.ChangeType == ChangeType.DELETED) ? x : y;
-            actions.Add(new RenameAction(0, x.SourceID, createAction.RelativeFilePath,
-                                         deleteAction.RelativeFilePath, x.FileHash));
-        }
+       
     }
 }
