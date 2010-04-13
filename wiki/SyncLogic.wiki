@@ -4,12 +4,57 @@
 
 The following outlines of OneSync synchronization algorithm and logic.
 
-  * [SyncLogic#Applying_Patch 1. Applying Patch]
-    * [SyncLogic#Executing_SyncActions 1.1 Executing SyncActions]
-    * [SyncLogic#Updating_of_metadata 1.2 Updating of metadata]
-  * [SyncLogic#Generating_Patch 2. Generating Patch]
-    * [SyncLogic#Comparing_Metadata 2.1 Comparing Metadata]
-    * [SyncLogic#Creating_SyncActions 2.2 Creating SyncActions]
+  * [SyncLogic#1._Overview Overview]
+  * [SyncLogic#2._Sync_Preview 2. Sync Preview]
+  * [SyncLogic#2._Applying_Patch 2. Applying Patch]
+    * [SyncLogic#2.1_Executing_SyncActions 2.1 Executing SyncActions]
+    * [SyncLogic#2.2_Updating_of_metadata 2.2 Updating of metadata]
+  * [SyncLogic#3._Generating_Patch 3. Generating Patch]
+    * [SyncLogic#3.1_Comparing_Metadata 3.1 Comparing Metadata]
+    * [SyncLogic#3.2_Creating_SyncActions 3.2 Creating SyncActions]
+
+= 1. Overview =
+
+!FileSyncAgent is the main class executing the synchronization. The code snippet for synchronization is as follows:
+
+{{{
+public void Synchronize(SyncPreviewResult preview)
+{
+    OnStatusChanged(new SyncStatusChangedEventArgs("Applying patch"));
+    ApplyPatch(preview);
+    SyncEmptyFolders();
+    OnStatusChanged(new SyncStatusChangedEventArgs("Generating patch"));
+    GeneratePatch();
+    OnSyncCompleted(new SyncCompletedEventArgs());
+}
+}}}
+
+To support Synchronization Preview, the Synchronize method takes in a !SyncPreviewResult as an argument. !SyncPreviewResult is a wrapper for all actions to be executed and may contains skipped actions depending on the user selection during the preview.
+
+As OneSync doesn't view folders as items to be synchronized initially, `SyncEmptyFolders()` was added subsequently to achieve this. Of course, if synchronization of empty folders is not required, the method can be removed without any consequence.
+
+= 2. Sync Preview =
+
+The instance method for !FileSyncAgent to generate the !SyncPreviewResult is as follows:
+
+{{{
+public SyncPreviewResult GenerateSyncPreview()
+}}}
+
+For each !SyncAction to be executed, the affected file is checked whether it was modified since last sync. This is done by comparing the file with the metadata created during last sync. If it has been changed, the !SyncAction will be considered as a conflict action. The !SyncAction has a Conflict Resolution property/field to determine how this conflict is going to be resolved. It is to be noted that there will be no further filesystem changes made to the sync folder by OneSync after all !SyncActions are executed.
+
+It is during generation of !SyncPreviewResult that conflict actions are detected and filtered out.
+
+Outline of preview generation:
+  * `actions = load all SyncActions`
+  * `currentItems = generate sync folder metadata`
+  * `oldCurrentItems = load previously saved sync folder metadata`
+  * `oldOtherItems = load metadata of other PC for comparison`
+
+Sequence diagram for `GenerateSyncPreviewResult()`:
+
+[http://www.comp.nus.edu.sg/~deskoh/devGuide/sd_genPreview.png]
+
 
 = 1. Applying Patch =
 
@@ -17,12 +62,14 @@ When synchonization starts, OneSync will check if there are any patch to be appl
 
 == 1.1 Executing !SyncActions ==
 
-Each !SyncAction is can be a Copy action or a Delete action. When a !SyncAction is executed, the affected file is checked whether it was modified since last sync. This is done by comparing the file with the metadata created during last sync. If it has been changed, the !SyncAction will be considered as a conflict action. The !SyncAction has a Conflict Resolution property/field to determine how this conflict is going to be resolved. It is to be noted that there will be no further filesystem changes made to the sync folder after all !SyncActions are executed.
+Each !SyncAction is can be a Copy, Delete or Rename action. 
 
 After the !SyncActions are executed, the !SyncActions and any associated files are deleted from the intermediary storage as they are no longer required.
 
-In implementation, to support sync preview, !SyncPreviewResult is first generated. The conflict actions are detected and filtered during the preview generation. The sequence diagram below shows the execution of !SyncActions. It takes in a !SyncPreviewResult as an argument. 
+The following is the sequence diagram for `ApplyPatch()`.
+
 [http://www.comp.nus.edu.sg/~deskoh/devGuide/sd_apply.png]
+
 
 == 1.2 Updating of metadata =
 
