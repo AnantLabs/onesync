@@ -324,9 +324,12 @@ namespace OneSync.Synchronization
             Metadata mdOther = mdProvider.Load(_job.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
 
             //generate list of sync actions by comparing 2 metadata
-            var actionGenerator = new FileMetaDataComparer(mdCurrent.FileMetadata, mdOther.FileMetadata);
+            var differences = new FileMetaDataComparer(mdCurrent.FileMetadata, mdOther.FileMetadata);
 
-            return SyncClient.GetSyncActionsProvider(_job.IntermediaryStorage.Path) .Generate(mdCurrent.FileMetadata, actionGenerator);
+            return actProvider.Generate(mdCurrent.FileMetadata.SourceId,
+                                        differences.LeftOnly,
+                                        differences.RightOnly,
+                                        differences.BothModified);
         }
 
         private void WriteLog(DateTime startTime)

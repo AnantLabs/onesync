@@ -100,7 +100,8 @@ namespace OneSync.Synchronization
         /// and other PC based on the metadata.
         /// </summary>
         /// <returns>List of sync actions</returns>
-        public IList<SyncAction> Generate(FileMetaData currentSource, FileMetaDataComparer comparer)
+        public IList<SyncAction> Generate(string sourceId, IList<FileMetaDataItem> leftOnly, 
+                                          IList<FileMetaDataItem> rightOnly, IList<FileMetaDataItem> both)
         {
 
             IList<SyncAction> actions = new List<SyncAction>();
@@ -111,22 +112,22 @@ namespace OneSync.Synchronization
 
 
             //Get newly created items by comparing relative paths 
-            foreach (FileMetaDataItem item in comparer.LeftOnly)
+            foreach (FileMetaDataItem item in leftOnly)
             {
                 var createAction = new CreateAction(0, item.SourceId, item.RelativePath, item.HashCode);
                 actions.Add(createAction);
                 createActions.Add(createAction);
             }
 
-            foreach (FileMetaDataItem item in comparer.RightOnly)
+            foreach (FileMetaDataItem item in rightOnly)
             {
                 //the source id of this action must be source id of the folder where the item is deleted                 
-                var deleteAction = new DeleteAction(0, currentSource.SourceId, item.RelativePath, item.HashCode);
+                var deleteAction = new DeleteAction(0, sourceId, item.RelativePath, item.HashCode);
                 actions.Add(deleteAction);
                 deleteActions.Add(deleteAction);
             }
 
-            foreach (FileMetaDataItem item in comparer.BothModified)
+            foreach (FileMetaDataItem item in both)
             {
                 var createAction = new CreateAction(0, item.SourceId, item.RelativePath, item.HashCode);
                 actions.Add(createAction);
@@ -160,10 +161,10 @@ namespace OneSync.Synchronization
             foreach (SyncAction a in shortList)
             {
                 // Find if a file with same hash exist in other list
-                int index = longList.BinarySearch(shortList[i], hashComparer);
+                int index = longList.BinarySearch(a, hashComparer);
                 if (index >= 0)
                 {
-                    CreateRenameActions(shortList[i], longList[index], actions);
+                    CreateRenameActions(a, longList[index], actions);
                     longList.RemoveAt(index);
                 }
             }
