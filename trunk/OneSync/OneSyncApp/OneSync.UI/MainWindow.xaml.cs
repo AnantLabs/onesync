@@ -2,20 +2,20 @@
  $Id: MainWindow.xaml.cs 287 2010-03-18 02:25:56Z gclin009 $
  */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using OneSync.Synchronization;
-using Community.CsharpSqlite.SQLiteClient;
 using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Threading;
-using System.Diagnostics;
-using System.Collections;
+using Community.CsharpSqlite.SQLiteClient;
 using OneSync.Files;
+using OneSync.Synchronization;
 
 namespace OneSync.UI
 {

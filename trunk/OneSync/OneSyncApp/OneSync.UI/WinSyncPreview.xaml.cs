@@ -11,11 +11,11 @@ namespace OneSync.UI
 {
 	public partial class WinSyncPreview
 	{
-        SyncJob _job;
-        private BackgroundWorker previewWorker;
-        IEnumerable<SyncAction> allActions = null; /* used for filtering */
+        private SyncJob _job;
+        private IEnumerable<SyncAction> allActions = null; /* used for filtering */
+        private TaskbarManager tbManager = TaskbarManager.Instance;
 
-        TaskbarManager tbManager = TaskbarManager.Instance;
+        private WinSyncPreview() { }
 
         /// <summary>
         /// Instantiate a sync preview window job to be previewed.
@@ -27,7 +27,7 @@ namespace OneSync.UI
             this._job = job;
 
             // Initialize previewWorker
-            previewWorker = new BackgroundWorker();
+            BackgroundWorker previewWorker = new BackgroundWorker();
             previewWorker.DoWork += new DoWorkEventHandler(previewWorker_DoWork);
             previewWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(previewWorker_RunWorkerCompleted); ;
 
@@ -65,22 +65,10 @@ namespace OneSync.UI
             }
         }
 
-        private bool jobValid(SyncJob job)
-        {
-            if (!Directory.Exists(job.IntermediaryStorage.Path))
-            {
-                showErrorMsg("Intermediary storage path: \"" + job.IntermediaryStorage.Path +
-                             "\" not found.");
-                return false;
-            }
-            return true;
-        }
-
-        void previewWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void previewWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (tbManager != null) tbManager.SetProgressState(TaskbarProgressBarState.NoProgress);
             pb.Visibility = Visibility.Hidden;
-
 			previewUIUpdate(true);
 
             if (e.Error != null)
@@ -88,47 +76,27 @@ namespace OneSync.UI
                 showErrorMsg("Unable to generate preview: " + e.Error.Message);
                 return;
             }
-
             if (_job == null || _job.SyncPreviewResult == null) return;
 
             // Save results
-            SyncPreviewResult result = _job.SyncPreviewResult;
-            this.allActions = result.GetAllActions();
+            this.allActions = _job.SyncPreviewResult.GetAllActions();
             lvPreview.ItemsSource = this.allActions;
 
         }
 
-        private void showErrorMsg(string errorMsg)
-        {
-            if (string.IsNullOrEmpty(errorMsg))
-                txtError.Visibility = Visibility.Hidden;
-            else
-            {
-                txtError.Text = errorMsg;
-                txtError.Visibility = Visibility.Visible;
-                if (tbManager != null) tbManager.SetProgressState(TaskbarProgressBarState.NoProgress);
-                pb.Visibility = Visibility.Hidden;
-            }
-        }
-
-        private void showErrorMsgInvoke(string errorMsg)
-        {
-            this.Dispatcher.Invoke((Action)delegate
-            {
-                showErrorMsg(errorMsg);
-            });
-        }
-		
-		void previewUIUpdate(bool isEnable)
-		{
-			cmbFilter.IsEnabled = isEnable;
-			txtFilter.IsEnabled = isEnable;
-			txtBlkDone.IsEnabled = isEnable;
-		}
-
-        void txtFilter_TextChanged(object sender, TextChangedEventArgs e)
+        private void txtFilter_TextChanged(object sender, TextChangedEventArgs e)
         {
             filter();
+        }
+
+        private void txtFilter_GotFocus(object sender, RoutedEventArgs e)
+        {
+            txtFilter.SelectAll();
+        }
+
+        private void txtBlkDone_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            this.Close();
         }
 
         private void cmbFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -157,20 +125,49 @@ namespace OneSync.UI
                                                       && a.RelativeFilePath.ToLower().Contains(searchTerm));
         }
 
-        IEnumerable<SyncAction> filterActions(Func<SyncAction, bool> predicate)
+        private IEnumerable<SyncAction> filterActions(Func<SyncAction, bool> predicate)
         {
             var result = allActions.Where(predicate);
             return result;
         }
 
-        private void txtFilter_GotFocus(object sender, RoutedEventArgs e)
+        private bool jobValid(SyncJob job)
         {
-            txtFilter.SelectAll();
+            if (!Directory.Exists(job.IntermediaryStorage.Path))
+            {
+                showErrorMsg("Intermediary storage path: \"" + job.IntermediaryStorage.Path +
+                             "\" not found.");
+                return false;
+            }
+            return true;
         }
 
-        private void txtBlkDone_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void previewUIUpdate(bool isEnable)
         {
-            this.Close();
+            cmbFilter.IsEnabled = isEnable;
+            txtFilter.IsEnabled = isEnable;
+            txtBlkDone.IsEnabled = isEnable;
+        }
+
+        private void showErrorMsg(string errorMsg)
+        {
+            if (string.IsNullOrEmpty(errorMsg))
+                txtError.Visibility = Visibility.Hidden;
+            else
+            {
+                txtError.Text = errorMsg;
+                txtError.Visibility = Visibility.Visible;
+                if (tbManager != null) tbManager.SetProgressState(TaskbarProgressBarState.NoProgress);
+                pb.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void showErrorMsgInvoke(string errorMsg)
+        {
+            this.Dispatcher.Invoke((Action)delegate
+            {
+                showErrorMsg(errorMsg);
+            });
         }
 	}
 }
