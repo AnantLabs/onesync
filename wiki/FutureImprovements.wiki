@@ -1,0 +1,7 @@
+#summary Suggestions to future improvements
+
+= File Rename =
+
+Currently, similar files are detected using File Hash. So a 'real' rename operation cannot be really identified.
+
+A better solution might be to use the file ID of a file which according to the [http://msdn.microsoft.com/en-us/library/aa363788(VS.85).aspx MSDN documentation], "keeps the same file ID until it is deleted". The Win32 method `GetFileInformationByHandle` for getting the file ID is outlined [http://msdn.microsoft.com/en-us/library/aa364952(VS.85).aspx here] is implemented in the `FileUtil` class but is not used as it is only applicable for NTFS filesystem only. It could be possibly used in conjunction with current techniques in future versions.
