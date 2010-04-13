@@ -17,6 +17,8 @@ namespace OneSync.Synchronization
     {
         private string sourceId = "";
         private string sourcePath = "";
+        protected IList<FileMetaDataItem> items = new List<FileMetaDataItem>();
+
         /// <summary>
         /// Collection of attributes
         /// </summary>
@@ -30,8 +32,6 @@ namespace OneSync.Synchronization
         public const string NTFS_ID1 = "NTFS_ID1";
         public const string NTFS_ID2 = "NTFS_ID2";
         #endregion list of column names in METADATA TABLE
-
-        protected IList<FileMetaDataItem> items = new List<FileMetaDataItem>();              
         
         
         public FileMetaData(string sourceId, string sourcePath):base()
@@ -45,33 +45,17 @@ namespace OneSync.Synchronization
         /// </summary>
         public string RootDir
         {
-            get
-            {
-                return this.sourcePath;
-            }
+            get { return this.sourcePath; }
         }
+
         public string SourceId
         {
-            set
-            {
-                this.sourceId = value;
-            }
-            get
-            {
-                return this.sourceId;
-            }
+            get { return this.sourceId; }
         }
 
         public IList<FileMetaDataItem> MetaDataItems
         {
-            set
-            {
-                items = value;
-            }
-            get
-            {
-                return this.items;
-            }
+            get { return this.items; }
         }
     }
 }

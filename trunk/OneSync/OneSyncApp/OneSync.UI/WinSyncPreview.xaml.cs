@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Media.Animation;
-using OneSync.Synchronization;
 using System.Collections.Generic;
-using System.Linq;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using OneSync.Synchronization;
 
 namespace OneSync.UI
 {
@@ -38,17 +36,16 @@ namespace OneSync.UI
 
             // Check job parameters
             if (jobValid(_job))
+            {
+                previewUIUpdate(false);
                 previewWorker.RunWorkerAsync();
+            }
 		}
 
         void previewWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             if (_job == null) return;
 
-			this.Dispatcher.Invoke((Action)delegate
-			{
-				previewUIUpdate(false);
-			});
             FileSyncAgent agent = new FileSyncAgent(_job);
             try
             {
@@ -56,27 +53,16 @@ namespace OneSync.UI
             }
             catch (DirectoryNotFoundException ex)
             {
-                this.Dispatcher.Invoke((Action)delegate
-                {
-                    showErrorMsg("Directory not found: " + ex.Message);
-                });       
+                showErrorMsgInvoke("Directory not found: " + ex.Message);
             }
-            catch(UnauthorizedAccessException unauthorizedAccessException)
+            catch(UnauthorizedAccessException)
             {
-                this.Dispatcher.Invoke((Action)delegate
-                {
-                    showErrorMsg("Directory is inaccessible");
-                });       
+                showErrorMsgInvoke("Directory is inaccessible");
             }
-            catch (Exception exception)
+            catch (Exception)
             {
-                this.Dispatcher.Invoke((Action)delegate
-                {
-                    showErrorMsg("Can't generate sync preview");
-                });
+                showErrorMsgInvoke("Can't generate sync preview");
             }
-            
-
         }
 
         private bool jobValid(SyncJob job)
@@ -124,6 +110,14 @@ namespace OneSync.UI
                 pb.Visibility = Visibility.Hidden;
             }
         }
+
+        private void showErrorMsgInvoke(string errorMsg)
+        {
+            this.Dispatcher.Invoke((Action)delegate
+            {
+                showErrorMsg(errorMsg);
+            });
+        }
 		
 		void previewUIUpdate(bool isEnable)
 		{
@@ -148,44 +142,25 @@ namespace OneSync.UI
             string searchTerm = txtFilter.Text.Trim().ToLower();
 
             if (cmbFilter.SelectedIndex == 0)
-            {
-                lvPreview.ItemsSource =
-                    from a in allActions
-                    where a.RelativeFilePath.ToLower().Contains(searchTerm)
-                    select a;
-            }
+                lvPreview.ItemsSource = filterActions(a => a.RelativeFilePath.ToLower().Contains(searchTerm));
             else if (cmbFilter.SelectedIndex == 1)
-            {
-                lvPreview.ItemsSource =
-                    from a in allActions 
-                    where a.ConflictResolution != ConflictResolution.NONE
-                          && a.RelativeFilePath.ToLower().Contains(searchTerm)
-                    select a;
-            }
+                lvPreview.ItemsSource = filterActions(a => a.ConflictResolution != ConflictResolution.NONE
+                                                      && a.RelativeFilePath.ToLower().Contains(searchTerm));
             else if (cmbFilter.SelectedIndex == 2)
-            {
-                lvPreview.ItemsSource =
-                    from a in allActions 
-                    where (a.ChangeType == ChangeType.NEWLY_CREATED || a.ChangeType == ChangeType.MODIFIED)
-                          && a.RelativeFilePath.ToLower().Contains(searchTerm)
-                    select a;
-            }
+                lvPreview.ItemsSource = filterActions(a => (a.ChangeType == ChangeType.NEWLY_CREATED || a.ChangeType == ChangeType.MODIFIED)
+                                                      && a.RelativeFilePath.ToLower().Contains(searchTerm));
             else if (cmbFilter.SelectedIndex == 3)
-            {
-                lvPreview.ItemsSource =
-                    from a in allActions 
-                    where a.ChangeType == ChangeType.DELETED
-                          && a.RelativeFilePath.ToLower().Contains(searchTerm)
-                    select a;
-            }
+                lvPreview.ItemsSource = filterActions(a => a.ChangeType == ChangeType.DELETED
+                                                      && a.RelativeFilePath.ToLower().Contains(searchTerm));
             else if (cmbFilter.SelectedIndex == 4)
-            {
-                lvPreview.ItemsSource =
-                    from a in allActions
-                    where a.ChangeType == ChangeType.RENAMED
-                          && a.RelativeFilePath.ToLower().Contains(searchTerm)
-                    select a;
-            }
+                lvPreview.ItemsSource = filterActions(a => a.ChangeType == ChangeType.RENAMED
+                                                      && a.RelativeFilePath.ToLower().Contains(searchTerm));
+        }
+
+        IEnumerable<SyncAction> filterActions(Func<SyncAction, bool> predicate)
+        {
+            var result = allActions.Where(predicate);
+            return result;
         }
 
         private void txtFilter_GotFocus(object sender, RoutedEventArgs e)

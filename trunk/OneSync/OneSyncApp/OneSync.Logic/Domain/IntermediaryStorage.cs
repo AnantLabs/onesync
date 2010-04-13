@@ -15,27 +15,16 @@ namespace OneSync.Synchronization
     /// </summary>
     public class IntermediaryStorage
     {
-        private string path = "";
-        
         public IntermediaryStorage(string path)
         {
-            this.path = path;            
+            this.Path = path;            
         }
-        public string Path
-        {
-            get
-            {
-                return path;
-            }
-            set
-            {
-                path = value;
-            }
-        }
+        
+        public string Path { get; set; }
 
         public string DirtyFolderPath
         {
-            get { return this.path + @"\files"; }
+            get { return this.Path + @"\files"; }
         }
     }
 }
