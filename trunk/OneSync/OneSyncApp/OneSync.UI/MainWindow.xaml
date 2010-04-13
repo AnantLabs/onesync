@@ -170,8 +170,8 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 											<ColumnDefinition Width="22.2"/>
 										</Grid.ColumnDefinitions>
 										<TextBlock Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource jobInfo}" Text="{Binding SyncSource}" ToolTip="{Binding SyncSource}"  MouseDown="edit_MouseDown" />
-										<TextBox Grid.Column="0" Text="{Binding NewSyncSource}" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"  Loaded="editControls_Loaded"/>
-										<Button Grid.Column="1" Width="22.187" Height="22.188" Content="..." Click="btnBrowse_Click" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" Loaded="editControls_Loaded" />
+										<TextBox Grid.Column="0" Text="{Binding NewSyncSource}" Visibility="Hidden" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"  Loaded="editControls_Loaded"/>
+										<Button Grid.Column="1" Width="22.187" Height="22.188" Content="..." Click="btnBrowse_Click" Visibility="Hidden" Loaded="editControls_Loaded" />
 									</Grid>
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
