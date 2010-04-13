@@ -7,12 +7,7 @@ namespace OneSync.Synchronization
 {
     public class Metadata
     {
-        private FileMetaData fileMetadata = null;
-        private FolderMetadata folderMetadata = null;
-
-        public Metadata()
-        {
-        }
+        private Metadata() { }
 
         public Metadata(FileMetaData fileMetadata, FolderMetadata folderMetadata)
         {
@@ -20,16 +15,7 @@ namespace OneSync.Synchronization
             this.FolderMetadata = folderMetadata;
         }
 
-        public FileMetaData FileMetadata
-        {
-            set { this.fileMetadata = value; }
-            get { return this.fileMetadata; }
-        }
-
-        public FolderMetadata FolderMetadata
-        {
-            set { this.folderMetadata = value; }
-            get { return this.folderMetadata; }
-        }
+        public FileMetaData FileMetadata { set; get; }
+        public FolderMetadata FolderMetadata { get; set; }
     }
 }
