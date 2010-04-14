@@ -668,12 +668,11 @@ namespace OneSync.UI
             }
             catch (OutOfDiskSpaceException ex)
             {
-
                 string errorMsg;
                 entry.Error = ex;
                 entry.ProgressBarValue = 100;
-                entry.ProgressBarColor = "Red";
-                errorMsg = "Not enough space in intermediate storage: " + entry.IntermediaryStoragePath + ". So job " + entry.JobName + " cannot be completed. Please use a bigger drive for this job";
+                errorMsg = "Insufficient space in " + entry.IntermediaryStoragePath + 
+                           " to store all modified files. Sync is partially completed.";
                 this.Dispatcher.Invoke((Action)delegate
                 {
                     entry.ProgressBarMessage = errorMsg;
@@ -686,10 +685,7 @@ namespace OneSync.UI
                 entry.Error = ex;
                 entry.ProgressBarValue = 100;
                 entry.ProgressBarColor = "Red";
-                if (ex.GetType() == typeof(OutOfDiskSpaceException))
-                    errorMsg = "Not enough space in intermediate storage: " + entry.IntermediaryStoragePath + ". So job " + entry.JobName + " cannot be completed. Please use a bigger drive for this job";
-                else
-                    errorMsg = "Error Reported: " + ex.Message;
+                errorMsg = "Error Reported: " + ex.Message;
                 this.Dispatcher.Invoke((Action)delegate
                 {
                     entry.ProgressBarMessage = errorMsg;

@@ -204,6 +204,8 @@ namespace OneSync.Synchronization
             
             int totalProgress = actions.Count;
             int currProgress = 0;
+            bool outOfSpace = false;
+
             foreach (SyncAction a in actions)
             {
                 if (!Validator.SyncJobParamsValidated(_job.Name, _job.IntermediaryStorage.Path, _job.SyncSource.Path))
@@ -230,7 +232,9 @@ namespace OneSync.Synchronization
                     IList<FileMetaDataItem> list = new List<FileMetaDataItem>() { new FileMetaDataItem(a.SourceID, a.RelativeFilePath, "", DateTime.Now, 0, 0) };
                     mdProvider.Delete(list);
                     log.Add(new LogActivity(a.RelativeFilePath, a.ChangeType.ToString(),"FAIL"));
-                    throw;
+
+                    outOfSpace = true;
+                    //throw;
                 }
                 catch (Exception)
                 {
@@ -238,6 +242,7 @@ namespace OneSync.Synchronization
                     throw;
                 }
             }
+            if (outOfSpace) throw new OutOfDiskSpaceException();
         }
 
         private void ExecuteCreateActions(IList<SyncAction> copyList)
