@@ -434,7 +434,8 @@ namespace OneSync.Synchronization
             //Find the metadata items that in the current folder only
             IEnumerable<FolderMetadataItem> newOnly =
                 newMetadata.FolderMetadataItems.Where(
-                    @new => !oldMetadata.FolderMetadataItems.Contains(@new, new FolderMetadataItemComparer()));
+                    @new => !oldMetadata.FolderMetadataItems.Contains(@new, new FolderMetadataItemComparer())
+                    );
 
             //find metadata items that not in the current folder but metadata store
             IEnumerable<FolderMetadataItem> oldOnly =
@@ -452,7 +453,7 @@ namespace OneSync.Synchronization
             return true;
         }
 
-        public override bool UpdateFolderMetadata(FolderMetadata oldMetadata, FolderMetadata newMetadata)
+        public override bool UpdateFolderMetadata(FolderMetadata oldMetadata, FolderMetadata newMetadata, bool storeOnlyEmptyFolder)
         {
             oldMetadata.FolderMetadataItems.ToList().Sort(new FolderMetadataItemComparer());
             newMetadata.FolderMetadataItems.ToList().Sort(new FolderMetadataItemComparer());
@@ -460,7 +461,9 @@ namespace OneSync.Synchronization
             //Find the metadata items that in the current folder only
             IEnumerable<FolderMetadataItem> newOnly =
                 newMetadata.FolderMetadataItems.Where(
-                    @new => !oldMetadata.FolderMetadataItems.Contains(@new, new FolderMetadataItemComparer()));
+                    @new => !oldMetadata.FolderMetadataItems.Contains(@new, new FolderMetadataItemComparer())
+                && (storeOnlyEmptyFolder & Files.FileUtils.IsDirectoryEmpty(@new.AbsolutePath))
+                    );
 
             //find metadata items that not in the current folder but metadata store
             IEnumerable<FolderMetadataItem> oldOnly =

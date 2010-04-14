@@ -17,10 +17,10 @@ namespace OneSync.Synchronization
         private void Compare (IList<SyncAction> actions, IList<FileMetaDataItem> metaDataItems)
         {
             IList<FileMetaDataItem> dummyItems = new List<FileMetaDataItem>();
-            foreach (var list in actions)
+            foreach (var action in actions)
             {
-                dummyItems.Add(new FileMetaDataItem("", list.RelativeFilePath, list.FileHash, DateTime.Now,
-                                                             0, 0));
+                    dummyItems.Add(new FileMetaDataItem("", action.RelativeFilePath, action.FileHash, DateTime.Now,
+                                                    0, 0));
             }
 
             IEnumerable<FileMetaDataItem> inMDOnly = from mdItem in metaDataItems
