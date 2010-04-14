@@ -31,7 +31,7 @@ namespace OneSyncATD
             execTests.executeTests(listTestCases);
             TestResultWriting writeResults = new TestResultWriting();
             writeResults.writeResult(testFolderPath, listTestCases);
-            MessageBox.Show("Test Cases finish running", "OneSync", MessageBoxButtons.OK, MessageBoxIcon.Exclamation); 
+            MessageBox.Show("Test Cases finish running", "OneSyncATD", MessageBoxButtons.OK, MessageBoxIcon.Exclamation); 
         }
 
         private void browseButton_Click(object sender, EventArgs e)

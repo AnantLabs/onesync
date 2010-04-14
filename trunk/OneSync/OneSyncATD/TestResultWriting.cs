@@ -18,6 +18,7 @@ namespace OneSyncATD
                 streamWriter.Flush();
             }
             streamWriter.Close();
+            System.Diagnostics.Process.Start(resultFileName);
         }
     }
 }
