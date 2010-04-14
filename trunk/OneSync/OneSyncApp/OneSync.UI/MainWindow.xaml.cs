@@ -403,6 +403,10 @@ namespace OneSync.UI
                    {
                        this.Dispatcher.Invoke((Action)delegate
                        {
+                           entry.SyncJob.Name = oldSyncJobName;
+                           entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
+                           entry.SyncJob.SyncSource.Path = oldSyncSource;
+                           entry.InfoChanged();
                            showErrorMsg(ex.Message);
                        });
                    }
@@ -410,6 +414,10 @@ namespace OneSync.UI
                    {
                        this.Dispatcher.Invoke((Action)delegate
                        {
+                           entry.SyncJob.Name = oldSyncJobName;
+                           entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
+                           entry.SyncJob.SyncSource.Path = oldSyncSource;
+                           entry.InfoChanged();
                            showErrorMsg("Can't move files from old to new intermediary storage. Please do it manually");
                        });
                    }
@@ -417,6 +425,10 @@ namespace OneSync.UI
                    {
                        this.Dispatcher.Invoke((Action)delegate
                        {
+                           entry.SyncJob.Name = oldSyncJobName;
+                           entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
+                           entry.SyncJob.SyncSource.Path = oldSyncSource;
+                           entry.InfoChanged();
                            showErrorMsg("Can't move files from old to new intermediary storage. Please do it manually");
                        });
                    }
@@ -424,6 +436,10 @@ namespace OneSync.UI
                    {
                        this.Dispatcher.Invoke((Action)delegate
                        {
+                           entry.SyncJob.Name = oldSyncJobName;
+                           entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
+                           entry.SyncJob.SyncSource.Path = oldSyncSource;
+                           entry.InfoChanged();
                            showErrorMsg(sourceException.Message);
                        });
                    }
@@ -431,6 +447,10 @@ namespace OneSync.UI
                    {
                        this.Dispatcher.Invoke((Action)delegate
                        {
+                           entry.SyncJob.Name = oldSyncJobName;
+                           entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
+                           entry.SyncJob.SyncSource.Path = oldSyncSource;
+                           entry.InfoChanged();
                            showErrorMsg("The new intermediate storage is too small that it cannot store all the files.");
                        });
                    }
