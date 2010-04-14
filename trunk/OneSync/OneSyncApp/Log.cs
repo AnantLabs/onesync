@@ -237,6 +237,9 @@ namespace OneSync
 
                 try
                 {
+                    // Clear exception log if its size exceeds 10MB
+                    if (checkLogFileSize(logFilePath)) File.Delete(logFilePath);
+
                     if (File.Exists(logFilePath)) // Append to existing exception log file
                     {
                         fs = new FileStream(logFilePath, FileMode.Append);
@@ -588,8 +591,15 @@ namespace OneSync
 
         private static bool checkLogFileSize(string logFilePath)
         {
-            FileInfo fi = new FileInfo(logFilePath);
-            return (fi.Length > MaxLogFileSize);
+            try
+            {
+                FileInfo fi = new FileInfo(logFilePath);
+                return (fi.Length > MaxLogFileSize);
+            }
+            catch(Exception)
+            {
+                return false;
+            }
         }
 
         #endregion
