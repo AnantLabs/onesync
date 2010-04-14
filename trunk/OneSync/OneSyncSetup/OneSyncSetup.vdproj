@@ -27,19 +27,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_6ACFB0F10014E1330113E9E759FBCFD4"
+        "MsmKey" = "8:_630D353CAF3AD41D761C8F9DC9409EAE"
         "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_6ACFB0F10014E1330113E9E759FBCFD4"
-        "OwnerKey" = "8:_AFC484BCCB68A0A0280E2EE6AD185C47"
+        "MsmKey" = "8:_630D353CAF3AD41D761C8F9DC9409EAE"
+        "OwnerKey" = "8:_646762FF467D819B58305EFEDE4A8BB3"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_AFC484BCCB68A0A0280E2EE6AD185C47"
+        "MsmKey" = "8:_646762FF467D819B58305EFEDE4A8BB3"
         "OwnerKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -70,13 +70,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_AFC484BCCB68A0A0280E2EE6AD185C47"
+        "OwnerKey" = "8:_646762FF467D819B58305EFEDE4A8BB3"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_6ACFB0F10014E1330113E9E759FBCFD4"
+        "OwnerKey" = "8:_630D353CAF3AD41D761C8F9DC9409EAE"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -204,7 +204,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "Version" = "8:3.5.21022"
+                "Version" = "8:3.5.30729"
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=76617"
                 }
@@ -252,14 +252,14 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6ACFB0F10014E1330113E9E759FBCFD4"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_630D353CAF3AD41D761C8F9DC9409EAE"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Community.CsharpSqlite, Version=3.6.22.1, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_6ACFB0F10014E1330113E9E759FBCFD4"
+                    "_630D353CAF3AD41D761C8F9DC9409EAE"
                     {
                     "Name" = "8:Community.CsharpSqlite.dll"
                     "Attributes" = "3:512"
@@ -283,14 +283,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_AFC484BCCB68A0A0280E2EE6AD185C47"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_646762FF467D819B58305EFEDE4A8BB3"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Community.CsharpSqlite.SQLiteClient, Version=3.6.22.3, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
-                    "_AFC484BCCB68A0A0280E2EE6AD185C47"
+                    "_646762FF467D819B58305EFEDE4A8BB3"
                     {
                     "Name" = "8:Community.CsharpSqlite.SQLiteClient.dll"
                     "Attributes" = "3:512"
@@ -422,7 +422,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:OneSync V2.0"
         "ProductCode" = "8:{E8783D2A-EB76-468D-AA7D-CB50C0075A6A}"
-        "PackageCode" = "8:{F80B4D97-E19B-41E2-BA51-FBF101FA5371}"
+        "PackageCode" = "8:{97B1FE9D-4DDA-4D70-ADD6-50B8A8836247}"
         "UpgradeCode" = "8:{268160E3-0323-49E7-8B23-E33489420389}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"

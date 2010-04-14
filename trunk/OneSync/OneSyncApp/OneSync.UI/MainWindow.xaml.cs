@@ -179,10 +179,14 @@ namespace OneSync.UI
                 });
             }catch(Exception exception)
             {
-                this.Dispatcher.Invoke((Action)delegate
+                try
                 {
-                    showErrorMsg(exception.Message);
-                });
+                    this.Dispatcher.Invoke((Action)delegate
+                    {
+                        showErrorMsg(exception.Message);
+                    });
+                }
+                catch(Exception) { } //If you don't have .NET 3.5 SP1.
             }
 
 
@@ -421,6 +425,13 @@ namespace OneSync.UI
                        this.Dispatcher.Invoke((Action)delegate
                        {
                            showErrorMsg(sourceException.Message);
+                       });
+                   }
+                   catch (OutOfDiskSpaceException)
+                   {
+                       this.Dispatcher.Invoke((Action)delegate
+                       {
+                           showErrorMsg("The new intermediate storage is too small that it cannot store all the files.");
                        });
                    }
                    catch(Exception)
