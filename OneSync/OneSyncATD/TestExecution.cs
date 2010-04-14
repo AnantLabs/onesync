@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* Coded by Tham Zi Jie
+ * TestExecution.cs is handling all test methods.
+ * For OneSync, the test methods is focusing on sync job creation/modification and synchronization.
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
