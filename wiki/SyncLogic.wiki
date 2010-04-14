@@ -54,7 +54,7 @@ Outline of preview generation:
 
 Sequence diagram for `GenerateSyncPreviewResult()`:
 
-[http://www.comp.nus.edu.sg/~deskoh/devGuide/sd_genPreview.png]
+[http://onesync.googlecode.com/svn/wiki/images/sd_genPreview.png]
 
 
 = 3. Applying Patch =
