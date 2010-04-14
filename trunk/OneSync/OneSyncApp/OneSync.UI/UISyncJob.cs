@@ -194,6 +194,7 @@ namespace OneSync.UI
 
         protected virtual void OnPropertyChanged(string PropertyName)
         {
+            this._agent = new FileSyncAgent(SyncJob);
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(PropertyName));
         }
