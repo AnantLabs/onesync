@@ -155,7 +155,7 @@ namespace OneSync.Synchronization
             
             if (files == null) return new FileMetaData(id, fromPath);
             IEnumerable<FileInfo> noHiddenFiles = from file in files
-                                                  where excludeHidden ? ((!Files.FileUtils.IsFileHidden(file.FullName)) && excludeHidden) : !excludeHidden
+                                                  where excludeHidden ? !Files.FileUtils.IsFileHidden(file.FullName) : true
                                                   select file;
             files = noHiddenFiles.ToArray<FileInfo>();
 
