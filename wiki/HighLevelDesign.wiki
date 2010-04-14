@@ -11,7 +11,7 @@ The business objects are
   * !FileMetadata
 
 
-[http://www.comp.nus.edu.sg/~deskoh/devGuide/architecture01.png]
+[http://onesync.googlecode.com/svn/wiki/images/architecture01.png]
 
 ----
 
@@ -22,4 +22,4 @@ All the providers i.e. SyncSourceProvider, SyncActionsProvider, MetadataProvider
 
 In current implementation. SQLite database is for data persistence, and classes that inherits from them these abstract classes are prefixed with 'SQLite'.
 
-[http://www.comp.nus.edu.sg/~deskoh/devGuide/architecture02.png]
+[http://onesync.googlecode.com/svn/wiki/images/architecture02.png]
