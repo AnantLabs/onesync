@@ -14,22 +14,17 @@ namespace OneSync.Synchronization
 
     {
         private string source_id = "";
-        private string fullName = "";
         private string relativePath = "";
         private string hashCode = "";
         private DateTime lastModifiedTime;
         private uint ntfs1 = 0;
         private uint ntfs2 = 0;        
 
-        public FileMetaDataItem()
-        {
-            
-        }
+        private FileMetaDataItem() { }
         
-        public FileMetaDataItem(string source_id , string fullName, string relativePath , string hashCode, DateTime lastModifiedTime, uint ntfs1, uint ntfs2)
+        public FileMetaDataItem(string source_id, string relativePath , string hashCode, DateTime lastModifiedTime, uint ntfs1, uint ntfs2)
         {
             this.source_id = source_id;
-            this.fullName = fullName;
             this.relativePath = relativePath;            
             this.hashCode = hashCode;
             this.lastModifiedTime = lastModifiedTime;
@@ -39,60 +34,35 @@ namespace OneSync.Synchronization
 
         public string SourceId
         {
-            get
-            {
-                return this.source_id; 
-            }
-        }
-
-        public string FullName
-        {
-            get
-            {
-                return this.fullName;
-            }
+            get { return this.source_id; }
         }
 
         public string RelativePath
         {
-            get
-            {
-                return this.relativePath;
-            }
+            get { return this.relativePath; }
         }
 
 
         public string HashCode
         {
-            get
-            {
-                return this.hashCode;
-            }
+            get { return this.hashCode; }
         }
 
         public DateTime LastModifiedTime
         {
-            get
-            {
-                return this.lastModifiedTime;
-            }
+            get { return this.lastModifiedTime; }
         }
 
         public uint NTFS_ID1
         {
-            get
-            {
-                return this.ntfs1;
-            }
+            get { return this.ntfs1; }
         }
 
         public uint NTFS_ID2
         {
-            get
-            {
-                return this.ntfs2;
-            }
+            get { return this.ntfs2; }
         }
+
         public int CompareTo(FileMetaDataItem item)
         {            
             return this.RelativePath.CompareTo(item.RelativePath);
