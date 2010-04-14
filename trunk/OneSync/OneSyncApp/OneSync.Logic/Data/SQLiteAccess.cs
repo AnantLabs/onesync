@@ -14,6 +14,8 @@ namespace OneSync.Synchronization
 
         // Track whether Dispose has been called.
         private bool disposed = false;
+        private string dbFilePath = "";
+        private bool createIfNotExist = true;
 
         private string connectionString = "";
         /// <summary>
@@ -25,17 +27,9 @@ namespace OneSync.Synchronization
         public SQLiteAccess(string dbFilePath, bool createIfNotExist)
         {
             // Note: dbFilePath need not exists.
-
-            // Create directory for database file if it does not exist
-            FileInfo fi = new FileInfo(dbFilePath);
-            if (!fi.Exists && createIfNotExist) fi.Directory.Create();
-
+            this.dbFilePath = dbFilePath;
+            this.createIfNotExist = createIfNotExist;
             connectionString = String.Format(CONN_STRING_FORMAT, dbFilePath);
-
-            // TEST: What if no access to file, security permissions, invalid path format, path too long, db cannot be created?
-
-            if (dbFilePath == null)
-                throw new ArgumentNullException("dbFilePath");          
         }
 
         /// <summary>
@@ -45,8 +39,20 @@ namespace OneSync.Synchronization
         public SqliteConnection NewSQLiteConnection()
         {     
             conn = new SqliteConnection(connectionString);
-            conn.Open();
-            return conn;           
+            // Create directory for database file if it does not exist
+            FileInfo fi = new FileInfo(dbFilePath);
+            if ( fi.Exists )
+            {
+                conn.Open();
+                return conn;
+            }
+            if ((!fi.Exists) && createIfNotExist)
+            {
+                fi.Directory.Create();
+                conn.Open();
+                return conn;
+            }
+            return null;           
         }
         /// <summary>
         /// Get the current connection

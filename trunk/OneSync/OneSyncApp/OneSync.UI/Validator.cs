@@ -21,6 +21,15 @@ namespace OneSync.Synchronization
                    && IsRecursive(sourceAbsolute, immediate);
         }
         
+        public static bool IntermediaryMovable (string baseFolder, string sourceId)
+        {
+            string absolutePath = Path.Combine(baseFolder, Configuration.DATABASE_NAME);
+            if (!File.Exists(absolutePath)) return true;
+
+            SyncSourceProvider sourceProvider = SyncClient.GetSyncSourceProvider(baseFolder);
+            return sourceProvider.SourceExist(sourceId);
+        }
+
         private static bool IsRecursive (string source, string intermediate)
         {
             //Check #3: Check whether the Sync Source Folder and the Intermediate Storage Folder are the subdirectory of each other.

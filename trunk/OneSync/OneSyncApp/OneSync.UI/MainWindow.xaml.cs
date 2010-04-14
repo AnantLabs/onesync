@@ -359,6 +359,8 @@ namespace OneSync.UI
                 showErrorMsg("");
             });
 
+            
+
             UISyncJobEntry entry = e.Argument as UISyncJobEntry;
             if (entry == null) return;
             
@@ -371,6 +373,10 @@ namespace OneSync.UI
             entry.SyncJob.SyncSource.Path = entry.NewSyncSource;
            try
            {
+               Validator.SyncJobParamsValidated(entry.NewJobName, entry.NewSyncSource, entry.NewIntermediaryStoragePath);
+               if (!Validator.IntermediaryMovable (entry.IntermediaryStoragePath, entry.SyncJob.SyncSource.ID))
+                   throw new SyncJobException("Metadata file doesn't contain source " + oldSyncSource);
+
                jobManager.Update(entry.SyncJob);
                entry.InfoChanged(); /* Force databinding to refresh */
 

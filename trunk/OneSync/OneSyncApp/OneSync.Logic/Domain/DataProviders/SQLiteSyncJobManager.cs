@@ -89,7 +89,7 @@ namespace OneSync.Synchronization
 
             try
             {
-                SQLiteAccess db = new SQLiteAccess(Path.Combine (this.StoragePath, Configuration.DATABASE_NAME ),true);
+                SQLiteAccess db = new SQLiteAccess(Path.Combine (this.StoragePath, Configuration.DATABASE_NAME ),false);
 
                 using (SqliteConnection con =  db.NewSQLiteConnection ())
                 {                                   
@@ -127,7 +127,7 @@ namespace OneSync.Synchronization
         {
             SyncJob p = null;
 
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME),true);
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 string cmdText = "SELECT * FROM " + SYNCJOB_TABLE +
@@ -256,7 +256,7 @@ namespace OneSync.Synchronization
             paramList.Add(new SqliteParameter("@name", System.Data.DbType.String) { Value = profile.Name });
             paramList.Add(new SqliteParameter("@id", System.Data.DbType.String) { Value = profile.ID });
 
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME),true);
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
@@ -277,7 +277,7 @@ namespace OneSync.Synchronization
 
         public override bool Delete(SyncJob job)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME),true);
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 SqliteParameterCollection paramList = new SqliteParameterCollection();
@@ -304,8 +304,8 @@ namespace OneSync.Synchronization
                 throw new ProfileNameExistException("Sync job " + profile.Name + " is already created");
 
             
-            SQLiteAccess dbAccess1 = new SQLiteAccess(Path.Combine (this.StoragePath, Configuration.DATABASE_NAME),true);
-            SQLiteAccess dbAccess2 = new SQLiteAccess(Path.Combine(profile.IntermediaryStorage.Path, Configuration.DATABASE_NAME),true);
+            SQLiteAccess dbAccess1 = new SQLiteAccess(Path.Combine (this.StoragePath, Configuration.DATABASE_NAME),false);
+            SQLiteAccess dbAccess2 = new SQLiteAccess(Path.Combine(profile.IntermediaryStorage.Path, Configuration.DATABASE_NAME),false);
             SqliteConnection con1 = dbAccess1.NewSQLiteConnection();
             SqliteConnection con2 = dbAccess2.NewSQLiteConnection();
             SqliteTransaction transaction1 = (SqliteTransaction)con1.BeginTransaction();
@@ -378,7 +378,7 @@ namespace OneSync.Synchronization
 
         public  bool SyncJobExists(string profileName, string id)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine (this.StoragePath, Configuration.DATABASE_NAME ),true);
+            SQLiteAccess db = new SQLiteAccess(Path.Combine (this.StoragePath, Configuration.DATABASE_NAME ),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 // TODO: Change sql to SELECT COUNT(*)?

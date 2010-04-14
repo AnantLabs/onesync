@@ -79,7 +79,7 @@ namespace OneSync.Synchronization
         }
 
         /// <summary>
-        /// Executes synchronization based on the SyncPreviewResult as well
+        /// Executes synchronization based on the SyncPreviewRe;sult as well
         /// as generate patch for other folder.
         /// </summary>
         /// <param name="preview">SyncPreviewResult to be executed.</param>

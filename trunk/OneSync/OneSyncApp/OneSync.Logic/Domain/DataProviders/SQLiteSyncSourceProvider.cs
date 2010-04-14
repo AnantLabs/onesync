@@ -41,7 +41,7 @@ namespace OneSync.Synchronization
         {
             IList<SyncSource> syncSources = new List<SyncSource>();
 
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 using (SqliteCommand cmd = con.CreateCommand ())
@@ -68,7 +68,7 @@ namespace OneSync.Synchronization
         /// <returns></returns>
         public override bool Update(SyncSource source)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 string cmdText = "UPDATE " + Configuration.TBL_DATASOURCE_INFO +
@@ -90,7 +90,7 @@ namespace OneSync.Synchronization
 
         public override bool Delete(SyncSource source)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 string cmdText = "DELETE FROM " + Configuration.TBL_DATASOURCE_INFO +
@@ -179,7 +179,7 @@ namespace OneSync.Synchronization
         {
             try
             {
-                SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+                SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
                 using (SqliteConnection con = db.NewSQLiteConnection ())
                 {
                     string cmdText = "SELECT COUNT (DISTINCT " + Configuration.COL_SOURCE_ID + ") AS num" +
@@ -249,12 +249,38 @@ namespace OneSync.Synchronization
                                                           new SqliteParameter("@path", DbType.String) {Value = s.Path}
                                                       };
 
-            SQLiteAccess dbAccess = new SQLiteAccess(Path.Combine (this.StoragePath, Configuration.DATABASE_NAME),true);
+            SQLiteAccess dbAccess = new SQLiteAccess(Path.Combine (this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = dbAccess.NewSQLiteConnection())
             {
                 dbAccess.ExecuteNonQuery(insertText, paramList);
             }
             return true;
+        }
+
+        public override bool SourceExist(string sourceId)
+        {
+            try
+            {
+                SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME), false);
+                using (SqliteConnection con = db.NewSQLiteConnection())
+                {
+                    using (SqliteCommand cmd = con.CreateCommand())
+                    {
+                        cmd.CommandText = "SELECT * FROM  " + Configuration.TBL_DATASOURCE_INFO + " WHERE " +
+                            Configuration.COL_SOURCE_ID + " = @sourceId";
+                        cmd.Parameters.Add(new SqliteParameter(
+                                               "@sourceId", DbType.String) { Value = sourceId });
+                        using (SqliteDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            { return true; }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {return false;}
+            return false;
         }
     }
 }
