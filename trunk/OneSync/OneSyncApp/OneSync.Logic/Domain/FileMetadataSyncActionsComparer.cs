@@ -25,7 +25,7 @@ namespace OneSync.Synchronization
 
             IEnumerable<FileMetaDataItem> inMDOnly = from mdItem in metaDataItems
                                                          where
-                                                             dummyItems.Contains(mdItem, new FileMetaDataItemComparer())
+                                                             !dummyItems.Contains(mdItem, new FileMetaDataItemComparer())
                                                          select mdItem;
 
             onlyInMetadata.Clear();
