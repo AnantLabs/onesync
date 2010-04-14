@@ -1,1 +1,17 @@
 #summary How metadata of files are stored
+
+= Database Schema =
+
+== `SyncSource_Info` Table ==
+  * `source_id`: Foreign key. Globally Unique Identifier (GUID)
+  * `absolute_path`: To be concatenated with `relative_path` column of the Metadata table to obtain the full absolute path of the file.
+
+Note that the !SyncSource is identified by its id and not its relative path. This is so as to allow multiple !SyncJob to be created for any particular directory.
+
+== `SyncJob` Table ==
+  * `pid`: Globally Unique Identifier (GUID)
+  * `pname`: Unique !SyncJob name
+  * `intermediate_storage_path`: Absolute path to intermediary storage
+  * `source_info`: Foreign key. The column `pname` is unique as well
+
+== `Metadata` Table ==
