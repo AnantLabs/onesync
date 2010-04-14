@@ -11,6 +11,7 @@ namespace OneSync.Synchronization
     /// <summary>
     /// Class to manage MetaData.
     /// </summary>
+
     public abstract class MetaDataProvider
     {
         // Path to where MetaData are saved.
@@ -18,6 +19,7 @@ namespace OneSync.Synchronization
 
         // Root dir of files referenced by relative paths.
         protected string _rootPath;
+
 
         /// <summary>
         /// Creates a MetaDataProvider.
@@ -133,6 +135,11 @@ namespace OneSync.Synchronization
         }
 
         public static FileMetaData GenerateFileMetadata(string fromPath, string id, bool excludeHidden)
+        {
+            return GenerateFileMetadata(fromPath, id, excludeHidden, null);
+        }
+
+        public static FileMetaData GenerateFileMetadata(string fromPath, string id, bool excludeHidden, StatusCallbackDelegate statusCallback)
         {            
             FileMetaData fileMetadata = new FileMetaData(id, fromPath);
 
@@ -142,6 +149,8 @@ namespace OneSync.Synchronization
 
             FileInfo[] files = null;
 
+            if (statusCallback != null) statusCallback("Reading files from: " + fromPath);
+
             files = di.GetFiles("*.*", SearchOption.AllDirectories);
             
             if (files == null) return new FileMetaData(id, fromPath);
@@ -150,15 +159,16 @@ namespace OneSync.Synchronization
                                                   select file;
             files = noHiddenFiles.ToArray<FileInfo>();
 
-            // TODO: Implement ntfs id
             foreach (FileInfo f in files)
             {
                 try
                 {
+                    if (statusCallback != null) statusCallback(string.Format("Processing file: {0}", f.FullName));
+
                     fileMetadata.MetaDataItems.Add(new FileMetaDataItem(id, f.FullName,
                         OneSync.Files.FileUtils.GetRelativePath(fromPath, f.FullName), Files.FileUtils.GetFileHash(f.FullName),
                         f.LastWriteTime, (uint)0, (uint)0));    
-                }catch(Exception){Console.WriteLine(f.FullName);}
+                }catch(Exception){ }
             }
             return fileMetadata;
         }

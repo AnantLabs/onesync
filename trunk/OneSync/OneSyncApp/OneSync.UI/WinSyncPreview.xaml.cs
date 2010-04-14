@@ -32,7 +32,6 @@ namespace OneSync.UI
             previewWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(previewWorker_RunWorkerCompleted); ;
 
             if (tbManager != null) tbManager.SetProgressState(TaskbarProgressBarState.Indeterminate);
-            pb.Visibility = Visibility.Visible;
 
             // Check job parameters
             if (jobValid(_job))
@@ -47,9 +46,10 @@ namespace OneSync.UI
             if (_job == null) return;
 
             FileSyncAgent agent = new FileSyncAgent(_job);
+            
             try
             {
-                _job.SyncPreviewResult = agent.GenerateSyncPreview();
+                _job.SyncPreviewResult = agent.GenerateSyncPreview(updateStatusMessage);
             }
             catch (DirectoryNotFoundException ex)
             {
@@ -68,7 +68,6 @@ namespace OneSync.UI
         private void previewWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (tbManager != null) tbManager.SetProgressState(TaskbarProgressBarState.NoProgress);
-            pb.Visibility = Visibility.Hidden;
 			previewUIUpdate(true);
 
             if (e.Error != null)
@@ -147,6 +146,17 @@ namespace OneSync.UI
             cmbFilter.IsEnabled = isEnable;
             txtFilter.IsEnabled = isEnable;
             txtBlkDone.IsEnabled = isEnable;
+
+            if (isEnable)
+            {
+                txtStatus.Visibility = Visibility.Hidden;
+                pb.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                txtStatus.Visibility = Visibility.Visible;
+                pb.Visibility = Visibility.Visible;
+            }
         }
 
         private void showErrorMsg(string errorMsg)
@@ -158,7 +168,6 @@ namespace OneSync.UI
                 txtError.Text = errorMsg;
                 txtError.Visibility = Visibility.Visible;
                 if (tbManager != null) tbManager.SetProgressState(TaskbarProgressBarState.NoProgress);
-                pb.Visibility = Visibility.Hidden;
             }
         }
 
@@ -168,6 +177,16 @@ namespace OneSync.UI
             {
                 showErrorMsg(errorMsg);
             });
+        }
+
+        private void updateStatusMessage(string msg)
+        {
+            if (txtStatus.Dispatcher.CheckAccess())
+            {
+                txtStatus.Text = msg;
+            }
+            else
+                txtStatus.Dispatcher.Invoke((Action)delegate { txtStatus.Text = msg; });
         }
 	}
 }
