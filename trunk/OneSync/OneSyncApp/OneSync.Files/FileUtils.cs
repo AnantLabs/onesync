@@ -1,13 +1,6 @@
 ﻿/*
  $Id$
  */
-/*
- * Last edited by Thuat
- * Last modified time: 27/03/2010
- * Changes:
- *  +Integrate with KtmIntegration which provides ntfs transaction.
- *  +Files/folders permission check
- */
 using System;
 using System.IO;
 using System.Linq;
@@ -35,8 +28,8 @@ namespace OneSync.Files
         /// <summary>
         /// Compute the hash of content of any given file
         /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>      
+        /// <param name="path">The path of the file</param>
+        /// <returns>The hash of content of the given file</returns>      
         public static string GetFileHash(string path)
         {
             string hashString = "";
@@ -49,6 +42,12 @@ namespace OneSync.Files
             return hashString;
         }
 
+        /// <summary>
+        /// Check if a file exists
+        /// </summary>
+        /// <param name="baseFolder">The folder containing the file</param>
+        /// <param name="fileName">The name of the file</param>
+        /// <returns>Return true if the file exists, else false</returns>
         public static bool FileExist (string baseFolder, string fileName)
         {
             string absolutePath = System.IO.Path.Combine(baseFolder, fileName);
@@ -58,8 +57,9 @@ namespace OneSync.Files
         /// <summary>
         /// Delete a file given absolute path
         /// </summary>
-        /// <param name="absolutePath"></param>
-        /// <returns></returns>
+        /// <param name="absolutePath">The absolute path to a given file</param>
+        /// <param name="forceToDelete">Delete the given file even if it is read-only</param>
+        /// <returns>Return true if the file is deleted. If the file deletion is not successful, then return false.</returns>
         public static bool Delete(string absolutePath, bool forceToDelete)
         {
             /*
@@ -86,9 +86,10 @@ namespace OneSync.Files
         /// Delete a file given absolute path
         /// If the folder contains this file is empty after the file is deleted, the folder is deleted as well.
         /// </summary>
-        /// <param name="absolutePath"></param>
-        /// <param name="baseFolder"></param>
-        /// <param name="forceToDelete"></param>
+        /// <param name="absolutePath">The absolute path to the file</param>
+        /// <param name="baseFolder">The folder containing the file</param>
+        /// <param name="forceToDelete">Delete the given file even if it is read-only</param>
+        /// <returns>Return true if the deletion is successfully done, false otherwise</returns>
         public static bool DeleteFileAndFolderIfEmpty(string baseFolder, string absolutePath, bool forceToDelete)
         {
             try
@@ -112,9 +113,9 @@ namespace OneSync.Files
         /// <summary>
         /// Recursively delete empty folders
         /// </summary>
-        /// <param name="baseFolder"></param>
-        /// <param name="dir"></param>
-        /// <param name="forceToDelete"></param>
+        /// <param name="baseFolder">The folder directory</param>
+        /// <param name="dir">The directory info of the folder</param>
+        /// <param name="forceToDelete">Delete the folder even if it is read-only</param>
         public static void DeleteEmptyFolderRecursively(string baseFolder, DirectoryInfo dir, bool forceToDelete)
         {
             if (IsDirectoryEmpty(dir.FullName) & !dir.FullName.Equals(baseFolder))
@@ -129,8 +130,8 @@ namespace OneSync.Files
         /// <summary>
         /// Delete a folder given an absolute path
         /// </summary>
-        /// <param name="absolutePath"></param>
-        /// <param name="forceToDelete"></param>
+        /// <param name="absolutePath">The directory of the folder to be deleted</param>
+        /// <param name="forceToDelete">Delete the folder even if it is read-only</param>
         public static void DeleteFolder(string absolutePath, bool forceToDelete)
         {
             if (!IsDirectoryEmpty(absolutePath)  || !Directory.Exists(absolutePath)) return;
@@ -142,11 +143,10 @@ namespace OneSync.Files
         }
 
         /// <summary>
-        /// Get list of files in a folder 
-        /// exclude hidden files
+        /// Get list of files in a folder, exclude hidden files
         /// </summary>
-        /// <param name="absolutePath"></param>
-        /// <returns></returns>
+        /// <param name="absolutePath">The absolute path to the folder</param>
+        /// <returns>An array of file info</returns>
         public static FileInfo[] GetFilesExcludeHidden(string absolutePath)
         {
             return (new DirectoryInfo(absolutePath).GetFiles("*.*", SearchOption.AllDirectories)
@@ -156,8 +156,8 @@ namespace OneSync.Files
         /// <summary>
         /// Get list of sub folders under a directory, hidden folders are excluded
         /// </summary>
-        /// <param name="absolutePath"></param>
-        /// <returns></returns>
+        /// <param name="absolutePath">The absolute path to the folder</param>
+        /// <returns>An array of directory info</returns>
         public static DirectoryInfo[] GetDirectoriesExcludeHidden(string absolutePath)
         {
             return (new DirectoryInfo(absolutePath).GetDirectories("*.*", SearchOption.AllDirectories)
@@ -167,9 +167,9 @@ namespace OneSync.Files
         /// <summary>
         /// Get the relative path given the base directory and the full path to a file
         /// </summary>
-        /// <param name="baseDirectory"></param>
-        /// <param name="fullPath"></param>
-        /// <returns></returns>
+        /// <param name="baseDirectory">The directory containing the file</param>
+        /// <param name="fullPath">The full path to the file</param>
+        /// <returns>The relative path to the file. Empty if the fullPath does not contain the string baseDirectory</returns>
         public static string GetRelativePath(string baseDirectory, string fullPath)
         {
             if (fullPath.Contains(baseDirectory))
@@ -213,13 +213,12 @@ namespace OneSync.Files
         }
 
         /// <summary>
-        /// 
+        /// Move the file from oldPath to newPath.
         /// </summary>
-        /// <param name="oldPath"></param>
-        /// <param name="newPath"></param>
-        /// <param name="forceToRename"></param>
-        /// <returns></returns>
-        /// <exception cref="FileInUseException"></exception>
+        /// <param name="oldPath">The original location of the file.</param>
+        /// <param name="newPath">The new location of the file.</param>
+        /// <param name="forceToRename">Rename the read-only file.</param>
+        /// <returns>True if the file is successfully moved, false otherwise.</returns>
         public static bool Move(string oldPath, string newPath, bool forceToRename)
         {
             //if (IsOpen(oldPath)) throw new FileInUseException("File " + oldPath + " is being opened");
@@ -247,9 +246,9 @@ namespace OneSync.Files
         /// <summary>
         /// Used in conflict resolution. Conflict file will be renamed and copied or moved over
         /// </summary>
-        /// <param name="source"></param>
-        /// <param name="destination"></param>
-        /// <returns></returns>
+        /// <param name="source">The source of the conflict file</param>
+        /// <param name="destination">The destination of the conflict file</param>
+        /// <returns>True if the rename is successful, false otherwise</returns>
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="PathTooLongException"></exception>
         public static bool DuplicateRename(string source, string destination)
