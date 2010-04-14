@@ -5,7 +5,7 @@
 
 * [DeveloperGuide Developer Guide]
   * [HowOneSyncWorks How OneSync works?]
-  * [DeveloperGuide/HighLevelDesign High Level Design]
+  * [DeveloperGuide\HighLevelDesign High Level Design]
   * [SyncLogic Synchronization Logic]
   * [DetailedDesign Detailed Design]
   * [KnownIssues Known Issues]
