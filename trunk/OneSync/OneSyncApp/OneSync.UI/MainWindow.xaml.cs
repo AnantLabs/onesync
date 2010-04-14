@@ -616,6 +616,7 @@ namespace OneSync.UI
 
             // Update UI
             entry.ProgressBarColor = "#FF01D328";
+            entry.ProgressBarValue = 0;
             entry.ProgressBarVisibility = Visibility.Visible;
             entry.ProgressBarMessage = "Synchronizing...";
 
