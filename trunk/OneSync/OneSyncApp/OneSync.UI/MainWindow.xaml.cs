@@ -366,6 +366,7 @@ namespace OneSync.UI
             this.Dispatcher.Invoke((Action)delegate
             {
                 showErrorMsg("");
+                lblSyncJobEditing.Visibility = Visibility.Visible;
             });
 
             UISyncJobEntry entry = e.Argument as UISyncJobEntry;
@@ -442,11 +443,9 @@ namespace OneSync.UI
                     entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
                     entry.SyncJob.SyncSource.Path = oldSyncSource;
                     entry.InfoChanged();
-                    this.Dispatcher.Invoke((Action)delegate
-                    {
-                        showErrorMsg(profileNameExistException.Message);
-                        SetControlsEnabledState(false, true);
-                    });
+                    showErrorMsg(profileNameExistException.Message);
+                    SetControlsEnabledState(false, true);
+                    lblSyncJobEditing.Visibility = Visibility.Hidden;
                 });
             }
             catch (Exception ee)
@@ -459,6 +458,7 @@ namespace OneSync.UI
                 {
                     showErrorMsg(ee.Message);
                     SetControlsEnabledState(false, true);
+                    lblSyncJobEditing.Visibility = Visibility.Hidden;
                 });
             }
         }
@@ -473,6 +473,8 @@ namespace OneSync.UI
             refreshCombobox();
             
             SetControlsEnabledState(false, true);
+
+            lblSyncJobEditing.Visibility = Visibility.Hidden;
         }
 
         private void txtBlkShowLog_MouseDown(object sender, MouseButtonEventArgs e)
