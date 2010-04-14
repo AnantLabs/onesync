@@ -14,6 +14,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Cryptography;
+using OneSync.Synchronization;
 
 namespace OneSync.Files
 {
@@ -132,7 +133,8 @@ namespace OneSync.Files
         /// <param name="forceToDelete"></param>
         public static void DeleteFolder(string absolutePath, bool forceToDelete)
         {
-            if (!IsDirectoryEmpty(absolutePath)) return;
+            if (!IsDirectoryEmpty(absolutePath)  || !Directory.Exists(absolutePath)) return;
+            if (!IsDirectoryEmpty(absolutePath)  || !Directory.Exists(absolutePath)) return;
             var dirInfo = new DirectoryInfo(absolutePath);
             if (dirInfo.Exists & IsDirectoryReadOnly(absolutePath))
                 dirInfo.Attributes &= ~FileAttributes.ReadOnly;
@@ -185,16 +187,14 @@ namespace OneSync.Files
         /// <exception cref="FileInUseException"></exception>
         public static bool Copy(string source, string destination, bool forceToCopy)
         {
-            //if (IsOpen(source)) throw new FileInUseException("File " + source + " is being opened");
-            //if (IsOpen(source) || IsOpen(destination)) throw new FileInUseException("File is currently open");
-
             //extract the directory lead to destination
             string directory = destination.Substring(0, destination.LastIndexOf('\\'));
-            if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
+            
             //overwriten on exist            
             try
             {
                 var info = new FileInfo(destination);
+                if (!info.Directory.Exists) Directory.CreateDirectory((info.Directory.FullName));
                 /*
                 if (File.Exists(destination) && info.IsReadOnly)
                 {
@@ -222,6 +222,12 @@ namespace OneSync.Files
         /// <exception cref="FileInUseException"></exception>
         public static bool Move(string oldPath, string newPath, bool forceToRename)
         {
+            if (!Directory.Exists(oldPath))
+                throw new SyncSourceException(oldPath + " is not found");
+
+            if (!Directory.Exists(newPath))
+                throw new SyncSourceException(newPath+ " is not found");
+
             //if (IsOpen(oldPath)) throw new FileInUseException("File " + oldPath + " is being opened");
             //extract the directory lead to destination
             string directory = newPath.Substring(0, newPath.LastIndexOf('\\'));
@@ -260,8 +266,6 @@ namespace OneSync.Files
 
             fileName += "[conflicted-copy-" + string.Format("{0:yyyy-MM-dd-hh-mm-ss}", DateTime.Now) + "]";
             destination = directory + "\\" + fileName + extension;
-
-            if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
 
             return Move(source, destination, false);
         }

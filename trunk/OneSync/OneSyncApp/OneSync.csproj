@@ -146,6 +146,7 @@
     <Compile Include="OneSync.Logic\Exceptions\MetadataFileError.cs" />
     <Compile Include="OneSync.Files\OutOfDiskSpaceException.cs" />
     <Compile Include="OneSync.Logic\Exceptions\ProfileNameExistsException.cs" />
+    <Compile Include="OneSync.Logic\Exceptions\SyncSourceException.cs" />
     <Compile Include="OneSync.Logic\Exceptions\SyncSourcesNumberExceededException.cs" />
     <Compile Include="OneSync.Logic\SyncClient.cs" />
     <Compile Include="OneSync.Logic\SyncEvents\SyncStatusChangedEventArgs.cs" />
