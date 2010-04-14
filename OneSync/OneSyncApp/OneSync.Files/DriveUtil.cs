@@ -1,12 +1,6 @@
 ﻿/*
  $Id$
  */
-/*
- * Last edited by Thuat
- * Last modified time: 27 March 2010
- * Changes:
- *  + Add in 2 stub methods: TotalCapacity and SpareCapacity of a drive
- */
 using System;
 using System.Collections.Generic;
 using System.Linq;

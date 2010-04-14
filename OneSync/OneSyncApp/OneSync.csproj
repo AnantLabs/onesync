@@ -108,7 +108,6 @@
     <Compile Include="DropboxStatusCheck.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="OneSync.Files\DriveUtil.cs" />
-    <Compile Include="OneSync.Files\FileInUseException.cs" />
     <Compile Include="OneSync.Files\FileUtils.cs" />
     <Compile Include="OneSync.Files\PartialFileStream.cs" />
     <Compile Include="OneSync.Logic\Abstract Classes\MetaDataProvider.cs" />
