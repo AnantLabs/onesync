@@ -112,7 +112,7 @@ namespace OneSync.Synchronization
         private void ApplyPatch(SyncPreviewResult previewResult)
         {
             DateTime startTime = DateTime.Now;
-
+            
             // Create a new list of log
             log.Clear();
 
@@ -159,6 +159,7 @@ namespace OneSync.Synchronization
             log.Clear();
             DateTime startTime = DateTime.Now;
 
+            /*
             try
             {
                 FileMetaData mdDirtyFolder =
@@ -166,6 +167,7 @@ namespace OneSync.Synchronization
                 DeleteRedundantDirtyFiles(newActions, mdDirtyFolder.MetaDataItems, _job.IntermediaryStorage.DirtyFolderPath);
             }
             catch (Exception){}
+             */
 
             try
             {
@@ -326,7 +328,7 @@ namespace OneSync.Synchronization
             Metadata mdCurrentOld = mdProvider.Load(_job.SyncSource.ID, SourceOption.SOURCE_ID_EQUALS);
 
             //read metadata of the current folder in file system 
-            Metadata mdCurrent = MetaDataProvider.Generate(_job.SyncSource.Path, _job.SyncSource.ID, false, false);
+            Metadata mdCurrent = MetaDataProvider.Generate(_job.SyncSource.Path, _job.SyncSource.ID, false, false,true);
 
             //Update metadata 
             mdProvider.Update(mdCurrentOld, mdCurrent);
@@ -361,7 +363,7 @@ namespace OneSync.Synchronization
         private void SyncEmptyFolders()
         {
             //read metadata of the current folder in file system 
-            FolderMetadata currentItems = MetaDataProvider.GenerateFolderMetadata(_job.SyncSource.Path, _job.SyncSource.ID, false,false);
+            FolderMetadata currentItems = MetaDataProvider.GenerateFolderMetadata(_job.SyncSource.Path, _job.SyncSource.ID, false,false,true);
 
             FolderMetadata oldCurrentItems = mdProvider.LoadFolderMetadata(_job.SyncSource.ID, SourceOption.SOURCE_ID_EQUALS);
             FolderMetadata otherItems = mdProvider.LoadFolderMetadata(_job.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
@@ -372,6 +374,7 @@ namespace OneSync.Synchronization
             FolderMetadataComparer comparer4 = new FolderMetadataComparer(compare2.RightOnly, comparer1.LeftOnly);
 
             List<FolderMetadataItem> temps = comparer3.Both.ToList();
+            
             temps.Sort(new FolderMetadataItemComparer());
             temps.Reverse();
 
@@ -379,9 +382,12 @@ namespace OneSync.Synchronization
                 SyncExecutor.DeleteFolder(this._job.SyncSource.Path, item.RelativePath, true);
 
             foreach (FolderMetadataItem item in comparer4.LeftOnly)
+                
                 SyncExecutor.CreateFolder(this._job.SyncSource.Path, item.RelativePath);
 
-            mdProvider.UpdateFolderMetadata(oldCurrentItems, currentItems);
+            currentItems = MetaDataProvider.GenerateFolderMetadata(_job.SyncSource.Path, _job.SyncSource.ID, false,
+                                                                   false, true);
+            mdProvider.UpdateFolderMetadata(oldCurrentItems, currentItems, true);
         }
 
         #region Event Raising

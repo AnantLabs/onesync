@@ -88,7 +88,7 @@ namespace OneSync.Synchronization
         /// <param name="oldItems"></param>
         /// <param name="newItems"></param>
         /// <returns></returns>
-        public abstract bool UpdateFolderMetadata(FolderMetadata oldItems, FolderMetadata newItems);
+        public abstract bool UpdateFolderMetadata(FolderMetadata oldItems, FolderMetadata newItems, bool storeOnlyEmptyFolder);
 
         /// <summary>
         /// 
@@ -117,11 +117,11 @@ namespace OneSync.Synchronization
         /// <param name="fromPath">Root path of files which metadata is to be generated.</param>
         /// <param name="id">Id of metadata to be generated.</param>
         /// <returns>MetaData of all files specified in root path.</returns>
-        public static Metadata Generate(string fromPath, string id, bool excludeHidden, bool createIfNotExist)
+        public static Metadata Generate(string fromPath, string id, bool excludeHidden, bool createIfNotExist, bool excludeNonEmpty)
         {
             if (!Directory.Exists((fromPath)) && createIfNotExist)
                 Directory.CreateDirectory((fromPath));
-            return new Metadata(GenerateFileMetadata(fromPath, id, excludeHidden, createIfNotExist), GenerateFolderMetadata(fromPath, id, excludeHidden, createIfNotExist));
+            return new Metadata(GenerateFileMetadata(fromPath, id, excludeHidden, createIfNotExist), GenerateFolderMetadata(fromPath, id, excludeHidden, createIfNotExist,excludeNonEmpty));
         }
 
         private static void AddDirectorySecurity (string absolutePath)
@@ -182,7 +182,7 @@ namespace OneSync.Synchronization
         /// <param name="id"></param>
         /// <param name="excludeHidden"></param>
         /// <returns></returns>
-        public static FolderMetadata GenerateFolderMetadata(string fromPath, string id, bool excludeHidden, bool createIfNotExist)
+        public static FolderMetadata GenerateFolderMetadata(string fromPath, string id, bool excludeHidden, bool createIfNotExist, bool excludeNonEmpty)
         {
             if (!Directory.Exists((fromPath)) && createIfNotExist)
                 Directory.CreateDirectory((fromPath));
@@ -198,8 +198,9 @@ namespace OneSync.Synchronization
             
             if (directories == null) return new FolderMetadata( id, fromPath );
             IEnumerable<DirectoryInfo> noHiddenDirectories = from dir in directories
-                                                             where excludeHidden ? ((!Files.FileUtils.IsDirectoryHidden(dir.FullName)) && excludeHidden) :
-                                                             (!excludeHidden)
+                                                             where (
+                                                             (excludeHidden?!Files.FileUtils.IsDirectoryHidden(dir.FullName):true)
+                                                             &&(excludeNonEmpty?Files.FileUtils.IsDirectoryEmpty(dir.FullName):true))
                                                              select dir;
             directories = noHiddenDirectories.ToArray<DirectoryInfo>();
 

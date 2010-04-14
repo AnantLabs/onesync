@@ -140,6 +140,7 @@
     <Compile Include="OneSync.Logic\Domain\SyncActionComparer.cs" />
     <Compile Include="OneSync.Logic\Domain\SyncExecutor.cs" />
     <Compile Include="OneSync.Logic\Domain\SyncPreviewResult.cs" />
+    <Compile Include="OneSync.Logic\Domain\SyncResult.cs" />
     <Compile Include="OneSync.Logic\Domain\SyncSource.cs" />
     <Compile Include="OneSync.Logic\Exceptions\DatabaseException.cs" />
     <Compile Include="OneSync.Logic\Exceptions\SyncJobException.cs" />
