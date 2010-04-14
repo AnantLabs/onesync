@@ -359,8 +359,6 @@ namespace OneSync.UI
                 showErrorMsg("");
             });
 
-            
-
             UISyncJobEntry entry = e.Argument as UISyncJobEntry;
             if (entry == null) return;
             
@@ -393,51 +391,38 @@ namespace OneSync.UI
                        {
                            showErrorMsg(ex.Message);
                        });
-                   }catch(DirectoryNotFoundException directoryNotFoundException)
-                   {
-                       this.Dispatcher.Invoke((Action)delegate
-                       {
-                           showErrorMsg("Can't move files from old to new intermediary storage. Please do it manually");
-                       });
-                   }
-                   catch(UnauthorizedAccessException unauthorizedAccessException)
-                   {
-                       this.Dispatcher.Invoke((Action)delegate
-                       {
-                           showErrorMsg("Can't move files from old to new intermediary storage. Please do it manually");
-                       });
-                   }
-               }
-
-               if (!entry.SyncJob.SyncSource.Path.Equals(oldSyncSource))
-               {
-                   try
-                   {
-                       if (!Files.FileUtils.MoveFolder(oldSyncSource, entry.SyncJob.SyncSource.Path))
-                           throw new SyncJobException("File(s) can't be moved to " + entry.SyncJob.SyncSource.Path + ". Please do it manually");
-                   }
-                   catch (SyncJobException sje)
-                   {
-                       this.Dispatcher.Invoke((Action)delegate
-                       {
-                           showErrorMsg(sje.Message);
-                       });
                    }
                    catch (DirectoryNotFoundException directoryNotFoundException)
                    {
                        this.Dispatcher.Invoke((Action)delegate
                        {
-                           showErrorMsg("Can't move files from old to new sync source. Please do it manually");
+                           showErrorMsg("Can't move files from old to new intermediary storage. Please do it manually");
                        });
                    }
                    catch (UnauthorizedAccessException unauthorizedAccessException)
                    {
                        this.Dispatcher.Invoke((Action)delegate
                        {
-                           showErrorMsg("Can't move files from old to new sync source. Please do it manually");
+                           showErrorMsg("Can't move files from old to new intermediary storage. Please do it manually");
+                       });
+                   }
+                   catch (SyncSourceException sourceException)
+                   {
+                       this.Dispatcher.Invoke((Action)delegate
+                       {
+                           showErrorMsg(sourceException.Message);
+                       });
+                   }
+                   catch(Exception)
+                   {
+                       this.Dispatcher.Invoke((Action)delegate
+                       {
+                           
                        });
                    }
                }
+
+               
                e.Result = entry;
            }
             catch(ProfileNameExistException profileNameExistException)
