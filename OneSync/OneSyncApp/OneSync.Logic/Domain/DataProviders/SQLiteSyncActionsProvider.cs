@@ -227,7 +227,7 @@ namespace OneSync.Synchronization
 
         private bool InsertRenameAction(RenameAction renameAction)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 string cmdText = "INSERT INTO " + Configuration.TBL_ACTION +
@@ -274,7 +274,7 @@ namespace OneSync.Synchronization
 
         private bool InsertCreateAction(CreateAction createAction)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 string cmdText = "INSERT INTO " + Configuration.TBL_ACTION +
@@ -319,7 +319,7 @@ namespace OneSync.Synchronization
 
         private bool InsertDeleteAction(DeleteAction deleteAction)
         {
-            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
+            SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 string cmdText = "INSERT INTO " + Configuration.TBL_ACTION +

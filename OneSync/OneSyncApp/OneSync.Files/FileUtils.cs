@@ -48,6 +48,12 @@ namespace OneSync.Files
             return hashString;
         }
 
+        public static bool FileExist (string baseFolder, string fileName)
+        {
+            string absolutePath = System.IO.Path.Combine(baseFolder, fileName);
+            return File.Exists(absolutePath) ? true : false;
+        }
+
         /// <summary>
         /// Delete a file given absolute path
         /// </summary>

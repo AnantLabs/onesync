@@ -59,6 +59,8 @@ namespace OneSync.Synchronization
         /// <returns></returns>
         public abstract int GetSyncSourceCount();
 
+        public abstract bool SourceExist(string sourceId);
+
         /// <summary>
         /// Create default schema
         /// </summary>
