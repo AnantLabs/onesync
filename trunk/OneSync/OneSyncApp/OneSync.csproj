@@ -129,6 +129,7 @@
     <Compile Include="OneSync.Logic\Domain\FileMetaDataComparer.cs" />
     <Compile Include="OneSync.Logic\Domain\FileMetaDataItem.cs" />
     <Compile Include="OneSync.Logic\Domain\FileMetaDataItemComparer.cs" />
+    <Compile Include="OneSync.Logic\Domain\FileMetadataSyncActionsComparer.cs" />
     <Compile Include="OneSync.Logic\Domain\FileSyncAgent.cs" />
     <Compile Include="OneSync.Logic\Domain\FolderMetadata.cs" />
     <Compile Include="OneSync.Logic\Domain\FolderMetadataComparer.cs" />
