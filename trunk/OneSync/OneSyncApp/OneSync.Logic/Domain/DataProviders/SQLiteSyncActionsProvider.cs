@@ -95,7 +95,7 @@ namespace OneSync.Synchronization
             switch (action.ChangeType)
             {
                 case ChangeType.DELETED:
-                    return InsertDeleteAction((DeleteAction)action, con );
+                    return InsertDeleteAction((DeleteAction)action);
                 case ChangeType.NEWLY_CREATED:
                     return InsertCreateAction((CreateAction)action, con);
                 case ChangeType.RENAMED:
@@ -322,7 +322,7 @@ namespace OneSync.Synchronization
             return true;
         }
 
-        private bool InsertCreateAction(CreateAction createAction, SqliteConnection con)
+        private static bool InsertCreateAction(CreateAction createAction, SqliteConnection con)
         {            
             using (SqliteCommand cmd = con.CreateCommand ())
             {
@@ -369,26 +369,6 @@ namespace OneSync.Synchronization
             }
 
             return true;
-        }
-        private bool InsertDeleteAction(DeleteAction deleteAction, SqliteConnection con)
-        {            
-            using (SqliteCommand  cmd = con.CreateCommand())
-            {
-                 cmd.CommandText = "INSERT INTO " + Configuration.TBL_ACTION +
-                                            " ( " + Configuration.COL_CHANGE_IN + "," +
-                                            Configuration.COL_ACTION_TYPE + "," +
-                                            Configuration.COL_OLD_RELATIVE_PATH + "," +
-                                            Configuration.COL_OLD_HASH + ") VALUES (@changeIn, @action, @oldPath, @oldHash)";
-
-                SqliteParameterCollection paramList = new SqliteParameterCollection(); ;
-                paramList.Add(new SqliteParameter("@changeIn", DbType.String) { Value = deleteAction.SourceID });
-                paramList.Add(new SqliteParameter("@action", DbType.Int32) { Value = (int)deleteAction.ChangeType });
-                paramList.Add(new SqliteParameter("@oldPath", DbType.String) { Value = deleteAction.RelativeFilePath });
-                paramList.Add(new SqliteParameter("@oldHash", DbType.String) { Value = deleteAction.FileHash });
-
-                cmd.ExecuteNonQuery();
-                return true;
-            }            
         }
     }
 }

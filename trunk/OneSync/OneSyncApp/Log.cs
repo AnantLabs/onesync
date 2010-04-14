@@ -94,7 +94,7 @@ namespace OneSync
         /// <param name="syncDirection">Indicates the direction of synchronization.</param>
         /// <param name="numOfFilesProcessed">Number of files that have been processed in the synchronization.</param>
         /// <returns></returns>
-        public static bool AddToLog(string syncDirPath, string storageDirPath, string profileName,
+        public static bool AddToLog(string syncDirPath, string storageDirPath, string jobName,
             ICollection<LogActivity> logActivity, string syncDirection, int numOfFilesProcessed,
             DateTime startTime, DateTime endTime)
         {
@@ -136,7 +136,7 @@ namespace OneSync
                     moreThanMax = checkLogFileSize(logFilePath);
 
                     // Save log details
-                    SaveLogDetails(logFilePath, moreThanMax, profileName, storageDirPath, syncDirection, numOfFilesProcessed, startTime, endTime, logActivity);
+                    SaveLogDetails(logFilePath, moreThanMax, jobName, storageDirPath, syncDirection, numOfFilesProcessed, startTime, endTime, logActivity);
 
                     StoreSyncDirAndLogFilePairs(pairs);
                 }
@@ -370,7 +370,7 @@ namespace OneSync
             xmlWriter.Close();
         }
 
-        private static void SaveLogDetails(string logFilePath, bool moreThanMax, string profileName, string storageDirPath,
+        private static void SaveLogDetails(string logFilePath, bool moreThanMax, string jobName, string storageDirPath,
             string syncDirection, int numOfFilesProcessed, DateTime startTime, DateTime endTime,
             ICollection<LogActivity> logActivity)
         {
@@ -383,9 +383,9 @@ namespace OneSync
 
             // Construct the must-have child nodes for the sync session
             XmlElement syncSessionNode = xmlLogDoc.CreateElement("syncsession");
-            XmlElement profileNameNode = xmlLogDoc.CreateElement("profilename");
+            XmlElement jobNameNode = xmlLogDoc.CreateElement("profilename");
             // profileNameNode.InnerText = RemoveTags(profileName);
-            profileNameNode.InnerText = profileName;
+            jobNameNode.InnerText = jobName;
             XmlElement dateNode = xmlLogDoc.CreateElement("syncdate");
             dateNode.InnerText = DateTime.Now.ToShortDateString();
             XmlElement storageDirPathNode = xmlLogDoc.CreateElement("storagedirectory");
@@ -404,7 +404,7 @@ namespace OneSync
 
             // Prepend the node; the last log will be displayed first
             root.PrependChild(syncSessionNode);
-            syncSessionNode.AppendChild(profileNameNode);
+            syncSessionNode.AppendChild(jobNameNode);
             syncSessionNode.AppendChild(dateNode);
             syncSessionNode.AppendChild(storageDirPathNode);
             syncSessionNode.AppendChild(syncDirectionNode);

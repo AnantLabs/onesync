@@ -1,5 +1,5 @@
 ﻿/*
- $Id: SQLiteProfileManager.cs 255 2010-03-17 16:08:53Z gclin009 $
+ $Id: SQLiteSyncJobManager.cs 255 2010-03-17 16:08:53Z gclin009 $
  */
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using Community.CsharpSqlite.SQLiteClient;
 namespace OneSync.Synchronization
 {
     /// <summary>
-    /// This class manages jobs related to profiles
+    /// This class manages jobs related to SyncJobs
     /// </summary>
     public class SQLiteSyncJobManager: SyncJobManager
     {
@@ -69,7 +69,7 @@ namespace OneSync.Synchronization
             }
         }
 
-        public void CreateSchema(SqliteConnection con)
+        public static void CreateSchema(SqliteConnection con)
         {
             using (SqliteCommand cmd = con.CreateCommand())
             {
@@ -169,30 +169,30 @@ namespace OneSync.Synchronization
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="profileName"></param>
+        /// <param name="jobName"></param>
         /// <param name="absoluteSyncPath"></param>
         /// <param name="absoluteIntermediatePath"></param>
         /// <returns></returns>
-        /// <exception cref="ProfileNameExistException">if profile name already exists.</exception>
-        public override SyncJob CreateSyncJob(string profileName, string absoluteSyncPath, string absoluteIntermediatePath)
+        /// <exception cref="SyncJobNameExistException">if syncjob name already exists.</exception>
+        public override SyncJob CreateSyncJob(string jobName, string absoluteSyncPath, string absoluteIntermediatePath)
         {            
             SyncSource syncSource = new SyncSource(System.Guid.NewGuid().ToString(), absoluteSyncPath);
             IntermediaryStorage iStorage = new IntermediaryStorage(absoluteIntermediatePath);
-            SyncJob profile = new SyncJob(System.Guid.NewGuid().ToString(),
-                profileName, syncSource, iStorage);
+            SyncJob job = new SyncJob(System.Guid.NewGuid().ToString(),
+                jobName, syncSource, iStorage);
             
             CreateDataStore(this.StoragePath, syncSource, iStorage);
 
-            // Returns profile if it is successfully added.
-            if (Add(profile))
-                return profile;
+            // Returns job if it is successfully added.
+            if (Add(job))
+                return job;
             else
                 return null;
         }
 
-        public static void CreateDataStore(string pathToProfileFolder, SyncSource syncSource, IntermediaryStorage metaDataSource)
+        public static void CreateDataStore(string pathToJobFolder, SyncSource syncSource, IntermediaryStorage metaDataSource)
         {
-            if (!Directory.Exists(pathToProfileFolder)) Directory.CreateDirectory(pathToProfileFolder);
+            if (!Directory.Exists(pathToJobFolder)) Directory.CreateDirectory(pathToJobFolder);
             if (!Directory.Exists(metaDataSource.Path)) Directory.CreateDirectory(metaDataSource.Path);
 
             SqliteConnection con1 = null;
@@ -201,7 +201,7 @@ namespace OneSync.Synchronization
             SqliteTransaction transaction2 = null;
             try
             {
-                SQLiteAccess dbAccess1 = new SQLiteAccess(Path.Combine(pathToProfileFolder, Configuration.DATABASE_NAME),true);
+                SQLiteAccess dbAccess1 = new SQLiteAccess(Path.Combine(pathToJobFolder, Configuration.DATABASE_NAME),true);
                 SQLiteAccess dbAccess2 = new SQLiteAccess(Path.Combine (metaDataSource.Path, Configuration.DATABASE_NAME),true);
 
                 
@@ -209,7 +209,7 @@ namespace OneSync.Synchronization
                 con2 = dbAccess2.NewSQLiteConnection();
 
                 if (con1 == null)
-                    throw new DatabaseException(Path.Combine(pathToProfileFolder, Configuration.DATABASE_NAME) +
+                    throw new DatabaseException(Path.Combine(pathToJobFolder, Configuration.DATABASE_NAME) +
                                                 " is not found");
 
                 if (con2 == null)
@@ -220,17 +220,14 @@ namespace OneSync.Synchronization
                 transaction2 = (SqliteTransaction)con2.BeginTransaction();
                 transaction1 = (SqliteTransaction)con1.BeginTransaction();
 
-                //Create schema for source info table in profile folder
-                SQLiteSyncSourceProvider sourceProvider = (SQLiteSyncSourceProvider)SyncClient.GetSyncSourceProvider(pathToProfileFolder);
-                sourceProvider.CreateSchema(con1);
+                //Create schema for source info table in job folder
+                SQLiteSyncSourceProvider.CreateSchema(con1);
 
-                //Create schema for profile table in profile folder
-                SQLiteSyncJobManager pManager = (SQLiteSyncJobManager)SyncClient.GetSyncJobManager(pathToProfileFolder);
-                pManager.CreateSchema(con1);
+                //Create schema for profile table in job folder
+                SQLiteSyncJobManager.CreateSchema(con1);
 
                 //create schema for source info table in intermediate storage folder
-                sourceProvider = (SQLiteSyncSourceProvider)SyncClient.GetSyncSourceProvider(metaDataSource.Path);
-                sourceProvider.CreateSchema(con2);
+                SQLiteSyncSourceProvider.CreateSchema(con2);
 
                 //create schema for metadata table in intermediate storage folder
                 SQLiteMetaDataProvider mdProvider = (SQLiteMetaDataProvider)SyncClient.GetMetaDataProvider(metaDataSource.Path, Configuration.DATABASE_NAME);
@@ -257,12 +254,12 @@ namespace OneSync.Synchronization
             }
         }
 
-        public override bool Update(SyncJob profile)
+        public override bool Update(SyncJob job)
         {            
-            if (this.SyncJobExists(profile.Name, profile.ID))
-                throw new ProfileNameExistException("Sync job " + profile.Name + " is already created");
+            if (this.SyncJobExists(job.Name, job.ID))
+                throw new SyncJobNameExistException("Sync job " + job.Name + " is already created");
 
-            SQLiteSyncSourceProvider provider = (SQLiteSyncSourceProvider)SyncClient.GetSyncSourceProvider(profile.IntermediaryStorage.Path);
+            SQLiteSyncSourceProvider provider = (SQLiteSyncSourceProvider)SyncClient.GetSyncSourceProvider(job.IntermediaryStorage.Path);
             if (provider.GetSyncSourceCount() > 2)
                 throw new SyncSourcesNumberExceededException("Only 2 number of source folders are allowed to connect to the same intermediate storage folder.");
 
@@ -274,9 +271,9 @@ namespace OneSync.Synchronization
 
             SqliteParameterCollection paramList = new SqliteParameterCollection();                           
             // Add parameters for 1st Update statement
-            paramList.Add(new SqliteParameter("@mdSource", System.Data.DbType.String) { Value = profile.IntermediaryStorage.Path });
-            paramList.Add(new SqliteParameter("@name", System.Data.DbType.String) { Value = profile.Name });
-            paramList.Add(new SqliteParameter("@id", System.Data.DbType.String) { Value = profile.ID });
+            paramList.Add(new SqliteParameter("@mdSource", System.Data.DbType.String) { Value = job.IntermediaryStorage.Path });
+            paramList.Add(new SqliteParameter("@name", System.Data.DbType.String) { Value = job.Name });
+            paramList.Add(new SqliteParameter("@id", System.Data.DbType.String) { Value = job.ID });
 
             SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
@@ -288,7 +285,7 @@ namespace OneSync.Synchronization
                 SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
                 try
                 {
-                    new SQLiteSyncSourceProvider(this.StoragePath).Update(profile.SyncSource,con );
+                    SQLiteSyncSourceProvider.Update(job.SyncSource,con );
                     db.ExecuteNonQuery(updateProfileText, paramList);
                     transaction.Commit();
                     return true;
@@ -328,14 +325,14 @@ namespace OneSync.Synchronization
             return true;
         }
 
-        public override bool Add(SyncJob profile)
+        public override bool Add(SyncJob job)
         {
-            if (this.SyncJobExists(profile.Name, profile.ID))
-                throw new ProfileNameExistException("Sync job " + profile.Name + " is already created");
+            if (this.SyncJobExists(job.Name, job.ID))
+                throw new SyncJobNameExistException("Sync job " + job.Name + " is already created");
 
             
             SQLiteAccess dbAccess1 = new SQLiteAccess(Path.Combine (this.StoragePath, Configuration.DATABASE_NAME),false);
-            SQLiteAccess dbAccess2 = new SQLiteAccess(Path.Combine(profile.IntermediaryStorage.Path, Configuration.DATABASE_NAME),false);
+            SQLiteAccess dbAccess2 = new SQLiteAccess(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME),false);
             SqliteConnection con1 = dbAccess1.NewSQLiteConnection();
             SqliteConnection con2 = dbAccess2.NewSQLiteConnection();
 
@@ -344,7 +341,7 @@ namespace OneSync.Synchronization
                                             " is not found");
 
             if (con2 == null)
-                throw new DatabaseException(Path.Combine(profile.IntermediaryStorage.Path, Configuration.DATABASE_NAME) +
+                throw new DatabaseException(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME) +
                                             " is not found");
 
             SqliteTransaction transaction1 = (SqliteTransaction)con1.BeginTransaction();
@@ -352,25 +349,24 @@ namespace OneSync.Synchronization
 
             try
             {
-                string insertProfileText = "INSERT INTO " + SYNCJOB_TABLE +
+                string insertJobText = "INSERT INTO " + SYNCJOB_TABLE +
                                  " (" + COL_SYNCJOB_ID + ", " + COL_SYNCJOB_NAME +
                                  " ," + COL_METADATA_SOURCE_LOCATION + ", " + COL_SYNC_SOURCE_ID +
                                  ") VALUES (@id, @name, @meta, @source)";
 
                 SqliteParameterCollection paramList = new SqliteParameterCollection();
-                paramList.Add(new SqliteParameter("@id", System.Data.DbType.String) { Value = profile.ID });
-                paramList.Add(new SqliteParameter("@name", System.Data.DbType.String) { Value = profile.Name });
-                paramList.Add(new SqliteParameter("@meta", System.Data.DbType.String) { Value = profile.IntermediaryStorage.Path });
-                paramList.Add(new SqliteParameter("@source", System.Data.DbType.String) { Value = profile.SyncSource.ID });
+                paramList.Add(new SqliteParameter("@id", System.Data.DbType.String) { Value = job.ID });
+                paramList.Add(new SqliteParameter("@name", System.Data.DbType.String) { Value = job.Name });
+                paramList.Add(new SqliteParameter("@meta", System.Data.DbType.String) { Value = job.IntermediaryStorage.Path });
+                paramList.Add(new SqliteParameter("@source", System.Data.DbType.String) { Value = job.SyncSource.ID });
 
-                dbAccess1.ExecuteNonQuery(insertProfileText, paramList);
+                dbAccess1.ExecuteNonQuery(insertJobText, paramList);
 
-                SQLiteSyncSourceProvider provider = (SQLiteSyncSourceProvider)SyncClient.GetSyncSourceProvider(this.StoragePath);                
-                provider.Add(profile.SyncSource, con1);
+                SQLiteSyncSourceProvider.Add(job.SyncSource, con1);
 
-                provider = (SQLiteSyncSourceProvider)SyncClient.GetSyncSourceProvider(profile.IntermediaryStorage.Path);
+                SQLiteSyncSourceProvider provider = (SQLiteSyncSourceProvider)SyncClient.GetSyncSourceProvider(job.IntermediaryStorage.Path);
                 if (provider.GetSyncSourceCount() == 2) throw new SyncSourcesNumberExceededException("Only 2 number of source folders are allowed to connect to the same intermediate storage folder.");
-                provider.Add(profile.SyncSource, con2);
+                SQLiteSyncSourceProvider.Add(job.SyncSource, con2);
                 
                 transaction1.Commit();
                 transaction2.Commit();
@@ -390,10 +386,10 @@ namespace OneSync.Synchronization
         }           
         
 
-        public bool Add(SyncJob profile, SqliteConnection con)
+        public bool Add(SyncJob job, SqliteConnection con)
         {
-            if (this.SyncJobExists(profile.Name, profile.ID))
-                throw new ProfileNameExistException("Sync job " + profile.Name + " is already created");               
+            if (this.SyncJobExists(job.Name, job.ID))
+                throw new SyncJobNameExistException("Sync job " + job.Name + " is already created");               
 
             using (SqliteCommand cmd = con.CreateCommand ())
             {
@@ -402,20 +398,20 @@ namespace OneSync.Synchronization
                                   " ," + COL_METADATA_SOURCE_LOCATION + ", " + COL_SYNC_SOURCE_ID +
                                   ") VALUES (@id, @name, @meta, @source)";
 
-                cmd.Parameters.Add ( new SqliteParameter("@id", System.Data.DbType.String) { Value = profile.ID });
-                cmd.Parameters.Add(new SqliteParameter("@name", System.Data.DbType.String) { Value = profile.Name });
-                cmd.Parameters.Add(new SqliteParameter("@meta", System.Data.DbType.String) { Value = profile.IntermediaryStorage.Path });
-                cmd.Parameters.Add(new SqliteParameter("@source", System.Data.DbType.String) { Value = profile.SyncSource.ID });
+                cmd.Parameters.Add ( new SqliteParameter("@id", System.Data.DbType.String) { Value = job.ID });
+                cmd.Parameters.Add(new SqliteParameter("@name", System.Data.DbType.String) { Value = job.Name });
+                cmd.Parameters.Add(new SqliteParameter("@meta", System.Data.DbType.String) { Value = job.IntermediaryStorage.Path });
+                cmd.Parameters.Add(new SqliteParameter("@source", System.Data.DbType.String) { Value = job.SyncSource.ID });
 
                 cmd.ExecuteNonQuery ();
-            }                
-            new SQLiteSyncSourceProvider(this.StoragePath).Add(profile.SyncSource, con);
+            }
+            SQLiteSyncSourceProvider.Add(job.SyncSource, con);
             return true;
         }              
             
         
 
-        public  bool SyncJobExists(string profileName, string id)
+        public  bool SyncJobExists(string jobName, string id)
         {
             SQLiteAccess db = new SQLiteAccess(Path.Combine (this.StoragePath, Configuration.DATABASE_NAME ),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
@@ -429,7 +425,7 @@ namespace OneSync.Synchronization
                                  + COL_SYNCJOB_NAME + " = @profileName AND " + COL_SYNCJOB_ID + " <> @id";
 
                 SqliteParameterCollection paramList = new SqliteParameterCollection();
-                paramList.Add(new SqliteParameter("@profileName", System.Data.DbType.String) { Value = profileName });
+                paramList.Add(new SqliteParameter("@profileName", System.Data.DbType.String) { Value = jobName });
                 paramList.Add(new SqliteParameter("@id", System.Data.DbType.String) { Value =  id});
 
                 bool found = false;

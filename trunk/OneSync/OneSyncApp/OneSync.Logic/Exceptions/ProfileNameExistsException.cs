@@ -8,22 +8,22 @@ using System.Text;
 
 namespace OneSync.Synchronization
 {
-    public class ProfileNameExistException:ApplicationException
+    public class SyncJobNameExistException:ApplicationException
     {
         // SyncSource associated with Sync Job conflicted name.
         private SyncSource s;
 
-        public ProfileNameExistException(string message):base(message)
+        public SyncJobNameExistException(string message):base(message)
         {
         }
 
-        public ProfileNameExistException() :base(){ }
+        public SyncJobNameExistException() :base(){ }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="s">SyncSource associated with Sync Job conflicted name.</param>
-        public ProfileNameExistException(SyncSource s) : base() 
+        public SyncJobNameExistException(SyncSource s) : base() 
         {
             this.s = s;
         }
