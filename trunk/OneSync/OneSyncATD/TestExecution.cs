@@ -13,9 +13,7 @@ namespace OneSyncATD
         String rightFolder;
         String interFolder;
         String listSFolders;
-        String listSFiles;
         String listTFolders;
-        String listTFiles;
 
         public TestExecution(String rightFolPath, String interFolPath, String leftFolPath)
         {
@@ -80,6 +78,7 @@ namespace OneSyncATD
 
         private void runCommand(TestCase oneCase)
         {
+            #region createfolders id:createfolders:right or left,unicode or letters or letterssymbols,folderdepth,maxsubdir:true or false:comment
             if (oneCase.testMethod.Equals("createfolders"))
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
@@ -105,8 +104,8 @@ namespace OneSyncATD
                 }
 
                 sWatch.Stop();
-
-
+                #endregion
+            #region generatefiles id:generatefiles:right or left,unicode or letters or letterssymbols,numberoffiles,fileminsize,filemaxsize:true or false:comment
             } else if (oneCase.testMethod.Equals("generatefiles"))
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
@@ -130,26 +129,10 @@ namespace OneSyncATD
                     oneCase.testActual = "true";
                 }
 
-                sWatch.Stop();            
-
+                sWatch.Stop();
             }
-            else if (oneCase.testMethod.Equals("copyfrom"))
-            {
-                try
-                {
-                    String sourceFolder = enumFolder(oneCase.testParameters);
-                    String targetFolder = enumAnoFolder(oneCase.testParameters);
-                    DirectoryInfo diSource = new DirectoryInfo(sourceFolder);
-                    DirectoryInfo diTarget = new DirectoryInfo(targetFolder);
-                    copyAll(diSource, diTarget);
-                    oneCase.testActual = "true";
-                }
-                catch(Exception exception)
-                {
-                    oneCase.testActual = "false";
-                }
-
-            }
+            #endregion
+            #region clearall reset everything to initial
             else if (oneCase.testMethod.Equals("clearall"))
             {
                 DirectoryInfo diRight = new DirectoryInfo(rightFolder);
@@ -250,6 +233,8 @@ namespace OneSyncATD
 
                 sWatch.Stop();
             }
+            #endregion
+            #region createprofile id:createprofile:syncjob1,syncjob2:true or false:comment
             else if (oneCase.testMethod.Equals("createprofile")) 
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
@@ -279,8 +264,10 @@ namespace OneSyncATD
                 else
                 {
                     oneCase.testActual = "false, Sync Jobs are not created successfully.";
-                }                    
+                }
             }
+            #endregion
+            #region rightsyncfirst id:rightsyncfirst:syncjob1,syncjob2:true or false:comment
             else if (oneCase.testMethod.Equals("rightsyncfirst"))
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
@@ -319,8 +306,9 @@ namespace OneSyncATD
                 {
                     oneCase.testActual = "false";
                 }
-                
             }
+            #endregion
+            #region righthalfsync id:righthalfsync:syncjob:true or false:comment
             else if (oneCase.testMethod.Equals("righthalfsync"))
             {                
                 foreach (SyncJob jobItem in SyncClient.GetSyncJobManager(System.Windows.Forms.Application.StartupPath).LoadAllJobs())
@@ -336,6 +324,8 @@ namespace OneSyncATD
                 }
                 oneCase.testActual = "true";
             }
+            #endregion
+            #region leftsyncfirst id:leftsyncfirst:syncjob1,syncjob2,true or false:comment
             else if (oneCase.testMethod.Equals("leftsyncfirst"))
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
@@ -375,8 +365,9 @@ namespace OneSyncATD
                 {
                     oneCase.testActual = "false";
                 }
-
             }
+            #endregion
+            #region lefthalfsync id:lefthalfsync:syncjob:true or false:comment
             else if (oneCase.testMethod.Equals("lefthalfsync"))
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
@@ -395,6 +386,8 @@ namespace OneSyncATD
                 }
                 oneCase.testActual = "true";
             }
+            #endregion
+            #region updateprofile id:updateprofile:oldprofilename,newprofilename,sync source is right or left folder:true or false:comment
             else if (oneCase.testMethod.Equals("updateprofile")) //id:updateprofile:oldprofilename,newprofilename,sync source is right or left folder:comment
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
@@ -428,6 +421,8 @@ namespace OneSyncATD
                     }
                 }
             }
+            #endregion
+            #region deletefiles id:deletefiles:right or left,number of files to be deleted:true or false:comment
             else if (oneCase.testMethod.Equals("deletefiles")) //id:deletefiles:right or left,number of files to be deleted:true or false:comment
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
@@ -474,6 +469,8 @@ namespace OneSyncATD
                     }
                 }
             }
+            #endregion
+            #region deletefolders id:deletefolders:right or left,number of folders to be deleted:true or false:comment
             else if (oneCase.testMethod.Equals("deletefolders")) //id:deletefolders:right or left,number of folders to be deleted:true or false:comment
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
@@ -520,6 +517,8 @@ namespace OneSyncATD
                     }
                 }
             }
+            #endregion
+            #region generateafile id:generateafile:right or left,filename.ext,filesize:true or false:comment
             else if (oneCase.testParameters.Equals("generateafile")) //id:generateafile:right or left,filename.ext,filesize:true or false:comment
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
@@ -547,6 +546,8 @@ namespace OneSyncATD
                     oneCase.testComment = oneCase.testComment + "//" + fileName + " is not found.//";
                 }
             }
+            #endregion
+            #region updateafiledate id:updateafiledate:right or left,filename.ext,modifieddate(YYYY/MM/DD):true or false:comment
             else if (oneCase.testParameters.Equals("updateafiledate"))//id:updateafiledate:right or left,filename.ext,modifieddate(YYYY/MM/DD):true or false:comment
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
@@ -562,13 +563,15 @@ namespace OneSyncATD
     
                 File.SetLastWriteTime(fileName, DateTime.Parse(comParameters[2]));
                 oneCase.testActual = "true";
-            }            
+            }
+            #endregion
             else
             {
                 oneCase.testActual = "Invalid command.";
             }
         }
 
+        #region copyAll(DirectoryInfo sourceFolder, DirectoryInfo targetFolder)
         private void copyAll(DirectoryInfo sourceFolder, DirectoryInfo targetFolder)
         {
             foreach (FileInfo fileInf in sourceFolder.GetFiles())
@@ -582,7 +585,9 @@ namespace OneSyncATD
                 copyAll(diSourceSubDir, nextTargetSubDir);
             }
         }
+        #endregion
 
+        #region compareAll(DirectoryInfo sourceFolder, DirectoryInfo targetFolder)
         private Boolean compareAll(DirectoryInfo sourceFolder, DirectoryInfo targetFolder)
         {           
             Boolean continueFlag = false;
@@ -640,7 +645,9 @@ namespace OneSyncATD
             }         
             return resultFlag;
         }
+        #endregion
 
+        #region enumFolder(String comParameter)
         private string enumFolder(String comParameter)
         {
             if(comParameter.Equals("right"))
@@ -656,7 +663,9 @@ namespace OneSyncATD
                 throw new Exception("Command Error");
             }
         }
+        #endregion
 
+        #region enumAnoFolder(String comParameter)
         private string enumAnoFolder(String comParameter)
         {
             if (comParameter.Equals("right"))
@@ -672,7 +681,9 @@ namespace OneSyncATD
                 throw new Exception("Command Error");
             }
         }
+        #endregion
 
+        #region RandomGenerator
         private static RandomGenerator.NameType detectNameType(String comParameter)
         {
             RandomGenerator.NameType nameType;
@@ -689,6 +700,7 @@ namespace OneSyncATD
                 nameType = RandomGenerator.NameType.LettersAndSymbols;
             }
             return nameType;
-        }        
+        }
+        #endregion
     }
 }
