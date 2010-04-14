@@ -1,4 +1,4 @@
-#summary How metadata of files are stored
+#summary How file metadata and SyncJob are stored
 
 = Database Schema =
 
