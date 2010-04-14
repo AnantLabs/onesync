@@ -1,5 +1,4 @@
 #summary Known Issues / Assumptions
 
   # Assumes that user has read/write permission files and folders being synchronized.
-  # Empty folders are not synchronized.
   # No file size capacity check of intermediary storage.
