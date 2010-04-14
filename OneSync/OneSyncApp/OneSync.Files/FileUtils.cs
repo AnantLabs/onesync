@@ -222,12 +222,6 @@ namespace OneSync.Files
         /// <exception cref="FileInUseException"></exception>
         public static bool Move(string oldPath, string newPath, bool forceToRename)
         {
-            if (!Directory.Exists(oldPath))
-                throw new SyncSourceException(oldPath + " is not found");
-
-            if (!Directory.Exists(newPath))
-                throw new SyncSourceException(newPath+ " is not found");
-
             //if (IsOpen(oldPath)) throw new FileInUseException("File " + oldPath + " is being opened");
             //extract the directory lead to destination
             string directory = newPath.Substring(0, newPath.LastIndexOf('\\'));
@@ -393,6 +387,12 @@ namespace OneSync.Files
         /// <returns></returns>
         public static bool MoveFolder(string sourceDir, string destinationDir)
         {
+            if (!Directory.Exists(sourceDir))
+                throw new SyncSourceException(sourceDir + " is not found");
+
+            if (!Directory.Exists(destinationDir))
+                throw new SyncSourceException(destinationDir + " is not found");
+
             bool succeeded = true;
             //may throw unauthorize access here
             FileInfo[] fileInfos = new DirectoryInfo(sourceDir).GetFiles("*.*", SearchOption.AllDirectories);
