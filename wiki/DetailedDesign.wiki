@@ -29,14 +29,14 @@ Represents information about a synchronization job. It stores information about 
 
 !SyncJobManager is used to manage !SyncJob object. This includes saving and restoring a SyncJob to storage as well as modifying !SyncJob information.
 
-[http://www.comp.nus.edu.sg/~deskoh/devGuide/syncjob01.png]
+[http://onesync.googlecode.com/svn/wiki/images/syncjob01.png]
 
 
 === SQLiteSyncJobManager ===
 
 The SQLiteSyncJobManager inherits from SyncJobManager abstract class. On instantiation, it will check if the database schema is created and creates it if necessary.
 
-[http://www.comp.nus.edu.sg/~deskoh/devGuide/syncjob02.png]
+[http://onesync.googlecode.com/svn/wiki/images/syncjob02.png]
 
 ----
 
@@ -46,19 +46,19 @@ The SQLiteSyncJobManager inherits from SyncJobManager abstract class. On instant
 
 Encapsulates information about the folder being synchronized and possibly other information regarding the PC where the folder is. Each !SyncSource has a unique GUID. It should be noted that there can be 2 different !SyncSource object that represents the same folder on a PC. This is to allow a folder to be part of 2 different !SyncJobs.
 
-[http://www.comp.nus.edu.sg/~deskoh/devGuide/syncsource01.png]
+[http://onesync.googlecode.com/svn/wiki/images/syncsource01.png]
 
 === SQLiteSyncSourceProvider ===
 
 On instantiation, it will check if the database schema is created and creates it if necessary.
 
-[http://www.comp.nus.edu.sg/~deskoh/devGuide/syncsource02.png]
+[http://onesync.googlecode.com/svn/wiki/images/syncsource02.png]
 
 ----
 
 == !SyncActions Related Classes ==
 
-[http://www.comp.nus.edu.sg/~deskoh/devGuide/actions.png]
+[http://onesync.googlecode.com/svn/wiki/images/actions.png]
 
 === !SyncAction ===
 
@@ -80,7 +80,7 @@ A !RenameAction represents a file to be renamed. The `RelativeFilePath` field re
 
 == !FileMetadata Related Classes ==
 
-[http://www.comp.nus.edu.sg/~deskoh/devGuide/md.png]
+[http://onesync.googlecode.com/svn/wiki/images/md.png]
 
 === !FileMetadata ===
 
@@ -100,4 +100,4 @@ SQLiteMetadataProvider inherits from MetadataProvider abstract class to persist 
 
 This class represents information about the intermediary storage used for synchronization, in particular, the file path of the storage, and where the dirty files are kept.
 
-[http://www.comp.nus.edu.sg/~deskoh/devGuide/is.png]
+[http://onesync.googlecode.com/svn/wiki/images/is.png]
