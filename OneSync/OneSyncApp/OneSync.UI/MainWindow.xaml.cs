@@ -672,7 +672,7 @@ namespace OneSync.UI
                 entry.Error = ex;
                 entry.ProgressBarValue = 100;
                 errorMsg = "Insufficient space in " + entry.IntermediaryStoragePath + 
-                           " to store all modified files. Sync is partially completed.";
+                           " to store modified files. Please use a drive with bigger capacity.";
                 this.Dispatcher.Invoke((Action)delegate
                 {
                     entry.ProgressBarMessage = errorMsg;

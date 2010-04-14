@@ -91,42 +91,6 @@ namespace OneSync.Synchronization
         #endregion
 
 
-        #region Static Helper Methods
-        
-        /// <summary>
-        /// Returns SyncJobs that is associated with specified path as its synchronization source.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="jobs"></param>
-        /// <returns></returns>
-        public static IList<SyncJob> FindByDataSource(string path, IList<SyncJob> jobs)
-        {
-            IEnumerable<SyncJob> results = from j in jobs
-                                           where j.SyncSource.Path.Equals(path)
-                                           select j;
-            return results.ToList();
-        }
-
-
-        /// <summary>
-        /// Returns SyncJobs with specified id.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="jobs"></param>
-        /// <returns></returns>
-        public static SyncJob FindBySyncJobId(string id, IList<SyncJob> jobs)
-        {
-            IEnumerable<SyncJob> results = from j in jobs
-                                           where j.ID.Equals(id)
-                                           select j;
-            IList<SyncJob> pList = results.ToList();
-            if (pList.Count == 1) return pList[0];
-            return null;
-        }
-
-        #endregion
-
-
         
 
 

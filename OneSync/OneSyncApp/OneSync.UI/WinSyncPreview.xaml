@@ -25,7 +25,7 @@
 			<RowDefinition Height="42"/>
 		</Grid.RowDefinitions>
 		<TextBlock Foreground="Blue" FontSize="14" Text="Sync Preview" />
-		<TextBlock x:Name="txtError" HorizontalAlignment="Right" Foreground="#FFB90000" FontSize="10.667" FontStyle="Italic" FontWeight="Bold" Text="Error" Visibility="hidden" />
+		<TextBlock x:Name="txtError" HorizontalAlignment="Right" Foreground="#FFB90000" FontSize="10.667" FontStyle="Italic" FontWeight="Bold" Visibility="hidden" />
 		<Grid Grid.Row="1" d:LayoutOverrides="Height">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="65"/>
