@@ -62,7 +62,6 @@ namespace OneSync.Synchronization
 
                 db.ExecuteReader(cmdText, paramList, reader => mData.MetaDataItems.Add(new FileMetaDataItem(
                                                                                            (string) reader[Configuration.COL_SOURCE_ID],
-                                                                                           this.RootPath + (string) reader[Configuration.COL_RELATIVE_PATH],
                                                                                            (string) reader[Configuration.COL_RELATIVE_PATH],
                                                                                            (string) reader[Configuration.COL_HASH_CODE],
                                                                                            (DateTime) reader[Configuration.COL_LAST_MODIFIED_TIME],

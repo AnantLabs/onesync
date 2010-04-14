@@ -212,7 +212,7 @@ namespace OneSync.Synchronization
                     OnProgressChanged(new SyncProgressChangedEventArgs(++currProgress, totalProgress));
                     OnSyncFileChanged(new SyncFileChangedEventArgs(a.ChangeType, a.RelativeFilePath));
 
-                    FileMetaDataItem item = new FileMetaDataItem("", "", a.RelativeFilePath, a.FileHash, DateTime.Now, 0, 0);
+                    FileMetaDataItem item = new FileMetaDataItem("", a.RelativeFilePath, a.FileHash, DateTime.Now, 0, 0);
 
                     if (a.ChangeType == ChangeType.NEWLY_CREATED && !fileMetaData.MetaDataItems.Contains(item, new FileMetaDataItemComparer()))
                         SyncExecutor.CopyToDirtyFolderAndUpdateActionTable(a, _job);
@@ -223,6 +223,10 @@ namespace OneSync.Synchronization
                 }
                 catch (OutOfDiskSpaceException)
                 {
+                    // Delete metadata of file that cannot be copied so that it will be detected as newly
+                    // created file in subsequent sync.
+                    IList<FileMetaDataItem> list = new List<FileMetaDataItem>() { new FileMetaDataItem(a.SourceID, a.RelativeFilePath, "", DateTime.Now, 0, 0) };
+                    mdProvider.Delete(list);
                     log.Add(new LogActivity(a.RelativeFilePath, a.ChangeType.ToString(),"FAIL"));
                     throw;
                 }

@@ -19,7 +19,7 @@ namespace OneSync.Synchronization
             IList<FileMetaDataItem> dummyItems = new List<FileMetaDataItem>();
             foreach (var list in actions)
             {
-                dummyItems.Add(new FileMetaDataItem("", "", list.RelativeFilePath, list.FileHash, DateTime.Now,
+                dummyItems.Add(new FileMetaDataItem("", list.RelativeFilePath, list.FileHash, DateTime.Now,
                                                              0, 0));
             }
 

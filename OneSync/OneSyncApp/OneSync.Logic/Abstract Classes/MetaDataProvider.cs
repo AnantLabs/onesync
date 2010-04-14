@@ -167,7 +167,7 @@ namespace OneSync.Synchronization
                 {
                     if (statusCallback != null) statusCallback(string.Format("Processing file: {0}", f.FullName));
 
-                    fileMetadata.MetaDataItems.Add(new FileMetaDataItem(id, f.FullName,
+                    fileMetadata.MetaDataItems.Add(new FileMetaDataItem(id,
                         OneSync.Files.FileUtils.GetRelativePath(fromPath, f.FullName), Files.FileUtils.GetFileHash(f.FullName),
                         f.LastWriteTime, (uint)0, (uint)0));    
                 }catch(Exception){ }
