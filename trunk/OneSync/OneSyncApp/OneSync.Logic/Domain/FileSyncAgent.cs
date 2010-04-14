@@ -201,10 +201,8 @@ namespace OneSync.Synchronization
         {
             FileMetaData fileMetaData = MetaDataProvider.GenerateFileMetadata(_job.IntermediaryStorage.DirtyFolderPath,
                                                                               "", false,true);
-            
             int totalProgress = actions.Count;
             int currProgress = 0;
-            bool outOfSpace = false;
 
             foreach (SyncAction a in actions)
             {
@@ -227,14 +225,8 @@ namespace OneSync.Synchronization
                 }
                 catch (OutOfDiskSpaceException)
                 {
-                    // Delete metadata of file that cannot be copied so that it will be detected as newly
-                    // created file in subsequent sync.
-                    IList<FileMetaDataItem> list = new List<FileMetaDataItem>() { new FileMetaDataItem(a.SourceID, a.RelativeFilePath, "", DateTime.Now, 0, 0) };
-                    mdProvider.Delete(list);
                     log.Add(new LogActivity(a.RelativeFilePath, a.ChangeType.ToString(),"FAIL"));
-
-                    outOfSpace = true;
-                    //throw;
+                    throw;
                 }
                 catch (Exception)
                 {
@@ -242,7 +234,6 @@ namespace OneSync.Synchronization
                     throw;
                 }
             }
-            if (outOfSpace) throw new OutOfDiskSpaceException();
         }
 
         private void ExecuteCreateActions(IList<SyncAction> copyList)
