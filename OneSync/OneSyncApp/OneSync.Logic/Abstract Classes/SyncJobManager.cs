@@ -60,12 +60,11 @@ namespace OneSync.Synchronization
         public abstract bool Update(SyncJob job);
 
 
-        // TODO: delete job requires only the profile id?
         /// <summary>
-        /// Delete a profile requires delete data from 2 tables SYNCSOURCE_INFO and PROFILE
+        /// Delete a SyncJob requires delete data from 2 tables SYNCSOURCE_INFO and SYNCJOB
         /// If deletion action on one table fails, the total action must fail too.
         /// </summary>
-        /// <param name="profile"></param>
+        /// <param name="job"></param>
         /// <returns>true if successful.</returns>
         public abstract bool Delete(SyncJob job);
 
@@ -73,9 +72,9 @@ namespace OneSync.Synchronization
         /// <summary>
         /// Add new SyncJob
         /// </summary>
-        /// <param name="profile">SyncJob to be added</param>
+        /// <param name="job">SyncJob to be added</param>
         /// <returns>true if SyncJob is added successfully.</returns>
-        /// <exception cref="ProfileNameExistException">SyncJob with same name already exists.</exception>
+        /// <exception cref="SyncJobNameExistException">SyncJob with same name already exists.</exception>
         public abstract bool Add(SyncJob job);
         
         public abstract void CreateSchema();
@@ -113,11 +112,10 @@ namespace OneSync.Synchronization
         /// Returns SyncJobs with specified id.
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="profiles"></param>
+        /// <param name="jobs"></param>
         /// <returns></returns>
         public static SyncJob FindBySyncJobId(string id, IList<SyncJob> jobs)
         {
-            // TODO: Sufficient to stop search when profile is found?
             IEnumerable<SyncJob> results = from j in jobs
                                            where j.ID.Equals(id)
                                            select j;

@@ -6,7 +6,6 @@
 	xmlns:local="clr-namespace:OneSync.UI" 
 	mc:Ignorable="d"
 	x:Class="OneSync.UI.SyncActionsListView"
-	x:Name="UserControl"
 	d:DesignWidth="800" d:DesignHeight="480">
 
 	<UserControl.Resources>
@@ -59,7 +58,7 @@
 		
 	</UserControl.Resources>
 
-	<Grid x:Name="LayoutRoot">
+	<Grid>
 	<!--IsSynchronizedWithCurrentItem="True"-->
 		<ListView SelectionMode="Single" x:Name="lvActions">
 			<ListView.View>

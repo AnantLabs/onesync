@@ -262,7 +262,7 @@ namespace OneSync.UI
                 txtSource.Text = "";
                 txtIntStorage.Text = "";
             }
-            catch (ProfileNameExistException ex)
+            catch (SyncJobNameExistException ex)
             {
                 showErrorMsg(ex.Message);
             }
@@ -435,7 +435,7 @@ namespace OneSync.UI
                
                e.Result = entry;
            }
-            catch(ProfileNameExistException profileNameExistException)
+            catch(SyncJobNameExistException profileNameExistException)
             {
                 this.Dispatcher.Invoke((Action)delegate
                 {
@@ -928,7 +928,7 @@ namespace OneSync.UI
                 });                
                 return false;
             }
-            catch(ProfileNameExistException profileNameExistException)
+            catch(SyncJobNameExistException profileNameExistException)
             {
                 this.Dispatcher.Invoke((Action)delegate
                 {

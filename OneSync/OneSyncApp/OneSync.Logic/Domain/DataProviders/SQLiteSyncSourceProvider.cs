@@ -19,7 +19,7 @@ namespace OneSync.Synchronization
         /// <param name="s"></param>
         /// <param name="con"></param>
         /// <returns></returns>
-        public  bool Add(SyncSource s, SqliteConnection con)
+        public static bool Add(SyncSource s, SqliteConnection con)
         {            
              using (SqliteCommand cmd = con.CreateCommand())
              {
@@ -170,7 +170,7 @@ namespace OneSync.Synchronization
         /// <param name="source"></param>
         /// <param name="con"></param>
         /// <returns></returns>
-        public bool Update(SyncSource source, SqliteConnection con )
+        public static bool Update(SyncSource source, SqliteConnection con )
         {          
             using (SqliteCommand cmd = con.CreateCommand())
             {
@@ -240,7 +240,7 @@ namespace OneSync.Synchronization
         /// supports transaction
         /// </summary>
         /// <param name="con"></param>
-        public void CreateSchema(SqliteConnection con)
+        public static void CreateSchema(SqliteConnection con)
         {
             using (SqliteCommand cmd = con.CreateCommand())
             {
