@@ -31,6 +31,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OneSync, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <ExecutableExtension>.exe</ExecutableExtension>
+      <HintPath>..\OneSyncApp\bin\Debug\OneSync.exe</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -87,12 +92,6 @@
     <Compile Include="TestCase.cs" />
     <Compile Include="UpdateHandler.cs" />
     <Compile Include="Utility.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\OneSyncApp\OneSync.csproj">
-      <Project>{18DA4780-0E82-440E-B282-6DDF766420E4}</Project>
-      <Name>OneSync</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
