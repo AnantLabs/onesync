@@ -25,6 +25,12 @@ namespace OneSync.Synchronization
             SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
+                if (con == null)
+                    throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME) +
+                                                " is not found");
+
+                if (con == null) throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)+ " is not found");
+
                 string cmdText = "SELECT * FROM " + Configuration.TBL_ACTION + 
                                  " WHERE " + Configuration.COL_CHANGE_IN + opt + " @sourceId";
 
@@ -126,6 +132,7 @@ namespace OneSync.Synchronization
             SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
+                if (con == null) throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME) + " is not found");
                 string cmdText = "DELETE FROM " + Configuration.TBL_ACTION + 
                                  " WHERE " + Configuration.COL_ACTION_ID + " = @id";
 
@@ -156,6 +163,10 @@ namespace OneSync.Synchronization
             SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
+                if (con == null)
+                    throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME) +
+                                                " is not found");
+
                 string cmdText = "DELETE FROM " + Configuration.TBL_ACTION +
                                  " WHERE " + Configuration.COL_ACTION_ID + " = @id";
 
@@ -178,6 +189,10 @@ namespace OneSync.Synchronization
             SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
+                if (con == null)
+                    throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME) +
+                                                " is not found");
+
                 string cmdText = "DELETE FROM " + Configuration.TBL_ACTION + 
                                  " WHERE " + Configuration.COL_CHANGE_IN + " " + opt + " @id";
 
@@ -195,6 +210,10 @@ namespace OneSync.Synchronization
             SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),true);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
+                if (con == null)
+                    throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME) +
+                                                " is not found");
+ 
                 string cmdText = "CREATE TABLE IF NOT EXISTS " + Configuration.TBL_ACTION +
                                  " ( " + Configuration.COL_ACTION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                                  Configuration.COL_CHANGE_IN + " TEXT, " +
@@ -230,6 +249,10 @@ namespace OneSync.Synchronization
             SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
+                if (con == null)
+                    throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME) +
+                                                " is not found");
+
                 string cmdText = "INSERT INTO " + Configuration.TBL_ACTION +
                                 " ( " + Configuration.COL_CHANGE_IN + "," +
                                 Configuration.COL_ACTION_TYPE + "," +
@@ -277,6 +300,10 @@ namespace OneSync.Synchronization
             SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
+                if (con == null)
+                    throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME) +
+                                                " is not found");
+
                 string cmdText = "INSERT INTO " + Configuration.TBL_ACTION +
                                  " ( " + Configuration.COL_CHANGE_IN + "," +
                                  Configuration.COL_ACTION_TYPE + "," +
@@ -322,6 +349,10 @@ namespace OneSync.Synchronization
             SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
+                if (con == null)
+                    throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME) +
+                                                " is not found");
+
                 string cmdText = "INSERT INTO " + Configuration.TBL_ACTION +
                                             " ( " + Configuration.COL_CHANGE_IN + "," +
                                             Configuration.COL_ACTION_TYPE + "," +
