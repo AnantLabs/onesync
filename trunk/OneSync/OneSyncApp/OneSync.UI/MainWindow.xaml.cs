@@ -1014,8 +1014,18 @@ namespace OneSync.UI
                 }
                 else 
                 {
-                    if (Directory.Exists(folders[0]))
+                    if (Directory.Exists(folders[0])) 
+                    {
                         cb.Text = folders[0];
+                        if (txtSyncJobName.Text.Length <= 0)
+                        {
+                            try
+                            {
+                                txtSyncJobName.Text = System.IO.Path.GetFileName(txtSource.Text.Trim());
+                            }
+                            catch (Exception) { }
+                        }
+                    }
                 }
             }
 
