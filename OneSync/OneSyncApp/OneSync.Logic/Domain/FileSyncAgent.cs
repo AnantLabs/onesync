@@ -17,6 +17,11 @@ namespace OneSync.Synchronization
     public delegate void SyncFileChangedHandler(object sender, SyncFileChangedEventArgs args);
     #endregion
 
+    /// <summary>
+    /// Delegates that can be used to update status message.
+    /// </summary>
+    public delegate void StatusCallbackDelegate(string statusMsg);
+
 
     /// <summary>
     /// 
@@ -59,7 +64,7 @@ namespace OneSync.Synchronization
         /// as an argument for the actions to be executed.
         /// </summary>
         /// <exception cref="DirectoryNotFoundException"></exception>
-        public SyncPreviewResult GenerateSyncPreview()
+        public SyncPreviewResult GenerateSyncPreview(StatusCallbackDelegate statusCallback)
         {
             OnStatusChanged(new SyncStatusChangedEventArgs("Preparing to sync"));
 
@@ -67,7 +72,7 @@ namespace OneSync.Synchronization
             IList<SyncAction> actions = actProvider.Load(_job.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
 
             // Generate current folder's metadata
-            FileMetaData currentItems = MetaDataProvider.GenerateFileMetadata(_job.SyncSource.Path, _job.SyncSource.ID, false);
+            FileMetaData currentItems = MetaDataProvider.GenerateFileMetadata(_job.SyncSource.Path, _job.SyncSource.ID, false, statusCallback);
 
             // Load current folder metadata from database
             FileMetaData oldCurrentItems = mdProvider.LoadFileMetadata(_job.SyncSource.ID, SourceOption.SOURCE_ID_EQUALS);

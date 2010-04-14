@@ -626,7 +626,7 @@ namespace OneSync.UI
             try
             {
                 if (entry.SyncJob.SyncPreviewResult == null)
-                    entry.SyncJob.SyncPreviewResult = entry.SyncAgent.GenerateSyncPreview();
+                    entry.SyncJob.SyncPreviewResult = entry.SyncAgent.GenerateSyncPreview(null);
 
                 entry.SyncAgent.Synchronize(entry.SyncJob.SyncPreviewResult);
                 entry.Error = null;
@@ -819,11 +819,9 @@ namespace OneSync.UI
         {
             //Display some text so that the user knows that what OneSync is doing during the synchronization.
             if (this.Dispatcher.CheckAccess())
-            {
                 lblStatus.Content = e.Message;
-            }
             else
-                lblStatus.Dispatcher.Invoke((Action)delegate { currAgent_StatusChanged(sender, e); });
+                lblStatus.Dispatcher.Invoke((Action)delegate { lblStatus.Content = e.Message; });
         }
 
         /// <summary>
@@ -834,7 +832,7 @@ namespace OneSync.UI
             if (this.Dispatcher.CheckAccess())
                 lblSubStatus.Content = "Synchronizing: " + e.RelativePath;
             else
-                lblSubStatus.Dispatcher.Invoke((Action)delegate { currAgent_FileChanged(sender, e); });
+                lblSubStatus.Dispatcher.Invoke((Action)delegate { lblSubStatus.Content = "Synchronizing: " + e.RelativePath; });
         }
 
         void syncAgent_SyncStatusChanged(object sender, SyncStatusChangedEventArgs e)
@@ -842,7 +840,7 @@ namespace OneSync.UI
             if (this.Dispatcher.CheckAccess())
                 lblStatus.Content = e.Message;
             else
-                this.Dispatcher.Invoke((Action)delegate { syncAgent_SyncStatusChanged(sender, e); });
+                this.Dispatcher.Invoke((Action)delegate { lblStatus.Content = e.Message; });
         }
 
         #endregion
