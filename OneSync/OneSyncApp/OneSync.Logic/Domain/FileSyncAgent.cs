@@ -161,6 +161,14 @@ namespace OneSync.Synchronization
 
             try
             {
+                FileMetaData mdDirtyFolder =
+                    MetaDataProvider.GenerateFileMetadata(_job.IntermediaryStorage.DirtyFolderPath, "", false, false);
+                DeleteRedundantDirtyFiles(newActions, mdDirtyFolder.MetaDataItems, _job.IntermediaryStorage.DirtyFolderPath);
+            }
+            catch (Exception){}
+
+            try
+            {
                 SaveActionsAndDirtyFiles(newActions);
             }
             catch (OutOfDiskSpaceException)
@@ -171,17 +179,27 @@ namespace OneSync.Synchronization
             {
                 WriteLog(startTime, Log.To);
             }
-            
-            
             //catch (OutOfDiskSpaceException) { throw; }
             
             
         }
 
+        private void DeleteRedundantDirtyFiles(IList<SyncAction> actions, IList<FileMetaDataItem> items, string baseFolder)
+        {
+            FileMetadataSyncActionsComparer comparer = new FileMetadataSyncActionsComparer(actions, items);
+            List<FileMetaDataItem> mdOnly = comparer.InMetaDataOnly;
+            foreach (var item in mdOnly)
+            {
+                string absolute = baseFolder + item.RelativePath;
+                Files.FileUtils.DeleteFileAndFolderIfEmpty(baseFolder, absolute, true);        
+            }
+        }
+
         private void SaveActionsAndDirtyFiles(IList<SyncAction> actions)
         {
-            Metadata mdStorage = MetaDataProvider.Generate(_job.IntermediaryStorage.DirtyFolderPath, "", false, true);
-
+            FileMetaData fileMetaData = MetaDataProvider.GenerateFileMetadata(_job.IntermediaryStorage.DirtyFolderPath,
+                                                                              "", false,true);
+            
             int totalProgress = actions.Count;
             int currProgress = 0;
             foreach (SyncAction a in actions)
@@ -196,7 +214,7 @@ namespace OneSync.Synchronization
 
                     FileMetaDataItem item = new FileMetaDataItem("", "", a.RelativeFilePath, a.FileHash, DateTime.Now, 0, 0);
 
-                    if (a.ChangeType == ChangeType.NEWLY_CREATED && !mdStorage.FileMetadata.MetaDataItems.Contains(item, new FileMetaDataItemComparer()))
+                    if (a.ChangeType == ChangeType.NEWLY_CREATED && !fileMetaData.MetaDataItems.Contains(item, new FileMetaDataItemComparer()))
                         SyncExecutor.CopyToDirtyFolderAndUpdateActionTable(a, _job);
                     else
                         actProvider.Add(a);
@@ -339,7 +357,7 @@ namespace OneSync.Synchronization
         private void SyncEmptyFolders()
         {
             //read metadata of the current folder in file system 
-            FolderMetadata currentItems = MetaDataProvider.GenerateFolderMetadata(_job.SyncSource.Path, _job.SyncSource.ID, false);
+            FolderMetadata currentItems = MetaDataProvider.GenerateFolderMetadata(_job.SyncSource.Path, _job.SyncSource.ID, false,false);
 
             FolderMetadata oldCurrentItems = mdProvider.LoadFolderMetadata(_job.SyncSource.ID, SourceOption.SOURCE_ID_EQUALS);
             FolderMetadata otherItems = mdProvider.LoadFolderMetadata(_job.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);

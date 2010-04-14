@@ -121,7 +121,7 @@ namespace OneSync.Synchronization
         {
             if (!Directory.Exists((fromPath)) && createIfNotExist)
                 Directory.CreateDirectory((fromPath));
-            return new Metadata(GenerateFileMetadata(fromPath, id, excludeHidden), GenerateFolderMetadata(fromPath, id, excludeHidden));
+            return new Metadata(GenerateFileMetadata(fromPath, id, excludeHidden, createIfNotExist), GenerateFolderMetadata(fromPath, id, excludeHidden, createIfNotExist));
         }
 
         private static void AddDirectorySecurity (string absolutePath)
@@ -134,8 +134,10 @@ namespace OneSync.Synchronization
             Directory.SetAccessControl(absolutePath,directorySecurity);
         }
 
-        public static FileMetaData GenerateFileMetadata(string fromPath, string id, bool excludeHidden)
+        public static FileMetaData GenerateFileMetadata(string fromPath, string id, bool excludeHidden, bool createIfNotExist)
         {
+            if (!Directory.Exists((fromPath)) && createIfNotExist)
+                Directory.CreateDirectory((fromPath));
             return GenerateFileMetadata(fromPath, id, excludeHidden, null);
         }
 
@@ -180,8 +182,11 @@ namespace OneSync.Synchronization
         /// <param name="id"></param>
         /// <param name="excludeHidden"></param>
         /// <returns></returns>
-        public static FolderMetadata GenerateFolderMetadata(string fromPath, string id, bool excludeHidden)
-        {            
+        public static FolderMetadata GenerateFolderMetadata(string fromPath, string id, bool excludeHidden, bool createIfNotExist)
+        {
+            if (!Directory.Exists((fromPath)) && createIfNotExist)
+                Directory.CreateDirectory((fromPath));
+
             FolderMetadata folderMetadata = new FolderMetadata(id, fromPath);
 
             DirectoryInfo di = new DirectoryInfo(fromPath);
