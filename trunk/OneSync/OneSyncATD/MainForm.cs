@@ -23,6 +23,7 @@ namespace OneSyncATD
             InitializeComponent();
         }
 
+        //When start button is clicked, list of actions will run
         private void startButton_Click(object sender, EventArgs e)
         {
             TestCaseReading readCases = new TestCaseReading();

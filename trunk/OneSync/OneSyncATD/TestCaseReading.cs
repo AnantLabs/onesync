@@ -1,4 +1,9 @@
-﻿using System;
+﻿/* Coded by Tham Zi Jie
+ * TestCaseReading.cs reads in the test cases from input text doucument
+ * Template syntax of test cases-- id:method:parameters:expected result:comment
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

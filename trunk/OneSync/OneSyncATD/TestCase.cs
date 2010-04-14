@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* Coded by Tham Zi Jie
+ * TestCase.cs is used to store test cases which will be read by TestCaseReading.cs
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +15,7 @@ namespace OneSyncATD
         public String testComment = "";
         public Boolean testPassed = false;
 
+        //Constructor
         public TestCase(string readLine)
         {
             String[] caseInfo = readLine.Split(':');
@@ -24,6 +29,7 @@ namespace OneSyncATD
             this.testActual = "";
         }
 
+        //Show whether the test case pass or not
         public string showResult()
         {
             String testResult = testPassed ? "pass" : "fail";

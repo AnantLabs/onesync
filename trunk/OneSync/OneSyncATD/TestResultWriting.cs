@@ -1,4 +1,10 @@
-﻿using System;
+﻿/* Coded by Tham Zi Jie
+ * TestResultWriting.cs will generate a text document containing the final result of test cases.
+ * Output document name is outputresult_{current date time}.txt
+ * The output document location is same as the input document location
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
