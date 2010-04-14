@@ -43,12 +43,12 @@ namespace OneSync.UI
 		{
             this.InitializeComponent();
 
+            //Make sure that there is only one OneSync application running for all the time.
             string RunningProcess = Process.GetCurrentProcess().ProcessName;
             Process[] processes = Process.GetProcessesByName(RunningProcess);
-
             if (processes.Length > 1)
             {
-                MessageBox.Show("OneSync is already running", "Stop", MessageBoxButton.OK);
+                MessageBox.Show("OneSync is already running. There should be only one instance of OneSync all the time.", "OneSync -- One Instant Only", MessageBoxButton.OK, MessageBoxImage.Stop);
                 Application.Current.Shutdown();
             }
 
@@ -189,8 +189,9 @@ namespace OneSync.UI
         }
 
 		private void btnBrowse_Click(object sender, System.Windows.RoutedEventArgs e)
-        {           
-            //TODO: Add try catch
+        {
+            try
+            {
                 ComboBox cb = ((Button)sender).Tag as ComboBox;
                 if (cb == null)
                 {
@@ -206,18 +207,26 @@ namespace OneSync.UI
                         tb.CaretIndex = tb.Text.Length;
                     }
                 }
-                else 
+                else
                 {
                     System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
 
                     if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
                         cb.Text = fbd.SelectedPath;
+                        if (txtSyncJobName.Text.Length <= 0)
+                        {
+                            try
+                            {
+                                txtSyncJobName.Text = System.IO.Path.GetFileName(txtSource.Text.Trim());
+                            }
+                            catch (Exception) { }
+                        }
                         cb.Focus();
-                        //tb.CaretIndex = tb.Text.Length;
                     }
                 }
-            
+            }
+            catch (Exception) { }
         }
 
         void editControls_Loaded(object sender, RoutedEventArgs e)
