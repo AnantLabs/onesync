@@ -446,88 +446,15 @@ namespace OneSync
         private static bool CreateXSL(string filePath)
         {
             bool success = true;
-            StringBuilder sb = new StringBuilder();
             FileStream fs = null;
             StreamWriter sw = null;
 
             try
             {
-                sb.Append("<?xml version='1.0' encoding='ISO-8859-1'?>\r\n");
-                sb.Append("<xsl:stylesheet version='1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>\r\n");
-                sb.Append("<xsl:template match='/'>\r\n");
-                sb.Append("<html>\r\n");
-                sb.Append("<body style='FONT-FAMILY: arial; FONT-SIZE: 12px'>\r\n");
-                sb.Append("<style type='text/css'>\r\n");
-                sb.Append("table.t1 { background-color: #FEFEF2; }tr.da { background-color: #E0ECF8; }\r\n");
-                sb.Append("tr.db { background-color: #EFFBEF; }\r\n");
-                sb.Append("tr.f { background-color: #F5A9A9; }\r\n");
-                sb.Append("tr.dh th { background-color: #FCF6CF; }\r\n");
-                sb.Append("tr.d0 td { background-color: #FCF6CF; }\r\n");
-                sb.Append("tr.d1 td { background-color: #FEFEF2; }\r\n");
-                sb.Append("</style>\r\n");
-                sb.Append("<table width='100%'>\r\n");
-                sb.Append("<tr class='da'><td width='20%'>Synchronization directory</td>\r\n");
-                sb.Append("<td>: <xsl:value-of select='syncdirectory/@value'/></td></tr>\r\n");
-                sb.Append("</table>\r\n");
-                sb.Append("<br></br><br></br>\r\n");
-                sb.Append("<xsl:for-each select='syncdirectory/syncsession'>\r\n");
-                sb.Append("<table class='t1' width='100%'>\r\n");
-                sb.Append("<tr><td width='20%'>Job Name</td><td>: <xsl:value-of select='profilename'/></td></tr>\r\n");
-                sb.Append("<tr><td width='20%'>Date</td><td>: <xsl:value-of select='syncdate'/></td></tr>\r\n");
-                sb.Append("<tr><td width='20%'>Storage directory</td><td>: <xsl:value-of select='storagedirectory'/></td></tr>\r\n");
-                sb.Append("<tr><td width='20%'>Synchronization direction</td><td>: <xsl:value-of select='syncdirection'/></td></tr>\r\n");
-                sb.Append("<tr><td width='20%'>Number of files processed</td><td>: <xsl:value-of select='numberoffilesprocessed'/></td></tr>\r\n");
-                sb.Append("<xsl:if test='syncrecord'>\r\n");
-                sb.Append("<tr><td width='20%'>Start time</td><td>: <xsl:value-of select='starttime'/></td></tr>\r\n");
-                sb.Append("<tr><td width='20%'>End time</td><td>: <xsl:value-of select='endtime'/></td></tr>\r\n");
-                sb.Append("<tr>\r\n");
-                sb.Append("<td colspan='2'>\r\n");
-                sb.Append("<table width='100%' cellpadding='3'>\r\n");
-                sb.Append("<tr class='dh' align='left'><th width='75%'>File</th><th>Action</th><th>Status</th></tr>\r\n");
-                sb.Append("<xsl:for-each select='syncrecord'>\r\n");
-                sb.Append("<xsl:choose>\r\n");
-                sb.Append("<xsl:when test=\"status='FAIL'\">\r\n");
-                sb.Append("<tr class='f'>\r\n");
-                sb.Append("<td width='75%'><xsl:value-of select='file'/></td>\r\n");
-                sb.Append("<td width='75%'><xsl:value-of select='action'/></td>\r\n");
-                sb.Append("<td width='75%'><xsl:value-of select='status'/></td>\r\n");
-                sb.Append("</tr>\r\n");
-                sb.Append("</xsl:when>\r\n");
-                sb.Append("<xsl:otherwise>\r\n");
-                sb.Append("<xsl:choose>\r\n");
-                sb.Append("<xsl:when test='(position() mod 2 = 1)'>\r\n");
-                sb.Append("<tr class='d1'>\r\n");
-                sb.Append("<td width='75%'><xsl:value-of select='file'/></td>\r\n");
-                sb.Append("<td width='75%'><xsl:value-of select='action'/></td>\r\n");
-                sb.Append("<td width='75%'><xsl:value-of select='status'/></td>\r\n");
-                sb.Append("</tr>\r\n");
-                sb.Append("</xsl:when>\r\n");
-                sb.Append("<xsl:otherwise>\r\n");
-                sb.Append("<tr class='d0'>\r\n");
-                sb.Append("<td width='75%'><xsl:value-of select='file'/></td>\r\n");
-                sb.Append("<td width='75%'><xsl:value-of select='action'/></td>\r\n");
-                sb.Append("<td width='75%'><xsl:value-of select='status'/></td>\r\n");
-                sb.Append("</tr>\r\n");
-                sb.Append("</xsl:otherwise>\r\n");
-                sb.Append("</xsl:choose>\r\n");
-                sb.Append("</xsl:otherwise>\r\n");
-                sb.Append("</xsl:choose>\r\n");
-                sb.Append("</xsl:for-each>\r\n");
-                sb.Append("</table>\r\n");
-                sb.Append("</td>\r\n");
-                sb.Append("</tr>\r\n");
-                sb.Append("</xsl:if>\r\n");
-                sb.Append("</table>\r\n");
-                sb.Append("<br></br><br></br><br></br><br></br>\r\n");
-                sb.Append("</xsl:for-each>\r\n");
-                sb.Append("</body>\r\n");
-                sb.Append("</html>\r\n");
-                sb.Append("</xsl:template>\r\n");
-                sb.Append("</xsl:stylesheet>\r\n");
-
+                string s = Properties.Resources.xsl;
                 fs = new FileStream(filePath, FileMode.Create);
                 sw = new StreamWriter(fs);
-                sw.Write(sb);
+                sw.Write(s);
             }
             catch (Exception e)
             {
