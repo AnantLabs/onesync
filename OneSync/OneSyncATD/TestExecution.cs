@@ -45,12 +45,28 @@ namespace OneSyncATD
                 {
                     //throw exception;
                     oneCase.testActual = "false";
+                    oneCase.testComment = oneCase.testComment + "//" + exception.Message + "//";
                 }
                 finally
                 {
                     if (oneCase.testActual.Equals(oneCase.testExpected))
                     {
                         oneCase.testPassed = true;
+                    }
+                    else
+                    {
+                        DirectoryInfo diRight = new DirectoryInfo(rightFolder);
+                        DirectoryInfo diLeft = new DirectoryInfo(leftFolder);
+
+                        String newRight = diRight.Parent.FullName + "\\right" + oneCase.testID;
+                        Directory.CreateDirectory(newRight);
+                        DirectoryInfo diNewRight = new DirectoryInfo(newRight);
+                        copyAll(diRight, diNewRight);
+
+                        String newLeft = diLeft.Parent.FullName + "\\left" + oneCase.testID;
+                        Directory.CreateDirectory(newLeft);
+                        DirectoryInfo diNewLeft = new DirectoryInfo(newLeft);
+                        copyAll(diLeft, diNewLeft);
                     }
                 }
             }            
@@ -107,7 +123,7 @@ namespace OneSyncATD
 
                 if (checkFiles.Length == 0 && System.IO.Directory.GetDirectories(enumFolder(comParameters[0])).Length == 0)
                 {
-                    oneCase.testActual = "false";
+                    oneCase.testActual = "false, no files is generated.";
                 }
                 else
                 {
@@ -262,8 +278,7 @@ namespace OneSyncATD
                 }
                 else
                 {
-                    oneCase.testActual = "false";
-                    oneCase.testComment = oneCase.testComment + "//Sync Jobs are not created successfully.//";
+                    oneCase.testActual = "false, Sync Jobs are not created successfully.";
                 }                    
             }
             else if (oneCase.testMethod.Equals("rightsyncfirst"))
@@ -326,7 +341,7 @@ namespace OneSyncATD
                 String[] comParameters = oneCase.testParameters.Split(',');
                 foreach (SyncJob jobItem in SyncClient.GetSyncJobManager(System.Windows.Forms.Application.StartupPath).LoadAllJobs())
                 {
-                    if (jobItem.Name.Equals(comParameters[0]) && jobItem.SyncSource.Path.Equals(rightFolder))
+                    if (jobItem.Name.Equals(comParameters[1]) && jobItem.SyncSource.Path.Equals(leftFolder))
                     {
                         FileSyncAgent currentAgent = new OneSync.Synchronization.FileSyncAgent(jobItem);
                         SyncPreviewResult previewResult = currentAgent.GenerateSyncPreview(null);
@@ -339,7 +354,7 @@ namespace OneSyncATD
 
                 foreach (SyncJob jobItem in SyncClient.GetSyncJobManager(System.Windows.Forms.Application.StartupPath).LoadAllJobs())
                 {
-                    if (jobItem.Name.Equals(comParameters[1]) && jobItem.SyncSource.Path.Equals(leftFolder))
+                    if (jobItem.Name.Equals(comParameters[0]) && jobItem.SyncSource.Path.Equals(rightFolder))
                     {
                         FileSyncAgent currentAgent = new OneSync.Synchronization.FileSyncAgent(jobItem);
                         SyncPreviewResult previewResult = currentAgent.GenerateSyncPreview(null);
@@ -404,8 +419,7 @@ namespace OneSyncATD
                 {
                     if (jobItem.Name.Equals(oldJobName) && jobItem.SyncSource.Path.Equals(syncSource))
                     {
-                        oneCase.testActual = "false";
-                        oneCase.testComment = oneCase.testComment + " //Old sync job name is found for current sync source.//";
+                        oneCase.testActual = "false, old job name is found for current sync source";
                         break;
                     }
                     if (jobItem.Name.Equals(newJobName) && jobItem.SyncSource.Path.Equals(syncSource))
@@ -486,7 +500,7 @@ namespace OneSyncATD
                     foreach (DirectoryInfo dirInf in dirInfo.GetDirectories())
                     {
                         foldNames[foldCount] = dirInf.Name;
-                        dirInf.Delete();
+                        Directory.Delete(dirInf.FullName, true);
                         oneCase.testComment = oneCase.testComment + "//" + dirInf.Name + " is removed//";
                         foldCount++;
                         if (foldCount >= foldMax)
@@ -555,7 +569,7 @@ namespace OneSyncATD
             }
         }
 
-        public void copyAll(DirectoryInfo sourceFolder, DirectoryInfo targetFolder)
+        private void copyAll(DirectoryInfo sourceFolder, DirectoryInfo targetFolder)
         {
             foreach (FileInfo fileInf in sourceFolder.GetFiles())
             {
@@ -569,19 +583,19 @@ namespace OneSyncATD
             }
         }
 
-        public Boolean compareAll(DirectoryInfo sourceFolder, DirectoryInfo targetFolder)
+        private Boolean compareAll(DirectoryInfo sourceFolder, DirectoryInfo targetFolder)
         {           
             Boolean continueFlag = false;
             Boolean resultFlag = false;
             Boolean dirFlag = false;
+
             foreach (FileInfo sourceInf in sourceFolder.GetFiles())
-            {
-                listSFiles = listSFiles + "(" + sourceInf.Name + ")";
+            {                
                 resultFlag = false;
                 foreach (FileInfo targetInf in targetFolder.GetFiles())
                 {
-                    listTFiles = listTFiles + "(" + targetInf.Name + ")";
-                    if (sourceInf.Length == targetInf.Length && sourceInf.GetHashCode().Equals(targetInf.GetHashCode()))
+                    //listTFiles = listTFiles + "(" + targetInf.Name + ")";
+                    if (sourceInf.Length == targetInf.Length && sourceInf.Name == targetInf.Name)
                     {
                         resultFlag = true;
                         break;

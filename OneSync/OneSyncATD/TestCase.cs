@@ -26,7 +26,7 @@ namespace OneSyncATD
 
         public string showResult()
         {
-            String testResult = testPassed ? "pass" : "failed";
+            String testResult = testPassed ? "pass" : "fail";
             return testResult + "[" + testLine + "]" + "test actual: " + testActual;
         }
     }
