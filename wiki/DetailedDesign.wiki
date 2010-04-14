@@ -9,10 +9,10 @@
     * [DetailedDesign#SyncSource SyncSource]
     * [DetailedDesign#SQLiteSyncSourceProvider SQLiteSyncSourceProvider]
   * [DetailedDesign#SyncActions_Related_Classes SyncActions Related Classes]
-    * [DetailedDesign#SyncActions SyncAction]
-    * [DetailedDesign#SyncActions CreateAction]
-    * [DetailedDesign#SyncActions DeleteAction]
-    * [DetailedDesign#SyncActions RenameAction]
+    * [DetailedDesign#SyncAction SyncAction]
+    * [DetailedDesign#CreateAction CreateAction]
+    * [DetailedDesign#DeleteAction DeleteAction]
+    * [DetailedDesign#DeleteAction RenameAction]
   * [DetailedDesign#Metadata_Related_Classes Metadata Related Classes]
     * [DetailedDesign#FileMetadata FileMetadata]
     * [DetailedDesign#FileMetadataItem FileMetadataItem]
@@ -70,11 +70,11 @@ A !CreateAction represents a file to be copied. This action is generated when a 
 
 === !DeleteAction ===
 
-A !DeleteAction represents a file to be deleted. This action generated if a file that previously used to exist (by reading the metadata) no logner exist now.
+A !DeleteAction represents a file to be deleted. This action will be generated if a file that previously exist (by comparing against previously saved metadata) but no longer exist now.
 
 === !RenameAction ===
 
-!RenameAction is currently not implemented yet.
+A !RenameAction represents a file to be renamed. The `RelativeFilePath` field refers to the filename after rename. Hence, `previousRelativeFilePath` field is required for the rename action to be executed. For information of how rename is detected, refer to [SyncLogic#4.3_Rename_Detection SyncLogic].
 
 ----
 
