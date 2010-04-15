@@ -27,7 +27,7 @@ During each synchronization, the filesystem of the folder to be synchronized is 
   * Last modified time
   * NTFS ID
 
-All metadata information are stored in the intermediary storage so that it can be accessed by either PC. Refer to [File_Metadata File Metadata] for more information.
+All metadata information are stored in the intermediary storage so that it can be accessed by either PC. Refer to [DatabaseSchema Database Schema] for more information about the format of the metadata.
 
 == !SyncSource ==
 A !SyncSource refers to a folder that is being synchronized as well as the absolute path of the root folder being synchronized. Each !SyncSource is uniquely identified by a Globally Unique Identifier (GUID).
