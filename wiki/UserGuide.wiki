@@ -84,7 +84,7 @@ You can edit any of your sync jobs by clicking on the corresponding *Edit* butto
  # *New Job Name* - Change the name of your sync job here.
  # *Folder to Sync* - Update the sync source folder here.
  # *Intermediate Storage Location* - Update the intermediate storage location here.
- # *Save Job* - Save and finish updating the sync job.
+ # *Save Job* - Save and finish updating the sync job. If you decide not to save the updating, you can click on other sync job.
 
 The following diagram describes some of the things that you will see when you click on the *Preview* button:
 
