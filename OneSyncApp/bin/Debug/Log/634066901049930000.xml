@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type='text/xsl' href='onesynclog.xsl'?>
+<syncdirectory value="C:\Users\u0707373\Desktop\1">
+  <syncsession>
+    <profilename>Online NUS Drive</profilename>
+    <syncdate>13/4/2010</syncdate>
+    <storagedirectory>H:\New Folder</storagedirectory>
+    <syncdirection>To intermediate storage</syncdirection>
+    <numberoffilesprocessed>2</numberoffilesprocessed>
+    <starttime>8:04:11 PM</starttime>
+    <endtime>8:04:13 PM</endtime>
+    <syncrecord>
+      <file>\data.md</file>
+      <action>NEWLY_CREATED</action>
+      <status>SUCCESS</status>
+    </syncrecord>
+    <syncrecord>
+      <file>\DrJava CS1101S.exe</file>
+      <action>NEWLY_CREATED</action>
+      <status>FAIL</status>
+    </syncrecord>
+  </syncsession>
+  <syncsession>
+    <profilename>Online NUS Drive</profilename>
+    <syncdate>13/4/2010</syncdate>
+    <storagedirectory>H:\New Folder</storagedirectory>
+    <syncdirection>To intermediate storage</syncdirection>
+    <numberoffilesprocessed>2</numberoffilesprocessed>
+    <starttime>10:47:23 AM</starttime>
+    <endtime>10:47:23 AM</endtime>
+    <syncrecord>
+      <file>\data.md</file>
+      <action>NEWLY_CREATED</action>
+      <status>SUCCESS</status>
+    </syncrecord>
+    <syncrecord>
+      <file>\DrJava CS1101S.exe</file>
+      <action>NEWLY_CREATED</action>
+      <status>FAIL</status>
+    </syncrecord>
+  </syncsession>
+  <syncsession>
+    <profilename>Online NUS Drive</profilename>
+    <syncdate>13/4/2010</syncdate>
+    <storagedirectory>H:\New Folder</storagedirectory>
+    <syncdirection>To intermediate storage</syncdirection>
+    <numberoffilesprocessed>2</numberoffilesprocessed>
+    <starttime>10:45:41 AM</starttime>
+    <endtime>10:45:42 AM</endtime>
+    <syncrecord>
+      <file>\data.md</file>
+      <action>NEWLY_CREATED</action>
+      <status>SUCCESS</status>
+    </syncrecord>
+    <syncrecord>
+      <file>\DrJava CS1101S.exe</file>
+      <action>NEWLY_CREATED</action>
+      <status>FAIL</status>
+    </syncrecord>
+  </syncsession>
+  <syncsession>
+    <profilename>Online Drive</profilename>
+    <syncdate>12/4/2010</syncdate>
+    <storagedirectory>H:\New Folder</storagedirectory>
+    <syncdirection>To intermediate storage</syncdirection>
+    <numberoffilesprocessed>0</numberoffilesprocessed>
+  </syncsession>
+  <syncsession>
+    <profilename>Online Drive</profilename>
+    <syncdate>12/4/2010</syncdate>
+    <storagedirectory>H:\New Folder</storagedirectory>
+    <syncdirection>To intermediate storage</syncdirection>
+    <numberoffilesprocessed>0</numberoffilesprocessed>
+  </syncsession>
+  <syncsession>
+    <profilename>Online Drive</profilename>
+    <syncdate>12/4/2010</syncdate>
+    <storagedirectory>H:\New Folder</storagedirectory>
+    <syncdirection>To intermediate storage</syncdirection>
+    <numberoffilesprocessed>0</numberoffilesprocessed>
+  </syncsession>
+  <syncsession>
+    <profilename>Online Drive</profilename>
+    <syncdate>12/4/2010</syncdate>
+    <storagedirectory>H:\New Folder</storagedirectory>
+    <syncdirection>To intermediate storage</syncdirection>
+    <numberoffilesprocessed>0</numberoffilesprocessed>
+  </syncsession>
+  <syncsession>
+    <profilename>Online Drive</profilename>
+    <syncdate>12/4/2010</syncdate>
+    <storagedirectory>H:\New Folder</storagedirectory>
+    <syncdirection>To intermediate storage</syncdirection>
+    <numberoffilesprocessed>0</numberoffilesprocessed>
+  </syncsession>
+  <syncsession>
+    <profilename>Online Drive</profilename>
+    <syncdate>12/4/2010</syncdate>
+    <storagedirectory>H:\New Folder</storagedirectory>
+    <syncdirection>To intermediate storage</syncdirection>
+    <numberoffilesprocessed>0</numberoffilesprocessed>
+  </syncsession>
+</syncdirectory>
