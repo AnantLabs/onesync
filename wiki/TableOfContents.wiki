@@ -8,6 +8,7 @@
   * [HighLevelDesign High Level Design]
   * [SyncLogic Synchronization Logic]
   * [DetailedDesign Detailed Design]
+  * [DropBoxIPC DropBox Communication]
   * [KnownIssues Known Issues]
   * [FutureImprovements Future Improvements]
   * [Glossary Glossary]
