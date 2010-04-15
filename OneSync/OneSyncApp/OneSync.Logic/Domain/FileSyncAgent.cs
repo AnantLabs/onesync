@@ -15,7 +15,7 @@ namespace OneSync.Synchronization
     public delegate void SyncStatusChangedHandler(object sender, SyncStatusChangedEventArgs args);
     public delegate void SyncProgressChangedHandler(object sender, SyncProgressChangedEventArgs args);
     public delegate void SyncFileChangedHandler(object sender, SyncFileChangedEventArgs args);
-    public delegate void SyncFileOperationError(object sender, SyncFileOperationErrorEventArgs args);
+    
 
     #endregion
 
@@ -35,7 +35,7 @@ namespace OneSync.Synchronization
         public event SyncStatusChangedHandler StatusChanged;
         public event SyncProgressChangedHandler ProgressChanged;
         public event SyncFileChangedHandler SyncFileChanged;
-        public event SyncFileOperationError SyncFileError; 
+        
         #endregion Events
 
         private SyncJob _job;
@@ -313,8 +313,6 @@ namespace OneSync.Synchronization
                 catch (Exception)
                 {
                     logStatus = "FAIL";
-                    if (this.SyncFileError != null)
-                        SyncFileError(this, new SyncFileOperationErrorEventArgs(action.RelativeFilePath));
                         
                 }
                 finally
