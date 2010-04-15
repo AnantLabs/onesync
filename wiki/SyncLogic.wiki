@@ -13,6 +13,7 @@ The following outlines of OneSync synchronization algorithm and logic.
     * [SyncLogic#4.1_Comparing_Metadata 4.1 Comparing Metadata]
     * [SyncLogic#4.2_Creating_SyncActions 4.2 Creating SyncActions]
     * [SyncLogic#4.3_Rename_Detection 4.3 Rename Detection]
+  * [SyncLogic#5._Final_Notes 5. Final Notes]
 
 = 1. Overview =
 
@@ -143,3 +144,8 @@ A Rename action is seen to be equivalent to a Delete action followed by a Create
 It is to be noted that for this implementation, user might not has renamed the file but has explicitly deleted it and created a same file with the same contents (and hence the same hash). However, !OneSync will still detect it as a rename operation and after synchronization, the state of the filesystem will still be consistent.
 
 A possible solution might be to use the unique Id of a file. See [FutureImprovements Future Improvements] for more details.
+
+=== 5. Final Notes ===
+Due to the nature of light-weight sync, several rounds of synchronization will be required for 2 folders to be synchronized.
+
+For instance, after 2 folders are synchronized, if both folders are modified (files are created, renamed etc in both folders), another 2 synchronization needs to be carried out for changes in either folder to be propagated to each other, unlike conventional synchronization.
