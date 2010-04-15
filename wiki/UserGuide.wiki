@@ -174,9 +174,10 @@ If you have accidentally deleted the intermediate storage folder or accidentally
 
 Sometimes, you will see an error message displayed at the top of the window. It is highly possible that the error message is due to one of these problems:
  * You create a new job name having the same name as one of the existing sync jobs (Just choose a new name that you have not used before).
- * There are more than one profile that has the same intermediate storage (Do not use the same intermediate storage for a different profile again).
- * The data.md file is missing (Please uninstall and re-install).
+ * There are two and only two job profiles that are allowed to have the same intermediary storage if you are doing local sync. One job profile on two different PCs which has the same intermediary storage are advised to do online sync or using USB drive to sync. (It is  recommended not to use the same intermediate storage for another sync job again).
+ * The data.md file is missing or corrupted (Please delete the job profile and create the job profile again).
  * The data.md file is not updated because of the disk input/output problem (Please try running the program later).
+ * The sync process terminates it may be caused 
  * A problem the CodeDroids members do not even know (Please tell us).
 
 
