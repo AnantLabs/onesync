@@ -395,7 +395,7 @@ namespace OneSync.Synchronization
                 SyncExecutor.DeleteFolder(this._job.SyncSource.Path, item.RelativePath, true);
 
             foreach (FolderMetadataItem item in comparer4.LeftOnly)
-                SyncExecutor.CreateFolder(this._job.SyncSource.Path, item.RelativePath);
+                if (item.IsEmpty == 1) SyncExecutor.CreateFolder(this._job.SyncSource.Path, item.RelativePath);
 
             currentItems = MetaDataProvider.GenerateFolderMetadata(_job.SyncSource.Path, _job.SyncSource.ID, false,
                                                                    false, true);

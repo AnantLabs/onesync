@@ -205,7 +205,9 @@ namespace OneSync.Synchronization
 
             foreach (DirectoryInfo dirInfo in directories)
             {
-                folderMetadata.FolderMetadataItems.Add(new FolderMetadataItem(id, dirInfo.FullName, fromPath));
+                int isEmpty = (Files.FileUtils.IsDirectoryEmpty(dirInfo.FullName)) ? 1 : 0;
+                folderMetadata.FolderMetadataItems.Add(
+                    new FolderMetadataItem(id, dirInfo.FullName, fromPath, isEmpty));
             }
             return folderMetadata;
         }
