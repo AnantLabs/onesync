@@ -5,7 +5,7 @@
 
 Welcome to the user guide for OneSync! From this guide, you will know more about OneSync and find out how to organize your files that are stored in different computers! With OneSync, your personal files stored in your computer will be easily shared and synced with another computer in several ways: syncing through portable drive, thumb drive, Windows Shared Folders or even Dropbox (Online Sync)!
 
-This guide gives you an opportunity to learn the core features of OneSync. Just follow through the handy guide below, and please enjoy the journey!
+This guide gives you an opportunity to learn the core features of OneSync. Just follow the handy guide below, and please enjoy the journey!
 
 == Content ==
 
@@ -28,15 +28,15 @@ This guide gives you an opportunity to learn the core features of OneSync. Just 
 
 ===The OneSync Concepts===
 
-OneSync is working based on two important concepts. These are the concepts that distinguish OneSync from other sync tools such as Live Mesh, Sync Toy and so on.
+OneSync is based on two important concepts. These are the concepts that distinguish OneSync from other sync tools such as Live Mesh, Sync Toy and so on.
 
-The first concept is called the *Light-weight Sync*. OneSync tries to make optimal use of the intermediate storage. Hence, only your modified files will be uploaded to or downloaded from the intermediate storage. This will not only prevent storing duplicated copies of your files on the intermediate storage but also make the whole sync process faster.
+The first concept is called the *Light-weight Sync*. OneSync tries to make optimal use of the intermediate storage. Hence, only your modified files will be uploaded to or downloaded from the intermediate storage. This will not only prevent the storage of duplicated copies of your files on the intermediate storage but also make the whole sync process faster.
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_2_v2.jpg]
 
 The second concept is known as *Half Way Sync*. Instead of doing synchronization directly between two PCs, there is an intermediate storage that plays an important role during the sync process.
 
-When a user syncs his folder, he must first choose the location of the intermediate storage. The storage can be a folder in his portable drive, a Windows Shared Folder or a Dropbox local folder that is stored on his computer. When he does the sync on one PC, his files (or *patch*) will be sent to the intermediate storage. After that, he has to do the sync again in his another computer in order to download the *patch* from the intermediate storage and complete the sync process. It is important that the user chooses the same folder as the intermediate storage in subsequent rounds of sync for this couple of folders  on two different PCs.
+When a user syncs his folder, he must first choose the location of the intermediate storage. The storage can be a folder in his portable drive, a Windows Shared Folder or a Dropbox local folder that is stored on his computer. When he does the sync on one PC, his files (or *patch*) will be sent to the intermediate storage. After that, he has to do the sync again on his other computer in order to download the *patch* from the intermediate storage and complete the sync process. It is important that the user chooses the same folder as the intermediate storage in subsequent rounds of synchronization for these couple of folders on the two different PCs.
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_1_v2.jpg]
 
@@ -84,7 +84,7 @@ You can edit any of your sync jobs by clicking on the corresponding *Edit* butto
  # *New Job Name* - Change the name of your sync job here.
  # *Folder to Sync* - Update the sync source folder here.
  # *Intermediate Storage Location* - Update the intermediate storage location here.
- # *Save Job* - Save and finish updating the sync job. If you decide not to save the updating, you can click on other sync job to cancel the updating.
+ # *Save Job* - Save and finish updating the sync job. If you decide not to save the update, you can click on other sync job to cancel the update.
 
 The following diagram describes some of the things that you will see when you click on the *Preview* button:
 
@@ -123,7 +123,7 @@ The OneSync Window will pop up. Enter the sync job name, directory of the folder
 
 [http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot5.jpg]
 
-After a few moments (unless your sync source folder is huge), sync process will be done successfully. =)
+After a few moments (unless your sync source folder is huge), the sync process will be completed successfully. =)
 
 [http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot6.jpg]
 
@@ -131,12 +131,12 @@ After a few moments (unless your sync source folder is huge), sync process will 
 
 Firstly, please install Dropbox. You can find the installer at https://www.dropbox.com/downloading.
 
-The steps are the same as the steps mentioned in Syncing Through Portable Drive. However, please remember that the intermediate storage path has to be your Dropbox folder directory. If you do not know what is your Dropbox folder, double click on the Dropbox icon on your system tray and then the Dropbox folder will be displayed.
+The steps are the same as the steps mentioned in Syncing Through Portable Drive. However, please remember that the intermediate storage path has to be your Dropbox folder directory. If you do not know what is your Dropbox folder, double click on the Dropbox icon on your system tray and the Dropbox folder will be displayed.
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_06.jpg]
 
 ===Syncing Through Windows Shared Folders===
-If you do not bring your portable drive and also do not want to install Dropbox, you may want to use a Windows Shared Folder as your intermediate storage as well. The steps to do this are the same as those mentioned in Syncing Through Portable Drive.
+If you do not have your portable drive and also do not want to install Dropbox, you may want to use a Windows Shared Folder as your intermediate storage as well. The steps to do this are the same as those mentioned in Syncing Through Portable Drive.
 
 Of course, you need to setup a Windows Shared Folder in your LAN first.
 
@@ -145,7 +145,7 @@ Of course, you need to setup a Windows Shared Folder in your LAN first.
 As shown below, OneSync uses three colors to indicate different sync statuses:
 
  * Green - Everything goes smooth and OneSync finishes the sync job successfully.
- * Yellow - Special case for Dropbox folders. The sycn status will turn yellow after the sync job for the Dropbox folder has been done, yet the PC is still interacting with the Dropbox main server, e.g. it may be uploading files in the folder to the server.
+ * Yellow - Special case for Dropbox folders. The sync status will turn yellow after the sync job for the Dropbox folder has been done However, do note that the PC is still interacting with the Dropbox main server, e.g. it may be uploading files in the folder to the server.
  * Red - Errors occur while syncing. Please check the status message at the top of OneSync window.
 
 [http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot8.jpg]
@@ -154,9 +154,9 @@ As shown below, OneSync uses three colors to indicate different sync statuses:
 ===Handling Conflicts===
 You can choose different ways to handle conflicts in the *Preview* window before you do the synchronization.
 
-For example, suppose you are working on two folders on different PCs and keep them in sync using OneSync. You modify a file on one PC and sync the folder that contains the file to the intermediate folder. Later you sync the intermediate folder with a folder on another PC which also contains the same file that also has some modifications. In this case, when you open the preview before syncing, OneSync will give you two options for this file as shown below.
+For example, suppose you are working on two folders on different PCs. You modify a file on one PC and sync the folder that contains the file to the intermediate folder. Later you sync the intermediate folder with a folder on another PC which also contains the same file that also has some modifications. In this case, when you open the preview before syncing, OneSync will give you two options for this file as shown below.
 
- * Keep both - The file from the intermediate storage will be transferred to the folder on the second PC and renamed leaving the file on this PC intact.
+ * Keep both - The file from the intermediate storage will be transferred to the folder on the second PC and renamed. The file on this PC will be left intact.
  * Overwrite - The file on the second PC will be replaced with the file from the intermediate storage.
 
 The default operation for handling conflicts is "Keep both" when you don't go through the sync preview. 
@@ -167,10 +167,10 @@ The default operation for handling conflicts is "Keep both" when you don't go th
 
 In order to make sure that OneSync is working properly, you should not perform the following actions in OneSync.
  * Delete or modify the data.md file. (It will cause damage to the sync process and the user has to create a new sync job again).
- * Delete or modify content in the "files" folder located inside intermediary storage folder.(It will lead to data loss and corruption). 
+ * Delete or modify content in the "files" folder located inside the intermediary storage folder.(It will lead to data loss and corruption). 
  * Delete or move the intermediate storage or source folder manually to another directory.
  * Unplug thumb drive while the sync process is ongoing. (It will lead to an incomplete sync process and may cause damage to data.md file).
- * Repeat the sync process before Dropbox finishes synchronizing with its server. (It causes data loss and leads to an incomplete sync. It is suggested to continue next sync after Dropbox completes uploading and downloading files).
+ * Repeat the sync process before Dropbox finishes synchronizing with its server. (It causes data loss and leads to an incomplete sync. It is suggested to continue your next sync after Dropbox completes uploading and downloading files).
  * Open any file in source folder or intermediary folder while the sync process is ongoing. (It may cause data loss).     
 
 If you have accidentally deleted the intermediate storage folder or accidentally edited/deleted the data.md file, you should delete the sync job which is associated with the intermediate storage folder.
@@ -179,15 +179,15 @@ If you have accidentally deleted the intermediate storage folder or accidentally
 ==Error Messages==
 
 Sometimes, you will see an error message displayed at the top of the window. It is highly possible that the error message is due to one of these problems:
- * You create a new job name having the same name as one of the existing sync jobs (Just choose a new name that you have not used before).
- * There are two and only two sync jobs that are allowed to have the same intermediary storage if you are doing local sync. One job on two different PCs which has the same intermediary storage are advised to do online sync or using USB drive to sync. (It is  recommended not to use the same intermediate storage for another sync job again).
- * The capacity of your intermediate storage is smaller than the total size of the files that OneSync is going to copy over, which are mostly your modified and newly created files. This will only happen to those users who are using portable drive as their intermediate storage. (Use another portable drive which has a capacity larger than the total size of the modified or created files)
+ * You create a new job which shares the same name as one of the existing sync jobs (Just choose a new name that you have not used before).
+ * There are two and only two sync jobs that are allowed to have the same intermediary storage if you are doing local sync. One job on two different PCs which has the same intermediary storage are advised to undergo an online sync or use the USB drive to sync them. (It is  recommended not to use the same intermediate storage for another sync job again).
+ * The capacity of your intermediate storage is smaller than the total size of the files that OneSync is going to copy over, which are mostly your modified and newly created files. This will only happen to those users who are using portable drives as their intermediate storage. (Use another portable drive which has a capacity larger than the total size of the modified or created files)
  * The data.md file is missing or corrupted. The data.md file may be accidentally deleted or modified. It is also possible that an incomplete sync process has caused damage to data.md file. (Please delete the job and create another sync job again).
  * The data.md file is not updated because of the disk input/output problem (Please try running the program again).
- * The inputs folders (source folder or intermediary folder)are incorrect. You may choose an intermediary folder and its sub folders to be the source folder or vice verse (It is not permitted to do so). 
- * The source folder is removed or not in the directory. (It is advised to restore the original source folder in the same directory or delete the old sync job and create a new one).
+ * The folder inputs (source folder or intermediary folder)are incorrect. You may choose an intermediary folder and its sub folders to be the source folder or vice versa (It is not permitted to do so). 
+ * The source folder is removed or not in the directory. (The user is advised to restore the original source folder in the same directory or delete the old sync job and create a new one).
  * The intermediary folder is removed or the content inside is modified. It may cause data loss and metadata-file-not-found error. (The user is not supposed to do any modification in the intermediary folder. However, the user is allowed to choose a new folder as the intermediary folder). 
- * Sync process terminates unexpectedly. (The user can restart the sync process, if the metadata file is correctly saved. If it is corrupted, it is advised to create a new sync job).   
+ * Sync process terminates unexpectedly. (The user can restart the sync process, if the metadata file is correctly saved. If it is corrupted, the user is advised to create a new sync job).   
  * A problem the CodeDroids members has not even spotted (Please tell us).
 
 
