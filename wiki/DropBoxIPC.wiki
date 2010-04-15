@@ -1,0 +1,22 @@
+#summary How OneSync communicates with Dropbox
+
+= DropBox Status =
+
+Inter-process communication (IPC) is used to determine the status of DropBox i.e. whether files in DropBox are up to date or outdated etc. This is beneficial to users using DropBox as the intermediary storage.
+
+DropBox provides a [http://wiki.dropbox.com/DropboxAddons/PythonScriptToGetFileOrFolderStatusInWindows python script] for accomplishing this. The script was then ported to .NET and implemented in `DropboxStatusCheck.cs`.
+
+The possible DropBox status are as follows:
+
+{{{
+public enum DropboxStatus
+{
+    NOT_RUNNING,
+    NOT_IN_DROPBOX,
+    UP_TO_DATE,
+    SYNCHRONIZING,
+    SYNC_PROBLEM
+}
+}}}
+
+Only `UP_TO_DATE` and `SYNCHRONIZING` are used in OneSync to inform user in case the DropBox folder is outdated.
