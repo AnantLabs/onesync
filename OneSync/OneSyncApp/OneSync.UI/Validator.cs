@@ -51,10 +51,13 @@ namespace OneSync.Synchronization
 
         private static bool IsDualRole(string source, string intermediate, IList<SyncJob> allEntries)
         {
-            foreach (SyncJob entry in allEntries)
+            if (allEntries != null)
             {
-                if (entry.IntermediaryStorage.Path.Equals(source) || entry.SyncSource.Path.Equals(intermediate))
-                    return false;
+                foreach (SyncJob entry in allEntries)
+                {
+                    if (entry.IntermediaryStorage.Path.Equals(source) || entry.SyncSource.Path.Equals(intermediate))
+                        return false;
+                }
             }
             return true;
         }
