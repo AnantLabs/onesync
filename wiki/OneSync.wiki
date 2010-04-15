@@ -1,5 +1,5 @@
 #labels Featured
-#FAQ
+#FAQ of OneSync
 
 ==What is _OneSync_?==
 
