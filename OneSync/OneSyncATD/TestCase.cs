@@ -18,7 +18,7 @@ namespace OneSyncATD
         //Constructor
         public TestCase(string readLine)
         {
-            String[] caseInfo = readLine.Split(':');
+            String[] caseInfo = readLine.Split(';');
             if (caseInfo.Length < 4) throw new Exception("Wrong Test Case Syntax.");
             this.testLine = readLine;
             this.testID = caseInfo[0].Trim();

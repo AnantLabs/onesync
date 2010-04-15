@@ -1,6 +1,17 @@
-id:createfolders:right or left,unicode or letters or letterssymbols,folderdepth,maxsubdir:true or false:comment
-id:generatefiles:right or left,unicode or letters or letterssymbols,numberoffiles,fileminsize,filemaxsize:true or false:comment
-id:copyfrom::true:comment
-id:createprofile:profile1,profile2:true or false:comment
-id:sync:profile1,profile2:true or false:comment
-id:clearall::true or false:comment
+id;createfolders;right or left,unicode or letters or letterssymbols,folderdepth,maxsubdir:true or false:comment
+id;generatefiles;right or left,unicode or letters or letterssymbols,numberoffiles,fileminsize,filemaxsize;true or false;comment
+id;createsyncjobs;syncjob1,syncjob2;true or false;comment
+id;rightsyncfirst;syncjob1,syncjob2;true or false;comment
+id;righthalfsync;rightsyncjobname;true or false;comment
+id;leftsyncfirst;syncjob1,syncjob2;true or false;comment
+id;lefthalfsync;leftsyncjobname;true or false;comment
+id;clearall;;true or false;comment
+id;deletefolders;right or left,number of folders to be deleted;true or false;comment
+id;deletefiles;right or left,number of files to be deleted;true or false;comment
+id;updatesyncjob;oldjobname,newjobname,sync source is right or left folder;true or false;comment
+id;createafolder;folderpath;true or false;comment
+id;generateafile;filepath,file size;true or false;comment
+id;updatefiledate;filepath,date(YYYY/MM/DD);true or false;comment
+id;modifyafile;filepath;true or false;comment
+id;renameafile;oldfilepath,newfilepath;true or false;comment
+id;deleteafile;filepath;true or false;comment

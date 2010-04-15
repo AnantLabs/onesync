@@ -1,0 +1,33 @@
+1.0;createafolder;C:\Users\ZandyJack\Desktop\temp\ATDright\test;true;create a empty folder in right folder
+1.1;createsyncjobs;rightjob,leftjob;true;create sync jobs
+1.2;rightsyncfirst;rightjob,leftjob;true;sync from right to left through intermediate
+1.3;clearall;;true;The above are to test empty folder sync
+2.0;createafolder;C:\Users\ZandyJack\Desktop\temp\ATDright\test;true;create a empty folder in right folder
+2.1;generateafile;C:\Users\ZandyJack\Desktop\temp\ATDright\test\933.txt,25014;true;make a file in right folder
+2.2;createsyncjobs;rightjob,leftjob;true;create sync jobs
+2.3;rightsyncfirst;rightjob,leftjob;true;sync from right to left through intermediate
+2.4;clearall;;true;The above are to test a folder and a file synchronization
+3.0;createfolders;right,letters,5,3;true;create a lot of folders in right folder
+3.1;generatefiles;right,lettersymbol,6,200,1024;true;generate lot of files in rightfolder
+3.2;createsyncjobs;rightjob,leftjob;true;create sync jobs
+3.3;rightsyncfirst;rightjob,leftjob;true;sync from right to left through intermediate
+3.4;clearall;;true;The above are to test lots of files/folders synchronization
+4.0;createfolders;right,letters,5,3;true;create a lot of folders in right folder
+4.1;generatefiles;right,lettersymbol,6,200,1024;true;generate lot of files in right folder
+4.2;createfolders;left,letters,5,3;true;create a lot of folders in left folder
+4.3;generatefiles;left,letters,6,200,1024;true;generate lot of files in left folder
+4.4;createsyncjobs;rightjob,leftjob;true;create sync jobs
+4.5;rightsyncfirst;rightjob,leftjob;true;sync from right to left through intermediate
+4.6;leftsyncfirst;rightjob,leftjob;true;sync from left to right through intermediate
+4.7;clearall;;true;The above are to test synchronization between two right and left folders
+5.0;createfolders;right,letters,5,3;true;create a lot of folders in right folder
+5.1;generatefiles;right,lettersymbol,6,200,1024;true;generate lot of files in right folder
+2.2;createfolders;left,letters,5,3;true;create a lot of folders in left folder
+5.3;generatefiles;left,letters,6,200,1024;true;generate lot of files in left folder
+5.4;createsyncjobs;rightjob,leftjob;true;create sync jobs
+5.5;righthalfsync;rightjob;true;sync from right to intermediate
+5.6;generateafile;C:\Users\ZandyJack\Desktop\temp\ATDright\test.txt,50;true;generate a file in right folder
+5.7;rightsyncfirst;rightjob,leftjob;true;sync from right to left through intermediate
+5.8;generateafile;C:\Users\ZandyJack\Desktop\temp\ATDleft\test.txt,50;true;generate a file in right folder
+5.8;leftsyncfirst;rightjob,leftjob;true;sync from left to right through intermediate
+5.9;clearall;;true;The above are to test synchronization between two right and left folders
