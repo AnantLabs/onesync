@@ -209,7 +209,7 @@ namespace OneSync.Synchronization
 
             foreach (SyncAction a in actions)
             {
-                if (!Validator.SyncJobParamsValidated(_job.Name, _job.IntermediaryStorage.Path, _job.SyncSource.Path))
+                if (!Validator.SyncJobParamsValidated(_job.Name, _job.IntermediaryStorage.Path, _job.SyncSource.Path, null))
                     return;
 
                 try

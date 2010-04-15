@@ -3,12 +3,13 @@ using System.IO;
 using System.Security;
 using System.Threading;
 using OneSync.Synchronization;
+using System.Collections.Generic;
 
 namespace OneSync.Synchronization
 {
     static class Validator
     {
-        public static bool SyncJobParamsValidated (string name, string sourceAbsolute, string immediate)
+        public static bool SyncJobParamsValidated(string name, string sourceAbsolute, string intermediate, IList<SyncJob> allEntries)
         {
             if (name == null || name.Equals(String.Empty))
                 throw new SyncJobException("Sync job name can't be empty");
@@ -16,9 +17,10 @@ namespace OneSync.Synchronization
             if (name.Length > 50)
                 throw new SyncJobException("Sync job name can't exceed 50 characters");
 
-            return IsDirectoryValidated(immediate)
+            return IsDirectoryValidated(intermediate)
                    && IsDirectoryValidated(sourceAbsolute)
-                   && IsRecursive(sourceAbsolute, immediate);
+                   && IsRecursive(sourceAbsolute, intermediate)
+                   && IsDualRole(sourceAbsolute, intermediate, allEntries);
         }
         
         public static bool IntermediaryMovable (string baseFolder, string sourceId)
@@ -44,6 +46,16 @@ namespace OneSync.Synchronization
                 {
                     throw new SyncJobException("Sync between folder and its sub-folder is not allowed");
                 }   
+            }
+            return true;
+        }
+
+        private static bool IsDualRole(string source, string intermediate, IList<SyncJob> allEntries)
+        {
+            foreach (SyncJob entry in allEntries)
+            {
+                if (entry.IntermediaryStorage.Path.Equals(source) || entry.SyncSource.Path.Equals(intermediate))
+                    return false;
             }
             return true;
         }
