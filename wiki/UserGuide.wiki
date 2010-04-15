@@ -167,7 +167,7 @@ In order to make sure that OneSync is working properly, you should not perform t
  * Delete or modify the data.md file. (It damages the sync process. And the user has to 
 create a new job profile again).
  * Delete or modify content in the "files" folder located at intermediary storage.(It leads to data loss and data corruption). 
- * Delete or move the intermediate storage (source folder) to other directory.
+ * Delete or move the intermediate storage or source folder to other directory.
  * Unplug thumb drive during sync process is ongoing. (It leads to an incomplete sync process and may damage data.md file).
  * Repeat the sync process before Drop box finishes updating changes. (It causes data loss and leads to an incomplete sync. It is a good behavior to continue next sync after Drop box completes uploading and downing files).
  * Open any file in source folder or intermediary folder, during sync process is ongoing. (It may cause data loss.)     
