@@ -38,10 +38,6 @@ namespace OneSyncATD
                     {
                         oneCase.testPassed = true;
                     }
-                    else
-                    {
-                        oneCase.testComment = oneCase.testComment + "Source Folders: " + listSFolders + "Source Files: " + listSFolders + "Target Folders: " + listTFolders + "Target Files: " + listTFiles;
-                    }
                 }
                 catch (Exception exception)
                 {
@@ -431,7 +427,8 @@ namespace OneSyncATD
                 {
                     if (jobItem.Name.Equals(oldJobName) && jobItem.SyncSource.Path.Equals(syncSource))
                     {
-                        oneCase.testActual = "false, old job name is found for current sync source";
+                        oneCase.testActual = "false";
+                        oneCase.testComment = oneCase.testComment + "//old job name is found for current sync source//";
                         break;
                     }
                     if (jobItem.Name.Equals(newJobName) && jobItem.SyncSource.Path.Equals(syncSource))
@@ -544,7 +541,7 @@ namespace OneSyncATD
 
                 if (Directory.Exists(oneCase.testParameters))
                 {
-                    oneCase.testActual = true;
+                    oneCase.testActual = "true";
                 }
                 else
                 {
@@ -590,7 +587,7 @@ namespace OneSyncATD
                 {
                     o.Write("a");
                 }
-                oneCase.testActual = "true"
+                oneCase.testActual = "true";
             }
             #endregion
             #region renameafile id:renameafile:fullfilepath,newfullfilepath:true or false:comment
@@ -614,7 +611,7 @@ namespace OneSyncATD
             {
                 File.Delete(oneCase.testParameters);
 
-                if (File.Exists(comParameters[1]))
+                if (File.Exists(oneCase.testParameters))
                 {
                     oneCase.testActual = "false, deletion is unsuccessful";
                 }
