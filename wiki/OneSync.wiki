@@ -3,11 +3,11 @@
 
 ==What is _OneSync_?==
 
-*_OneSync_* is a sync tool which makes use of portable storage as well as free online storage such as [http://wiki.dropbox.com/ Dropbox] effectively utilizes online disk space to synchronize files/folders between computers.
+*_OneSync_* is a synchronization tool which makes use of portable and free online storage such as [http://wiki.dropbox.com/Dropbox] and effectively utilizes disk space to synchronize files/folders between computers.
 
 ==Is _OneSync_ easy to use?==
 
-We are on user side. *_OneSync_* will be the one of the easiest-to-use sync tool that will do everything without complex configuration. We hope that users will have great experience using *_OneSync_*.
+*_OneSync_* is carefully designed with users in mind. *_OneSync_* will be one of the easiest sync tools that will function without complex configuration. We hope that users will have great experience while using *_OneSync_*.
 
 ==Is *_OneSync_* free?==
 
@@ -26,4 +26,4 @@ If you are a Dropbox user, *_OneSync_* is 100% suitable for you. *_OneSync_* can
 
 ==I have some more questions for *_OneSync_*. Who can I ask for?==
 
-Please email to ([mailto:my3215group@googlegroups.com]) if you have queries. Also, we welcome your opinions and comments towards *_OneSync_*. Our motto is "*Users' Satisfaction is Our Vision and Driving Force*".
+Please email to ([mailto:my3215group@googlegroups.com]) if you have queries. Also, we welcome your opinions and comments about *_OneSync_*. Our motto is "*Users' Satisfaction is Our Vision and Driving Force*".
