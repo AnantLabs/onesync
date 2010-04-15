@@ -92,7 +92,7 @@ Contains specific information regarding a file like its hash code, relative file
 
 === SQLiteMetadataProvider ===
 
-SQLiteMetadataProvider inherits from MetadataProvider abstract class to persist FileMetadata to an SQLite database.
+SQLiteMetadataProvider inherits from !MetadataProvider abstract class to persist !FileMetadata to an SQLite database.
 
 ----
 
