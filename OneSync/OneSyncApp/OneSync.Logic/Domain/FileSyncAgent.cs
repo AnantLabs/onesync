@@ -249,6 +249,8 @@ namespace OneSync.Synchronization
             ExecuteActions(deleteList, a =>
             {
                 SyncExecutor.DeleteInSyncFolderAndUpdateActionTable((DeleteAction)a, _job);
+                string absolutePath = _job.IntermediaryStorage.DirtyFolderPath + a.RelativeFilePath;
+                //Files.FileUtils.DeleteFileAndFolderIfEmpty(_job.IntermediaryStorage.DirtyFolderPath, absolutePath, true);
             });
         }
 
@@ -338,13 +340,20 @@ namespace OneSync.Synchronization
         /// </summary>
         private IList<SyncAction> GenerateActions()
         {
-            Metadata mdCurrent = UpdateSyncSourceMetadata();
-            Metadata mdOther = mdProvider.Load(_job.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
+            //Metadata mdCurrent = UpdateSyncSourceMetadata();
+            //Metadata mdOther = mdProvider.Load(_job.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
+            FileMetaData mdCurrent = MetaDataProvider.GenerateFileMetadata(
+                _job.SyncSource.Path, _job.SyncSource.ID, false, false);
 
+            FileMetaData mdOldCurrent = mdProvider.LoadFileMetadata(_job.SyncSource.ID, SourceOption.SOURCE_ID_EQUALS);
+
+            mdProvider.UpdateFileMetadata(mdOldCurrent, mdCurrent);
+
+            FileMetaData mdOther = mdProvider.LoadFileMetadata(_job.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
             //generate list of sync actions by comparing 2 metadata
-            var differences = new FileMetaDataComparer(mdCurrent.FileMetadata, mdOther.FileMetadata);
+            var differences = new FileMetaDataComparer(mdCurrent, mdOther);
 
-            return actProvider.Generate(mdCurrent.FileMetadata.SourceId,
+            return actProvider.Generate(mdCurrent.SourceId,
                                         differences.LeftOnly,
                                         differences.RightOnly,
                                         differences.BothModified);
@@ -361,11 +370,19 @@ namespace OneSync.Synchronization
             //read metadata of the current folder in file system 
             FolderMetadata currentItems = MetaDataProvider.GenerateFolderMetadata(_job.SyncSource.Path, _job.SyncSource.ID, false,false,true);
 
+            //read the folder metadata of current folder stored in database
             FolderMetadata oldCurrentItems = mdProvider.LoadFolderMetadata(_job.SyncSource.ID, SourceOption.SOURCE_ID_EQUALS);
+
+            //read folder metadata of the other source stored in the database
             FolderMetadata otherItems = mdProvider.LoadFolderMetadata(_job.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
 
+            //get the difference between current folder metadata with its previous state (from previous sync session).
             FolderMetadataComparer comparer1 = new FolderMetadataComparer(oldCurrentItems, currentItems);
+
+            //get the difference between current folder metadata with the other folder's previous metadata
             FolderMetadataComparer compare2 = new FolderMetadataComparer(currentItems, otherItems);
+
+
             FolderMetadataComparer comparer3 = new FolderMetadataComparer(oldCurrentItems.FolderMetadataItems, compare2.LeftOnly);
             FolderMetadataComparer comparer4 = new FolderMetadataComparer(compare2.RightOnly, comparer1.LeftOnly);
 
@@ -378,12 +395,11 @@ namespace OneSync.Synchronization
                 SyncExecutor.DeleteFolder(this._job.SyncSource.Path, item.RelativePath, true);
 
             foreach (FolderMetadataItem item in comparer4.LeftOnly)
-                
                 SyncExecutor.CreateFolder(this._job.SyncSource.Path, item.RelativePath);
 
             currentItems = MetaDataProvider.GenerateFolderMetadata(_job.SyncSource.Path, _job.SyncSource.ID, false,
                                                                    false, true);
-            mdProvider.UpdateFolderMetadata(oldCurrentItems, currentItems, true);
+            mdProvider.UpdateFolderMetadata(oldCurrentItems, currentItems, false);
         }
 
         #region Event Raising

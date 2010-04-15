@@ -199,8 +199,7 @@ namespace OneSync.Synchronization
             if (directories == null) return new FolderMetadata( id, fromPath );
             IEnumerable<DirectoryInfo> noHiddenDirectories = from dir in directories
                                                              where (
-                                                             (excludeHidden?!Files.FileUtils.IsDirectoryHidden(dir.FullName):true)
-                                                             &&(excludeNonEmpty?Files.FileUtils.IsDirectoryEmpty(dir.FullName):true))
+                                                             (excludeHidden?!Files.FileUtils.IsDirectoryHidden(dir.FullName):true))
                                                              select dir;
             directories = noHiddenDirectories.ToArray<DirectoryInfo>();
 
