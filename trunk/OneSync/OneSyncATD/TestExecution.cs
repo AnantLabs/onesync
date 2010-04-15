@@ -75,9 +75,24 @@ namespace OneSyncATD
             return listCases;
         }
 
-        /**
+        /** Parameters for each methods
          *createfolders : targetfolder, folnametype, folderdepth, maxsubdir
-         *generatefiles : targetfolder, filenametype, numberoffiles, fileminsize, filemaxsize           
+         *generatefiles : targetfolder, filenametype, numberoffiles, fileminsize, filemaxsize   
+         *clearall
+         *createprofile : name of syncjob 1 for right folder, name of syncjob2 for left folder
+         *rightsyncfirst: name of syncjob 1 , name of syncjob 2
+         *righthalfsync: name of syncjob
+         *leftsyncfirst: name of syncjob 1 , name of syncjob 2
+         *lefthalfsync: name of syncjob
+         *updateprofile: old job name, new job name, sync source
+         *deletefiles: sync source, number of files to be deleted
+         *deletefolders: sync source, number of folders to be deleted
+         *createafolder: full folder path
+         *generateafile: full file path, file size
+         *updateafiledate: full file path, modified date(YYYY/MM/DD)
+         *modifyafile: full file path
+         *deleteafile: full file path
+         *renameafile: full file path, new name
          **/
 
         private void runCommand(TestCase oneCase)
@@ -522,51 +537,91 @@ namespace OneSyncATD
                 }
             }
             #endregion
-            #region generateafile id:generateafile:right or left,filename.ext,filesize:true or false:comment
-            else if (oneCase.testParameters.Equals("generateafile")) //id:generateafile:right or left,filename.ext,filesize:true or false:comment
+            #region createafolder id:createafolder:fullfolderpath:true or false:comment
+            else if (oneCase.testMethod.Equals("createafolder"))
             {
-                String[] comParameters = oneCase.testParameters.Split(',');
-                String fileName;
+                Directory.CreateDirectory(oneCase.testParameters);
 
-                if (enumFolder(comParameters[0]).Equals("right"))
+                if (Directory.Exists(oneCase.testParameters))
                 {
-                    fileName = rightFolder + comParameters[1];
+                    oneCase.testActual = true;
                 }
                 else
                 {
-                    fileName = leftFolder + comParameters[1];
+                    oneCase.testActual = "false, " + oneCase.testParameters + " is not found.//";
                 }
+            }
+            #endregion
+            #region generateafile id:generateafile:fullfilepath,filesize:true or false:comment
+            else if (oneCase.testParameters.Equals("generateafile")) //id:generateafile:right or left,filename.ext,filesize:true or false:comment
+            {
+                String[] comParameters = oneCase.testParameters.Split(',');
+                String fileName = comParameters[0];
+
                 using (var fileStream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
                     fileStream.SetLength(long.Parse(comParameters[2]));
                 }
+
                 if (File.Exists(fileName))
                 {
                     oneCase.testActual = "true";
                 }
                 else
                 {
-                    oneCase.testActual = "false";
-                    oneCase.testComment = oneCase.testComment + "//" + fileName + " is not found.//";
+                    oneCase.testActual = "false, " + fileName + " is not found.//";
                 }
             }
             #endregion
-            #region updateafiledate id:updateafiledate:right or left,filename.ext,modifieddate(YYYY/MM/DD):true or false:comment
-            else if (oneCase.testParameters.Equals("updateafiledate"))//id:updateafiledate:right or left,filename.ext,modifieddate(YYYY/MM/DD):true or false:comment
+            #region updateafiledate id:updateafiledate:fullfilepath,modifieddate(YYYY/MM/DD):true or false:comment
+            else if (oneCase.testParameters.Equals("updateafiledate"))//id:updateafiledate:fullfilepath,modifieddate(YYYY/MM/DD):true or false:comment
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
-                String fileName;
-                if (enumFolder(comParameters[0]).Equals("right"))
+                String fileName = comParameters[0];
+    
+                File.SetLastWriteTime(fileName, DateTime.Parse(comParameters[1]));
+                oneCase.testActual = "true";
+            }
+            #endregion
+            #region modifyafile id:modifyafile:fullfilepath:true or false:comment
+            else if (oneCase.testMethod.Equals("modifyafile"))
+            {
+                using (StreamWriter o = File.AppendText(oneCase.testParameters))
                 {
-                    fileName = rightFolder + comParameters[1];
+                    o.Write("a");
+                }
+                oneCase.testActual = "true"
+            }
+            #endregion
+            #region renameafile id:renameafile:fullfilepath,newfullfilepath:true or false:comment
+            else if (oneCase.testMethod.Equals("renameafile"))
+            {
+                String[] comParameters = oneCase.testParameters.Split(',');
+                File.Move(comParameters[0],comParameters[1]);
+
+                if (File.Exists(comParameters[1]))
+                {
+                    oneCase.testActual = "true";
                 }
                 else
                 {
-                    fileName = leftFolder + comParameters[1];
+                    oneCase.testActual = "false, rename is unsuccessful";
                 }
-    
-                File.SetLastWriteTime(fileName, DateTime.Parse(comParameters[2]));
-                oneCase.testActual = "true";
+            }
+            #endregion
+            #region deleteafile id:deleteafile:fullfilepath:true or false:comment
+            else if (oneCase.testMethod.Equals("deleteafile"))
+            {
+                File.Delete(oneCase.testParameters);
+
+                if (File.Exists(comParameters[1]))
+                {
+                    oneCase.testActual = "false, deletion is unsuccessful";
+                }
+                else
+                {
+                    oneCase.testActual = "true";
+                }
             }
             #endregion
             else
