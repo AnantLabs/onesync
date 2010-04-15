@@ -785,6 +785,15 @@ namespace OneSync.UI
             agent.ProgressChanged += new SyncProgressChangedHandler(currAgent_ProgressChanged);
             agent.SyncFileChanged += new SyncFileChangedHandler(currAgent_FileChanged);
             agent.StatusChanged += new SyncStatusChangedHandler(syncAgent_SyncStatusChanged);
+            agent.SyncFileError += new SyncFileOperationError(agent_SyncFileError);
+        }
+
+        void agent_SyncFileError(object sender, SyncFileOperationErrorEventArgs args)
+        {
+            this.Dispatcher.Invoke((Action)delegate
+            {
+                showErrorMsg("Can't access to the file " + args.FileName);
+            });    
         }
 
         private void RemoveAgentEventHandler(FileSyncAgent agent)
@@ -793,6 +802,7 @@ namespace OneSync.UI
             agent.ProgressChanged -= new SyncProgressChangedHandler(currAgent_ProgressChanged);
             agent.SyncFileChanged -= new SyncFileChangedHandler(currAgent_FileChanged);
             agent.StatusChanged -= new SyncStatusChangedHandler(syncAgent_SyncStatusChanged);
+            agent.SyncFileError -= new SyncFileOperationError(agent_SyncFileError);
         }
 
         #endregion

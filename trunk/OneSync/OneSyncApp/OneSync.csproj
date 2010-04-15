@@ -149,6 +149,7 @@
     <Compile Include="OneSync.Logic\Exceptions\SyncSourceException.cs" />
     <Compile Include="OneSync.Logic\Exceptions\SyncSourcesNumberExceededException.cs" />
     <Compile Include="OneSync.Logic\SyncClient.cs" />
+    <Compile Include="OneSync.Logic\SyncEvents\SyncFileOperationErrorEventArgs.cs" />
     <Compile Include="OneSync.Logic\SyncEvents\SyncStatusChangedEventArgs.cs" />
     <Compile Include="OneSync.Logic\SyncEvents\SyncFileChangedEventArgs.cs" />
     <Compile Include="OneSync.Logic\SyncEvents\SyncCancelledEventArgs.cs" />
