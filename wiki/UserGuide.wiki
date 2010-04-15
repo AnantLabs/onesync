@@ -159,6 +159,8 @@ For example, suppose you are working on two folders on different PCs and keep th
  * Keep both - The file from the intermediate storage will be transferred to the folder on the second PC and renamed leaving the file on this PC intact.
  * Overwrite - The file on the second PC will be replaced with the file from the intermediate storage.
 
+The default operation for handling conflicts is "Keep both" when you don't go through the sync preview. 
+
 [http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot7.jpg]
 
 ==What You Should Not Do==
