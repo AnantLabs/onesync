@@ -19,4 +19,4 @@ public enum DropboxStatus
 }
 }}}
 
-Only `UP_TO_DATE` and `SYNCHRONIZING` are used in OneSync to inform user in case the DropBox folder is outdated.
+Only `UP_TO_DATE` and `SYNCHRONIZING` are used in OneSync to inform user whether the DropBox folder is outdated.
