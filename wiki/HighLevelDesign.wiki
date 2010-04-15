@@ -18,8 +18,8 @@ The business objects are
 
 == Provider Class ==
 
-All the providers i.e. SyncSourceProvider, SyncActionsProvider, MetadataProvider as well as SyncJobManager are abtract classes. These classes are responsible for persisting objects that they manage to storage.
+All the providers i.e. SyncSourceProvider, SyncActionsProvider, MetadataProvider as well as SyncJobManager are abtract classes. These classes are responsible for managing the storage of persistent objects.
 
-In current implementation. SQLite database is for data persistence, and classes that inherits from them these abstract classes are prefixed with 'SQLite'.
+In the current implementation, the SQLite database used for data persistence, and classes that inherits from them these abstract classes are prefixed with 'SQLite'.
 
 [http://onesync.googlecode.com/svn/wiki/images/architecture02.png]
