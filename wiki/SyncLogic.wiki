@@ -16,6 +16,15 @@ The following outlines of OneSync synchronization algorithm and logic.
 
 = 1. Overview =
 
+The following are 2 videos to explain briefly the idea of light-weight synchronization:
+
+<wiki:video url="http://www.youtube.com/watch?v=gjbebQHzLwA&fmt=18&rel=0"/>
+
+It turns out that if DropBox (another layer of synchronization) is used as the intermediary storage, the synchronization logic is still valid.
+
+<wiki:video url="http://www.youtube.com/watch?v=__ENL2TbtQM&fmt=18&rel=0"/>
+
+
 !FileSyncAgent is the main class executing the synchronization. The code snippet for synchronization is as follows:
 
 {{{
