@@ -75,12 +75,12 @@ namespace OneSyncATD
          *createfolders : targetfolder, folnametype, folderdepth, maxsubdir
          *generatefiles : targetfolder, filenametype, numberoffiles, fileminsize, filemaxsize   
          *clearall
-         *createprofile : name of syncjob 1 for right folder, name of syncjob2 for left folder
+         *createsyncjobs : name of syncjob 1 for right folder, name of syncjob2 for left folder
          *rightsyncfirst: name of syncjob 1 , name of syncjob 2
          *righthalfsync: name of syncjob
          *leftsyncfirst: name of syncjob 1 , name of syncjob 2
          *lefthalfsync: name of syncjob
-         *updateprofile: old job name, new job name, sync source
+         *updatesyncjob: old job name, new job name, sync source
          *deletefiles: sync source, number of files to be deleted
          *deletefolders: sync source, number of folders to be deleted
          *createafolder: full folder path
@@ -249,8 +249,8 @@ namespace OneSyncATD
                 sWatch.Stop();
             }
             #endregion
-            #region createprofile id:createprofile:syncjob1,syncjob2:true or false:comment
-            else if (oneCase.testMethod.Equals("createprofile")) 
+            #region createsyncjobs id;createsyncjobs;syncjob1,syncjob2;true or false;comment
+            else if (oneCase.testMethod.Equals("createsyncjobs")) 
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
                 Boolean passRFlag = false;
@@ -402,8 +402,8 @@ namespace OneSyncATD
                 oneCase.testActual = "true";
             }
             #endregion
-            #region updateprofile id:updateprofile:oldprofilename,newprofilename,sync source is right or left folder:true or false:comment
-            else if (oneCase.testMethod.Equals("updateprofile")) //id:updateprofile:oldprofilename,newprofilename,sync source is right or left folder:comment
+            #region updatesyncjob id;updatesyncjob;oldprofilename,newprofilename,sync source is right or left;true or false;comment
+            else if (oneCase.testMethod.Equals("updatesyncjob")) //id:updateprofile:oldprofilename,newprofilename,sync source is right or left folder:comment
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
                 String oldJobName = comParameters[0];
@@ -550,14 +550,14 @@ namespace OneSyncATD
             }
             #endregion
             #region generateafile id:generateafile:fullfilepath,filesize:true or false:comment
-            else if (oneCase.testParameters.Equals("generateafile")) //id:generateafile:right or left,filename.ext,filesize:true or false:comment
+            else if (oneCase.testMethod.Equals("generateafile")) //id:generateafile:right or left,filename.ext,filesize:true or false:comment
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
                 String fileName = comParameters[0];
 
                 using (var fileStream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
-                    fileStream.SetLength(long.Parse(comParameters[2]));
+                    fileStream.SetLength(long.Parse(comParameters[1]));
                 }
 
                 if (File.Exists(fileName))
@@ -571,7 +571,7 @@ namespace OneSyncATD
             }
             #endregion
             #region updateafiledate id:updateafiledate:fullfilepath,modifieddate(YYYY/MM/DD):true or false:comment
-            else if (oneCase.testParameters.Equals("updateafiledate"))//id:updateafiledate:fullfilepath,modifieddate(YYYY/MM/DD):true or false:comment
+            else if (oneCase.testMethod.Equals("updateafiledate"))//id:updateafiledate:fullfilepath,modifieddate(YYYY/MM/DD):true or false:comment
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
                 String fileName = comParameters[0];
@@ -583,10 +583,9 @@ namespace OneSyncATD
             #region modifyafile id:modifyafile:fullfilepath:true or false:comment
             else if (oneCase.testMethod.Equals("modifyafile"))
             {
-                using (StreamWriter o = File.AppendText(oneCase.testParameters))
-                {
-                    o.Write("a");
-                }
+                StreamWriter streamWriter = File.AppendText(oneCase.testParameters);
+                streamWriter.WriteLine("This is a test.");
+                streamWriter.Close();
                 oneCase.testActual = "true";
             }
             #endregion
