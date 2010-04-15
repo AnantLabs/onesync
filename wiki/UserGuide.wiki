@@ -45,7 +45,7 @@ When a user syncs his folder, he must first choose the location of the intermedi
 This version of OneSync has a number of exciting new features, including:
  # Multiple Jobs Synchronization - Sync more than one sync job sequentially.
  # Sync Preview - View the actions in advance before the sync process.
- # Sync Job Management - Compared to the previous version, this version allows you to create and manage your sync jobs in an easy way. You do not have to memorize the long directories anymore.
+ # Sync Job Creation and Edit - Compared to the previous version, this version allows you to create and manage your sync jobs in an easy way. You do not have to memorize the long directories anymore.
  # Right-click and Sync - Just right click any reasonable folder, and you will be able to sync it in just two clicks!
 
 ===Downloading and Installing===
