@@ -22,7 +22,7 @@ You can get your Dropbox application and account from [http://www.dropbox.com Dr
 
 ==Well, how do I know that *_OneSync_* is suitable for me?==
 
-If you are a Dropbox user, *_OneSync_* is 100% suitable for you. *_OneSync_* can be an add-on for Dropbox to enhance online sync experience. Don't worry if you are a normal user. *_OneSync_* provides portable media storage synchronization as well. 
+If you are a Dropbox user, *_OneSync_* is 100% suitable for you. *_OneSync_* can be an add-on for Dropbox to enhance online sync experience. Don't worry if you are a normal user. *_OneSync_* provides a portable media storage synchronization as well. 
 
 ==I have some more questions for *_OneSync_*. Who can I ask for?==
 
