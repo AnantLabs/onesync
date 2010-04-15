@@ -18,6 +18,11 @@ The following outlines of OneSync synchronization algorithm and logic.
 
 The following are 2 videos to explain briefly the idea of light-weight synchronization:
 
+_High-resolution video file with manual advance:
+  * [https://onesync.googlecode.com/svn/wiki/vid_logic.mov Sync Logic]
+  * [https://onesync.googlecode.com/svn/wiki/vid_dropbox.mov Dropbox Sync]
+_
+
 <wiki:video url="http://www.youtube.com/watch?v=gjbebQHzLwA&fmt=18&rel=0"/>
 
 It turns out that if DropBox (another layer of synchronization) is used as the intermediary storage, the synchronization logic is still valid.
