@@ -145,7 +145,7 @@ Of course, you need to setup a Windows Shared Folder in your LAN first.
 As shown below, OneSync uses three colors to indicate different sync statuses:
 
  * Green - Everything goes smooth and OneSync finishes the sync job successfully.
- * Yellow - Special case for Dropbox folders. The sycn status will turn yellow after the sync job for the Dropbox folder has been done, yet the PC is still interacting with the Dropbox main server, e.g. it may be uploading files to the server.
+ * Yellow - Special case for Dropbox folders. The sycn status will turn yellow after the sync job for the Dropbox folder has been done, yet the PC is still interacting with the Dropbox main server, e.g. it may be uploading files in the folder to the server.
  * Red - Errors occur while syncing. Please check the status message at the top of OneSync window.
 
 [http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot8.jpg]
