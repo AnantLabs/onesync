@@ -8,16 +8,23 @@
   * `syncjob_id`: Globally Unique Identifier (GUID)
   * `profile_name`: Unique !SyncJob name
   * `metadata_source_location`: Absolute path to intermediary storage
-  * `source_info_id`: Foreign key to reference a SyncSource
+  * `source_info_id`: Foreign key to reference a !SyncSource
 
 == `Datasource_info_table` ==
-  * `source_id`: Globally Unique Identifier (GUID) of the SyncSource
-  * `source_absolute_path`: Absolute path of SyncSource
+  * `source_id`: Globally Unique Identifier (GUID) of the !SyncSource
+  * `source_absolute_path`: Absolute path of !SyncSource
 
 Note that the !SyncSource is identified by its id and not its relative path. This is so as to allow multiple !SyncJob to be created for any particular directory.
 
 == `Metadata_table` ==
-This is the table containing the filesystem metadata. The table will contain at most the the metadata of 2 !SyncSource. The `source_id` column is to distinguish which entry belongs to which !SyncSource.
+  * `source_id`: To distinguish which entry belongs to which !SyncSource.
+
+This is the table containing the filesystem metadata. The table will contain at most the the metadata of 2 !SyncSource.
 
 == `Action_table` ==
-The `action_id` is an auto-incremented column. Columns prefixed with `old` is to support rename actions. `change_in` column is used to determined in which !SyncSource should the action be executed.
+  *`action_id`: Auto-incremented column.
+  * `change_in`: To determine in which !SyncSource should the action be executed.
+
+Columns prefixed with `old` is to support rename actions in order to determine the filename of the file to be renamed.
+
+The `Metadata_table` and `Folder_table` is joined with `Datasource_info` on the `source_id` key to get the full filesystem metadata information of both !SyncSource associated with the intermediary storage.
