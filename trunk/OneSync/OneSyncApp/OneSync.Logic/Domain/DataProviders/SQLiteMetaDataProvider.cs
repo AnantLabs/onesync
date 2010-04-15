@@ -89,7 +89,8 @@ namespace OneSync.Synchronization
                 db.ExecuteReader(cmdText, paramList, reader => folderMetadata.FolderMetadataItems.Add(
                                                                    new FolderMetadataItem(
                                                                        (string)reader[Configuration.COL_SOURCE_ID],
-                                                                       (string)reader[Configuration.COL_FOLDER_RELATIVE_PATH])));
+                                                                       (string)reader[Configuration.COL_FOLDER_RELATIVE_PATH],
+                                                                       (int)reader[Configuration.COL_IS_FOLDER_EMPTY] )));
             }
             return folderMetadata;
         }
@@ -118,14 +119,15 @@ namespace OneSync.Synchronization
                 var trasaction = (SqliteTransaction)con.BeginTransaction();
                 try
                 {
-                    string cmdText = string.Format("INSERT INTO {0}( {1},{2})VALUES (@source_id , @relative_path)", Configuration.TLB_FOLDERMETADATA, Configuration.COL_SOURCE_ID, Configuration.COL_FOLDER_RELATIVE_PATH);
+                    string cmdText = string.Format("INSERT INTO {0}( {1},{2},{3})VALUES (@source_id , @relative_path, @isEmpty)", Configuration.TLB_FOLDERMETADATA, Configuration.COL_SOURCE_ID, Configuration.COL_FOLDER_RELATIVE_PATH, Configuration.COL_IS_FOLDER_EMPTY);
                     foreach (FolderMetadataItem item in folders)
                     {
                         var paramList = new SqliteParameterCollection
                                             {
                                                 new SqliteParameter("@source_id", DbType.String) {Value = item.SourceId},
                                                 new SqliteParameter("@relative_path", DbType.String)
-                                                    {Value = item.RelativePath}
+                                                    {Value = item.RelativePath},
+                                                new SqliteParameter("@isEmpty", DbType.Int32){Value = item.IsEmpty}
                                             };
                         db.ExecuteNonQuery(cmdText, paramList);
                     }
@@ -150,8 +152,8 @@ namespace OneSync.Synchronization
         public bool Add(IList<FolderMetadataItem> folders, SqliteConnection con)
         {
             const string cmdText = "INSERT INTO " + Configuration.TLB_FOLDERMETADATA +
-                                   "( " + Configuration.COL_SOURCE_ID + "," + Configuration.COL_FOLDER_RELATIVE_PATH + ")" +
-                                   "VALUES (@source_id , @relative_path)";
+                                   "( " + Configuration.COL_SOURCE_ID + "," + Configuration.COL_FOLDER_RELATIVE_PATH + "," + Configuration.COL_IS_FOLDER_EMPTY + ")" +
+                                   "VALUES (@source_id , @relative_path, @isEmpty)";
             try
             {
                 foreach (FolderMetadataItem item in folders)
@@ -160,6 +162,7 @@ namespace OneSync.Synchronization
                     {
                         cmd.Parameters.Add(new SqliteParameter("@source_id", DbType.String) { Value = item.SourceId });
                         cmd.Parameters.Add(new SqliteParameter("@relative_path", DbType.String) { Value = item.RelativePath });
+                        cmd.Parameters.Add(new SqliteParameter("@isEmpty", DbType.Int32){Value = item.IsEmpty});
                         cmd.ExecuteNonQuery();
                     }
                 }
@@ -673,7 +676,7 @@ namespace OneSync.Synchronization
                 cmd.ExecuteNonQuery();
 
                 cmd.CommandText = "CREATE TABLE IF NOT EXISTS " + Configuration.TLB_FOLDERMETADATA +
-                    "( " + Configuration.COL_SOURCE_ID + " TEXT, " + Configuration.COL_FOLDER_RELATIVE_PATH + " TEXT," + Configuration.COL_IS_FOLDER_EMPTY + ", INT"
+                    "( " + Configuration.COL_SOURCE_ID + " TEXT, " + Configuration.COL_FOLDER_RELATIVE_PATH + " TEXT," + Configuration.COL_IS_FOLDER_EMPTY + " INT"
                     + ")"
                     ;
                 cmd.ExecuteNonQuery();

@@ -8,18 +8,21 @@ namespace OneSync.Synchronization
 {   
     public class FolderMetadataItem
     {
-        public FolderMetadataItem (string sourceId, string absolutePath, string baseFolder)
+        public FolderMetadataItem (string sourceId, string absolutePath, string baseFolder, int isEmpty)
         {
             SourceId = sourceId;
             AbsolutePath = absolutePath;
             RelativePath = FileUtils.GetRelativePath (baseFolder, absolutePath);
+            IsEmpty = isEmpty;
         }
 
-        public FolderMetadataItem(string sourceId, string relativePath)
+        public FolderMetadataItem(string sourceId, string relativePath, int isEmpty)
         {
             SourceId = sourceId;
             RelativePath = relativePath;
+            IsEmpty = isEmpty;
         }
+
 
         public string SourceId
         {set; get;}
@@ -29,5 +32,10 @@ namespace OneSync.Synchronization
 
         public string AbsolutePath
         { set; get; }
+
+        public int IsEmpty
+        {
+            set; get;
+        }
     }
 }
