@@ -40,8 +40,8 @@ namespace OneSync.Synchronization
 
             if (intermediate.LastIndexOf(@"\") > 0 && source.LastIndexOf(@"\") > 0)
             {
-                if ((source.Contains(intermediate.Substring(0, intermediate.LastIndexOf(@"\")))
-                || intermediate.Contains(source.Substring(0, source.LastIndexOf(@"\"))))
+                if ((source.Equals(intermediate.Substring(0, intermediate.LastIndexOf(@"\")))
+                || intermediate.Equals(source.Substring(0, source.LastIndexOf(@"\"))))
                     && System.IO.Path.GetDirectoryName(source) != System.IO.Path.GetDirectoryName(intermediate))
                 {
                     throw new SyncJobException("Sync between folder and its sub-folder is not allowed");

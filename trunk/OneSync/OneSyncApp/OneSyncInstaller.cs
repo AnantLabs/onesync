@@ -127,7 +127,7 @@ namespace OneSync
             {
                 try
                 {
-                    Directory.Delete(logLocation);
+                    Directory.Delete(logLocation, true);
                 }
                 catch (Exception) 
                 {
