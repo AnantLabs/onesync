@@ -17,7 +17,7 @@ The following outlines of OneSync synchronization algorithm and logic.
 
 = 1. Overview =
 
-The following are 2 videos to explain briefly the idea of light-weight synchronization:
+The following are 2 videos which briefly explain the idea of light-weight synchronization:
 
 _High-resolution video file with manual advance:
   * [https://onesync.googlecode.com/svn/wiki/vid_logic.mov Sync Logic]
@@ -45,7 +45,7 @@ public void Synchronize(SyncPreviewResult preview)
 }
 }}}
 
-To support Synchronization Preview, the Synchronize method takes in a !SyncPreviewResult as an argument. !SyncPreviewResult is a wrapper for all actions to be executed and may contains skipped actions depending on the user selection during the preview.
+To support Synchronization Preview, the Synchronize method takes in a !SyncPreviewResult as an argument. !SyncPreviewResult is a wrapper for all actions that are to be executed and may contains skipped actions depending on the user selection during the preview.
 
 As OneSync doesn't view folders as items to be synchronized initially, `SyncEmptyFolders()` was added subsequently to achieve this. Of course, if synchronization of empty folders is not required, the method can be removed without any consequence.
 
@@ -57,9 +57,9 @@ The instance method for !FileSyncAgent to generate the !SyncPreviewResult is as 
 public SyncPreviewResult GenerateSyncPreview()
 }}}
 
-For each !SyncAction to be executed, the affected file is checked whether it was modified since last sync. This is done by comparing the file with the metadata created during last sync. If it has been changed, the !SyncAction will be considered as a conflict action. The !SyncAction has a Conflict Resolution property/field to determine how this conflict is going to be resolved. It is to be noted that there will be no further filesystem changes made to the sync folder by OneSync after all !SyncActions are executed.
+For each !SyncAction to be executed, the affected file is checked if it was modified since the last sync. This is done by comparing the file with the metadata created during the last sync. If it has been changed, the !SyncAction will be considered as a conflict. The !SyncAction has a Conflict Resolution property/field to determine how this conflict is going to be resolved. It is to be noted that there will be no further filesystem changes made to the sync folder by OneSync after all !SyncActions are executed.
 
-It is during generation of !SyncPreviewResult that conflict actions are detected and filtered out.
+It is during generation of !SyncPreviewResult that conflicts are detected and filtered out.
 
 Outline of preview generation:
   * `actions = load all SyncActions`
@@ -74,7 +74,7 @@ Sequence diagram for `GenerateSyncPreviewResult()`:
 
 = 3. Applying Patch =
 
-When synchonization starts, OneSync will check if there are any patch to be applied to the current folder being synced. A Patch conceptually refers to !SyncActions to be executed and the (dirty) files that are associated with these !SyncActions.
+When synchonization starts, OneSync will check if there is any patch to apply to the current folder that is being synced. A Patch conceptually refers to !SyncActions to be executed and the (dirty) files that are associated with these !SyncActions.
 
 Code snippet for `ApplyPatch()`:
 
@@ -92,7 +92,7 @@ private void ApplyPatch(SyncPreviewResult previewResult)
 
 == 3.1 Executing !SyncActions ==
 
-Each !SyncAction is can be a Copy, Delete or Rename action. 
+Each !SyncAction can be a Copy, Delete or Rename action. 
 
 After the !SyncActions are executed, the !SyncActions and any associated files are deleted from the intermediary storage as they are no longer required.
 
@@ -106,7 +106,7 @@ This is the stage where the !SyncActions for the other folder/PC is being genera
 
 == 4.1 Comparing Metadata ==
 
-The saved metadata of the other PC is being compared with the current filesystem of the file being synchronized. The purpose is to detect all the differences in the filesystem of the folder being synchronized and the filesystem of the other PC.
+The saved metadata of the other PC is being compared with the current filesystem of the file being synchronized. The purpose is to detect all the differences between the filesystem of the folder that is being synchronized and the filesystem of the other PC.
 
 The `FileMetaDataComparer` class is used to determine the differences between 2 !FileMetaData (labelled _left_ and _right_). The result of the comparison comprises of 3 lists:
   * Files that exists in the left only
@@ -131,7 +131,7 @@ var both = from l in left.MetaDataItems
            select l;
 }}}
 
-Of course, the above might not be the most efficient query. There are still room for optimization of the search.
+Of course, the above might not be the most efficient query. There is still room for optimization of the search.
 
 == 4.2 Creating !SyncActions ==
 
@@ -139,13 +139,13 @@ For each difference, a corresponding !SyncAction will be generated to resolve th
 
 == 4.3 Rename Detection ==
 
-A Rename action is seen to be equivalent to a Delete action followed by a Create action of the same file. Therefore, Rename actions are generated last. In current implementation, the File Hash is used to determined whether the files are the deleted and created file are the same (and hence constitute a rename action).
+A Rename action is seen to be equivalent to a Delete action followed by a Create action of the same file. Therefore, Rename actions are generated last. In current implementation, the File Hash is used to determine whether the deleted and created file are the same (and hence constitute a rename action).
 
-It is to be noted that for this implementation, user might not has renamed the file but has explicitly deleted it and created a same file with the same contents (and hence the same hash). However, !OneSync will still detect it as a rename operation and after synchronization, the state of the filesystem will still be consistent.
+It is to be noted that for this implementation, the user might not have renamed the file but has explicitly deleted it and created a same file with the same contents (and hence the same hash). However, !OneSync will still detect it as a rename operation and after synchronization, the state of the filesystem will still be consistent.
 
 A possible solution might be to use the unique Id of a file. See [FutureImprovements Future Improvements] for more details.
 
 === 5. Final Notes ===
 Due to the nature of light-weight sync, several rounds of synchronization will be required for 2 folders to be synchronized.
 
-For instance, after 2 folders are synchronized, if both folders are modified (files are created, renamed etc in both folders), another 2 synchronization needs to be carried out for changes in either folder to be propagated to each other, unlike conventional synchronization.
+For instance, after 2 folders are synchronized, if both folders are modified (files are created, renamed etc in both folders), another 2 synchronization needs to be carried out for changes in either folder to be propagated to each other. This is how synchronization in OneSync differs from conventional synchronization.
