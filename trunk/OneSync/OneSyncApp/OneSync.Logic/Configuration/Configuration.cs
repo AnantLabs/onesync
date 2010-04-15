@@ -49,5 +49,6 @@ namespace OneSync.Synchronization
 
         // TLB_FOLDERMETADATA columns
         public const string COL_FOLDER_RELATIVE_PATH = "RELATIVE_PATH";
+        public const string COL_IS_FOLDER_EMPTY = "IS_FOLDER_EMPTY";
     }
 }
