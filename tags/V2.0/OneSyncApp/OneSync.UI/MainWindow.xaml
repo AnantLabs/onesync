@@ -1,0 +1,248 @@
+﻿<!--
+$Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
+-->
+<Window
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Class="OneSync.UI.MainWindow"
+	x:Name="Window"
+	xmlns:local="clr-namespace:OneSync.UI"
+	DataContext="{Binding RelativeSource={RelativeSource Self}}"
+	Title="OneSync" Width="1024" Height="480" MinWidth="720" MinHeight="480" WindowStartupLocation="CenterScreen" mc:Ignorable="d" Closing="Window_Closing" Icon="../Application.ico" KeyDown="Window_KeyDown">
+	<Window.Resources>
+		<local:VisibilityConverter x:Key="visibilityConverter" />
+		<local:EditModeConverter x:Key="editModeConverter" />
+		<Style x:Key="blueLabel" TargetType="{x:Type Label}">
+			<Setter Property="FontSize" Value="10.667" />
+			<Setter Property="Foreground" Value="#FF0000B9" />
+	    </Style>
+		<Style x:Key="blueBoldLabel" TargetType="{x:Type Label}">
+			<Setter Property="FontSize" Value="10.667" />
+			<Setter Property="Foreground" Value="#FF0000B9" />
+			<Setter Property="FontWeight" Value="Bold" />
+	    </Style>
+		<Style x:Key="blueLinkLabel" TargetType="{x:Type TextBlock}">
+			<Setter Property="FontSize" Value="13.33" />
+			<Setter Property="Foreground" Value="#FF0000B9" />
+			<Setter Property="FontWeight" Value="Bold" />
+			<Setter Property="TextDecorations" Value="Underline" />
+			<Setter Property="Cursor" Value="Hand" />
+	    </Style>
+        <Style x:Key="jobInfo" TargetType="{x:Type TextBlock}">
+            <Setter Property="TextWrapping" Value="NoWrap" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+        <Style x:Key="btnSyncStaticStyle" TargetType="{x:Type Image}">
+      		<Setter Property="Source" Value="Resource/OneSync Transparent Logo (Inactive).png" />
+			<Style.Triggers>
+		    	<Trigger Property="IsMouseOver" Value="True">
+		      		<Setter Property="Image.Source" Value="Resource/OneSync Transparent Logo.png" />
+		    	</Trigger>
+	  		</Style.Triggers>
+ 		</Style>
+		<Style x:Key="autoCompleteTextBox" TargetType="{x:Type TextBox}">
+			<Setter Property="Template">
+		    	<Setter.Value>
+		      		<ControlTemplate TargetType="{x:Type TextBoxBase}">
+		        		<Grid x:Name="root">
+		          				<Popup x:Name="PART_Popup" 
+		                      		AllowsTransparency="true" 
+		                      		Placement="Bottom" 
+		                      		IsOpen="False"  
+		                      		PopupAnimation="{DynamicResource 
+		                      			{x:Static SystemParameters.ComboBoxPopupAnimationKey}}">
+		                			<ListBox x:Name="PART_ItemList" 
+		                      			SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+		                      			VerticalContentAlignment="Stretch" 
+		                      			HorizontalContentAlignment="Stretch"
+		                      			KeyboardNavigation.DirectionalNavigation="Contained" />
+		          				</Popup>
+		        		</Grid>
+		      		</ControlTemplate>
+		    	</Setter.Value>
+		   </Setter>
+		</Style>
+		<Storyboard x:Key="sbRotateSync" RepeatBehavior="Forever">
+			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="btnSyncRotating" Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)">
+				<LinearDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+				<LinearDoubleKeyFrame KeyTime="00:00:01.5000000" Value="360"/>
+			</DoubleAnimationUsingKeyFrames>
+		</Storyboard>
+	</Window.Resources>
+	<Window.Triggers>
+		<EventTrigger RoutedEvent="FrameworkElement.Loaded">
+			<BeginStoryboard Storyboard="{StaticResource sbRotateSync}"/>
+		</EventTrigger>
+	</Window.Triggers>
+	<Window.Background>
+		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+			<GradientStop Color="#FF69DAF4" Offset="1"/>
+			<GradientStop Color="White" Offset="0.337"/>
+			<GradientStop Color="#FFC9EFF8" Offset="0.768"/>
+		</LinearGradientBrush>
+	</Window.Background>
+
+	<Grid>
+		<Grid Margin="10,10,5,8">
+			<Grid.RenderTransform>
+				<TranslateTransform X="0" Y="0"/>
+			</Grid.RenderTransform>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="30"/>
+				<RowDefinition Height="65"/>
+				<RowDefinition/>
+				<RowDefinition Height="145"/>
+			</Grid.RowDefinitions>
+			
+			<!--Row 0 -->
+			<Label Grid.Row="0" Grid.Column="0" x:Name="label_notification" Content="" FontSize="10.667" Foreground="#FFB90000" FontStyle="Italic" FontWeight="Bold" Visibility="Hidden" Margin="0,0,30,0"/>
+			
+			<!--Row 1 -->
+			<Grid Grid.Row="1" Margin="0,0,8,0" >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="0.333*"/>
+					<ColumnDefinition Width="0.333*"/>
+					<ColumnDefinition Width="0.333*"/>
+					<ColumnDefinition Width="122"/>
+				</Grid.ColumnDefinitions>
+				
+				<!--Column 0 -->
+				<Label Grid.Column="0" Content="Sync Job Name:" FontSize="10.667" Foreground="#FF0000B9" Margin="0,0,0,0" />
+				<TextBox Grid.Column="0" x:Name="txtSyncJobName" Height="22.187" MaxLines="1" Margin="5,21.406,10,21.406" />
+				
+				<!--Column 1 -->
+				<Label Grid.Column="1" Content="Folder to Sync:" FontSize="10.667" Foreground="#FF0000B9" />
+                <ComboBox x:Name="txtSource" Margin="4,21.407,34.187,21.406" Grid.Column="1" IsEditable="True" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"/>
+				<Button Grid.Column="1" x:Name="btnBrowse_Source" Width="22.187" Height="22.188" Content="..." ToolTip="Click to browse folders" Click="btnBrowse_Click" Margin="0,0,8,0" HorizontalAlignment="Right" VerticalAlignment="Center" />
+				
+				<!--Column 2 -->
+				<Label Grid.Column="2" Content=" Intermediary Storage Location:" FontSize="10.667" Foreground="#FF0000B9" Margin="2,0,-2,0" />
+				<ComboBox x:Name="txtIntStorage" Margin="8,23.086,34.187,19.727" IsEditable="True" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop" Grid.Column="2"/>
+                <Button Grid.Column="2" x:Name="btnBrowse" Width="22.187" Height="22.188" Content="..." ToolTip="Click to browse folders" Click="btnBrowse_Click" Margin="0,0,8,0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+				
+				<!--Column 3 -->
+				<TextBlock Grid.Column="3" x:Name="txtBlkNewJob" Style="{StaticResource blueLinkLabel}" Text="Add New Job" MouseDown="txtBlkNewJob_MouseDown" HorizontalAlignment="Right" Margin="0,23.086,18,24.182" d:LayoutOverrides="Height"/>
+			</Grid>
+			
+			<!--Row 2 -->
+			<ListView Grid.Row="2" x:Name="listAllSyncJobs" Margin="0,0,7,0" SelectionChanged="listAllSyncJobs_SelectionChanged" > 
+                <ListView.View>
+					<GridView>
+                        <GridViewColumn Width="30">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate x:Name="CheckBoxSelectAll">
+                                    <CheckBox Name="checkBoxSelectAll" Checked="checkBoxSelectAll_Checked" Unchecked="checkBoxSelectAll_Unchecked"/>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Name="selectSyncCheckBox" IsChecked="{Binding IsSelected}" Checked="selectSyncCheckBox_Checked" Unchecked="selectSyncCheckBox_Unchecked"></CheckBox>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+				        <GridViewColumn Width="50" Header="Reorder">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+									<StackPanel Orientation="Horizontal">
+	                                    <TextBlock FontWeight="Bold" Cursor="Hand" Text="ñ" FontFamily="Wingdings" FontSize="20" MouseDown="reorder_MouseDown" Tag="-1" />
+										<TextBlock FontWeight="Bold" Cursor="Hand" Text="ò" FontFamily="Wingdings" FontSize="20" MouseDown="reorder_MouseDown" Tag="1" />
+									</StackPanel>
+								</DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Width="108" Header="Job Name">		
+						    <GridViewColumn.CellTemplate>
+								<DataTemplate>
+									<Grid>
+                                        <TextBlock Style="{StaticResource jobInfo}" Text="{Binding JobName}" ToolTip="{Binding JobName}" MouseDown="edit_MouseDown" />
+                                        <TextBox Text="{Binding NewJobName}" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" />
+									</Grid>
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+					    <GridViewColumn Width="226" Header="Sync Source Directory">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate>
+									<Grid>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition/>
+											<ColumnDefinition Width="22.2"/>
+										</Grid.ColumnDefinitions>
+										<TextBlock Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource jobInfo}" Text="{Binding SyncSource}" ToolTip="{Binding SyncSource}"  MouseDown="edit_MouseDown" />
+										<TextBox Grid.Column="0" Text="{Binding NewSyncSource}" Visibility="Hidden" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"  Loaded="editControls_Loaded"/>
+										<Button Grid.Column="1" Width="22.187" Height="22.188" Content="..." Click="btnBrowse_Click" Visibility="Hidden" Loaded="editControls_Loaded" />
+									</Grid>
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+                        <GridViewColumn Width="226" Header="Intermediary Storage Directory">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate>
+									<Grid>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition/>
+											<ColumnDefinition Width="22.2"/>
+										</Grid.ColumnDefinitions>
+										<TextBlock Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource jobInfo}" Text="{Binding IntermediaryStoragePath}" ToolTip="{Binding IntermediaryStoragePath}" MouseDown="edit_MouseDown" />
+										<TextBox Grid.Column="0" Text="{Binding NewIntermediaryStoragePath}" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"  Loaded="editControls_Loaded"/>
+										<Button Grid.Column="1" Width="22.187" Height="22.188" Content="..." Click="btnBrowse_Click" Visibility="{Binding Path=EditMode, Converter={StaticResource visibilityConverter}}"  Loaded="editControls_Loaded" />
+									</Grid>
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+                        <GridViewColumn Width="70" Header="">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate x:Name="operationEditTemplate">
+                                    <StackPanel Orientation="Horizontal">
+									    <Image Width="24" Height="24" Cursor="Hand" Source="{Binding Path=EditMode, Converter={StaticResource editModeConverter}}" ToolTip="Edit this job" MouseDown="edit_MouseDown"/>
+                                        <Image Width="24" Height="24" Cursor="Hand" Source="Resource/delete.png" ToolTip="Delete this job" MouseDown="imgDelete_MouseDown" />
+                                    </StackPanel>
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+                        <GridViewColumn Width="70" Header="">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate x:Name="operationPreviewTemplate">
+									<TextBlock TextDecorations="Underline" FontWeight="Bold" Cursor="Hand" Text="Preview" ToolTip="Preview selected job" MouseDown="textBoxPreview_MouseDown" />
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+                        <GridViewColumn Width="70" Header="">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate x:Name="operationLogTemplate">
+                                    <TextBlock TextDecorations="Underline" FontWeight="Bold" Cursor="Hand" Text="Show Log" ToolTip="Show selected job's log" MouseDown="txtBlkShowLog_MouseDown" />
+								</DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+						<GridViewColumn Width="120" Header="Sync Status">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate x:Name="syncStatusTemplate">
+									<Grid>
+                                    	<ProgressBar Foreground="{Binding ProgressBarColor}" Value="{Binding ProgressBarValue}" Visibility="{Binding ProgressBarVisibility}" ToolTip="{Binding ProgressBarMessage}" Height="18" Width="100" />
+									</Grid>
+								</DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>                           
+                    </GridView>
+				</ListView.View>
+			</ListView>
+			
+			<!--Row 3 -->
+			<TextBlock Grid.Row="3" x:Name="txtBlkProceed" Text="Sync Selected Jobs" Style="{StaticResource blueLinkLabel}" MouseDown="sync_MouseDown" Margin="8,0,0,15.27" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
+			<Image Grid.Row="3" x:Name="btnSyncRotating" ToolTip="Cancel Subsequent Jobs" HorizontalAlignment="Left" Margin="8,8,0,33" Width="104" Source="Resource/OneSync Transparent Logo.png" RenderTransformOrigin="0.5,0.5" d:LayoutOverrides="GridBox" Visibility="Hidden" Cursor="Hand" MouseDown="sync_MouseDown" >
+				<Image.RenderTransform>
+					<RotateTransform Angle="0"/>
+				</Image.RenderTransform>
+			</Image>
+			<Image Grid.Row="3" x:Name="btnSyncStatic" Style="{StaticResource btnSyncStaticStyle}" ToolTip="Sync Selected Jobs" Width="104" HorizontalAlignment="Left" Margin="8,8,0,33" d:LayoutOverrides="GridBox" Cursor="Hand" MouseDown="sync_MouseDown" />
+			<Label x:Name="lbl_description" Grid.Row="3" Style="{StaticResource blueLabel}" Content="Number of sync jobs:&#xd;&#xa;&#xd;&#xa;Current syncing job:" Margin="130.398,6,63,71.985" Visibility="Hidden"/>
+			<Label Grid.Row="3" x:Name="lblJobsNumber" Style="{StaticResource blueBoldLabel}" Content="" Margin="237.217,6,104,0" VerticalAlignment="Top" Height="27.015"/>
+			<Label Grid.Row="3" x:Name="lblSyncJobName" Style="{StaticResource blueBoldLabel}" Content="" Margin="237.217,34.015,104,0" VerticalAlignment="Top" Height="25.99"/>
+			<Label Grid.Row="3" x:Name="lblStatus" Content="" FontSize="10.667" Margin = "130.398,69.251,54.602,47.763" />
+			<Label Grid.Row="3" x:Name="lblSubStatus" Content=""  FontSize="10.667" Margin = "130.398,0,54.602,33" VerticalAlignment="Bottom" Height="24.739" />
+			<Image x:Name="btnHelp" HorizontalAlignment="Right" Margin="0,0,0,12" Width="18" Source="Resource/OneSyncHelp.png" RenderTransformOrigin="1.278,0.611" Cursor="Hand" ToolTip="Help" MouseDown="btnHelp_MouseDown"/>
+			<Label x:Name="lblSyncJobEditing" Margin="372,31,414,0" VerticalAlignment="Top" Height="36" Content="Hold on... Updating the sync jobs" Grid.Row="2" FontWeight="Bold" Visibility="Hidden"/>
+		</Grid>
+	</Grid>
+</Window>

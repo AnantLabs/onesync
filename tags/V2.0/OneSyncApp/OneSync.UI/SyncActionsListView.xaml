@@ -1,0 +1,81 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:local="clr-namespace:OneSync.UI" 
+	mc:Ignorable="d"
+	x:Class="OneSync.UI.SyncActionsListView"
+	d:DesignWidth="800" d:DesignHeight="480">
+
+	<UserControl.Resources>
+		<!-- Converters used for databinding -->
+		<local:InvertBoolConverter x:Key="invertBoolConverter" />
+		<local:ConflictVisibilityConverter x:Key="conflictVisibilityConverter" />
+		<local:ConflictResolutionToIntConverter x:Key="intConverter" />
+		<local:ChangeTypeConverter x:Key="changeTypeConverter" />
+		<local:ChangeTypeColorConverter x:Key="changeTypeColorConverter" />
+		<local:OriginalPathConverter x:Key="originalPathConverter" />
+		
+		<!-- Style for listview -->
+		<Style TargetType="{x:Type ListViewItem}">
+	      <Style.Triggers>
+	        <Trigger Property="IsMouseOver" Value="true">
+	          <Setter Property="Cursor" Value="Hand"/>
+	        </Trigger>
+	      </Style.Triggers>
+	    </Style>
+		
+		<DataTemplate x:Key="PathCell">
+	      <StackPanel Orientation="Horizontal">
+			<Label Content="{Binding Path=RelativeFilePath}" Foreground="{Binding Path=ChangeType, Converter={StaticResource changeTypeColorConverter}}"/>
+	      </StackPanel>
+	    </DataTemplate>
+	
+		<DataTemplate x:Key="SelectCell">
+	      <StackPanel Orientation="Horizontal">
+			<CheckBox IsChecked="{Binding Path=Skip}" Name="checkBoxSkip"/>
+	      </StackPanel>
+	    </DataTemplate>
+		
+		<DataTemplate x:Key="OriginalPathCell">
+	      <StackPanel Orientation="Horizontal">
+			<Label Content="{Binding Converter={StaticResource originalPathConverter}}" />
+	      </StackPanel>
+	    </DataTemplate>
+		
+		<DataTemplate x:Key="ActionCell">
+	      <StackPanel Orientation="Horizontal">
+	        <ComboBox Width="80" 
+							Visibility="{Binding Path=ConflictResolution, Converter={StaticResource conflictVisibilityConverter}}"
+							SelectedIndex="{Binding Path=ConflictResolution, Converter={StaticResource intConverter}}"
+							IsEnabled="{Binding Path=Skip, Converter={StaticResource invertBoolConverter}}">
+				<ComboBoxItem Content="Keep Both"/>
+				<ComboBoxItem Content="Overwrite"/>
+			</ComboBox>
+	      </StackPanel>
+	    </DataTemplate>
+		
+	</UserControl.Resources>
+
+	<Grid>
+	<!--IsSynchronizedWithCurrentItem="True"-->
+		<ListView SelectionMode="Single" x:Name="lvActions">
+			<ListView.View>
+				<GridView AllowsColumnReorder="False">               
+                    <GridViewColumn CellTemplate="{StaticResource SelectCell}" Width="70">                                               
+                        <DockPanel>
+                            <CheckBox Name="checkBoxSelectAll" Margin="5" Checked="checkBoxSelectAll_Checked" Unchecked="checkBoxSelectAll_Unchecked"></CheckBox>                                
+                            <TextBlock Text="Skip" Margin="5"></TextBlock>
+                        </DockPanel>                           
+                    </GridViewColumn>
+                    <GridViewColumn Header="Action" DisplayMemberBinding="{Binding ChangeType, Converter={StaticResource changeTypeConverter}}" Width="60"/>
+					<GridViewColumn Header="File Path" CellTemplate="{StaticResource PathCell}" Width="300"/>
+					<GridViewColumn Header="Original File Path" CellTemplate="{StaticResource OriginalPathCell}" Width="300"/>
+					<GridViewColumn Header="Conflict Resolution" CellTemplate="{StaticResource ActionCell}" Width="120"/>
+				</GridView>
+			</ListView.View>
+		</ListView>
+	</Grid>
+	
+</UserControl>

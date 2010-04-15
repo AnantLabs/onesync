@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type='text/xsl' href='onesynclog.xsl'?>
+<syncdirectory value="C:\Users\u0707373\Desktop\a">
+  <syncsession>
+    <profilename>Wu Peng 1</profilename>
+    <syncdate>12/4/2010</syncdate>
+    <storagedirectory>C:\Users\u0707373\Desktop\b</storagedirectory>
+    <syncdirection>To intermediate storage</syncdirection>
+    <numberoffilesprocessed>3</numberoffilesprocessed>
+    <starttime>9:36:22 PM</starttime>
+    <endtime>9:36:22 PM</endtime>
+    <syncrecord>
+      <file>\New Folder\a.txt</file>
+      <action>NEWLY_CREATED</action>
+      <status>SUCCESS</status>
+    </syncrecord>
+    <syncrecord>
+      <file>\New Folder\b.txt</file>
+      <action>NEWLY_CREATED</action>
+      <status>SUCCESS</status>
+    </syncrecord>
+    <syncrecord>
+      <file>\New Folder\c.txt</file>
+      <action>NEWLY_CREATED</action>
+      <status>SUCCESS</status>
+    </syncrecord>
+  </syncsession>
+</syncdirectory>
