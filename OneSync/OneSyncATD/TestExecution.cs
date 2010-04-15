@@ -93,7 +93,7 @@ namespace OneSyncATD
 
         private void runCommand(TestCase oneCase)
         {
-            #region createfolders id:createfolders:right or left,unicode or letters or letterssymbols,folderdepth,maxsubdir:true or false:comment
+            #region createfolders id;createfolders;right or left,unicode or letters or letterssymbols,folderdepth,maxsubdir;true or false;comment
             if (oneCase.testMethod.Equals("createfolders"))
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
@@ -120,7 +120,7 @@ namespace OneSyncATD
 
                 sWatch.Stop();
                 #endregion
-            #region generatefiles id:generatefiles:right or left,unicode or letters or letterssymbols,numberoffiles,fileminsize,filemaxsize:true or false:comment
+            #region generatefiles id;generatefiles;right or left,unicode or letters or letterssymbols,numberoffiles,fileminsize,filemaxsize;true or false;comment
             } else if (oneCase.testMethod.Equals("generatefiles"))
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
@@ -282,7 +282,7 @@ namespace OneSyncATD
                 }
             }
             #endregion
-            #region rightsyncfirst id:rightsyncfirst:syncjob1,syncjob2:true or false:comment
+            #region rightsyncfirst id;rightsyncfirst;syncjob1,syncjob2;true or false;comment
             else if (oneCase.testMethod.Equals("rightsyncfirst"))
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
@@ -293,7 +293,6 @@ namespace OneSyncATD
                         FileSyncAgent currentAgent = new OneSync.Synchronization.FileSyncAgent(jobItem);
                         SyncPreviewResult previewResult = currentAgent.GenerateSyncPreview(null);
                         currentAgent.Synchronize(previewResult);
-                        //currentAgent.Synchronize(previewResult);
                         break;                        
                     }
                 }
@@ -305,8 +304,6 @@ namespace OneSyncATD
                         FileSyncAgent currentAgent = new OneSync.Synchronization.FileSyncAgent(jobItem);
                         SyncPreviewResult previewResult = currentAgent.GenerateSyncPreview(null);
                         currentAgent.Synchronize(previewResult);
-                        //SyncPreviewResult previewResult = currentAgent.PreviewSync();
-                        //currentAgent.Synchronize(previewResult);
                         break;
                     }
                 }
@@ -323,7 +320,7 @@ namespace OneSyncATD
                 }
             }
             #endregion
-            #region righthalfsync id:righthalfsync:syncjob:true or false:comment
+            #region righthalfsync id;righthalfsync;syncjob;true or false;comment
             else if (oneCase.testMethod.Equals("righthalfsync"))
             {                
                 foreach (SyncJob jobItem in SyncClient.GetSyncJobManager(System.Windows.Forms.Application.StartupPath).LoadAllJobs())
@@ -340,7 +337,7 @@ namespace OneSyncATD
                 oneCase.testActual = "true";
             }
             #endregion
-            #region leftsyncfirst id:leftsyncfirst:syncjob1,syncjob2,true or false:comment
+            #region leftsyncfirst id;leftsyncfirst;syncjob1,syncjob2,true or false;comment
             else if (oneCase.testMethod.Equals("leftsyncfirst"))
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
@@ -382,7 +379,7 @@ namespace OneSyncATD
                 }
             }
             #endregion
-            #region lefthalfsync id:lefthalfsync:syncjob:true or false:comment
+            #region lefthalfsync id;lefthalfsync;syncjob;true or false:comment
             else if (oneCase.testMethod.Equals("lefthalfsync"))
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
@@ -394,8 +391,6 @@ namespace OneSyncATD
                         FileSyncAgent currentAgent = new OneSync.Synchronization.FileSyncAgent(jobItem);
                         SyncPreviewResult previewResult = currentAgent.GenerateSyncPreview(null);
                         currentAgent.Synchronize(previewResult);
-                        //SyncPreviewResult previewResult = currentAgent.PreviewSync();
-                        //currentAgent.Synchronize(previewResult);
                         break;
                     }
                 }
@@ -403,7 +398,7 @@ namespace OneSyncATD
             }
             #endregion
             #region updatesyncjob id;updatesyncjob;oldprofilename,newprofilename,sync source is right or left;true or false;comment
-            else if (oneCase.testMethod.Equals("updatesyncjob")) //id:updateprofile:oldprofilename,newprofilename,sync source is right or left folder:comment
+            else if (oneCase.testMethod.Equals("updatesyncjob")) //id;updateprofile;oldprofilename,newprofilename,sync source is right or left folder;comment
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
                 String oldJobName = comParameters[0];
@@ -438,8 +433,8 @@ namespace OneSyncATD
                 }
             }
             #endregion
-            #region deletefiles id:deletefiles:right or left,number of files to be deleted:true or false:comment
-            else if (oneCase.testMethod.Equals("deletefiles")) //id:deletefiles:right or left,number of files to be deleted:true or false:comment
+            #region deletefiles id;deletefiles;right or left,number of files to be deleted;true or false:comment
+            else if (oneCase.testMethod.Equals("deletefiles")) //id:deletefiles:right or left,number of files to be deleted;true or false;comment
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
                 int fileCount = 0;
@@ -486,8 +481,8 @@ namespace OneSyncATD
                 }
             }
             #endregion
-            #region deletefolders id:deletefolders:right or left,number of folders to be deleted:true or false:comment
-            else if (oneCase.testMethod.Equals("deletefolders")) //id:deletefolders:right or left,number of folders to be deleted:true or false:comment
+            #region deletefolders id;deletefolders;right or left,number of folders to be deleted;true or false;comment
+            else if (oneCase.testMethod.Equals("deletefolders")) //id;deletefolders;right or left,number of folders to be deleted;true or false;comment
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
                 int foldCount = 0;
@@ -534,7 +529,7 @@ namespace OneSyncATD
                 }
             }
             #endregion
-            #region createafolder id:createafolder:fullfolderpath:true or false:comment
+            #region createafolder id;createafolder;fullfolderpath;true or false;comment
             else if (oneCase.testMethod.Equals("createafolder"))
             {
                 Directory.CreateDirectory(oneCase.testParameters);
@@ -549,8 +544,8 @@ namespace OneSyncATD
                 }
             }
             #endregion
-            #region generateafile id:generateafile:fullfilepath,filesize:true or false:comment
-            else if (oneCase.testMethod.Equals("generateafile")) //id:generateafile:right or left,filename.ext,filesize:true or false:comment
+            #region generateafile id;generateafile;fullfilepath,filesize;true or false;comment
+            else if (oneCase.testMethod.Equals("generateafile")) //id;generateafile;right or left,filename.ext,filesize;true or false;comment
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
                 String fileName = comParameters[0];
@@ -570,8 +565,8 @@ namespace OneSyncATD
                 }
             }
             #endregion
-            #region updateafiledate id:updateafiledate:fullfilepath,modifieddate(YYYY/MM/DD):true or false:comment
-            else if (oneCase.testMethod.Equals("updateafiledate"))//id:updateafiledate:fullfilepath,modifieddate(YYYY/MM/DD):true or false:comment
+            #region updateafiledate id;updateafiledate;fullfilepath,modifieddate(YYYY/MM/DD);true or false;comment
+            else if (oneCase.testMethod.Equals("updateafiledate"))//id;updateafiledate;fullfilepath,modifieddate(YYYY/MM/DD);true or false;comment
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
                 String fileName = comParameters[0];
@@ -580,7 +575,7 @@ namespace OneSyncATD
                 oneCase.testActual = "true";
             }
             #endregion
-            #region modifyafile id:modifyafile:fullfilepath:true or false:comment
+            #region modifyafile id;modifyafile;fullfilepath;true or false;comment
             else if (oneCase.testMethod.Equals("modifyafile"))
             {
                 StreamWriter streamWriter = File.AppendText(oneCase.testParameters);
@@ -589,7 +584,7 @@ namespace OneSyncATD
                 oneCase.testActual = "true";
             }
             #endregion
-            #region renameafile id:renameafile:fullfilepath,newfullfilepath:true or false:comment
+            #region renameafile id;renameafile;fullfilepath,newfullfilepath;true or false;comment
             else if (oneCase.testMethod.Equals("renameafile"))
             {
                 String[] comParameters = oneCase.testParameters.Split(',');
@@ -605,7 +600,7 @@ namespace OneSyncATD
                 }
             }
             #endregion
-            #region deleteafile id:deleteafile:fullfilepath:true or false:comment
+            #region deleteafile id;deleteafile;fullfilepath;true or false;comment
             else if (oneCase.testMethod.Equals("deleteafile"))
             {
                 File.Delete(oneCase.testParameters);
