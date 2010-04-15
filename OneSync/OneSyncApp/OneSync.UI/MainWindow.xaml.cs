@@ -48,7 +48,7 @@ namespace OneSync.UI
             Process[] processes = Process.GetProcessesByName(RunningProcess);
             if (processes.Length > 1)
             {
-                MessageBox.Show("OneSync is already running. There should be only one instance of OneSync all the time.", "OneSync -- One Instant Only", MessageBoxButton.OK, MessageBoxImage.Stop);
+                MessageBox.Show("OneSync is already running. There should be only one instance of OneSync all the time.", "OneSync -- One Instance Only", MessageBoxButton.OK, MessageBoxImage.Stop);
                 Application.Current.Shutdown();
             }
 
@@ -256,8 +256,11 @@ namespace OneSync.UI
             //Create new sync job if all three inputs mentioned above are valid.
             try
             {
-                if (!Validator.SyncJobParamsValidated(syncJobName, syncSourceDir, intStorageDir))
+                if (!Validator.SyncJobParamsValidated(syncJobName, syncSourceDir, intStorageDir, jobManager.LoadAllJobs()))
+                {
+                    showErrorMsg("Please check your inputs");
                     return;
+                }
 
                 SyncJob job = jobManager.CreateSyncJob(syncJobName, syncSourceDir, intStorageDir);
                 UISyncJobEntry entry = new UISyncJobEntry(job) { IsSelected = true };
@@ -385,7 +388,17 @@ namespace OneSync.UI
             entry.SyncJob.SyncSource.Path = entry.NewSyncSource;
            try
            {
-               Validator.SyncJobParamsValidated(entry.NewJobName, entry.NewSyncSource, entry.NewIntermediaryStoragePath);
+               if (Validator.SyncJobParamsValidated(entry.NewJobName, entry.NewSyncSource, entry.NewIntermediaryStoragePath, jobManager.LoadAllJobs())) 
+               {
+                   this.Dispatcher.Invoke((Action)delegate
+                   {
+                       entry.SyncJob.Name = oldSyncJobName;
+                       entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
+                       entry.SyncJob.SyncSource.Path = oldSyncSource;
+                       entry.InfoChanged();
+                       showErrorMsg("Please check your inputs");
+                   });
+               }
                if (!Validator.IntermediaryMovable (entry.IntermediaryStoragePath, entry.SyncJob.SyncSource.ID))
                    throw new SyncJobException("Metadata file doesn't contain source " + oldSyncSource);
 
@@ -932,7 +945,7 @@ namespace OneSync.UI
             
             try
             {
-                if (Validator.SyncJobParamsValidated(entry.NewJobName, entry.NewSyncSource, entry.NewIntermediaryStoragePath))
+                if (Validator.SyncJobParamsValidated(entry.NewJobName, entry.NewSyncSource, entry.NewIntermediaryStoragePath, jobManager.LoadAllJobs()))
                 {
                     BackgroundWorker editJobWorker = new BackgroundWorker();
                     editJobWorker.DoWork += new DoWorkEventHandler(editJobWorker_DoWork);
@@ -943,6 +956,7 @@ namespace OneSync.UI
                 }
                 else
                 {
+                    showErrorMsg("Please check your inputs");
                     entry.EditMode = false;
                     SetControlsEnabledState(false, true);
                 }
