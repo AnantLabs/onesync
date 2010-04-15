@@ -1,9 +1,9 @@
-#summary FAQ of OneSync
 #labels Featured
+#OneSync FAQ
 
 ==What is _OneSync_?==
 
-*_OneSync_* is a synchronization tool which makes use of portable and free online storage such as [http://wiki.dropbox.com/Dropbox] and effectively utilizes disk space to synchronize files/folders between computers.
+*_OneSync_* is a synchronization tool which makes effective use of portable and free online storage such as [http://wiki.dropbox.com/Dropbox] to synchronize files/folders between computers.
 
 ==Is _OneSync_ easy to use?==
 
@@ -11,7 +11,7 @@
 
 ==Is *_OneSync_* free?==
 
-Of course, *_OneSync_* is free for all. Also, Dropbox account is also free. You can get 2GB online storage for a free Dropbox account.
+Of course, *_OneSync_* is free for all as is the Dropbox account. You can get free 2GB online storage once you sign up for a Dropbox account.
 
 ==*_OneSync_* is very interesting. What are the requirements for *_OneSync_*?==
 
@@ -22,7 +22,7 @@ You can get your Dropbox application and account from [http://www.dropbox.com Dr
 
 ==Well, how do I know that *_OneSync_* is suitable for me?==
 
-If you are a Dropbox user, *_OneSync_* is 100% suitable for you. *_OneSync_* can be an add-on for Dropbox to enhance online sync experience. Don't worry if you are a normal user. *_OneSync_* provides portable media storage synchronization too. 
+If you are a Dropbox user, *_OneSync_* is 100% suitable for you. *_OneSync_* can be an add-on for Dropbox to enhance online sync experience. Don't worry if you are a normal user. *_OneSync_* provides portable media storage synchronization as well. 
 
 ==I have some more questions for *_OneSync_*. Who can I ask for?==
 
