@@ -166,26 +166,26 @@ For example, suppose you are working on two folders on different PCs and keep th
 In order to make sure that OneSync is working properly, you should not perform the following actions in OneSync.
  * Delete or modify the data.md file. (It will cause damage to the sync process and the user has to create a new sync job again).
  * Delete or modify content in the "files" folder located inside intermediary storage folder.(It will lead to data loss and corruption). 
- * Delete or move the intermediate storage or source folder to another directory.
+ * Delete or move the intermediate storage or source folder manually to another directory.
  * Unplug thumb drive while the sync process is ongoing. (It will lead to an incomplete sync process and may cause damage to data.md file).
  * Repeat the sync process before Dropbox finishes synchronizing with its server. (It causes data loss and leads to an incomplete sync. It is suggested to continue next sync after Dropbox completes uploading and downloading files).
  * Open any file in source folder or intermediary folder while the sync process is ongoing. (It may cause data loss).     
 
-If you have accidentally deleted the intermediate storage folder or accidentally edited/deleted the data.md file, you should delete the profile which is associated with the intermediate storage folder in OneSync under Sync Job Management.
+If you have accidentally deleted the intermediate storage folder or accidentally edited/deleted the data.md file, you should delete the sync job which is associated with the intermediate storage folder.
 
 
 ==Error Messages==
 
 Sometimes, you will see an error message displayed at the top of the window. It is highly possible that the error message is due to one of these problems:
  * You create a new job name having the same name as one of the existing sync jobs (Just choose a new name that you have not used before).
- * There are two and only two job profiles that are allowed to have the same intermediary storage if you are doing local sync. One job profile on two different PCs which has the same intermediary storage are advised to do online sync or using USB drive to sync. (It is  recommended not to use the same intermediate storage for another sync job again).
- * The data.md file is missing or corrupted. The data.md file may be accidentally deleted or modified. It is also possible that an incomplete sync process damages data.md file.   (Please delete the job profile and create the job profile again).
+ * There are two and only two sync jobs that are allowed to have the same intermediary storage if you are doing local sync. One job on two different PCs which has the same intermediary storage are advised to do online sync or using USB drive to sync. (It is  recommended not to use the same intermediate storage for another sync job again).
+ * The data.md file is missing or corrupted. The data.md file may be accidentally deleted or modified. It is also possible that an incomplete sync process has caused damage to data.md file. (Please delete the job and create another sync job again).
  * The data.md file is not updated because of the disk input/output problem (Please try running the program again).
- * The inputs folders (source folder or intermediary folder)are incorrect.You may choose a intermediary folder and its sub folders to be the source folder or vice verse (It is not permitted to do so). 
- * The source folder is removed or not in the directory. (It is advised to restore the original source folder in the same directory or delete the old profile and create a new one).
- * The intermediary folder is removed or content inside is modified. It may cause data loss and metadata file not found error. (The user is not supposed to do modification on the intermediary folder. However, the user is allowed to choose a new folder as the intermediary folder). 
- * Sync process terminates unexpectedly. (The user can restart the sync process, if the metadata file is safely saved. If it is corrupted, it is advised to create a new job profile).   
- * A problem the CodeDroids members do not even spot (Please tell us).
+ * The inputs folders (source folder or intermediary folder)are incorrect. You may choose an intermediary folder and its sub folders to be the source folder or vice verse (It is not permitted to do so). 
+ * The source folder is removed or not in the directory. (It is advised to restore the original source folder in the same directory or delete the old sync job and create a new one).
+ * The intermediary folder is removed or the content inside is modified. It may cause data loss and metadata-file-not-found error. (The user is not supposed to do any modification in the intermediary folder. However, the user is allowed to choose a new folder as the intermediary folder). 
+ * Sync process terminates unexpectedly. (The user can restart the sync process, if the metadata file is correctly saved. If it is corrupted, it is advised to create a new sync job).   
+ * A problem the CodeDroids members has not even spotted (Please tell us).
 
 
 ==Contact Us==
