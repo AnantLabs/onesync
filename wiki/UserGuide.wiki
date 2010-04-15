@@ -163,14 +163,13 @@ For example, suppose you are working on two folders on different PCs and keep th
 
 ==What You Should Not Do==
 
-In order to make sure that OneSync is working properly, you should not perform the following actions in the OneSync.
- * Delete or modify the data.md file. (It damages the sync process. And the user has to 
-create a new job profile again).
- * Delete or modify content in the "files" folder located at intermediary storage.(It leads to data loss and data corruption). 
- * Delete or move the intermediate storage or source folder to other directory.
- * Unplug thumb drive during sync process is ongoing. (It leads to an incomplete sync process and may damage data.md file).
- * Repeat the sync process before Drop box finishes updating changes. (It causes data loss and leads to an incomplete sync. It is a good behavior to continue next sync after Drop box completes uploading and downing files).
- * Open any file in source folder or intermediary folder, during sync process is ongoing. (It may cause data loss.)     
+In order to make sure that OneSync is working properly, you should not perform the following actions in OneSync.
+ * Delete or modify the data.md file. (It will cause damage to the sync process and the user has to create a new sync job again).
+ * Delete or modify content in the "files" folder located inside intermediary storage folder.(It will lead to data loss and corruption). 
+ * Delete or move the intermediate storage or source folder to another directory.
+ * Unplug thumb drive while the sync process is ongoing. (It will lead to an incomplete sync process and may cause damage to data.md file).
+ * Repeat the sync process before Dropbox finishes synchronizing with its server. (It causes data loss and leads to an incomplete sync. It is suggested to continue next sync after Dropbox completes uploading and downloading files).
+ * Open any file in source folder or intermediary folder while the sync process is ongoing. (It may cause data loss).     
 
 If you have accidentally deleted the intermediate storage folder or accidentally edited/deleted the data.md file, you should delete the profile which is associated with the intermediate storage folder in OneSync under Sync Job Management.
 
