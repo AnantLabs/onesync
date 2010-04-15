@@ -70,11 +70,11 @@ namespace OneSync.Files
             if (IsFileReadOnly(absolutePath) && forceToDelete && File.Exists(absolutePath))
             {
              */
-            var fileInfo = new FileInfo(absolutePath);
-            if (forceToDelete) fileInfo.IsReadOnly = !forceToDelete;
 
             try
             {
+                var fileInfo = new FileInfo(absolutePath);
+                if (forceToDelete && fileInfo.IsReadOnly) fileInfo.IsReadOnly = !forceToDelete;
                 File.Delete(absolutePath);
                 return true;
             }
@@ -398,7 +398,11 @@ namespace OneSync.Files
             foreach (FileInfo info in fileInfos)
             {
                 string absolutePathInDestination = info.FullName.Replace(sourceDir, destinationDir);
-                try{ Copy(info.FullName, absolutePathInDestination, false);}
+                try
+                {
+                    Copy(info.FullName, absolutePathInDestination, false);
+                    Delete(info.FullName, true);
+                }
                 catch (OutOfDiskSpaceException){throw;}
                 catch (Exception){succeeded = false;}
             }

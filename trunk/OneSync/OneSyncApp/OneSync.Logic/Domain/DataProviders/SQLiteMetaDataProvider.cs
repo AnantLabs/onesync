@@ -462,7 +462,7 @@ namespace OneSync.Synchronization
             IEnumerable<FolderMetadataItem> newOnly =
                 newMetadata.FolderMetadataItems.Where(
                     @new => !oldMetadata.FolderMetadataItems.Contains(@new, new FolderMetadataItemComparer())
-                && (storeOnlyEmptyFolder & Files.FileUtils.IsDirectoryEmpty(@new.AbsolutePath))
+                && (storeOnlyEmptyFolder?Files.FileUtils.IsDirectoryEmpty(@new.AbsolutePath):true)
                     );
 
             //find metadata items that not in the current folder but metadata store
