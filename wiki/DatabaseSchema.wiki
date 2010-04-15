@@ -2,16 +2,22 @@
 
 = Database Schema =
 
-== `SyncSource_Info` Table ==
-  * `source_id`: Foreign key. Globally Unique Identifier (GUID)
-  * `absolute_path`: To be concatenated with `relative_path` column of the Metadata table to obtain the full absolute path of the file.
+[https://onesync.googlecode.com/svn/wiki/images/schema.png]
+
+== `Syncjob_table`==
+  * `syncjob_id`: Globally Unique Identifier (GUID)
+  * `profile_name`: Unique !SyncJob name
+  * `metadata_source_location`: Absolute path to intermediary storage
+  * `source_info_id`: Foreign key to reference a SyncSource
+
+== `Datasource_info_table` ==
+  * `source_id`: Globally Unique Identifier (GUID) of the SyncSource
+  * `source_absolute_path`: Absolute path of SyncSource
 
 Note that the !SyncSource is identified by its id and not its relative path. This is so as to allow multiple !SyncJob to be created for any particular directory.
 
-== `SyncJob` Table ==
-  * `pid`: Globally Unique Identifier (GUID)
-  * `pname`: Unique !SyncJob name
-  * `intermediate_storage_path`: Absolute path to intermediary storage
-  * `source_info`: Foreign key. The column `pname` is unique as well
+== `Metadata_table` ==
+This is the table containing the filesystem metadata. The table will contain at most the the metadata of 2 !SyncSource. The `source_id` column is to distinguish which entry belongs to which !SyncSource.
 
-== `Metadata` Table ==
+== `Action_table` ==
+The `action_id` is an auto-incremented column. Columns prefixed with `old` is to support rename actions. `change_in` column is used to determined in which !SyncSource should the action be executed.
