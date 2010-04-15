@@ -163,23 +163,23 @@ For example, suppose you are working on two folders on different PCs and keep th
 
 ==What You Should Not Do==
 
-In order to make sure that OneSync is working, you should not perform the following actions in the OneSync.
+In order to make sure that OneSync is working properly, you should not perform the following actions in the OneSync.
  * Delete the data.md file.
  * Delete the intermediate storage.
 
-If you accidentally delete the intermediate storage folder or accidentally edit/delete the data.md, then you should delete the profile which is associated to the intermediate storage folder in OneSync under Sync Job Management.
+If you have accidentally deleted the intermediate storage folder or accidentally edit/delete the data.md file, you should delete the profile which is associated with the intermediate storage folder in OneSync under Sync Job Management.
 
 
 ==Error Messages==
 
-Sometimes, you will see an error message displayed on the top of the window. It is highly possible that due to one of these problems:
+Sometimes, you will see an error message displayed at the top of the window. It is highly possible that the error message is due to one of these problems:
  * You create a new job name having the same name as one of the existing sync jobs (Just choose a new name that you have not used before).
- * There are more than one profile which have the same intermediate storage (Do not use back the same intermediate storage for different profile).
+ * There are more than one profile that has the same intermediate storage (Do not use the same intermediate storage for a different profile again).
  * The data.md file is missing (Please uninstall and re-install).
- * The data.md file is not updated because of the IO problem (Please try run the program later).
- * A problem that the CodeDroids members do not even know (Please tell us).
+ * The data.md file is not updated because of the disk input/output problem (Please try running the program later).
+ * A problem the CodeDroids members do not even know (Please tell us).
 
 
 ==Contact Us==
 
-Tell us how we are doing: Please [mailto:my3215group@googlegroups.com email us] your feedback about your experience to help us improve our product.
+Please [mailto:my3215group@googlegroups.com email us] your feedback about your experience to help us improve our product.
