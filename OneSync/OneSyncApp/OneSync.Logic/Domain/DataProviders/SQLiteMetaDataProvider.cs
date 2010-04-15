@@ -673,7 +673,8 @@ namespace OneSync.Synchronization
                 cmd.ExecuteNonQuery();
 
                 cmd.CommandText = "CREATE TABLE IF NOT EXISTS " + Configuration.TLB_FOLDERMETADATA +
-                    "( " + Configuration.COL_SOURCE_ID + " TEXT, " + Configuration.COL_FOLDER_RELATIVE_PATH + " TEXT )"
+                    "( " + Configuration.COL_SOURCE_ID + " TEXT, " + Configuration.COL_FOLDER_RELATIVE_PATH + " TEXT," + Configuration.COL_IS_FOLDER_EMPTY + ", INT"
+                    + ")"
                     ;
                 cmd.ExecuteNonQuery();
             }

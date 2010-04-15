@@ -250,7 +250,7 @@ namespace OneSync.Synchronization
             {
                 SyncExecutor.DeleteInSyncFolderAndUpdateActionTable((DeleteAction)a, _job);
                 string absolutePath = _job.IntermediaryStorage.DirtyFolderPath + a.RelativeFilePath;
-                //Files.FileUtils.DeleteFileAndFolderIfEmpty(_job.IntermediaryStorage.DirtyFolderPath, absolutePath, true);
+                Files.FileUtils.DeleteFileAndFolderIfEmpty(_job.IntermediaryStorage.DirtyFolderPath, absolutePath, true);
             });
         }
 
