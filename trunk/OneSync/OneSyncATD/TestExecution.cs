@@ -603,15 +603,23 @@ namespace OneSyncATD
             #region deleteafile id;deleteafile;fullfilepath;true or false;comment
             else if (oneCase.testMethod.Equals("deleteafile"))
             {
-                File.Delete(oneCase.testParameters);
-
-                if (File.Exists(oneCase.testParameters))
+                if (!File.Exists(oneCase.testParameters))
                 {
-                    oneCase.testActual = "false, deletion is unsuccessful";
+                    oneCase.testActual = "false";
+                    oneCase.testComment = oneCase.testComment + "//the file doesn't exist//";
                 }
                 else
                 {
-                    oneCase.testActual = "true";
+                    File.Delete(oneCase.testParameters);
+
+                    if (File.Exists(oneCase.testParameters))
+                    {
+                        oneCase.testActual = "false, deletion is unsuccessful";
+                    }
+                    else
+                    {
+                        oneCase.testActual = "true";
+                    }
                 }
             }
             #endregion
