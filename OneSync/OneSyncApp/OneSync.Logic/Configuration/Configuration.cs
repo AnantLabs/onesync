@@ -1,4 +1,5 @@
-﻿/*
+﻿//Coded by Nguyen van Thuat
+/*
  $Id$
  */
 using System;

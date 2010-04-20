@@ -1,4 +1,5 @@
-﻿using System;
+﻿//Coded by Koh Eng Tat Desmond
+using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;

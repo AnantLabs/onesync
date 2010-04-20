@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿//Coded by Nguyen van Thuat
+using System.Collections.Generic;
 using System.Linq;
 
 namespace OneSync.Synchronization

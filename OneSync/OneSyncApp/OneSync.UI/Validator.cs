@@ -1,4 +1,5 @@
-﻿using System;
+﻿//Coded by Goh Chun Lin
+using System;
 using System.IO;
 using System.Security;
 using System.Threading;

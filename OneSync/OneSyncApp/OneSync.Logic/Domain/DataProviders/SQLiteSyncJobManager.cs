@@ -1,4 +1,5 @@
-﻿/*
+﻿//Coded by Nguyen can Thuat
+/*
  $Id: SQLiteSyncJobManager.cs 255 2010-03-17 16:08:53Z gclin009 $
  */
 using System;
