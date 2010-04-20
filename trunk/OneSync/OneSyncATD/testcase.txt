@@ -30,4 +30,20 @@
 5.7;rightsyncfirst;rightjob,leftjob;true;sync from right to left through intermediate
 5.8;generateafile;C:\Users\ZandyJack\Desktop\temp\ATDleft\test.txt,50;true;generate a file in right folder
 5.8;leftsyncfirst;rightjob,leftjob;true;sync from left to right through intermediate
-5.9;clearall;;true;The above are to test synchronization between two right and left folders
+5.9;clearall;;true;The above are to test synchronization between right and left folders
+6.0;createafolder;C:\Users\ZandyJack\Desktop\temp\ATDright\test;true;create a empty folder in right folder
+6.1;generateafile;C:\Users\ZandyJack\Desktop\temp\ATDright\test\933.txt,25014;true;make a file in right folder
+6.2;createsyncjobs;rightjob,leftjob;true;create sync jobs
+6.3;rightsyncfirst;rightjob,leftjob;true;sync from right to left through intermediate
+6.4;renameafile;C:\Users\ZandyJack\Desktop\temp\ATDright\test\933.txt,C:\Users\ZandyJack\Desktop\temp\ATDright\test\test.txt;true;rename a file
+6.5;rightsyncfirst;rightjob,leftjob;true;sync from right to left through intermediate
+6.6;deleteafile;C:\Users\ZandyJack\Desktop\temp\ATDleft\test\933.txt;false;detect whether 933.txt is in left folder
+6.6;clearall;;true;The above are to test whether the renamed file will be synced
+7.0;createafolder;C:\Users\ZandyJack\Desktop\temp\ATDleft\test;true;create a empty folder in right folder
+7.1;generateafile;C:\Users\ZandyJack\Desktop\temp\ATDleft\test\933.txt,25014;true;make a file in right folder
+7.2;createsyncjobs;rightjob,leftjob;true;create sync jobs
+7.3;leftsyncfirst;rightjob,leftjob;true;sync from left to right through intermediate
+7.4;deleteafile;C:\Users\ZandyJack\Desktop\temp\ATDleft\test\933.txt;true;delete a file in left folder
+7.5;leftsyncfirst;rightjob,leftjob;true;sync from left to right through intermediate
+7.6;deleteafile;C:\Users\ZandyJack\Desktop\temp\ATDright\test\933.txt;false;detect whether 933.txt is in right folder
+7.7;clearall;;true;The above are to test detection of deleted file

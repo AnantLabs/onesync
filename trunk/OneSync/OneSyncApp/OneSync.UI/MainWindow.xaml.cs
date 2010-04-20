@@ -1,4 +1,5 @@
-﻿/*
+﻿//Coded by Goh Chun Lin
+/*
  $Id: MainWindow.xaml.cs 287 2010-03-18 02:25:56Z gclin009 $
  */
 using System;
@@ -388,7 +389,7 @@ namespace OneSync.UI
             entry.SyncJob.SyncSource.Path = entry.NewSyncSource;
            try
            {
-               if (Validator.SyncJobParamsValidated(entry.NewJobName, entry.NewSyncSource, entry.NewIntermediaryStoragePath, jobManager.LoadAllJobs())) 
+               if (!Validator.SyncJobParamsValidated(entry.NewJobName, entry.NewSyncSource, entry.NewIntermediaryStoragePath, jobManager.LoadAllJobs())) 
                {
                    this.Dispatcher.Invoke((Action)delegate
                    {

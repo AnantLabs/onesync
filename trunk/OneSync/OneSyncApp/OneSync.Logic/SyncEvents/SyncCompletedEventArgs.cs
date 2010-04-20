@@ -1,4 +1,5 @@
-﻿/*
+﻿//Coded by Nguyen van Thuat
+/*
  $Id: SyncCompletesEventArgs.cs 66 2010-03-10 07:48:55Z gclin009 $
  */
 using System;

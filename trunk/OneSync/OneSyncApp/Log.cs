@@ -1,4 +1,5 @@
-﻿/*
+﻿//Coded by Naing Tayza Htoon
+/*
  $Id$
  */
 using System;

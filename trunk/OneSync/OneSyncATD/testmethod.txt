@@ -1,4 +1,4 @@
-id;createfolders;right or left,unicode or letters or letterssymbols,folderdepth,maxsubdir:true or false:comment
+id;createfolders;right or left,unicode or letters or letterssymbols,folderdepth,maxsubdir;true or false;comment
 id;generatefiles;right or left,unicode or letters or letterssymbols,numberoffiles,fileminsize,filemaxsize;true or false;comment
 id;createsyncjobs;syncjob1,syncjob2;true or false;comment
 id;rightsyncfirst;syncjob1,syncjob2;true or false;comment

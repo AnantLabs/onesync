@@ -1,4 +1,5 @@
-﻿/*
+﻿//Coded by Koh Eng Tat Desmond
+/*
  $Id: Profile.cs 306 2010-03-23 10:34:17Z deskohet $
  */
 using System;

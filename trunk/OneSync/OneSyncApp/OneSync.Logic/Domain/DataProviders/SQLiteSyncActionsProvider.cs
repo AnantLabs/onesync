@@ -1,4 +1,5 @@
-﻿/*
+﻿//Coded by Nguyen can Thuat
+/*
  $Id: SQLiteActionProvider.cs 66 2010-03-10 07:48:55Z gclin009 $
  */
 using System.Collections.Generic;

@@ -1,4 +1,5 @@
-﻿/*
+﻿//Coded by Koh Eng Tat Desmond
+/*
  $Id: SyncAction.cs 90 2010-03-15 05:39:17Z deskohet $
  */
 using System;

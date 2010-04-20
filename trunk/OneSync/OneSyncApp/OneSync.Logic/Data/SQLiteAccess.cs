@@ -1,4 +1,5 @@
-﻿using System;
+﻿//Coded by Nguyen van Thuat
+using System;
 using System.Data;
 using Community.CsharpSqlite.SQLiteClient;
 using System.IO;
