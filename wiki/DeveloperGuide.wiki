@@ -1,4 +1,6 @@
+#summary This developer guide describes how OneSync Version 2.0 works as well as its architecture.
 #labels Featured
+
 === Introduction ===
 
 The purpose of this developer guide is to explain the functionality and design of OneSync. It starts with the 
