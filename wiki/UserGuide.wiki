@@ -188,7 +188,7 @@ Sometimes, you will see an error message displayed at the top of the window. It 
  * The source folder is removed or not in the directory. (The user is advised to restore the original source folder in the same directory or delete the old sync job and create a new one).
  * The intermediary folder is removed or the content inside is modified. It may cause data loss and metadata-file-not-found error. (The user is not supposed to do any modification in the intermediary folder. However, the user is allowed to choose a new folder as the intermediary folder). 
  * Sync process terminates unexpectedly. (The user can restart the sync process, if the metadata file is correctly saved. If it is corrupted, the user is advised to create a new sync job).   
- * A problem the CodeDroids members has not even spotted (Please tell us).
+ * A problem the CodeDroids members have not even spotted (Please tell us).
 
 
 ==Contact Us==
