@@ -12,3 +12,8 @@ OneSync 3 will be released in this summer.
 There will be a Chinese version of OneSync 3 as well. This is because there are a lot of users from China, Taiwan and Malaysia who download OneSync 2.0. They are looking forward to a OneSync which supports Chinese. Hence, in the next version, we promise to deliver both English and Chinese versions of OneSync.
 
 我们即将推出 OneSync 3 的中文版本，以方便中文使用者在使用 OneSync 时得心应手，不再有语言及文字上的困难。OneSync 3 即将在来临的夏日登场。敬请期待。
+
+== Feedback ==
+Please [mailto:my3215group@googlegroups.com email us] your feedback about your experience to help us improve our product.
+
+如果对 OneSync 有任何看法或意见，请[mailto:my3215group@googlegroups.com 电邮我们]。
