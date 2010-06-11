@@ -887,11 +887,11 @@ namespace OneSync.UI
         public void LoadSyncJobs()
         {
             string syncSourceDir = txtSource.Text.Trim();
-                IList<SyncJob> jobs = jobManager.LoadAllJobs();
-                sortJobs(jobs);
+            IList<SyncJob> jobs = jobManager.LoadAllJobs();
+            sortJobs(jobs);
 
-                foreach (SyncJob job in jobs)
-                    SyncJobEntries.Add(new UISyncJobEntry(job));
+            foreach (SyncJob job in jobs)
+                SyncJobEntries.Add(new UISyncJobEntry(job));
             
         }
 
@@ -1147,6 +1147,40 @@ namespace OneSync.UI
           		Process.Start(STARTUP_PATH + @"\OneSync.chm");
 			else
 				showErrorMsg("The offline help file is not available");
+        }
+
+        private void showPartialSyncJobsCheckBox_Checked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            String selectedSyncSource = txtSource.Text.Trim();
+
+            List<UISyncJobEntry> tempSyncJobEntries = new List<UISyncJobEntry>();
+
+            foreach (UISyncJobEntry entry in SyncJobEntries) 
+            {
+                if (entry.SyncSource.Equals(selectedSyncSource))
+                {
+                    tempSyncJobEntries.Add(entry);
+                }
+            }
+
+            SyncJobEntries.Clear();
+
+            foreach (UISyncJobEntry entry in tempSyncJobEntries)
+            {
+                if (entry.SyncSource.Equals(selectedSyncSource))
+                {
+                    SyncJobEntries.Add(entry);
+                }
+            }
+
+            txtSource.SelectedIndex = 0;
+        }
+
+        private void showPartialSyncJobsCheckBox_Unchecked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            SyncJobEntries.Clear();
+            
+            LoadSyncJobs();
         }
 
 	}
