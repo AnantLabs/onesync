@@ -90,6 +90,20 @@ namespace OneSync.UI
             // Set-up data bindings
             listAllSyncJobs.ItemsSource = this.SyncJobEntries;
             LoadSyncJobs();
+
+            //Check for latest update.
+            //MessageBox.Show(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            ProgramUpdateChecker updateChecker = new ProgramUpdateChecker();
+            string updateURL = updateChecker.GetNewVersion();
+            if (!string.IsNullOrEmpty(updateURL)) 
+            {
+                MessageBoxResult gettingNewVersion = MessageBox.Show(
+                        "There is a new version of OneSync available. Do you want to download it now?", "New Version Of OneSync Available",
+                            MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                if (gettingNewVersion == MessageBoxResult.Yes)
+                    Process.Start(updateURL);
+            }
         }
 
         private void dropboxStatusChecking()
