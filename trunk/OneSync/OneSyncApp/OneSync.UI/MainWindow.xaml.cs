@@ -51,31 +51,31 @@ namespace OneSync.UI
 		{
             this.InitializeComponent();
 
-            //Make sure that there is only one OneSync application running for all the time.
             string RunningProcess = Process.GetCurrentProcess().ProcessName;
             Process[] processes = Process.GetProcessesByName(RunningProcess);
+
+            RegistryKey installed_versions = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\NET Framework Setup\NDP");
+            string[] version_names = installed_versions.GetSubKeyNames();
+            //version names start with 'v', eg, 'v3.5' which needs to be trimmed off before conversion
+            double Framework = Convert.ToDouble(version_names[version_names.Length - 1].Remove(0, 1));
+            int SP = Convert.ToInt32(installed_versions.OpenSubKey(version_names[version_names.Length - 1]).GetValue("SP", 0));
+
             if (processes.Length > 1)
-            {
+            {   
+                //Make sure that there is only one OneSync application running for all the time.
                 MessageBox.Show("OneSync is already running. There should be only one instance of OneSync all the time.", "OneSync -- One Instance Only", MessageBoxButton.OK, MessageBoxImage.Stop);
                 Application.Current.Shutdown();
             }
-            else 
+            else if (Framework < 3.5 || (Framework == 3.5 && SP < 1))
             {
                 //Check for the .NET Framework requirement.
                 //Requirement is .NET 3.5 SP1 or later.
-                RegistryKey installed_versions = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\NET Framework Setup\NDP");
-                string[] version_names = installed_versions.GetSubKeyNames();
-                //version names start with 'v', eg, 'v3.5' which needs to be trimmed off before conversion
-                double Framework = Convert.ToDouble(version_names[version_names.Length - 1].Remove(0, 1));
-                int SP = Convert.ToInt32(installed_versions.OpenSubKey(version_names[version_names.Length - 1]).GetValue("SP", 0));
-
-                if(!(Framework < 3.5 || (Framework == 3.5 && SP < 1)))
-                {
-                    DotNetFrameworkErrorWindow dotNetFrameworkErrorWindow = new DotNetFrameworkErrorWindow();
-                    dotNetFrameworkErrorWindow.Show();
-                    Application.Current.Shutdown();
-                }
-
+                DotNetFrameworkErrorWindow dotNetFrameworkErrorWindow = new DotNetFrameworkErrorWindow();
+                dotNetFrameworkErrorWindow.Show();
+                this.Hide();
+            }
+            else 
+            {
                 trayNotifyIcon = new System.Windows.Forms.NotifyIcon();
                 trayNotifyIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
                 trayNotifyIcon.Text = "OneSync";
@@ -101,58 +101,58 @@ namespace OneSync.UI
                 ctxTrayMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { mnuRunProgram, mnuHelp, mnuExit });
 
                 trayNotifyIcon.ContextMenuStrip = ctxTrayMenu;
-            }
 
-            // Get current synchronization directory from command line arguments.
-            // Default sync directory is current directory of app.
-            string[] args = System.Environment.GetCommandLineArgs();
+                // Get current synchronization directory from command line arguments.
+                // Default sync directory is current directory of app.
+                string[] args = System.Environment.GetCommandLineArgs();
 
-            jobManager = SyncClient.GetSyncJobManager(STARTUP_PATH);
+                jobManager = SyncClient.GetSyncJobManager(STARTUP_PATH);
 
-            if (args.Length > 1 && Validator.validateDirPath(args[1]) == null)
-            {
-                txtSyncJobName.Text = System.IO.Path.GetFileName(args[1]);
-                txtSource.Text = args[1];
-                txtSource.Focus();
-            }
+                if (args.Length > 1 && Validator.validateDirPath(args[1]) == null)
+                {
+                    txtSyncJobName.Text = System.IO.Path.GetFileName(args[1]);
+                    txtSource.Text = args[1];
+                    txtSource.Focus();
+                }
 
-            // Tag each browse button to corr TextBox
-            btnBrowse_Source.Tag = txtSource;
-            btnBrowse.Tag = txtIntStorage;
+                // Tag each browse button to corr TextBox
+                btnBrowse_Source.Tag = txtSource;
+                btnBrowse.Tag = txtIntStorage;
 
-            // Initialize syncWorker 
-            syncWorker = new BackgroundWorker();
-            syncWorker.WorkerSupportsCancellation = true;
-            syncWorker.DoWork += new DoWorkEventHandler(syncWorker_DoWork);
-            syncWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(syncWorker_RunWorkerCompleted);
+                // Initialize syncWorker 
+                syncWorker = new BackgroundWorker();
+                syncWorker.WorkerSupportsCancellation = true;
+                syncWorker.DoWork += new DoWorkEventHandler(syncWorker_DoWork);
+                syncWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(syncWorker_RunWorkerCompleted);
 
-            // Configure the timer to check the Dropbox status
-            timerDropbox = new DispatcherTimer();
-            timerDropbox.Tick += new EventHandler((sender, e) => dropboxStatusChecking());
-            timerDropbox.Interval = TimeSpan.FromMilliseconds(1000);
+                // Configure the timer to check the Dropbox status
+                timerDropbox = new DispatcherTimer();
+                timerDropbox.Tick += new EventHandler((sender, e) => dropboxStatusChecking());
+                timerDropbox.Interval = TimeSpan.FromMilliseconds(1000);
 
-            _SyncJobEntries.CollectionChanged += (sender, e) => refreshCombobox();
-			
-			// Do not show the help button if the help file is not there
-			if (!File.Exists(STARTUP_PATH + @"\OneSync.chm"))
-               	btnHelp.Visibility = Visibility.Hidden;
+                _SyncJobEntries.CollectionChanged += (sender, e) => refreshCombobox();
 
-            // Set-up data bindings
-            listAllSyncJobs.ItemsSource = this.SyncJobEntries;
-            LoadSyncJobs();
+                // Do not show the help button if the help file is not there
+                if (!File.Exists(STARTUP_PATH + @"\OneSync.chm"))
+                    btnHelp.Visibility = Visibility.Hidden;
 
-            //Check for latest update.
-            //MessageBox.Show(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
-            ProgramUpdateChecker updateChecker = new ProgramUpdateChecker();
-            string updateURL = updateChecker.GetNewVersion();
-            if (!string.IsNullOrEmpty(updateURL)) 
-            {
-                MessageBoxResult gettingNewVersion = MessageBox.Show(
-                        "There is a new version of OneSync available. Do you want to download it now?", "New Version Of OneSync Available",
-                            MessageBoxButton.YesNo, MessageBoxImage.Question);
+                // Set-up data bindings
+                listAllSyncJobs.ItemsSource = this.SyncJobEntries;
+                LoadSyncJobs();
 
-                if (gettingNewVersion == MessageBoxResult.Yes)
-                    Process.Start(updateURL);
+                //Check for latest update.
+                //MessageBox.Show(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
+                ProgramUpdateChecker updateChecker = new ProgramUpdateChecker();
+                string updateURL = updateChecker.GetNewVersion();
+                if (!string.IsNullOrEmpty(updateURL))
+                {
+                    MessageBoxResult gettingNewVersion = MessageBox.Show(
+                            "There is a new version of OneSync available. Do you want to download it now?", "New Version Of OneSync Available",
+                                MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                    if (gettingNewVersion == MessageBoxResult.Yes)
+                        Process.Start(updateURL);
+                }
             }
         }
 
