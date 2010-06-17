@@ -35,8 +35,15 @@ namespace OneSync
 		private void lblDownloadLink_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
             Process.Start(dotNetFrameworkInfo[1]);
-            //Close OneSync
+            //Close OneSync using brute force because there is a hidden window (the main window) running.
             Process.GetCurrentProcess().Kill();
+		}
+
+		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			e.Cancel = true;
+			//Close OneSync using brute force because there is a hidden window (the main window) running.
+			Process.GetCurrentProcess().Kill();
 		}
 	}
 }
