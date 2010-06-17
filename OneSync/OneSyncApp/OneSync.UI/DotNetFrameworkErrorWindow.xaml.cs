@@ -35,6 +35,8 @@ namespace OneSync
 		private void lblDownloadLink_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
             Process.Start(dotNetFrameworkInfo[1]);
+            //Close OneSync
+            Process.GetCurrentProcess().Kill();
 		}
 	}
 }
