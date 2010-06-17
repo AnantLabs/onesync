@@ -154,22 +154,20 @@
     <Compile Include="OneSync.Logic\SyncEvents\SyncCancelledEventArgs.cs" />
     <Compile Include="OneSync.Logic\SyncEvents\SyncCompletedEventArgs.cs" />
     <Compile Include="OneSync.Logic\SyncEvents\SyncProgressChangedEventArgs.cs" />
+    <Compile Include="OneSync.UI\DotNetFrameworkErrorWindow.xaml.cs">
+      <DependentUpon>DotNetFrameworkErrorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="OneSync.UI\Interop\CoreErrorHelper.cs" />
     <Compile Include="OneSync.UI\Interop\TaskbarCOMInterface.cs" />
     <Compile Include="OneSync.UI\Interop\TaskbarManager.cs" />
     <Compile Include="OneSync.UI\Interop\TaskbarNativeMethods.cs" />
+    <Compile Include="OneSync.UI\ProgramUpdateChecker.cs" />
     <Compile Include="OneSync.UI\SyncActionsListView.xaml.cs">
       <DependentUpon>SyncActionsListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="OneSync.UI\UISyncJob.cs" />
     <Compile Include="OneSync.UI\WinSyncPreview.xaml.cs">
       <DependentUpon>WinSyncPreview.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="OneSyncInstaller.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="OneSyncInstaller.Designer.cs">
-      <DependentUpon>OneSyncInstaller.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OneSync.UI\MainWindow.xaml.cs">
@@ -186,6 +184,10 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Page Include="OneSync.UI\DotNetFrameworkErrorWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="OneSync.UI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -198,7 +200,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <AppDesigner Include="Properties\" />
     <None Include="app.config" />
     <None Include="Application.ico">
       <Visible>false</Visible>
@@ -213,6 +214,7 @@
     <Content Include="OneSync.Lib\Community.CsharpSqlite.dll" />
     <Content Include="OneSync.Lib\Community.CsharpSqlite.SQLiteClient.dll" />
     <Content Include="OneSync.Lib\FSync.Files.dll" />
+    <Resource Include="OneSync.UI\Resource\Application.ico" />
     <Resource Include="OneSync.UI\Resource\OneSyncHelp.png" />
     <Resource Include="OneSync.UI\Resource\save.png" />
     <Resource Include="OneSync.UI\Resource\delete.png" />

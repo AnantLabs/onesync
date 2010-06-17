@@ -50,5 +50,29 @@ namespace OneSync.UI
             else
                 return ""; // Unable to find any updates
         }
+
+        /// <summary>
+        /// Retrieves the required version of .NET Framework to make sure OneSync can run successfully.
+        /// </summary>
+        /// <returns>Returns an array containing the name of the .NET Framework and its download link.</returns>
+        public string[] GetRequiredDotNetInfo()
+        {
+            WebRequest request = WebRequest.Create(XmlUrl);
+            request.Timeout = 3000;
+            WebResponse response = request.GetResponse();
+            Stream responseStream = response.GetResponseStream();
+
+            String[] requiredDotNetInfo = new string[2];
+            XmlDocument xDoc = new XmlDocument();
+
+            xDoc.Load(new XmlTextReader(XmlUrl));
+            requiredDotNetInfo[0] = xDoc.GetElementsByTagName("suitable_dot_net_framework")[0].InnerText;
+            requiredDotNetInfo[1] = xDoc.GetElementsByTagName("url_dot_net_framework")[0].InnerText;
+
+            if (string.IsNullOrEmpty(requiredDotNetInfo[0]) || string.IsNullOrEmpty(requiredDotNetInfo[1]))
+                return null;
+
+            return requiredDotNetInfo;
+        }
     }
 }
