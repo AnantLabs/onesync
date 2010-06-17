@@ -17,6 +17,7 @@ using System.Windows.Threading;
 using Community.CsharpSqlite.SQLiteClient;
 using OneSync.Files;
 using OneSync.Synchronization;
+using Microsoft.Win32;
 
 namespace OneSync.UI
 {
@@ -29,6 +30,12 @@ namespace OneSync.UI
         private SyncJobManager jobManager;
         private BackgroundWorker syncWorker;
         private UISyncJobEntry currentJobEntry;
+
+        private System.Windows.Forms.NotifyIcon trayNotifyIcon;
+        private System.Windows.Forms.ContextMenuStrip ctxTrayMenu;
+        private System.Windows.Forms.ToolStripMenuItem mnuRunProgram;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelp;
+        private System.Windows.Forms.ToolStripMenuItem mnuExit;
 
         TextBox editTextBox;
 
@@ -51,6 +58,47 @@ namespace OneSync.UI
             {
                 MessageBox.Show("OneSync is already running. There should be only one instance of OneSync all the time.", "OneSync -- One Instance Only", MessageBoxButton.OK, MessageBoxImage.Stop);
                 Application.Current.Shutdown();
+            }
+            else 
+            {
+                //Check for the .NET Framework requirement.
+                //Requirement is .NET 3.5 SP1 or later.
+                RegistryKey installed_versions = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\NET Framework Setup\NDP");
+                string[] version_names = installed_versions.GetSubKeyNames();
+                //version names start with 'v', eg, 'v3.5' which needs to be trimmed off before conversion
+                double Framework = Convert.ToDouble(version_names[version_names.Length - 1].Remove(0, 1));
+                int SP = Convert.ToInt32(installed_versions.OpenSubKey(version_names[version_names.Length - 1]).GetValue("SP", 0));
+
+                if(Framework < 3.5 || (Framework == 3.5 && SP < 1))
+                {
+                    Application.Current.Shutdown();
+                }
+
+                trayNotifyIcon = new System.Windows.Forms.NotifyIcon();
+                trayNotifyIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
+                trayNotifyIcon.Text = "OneSync";
+                trayNotifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(trayNotifyIcon_MouseDoubleClick);
+                trayNotifyIcon.Visible = true;
+                
+                //For Run Program context menu item
+                mnuRunProgram = new System.Windows.Forms.ToolStripMenuItem("Open OneSync 3");
+                mnuRunProgram.Click += new EventHandler(mnuRunProgram_Click);
+
+                //For Help context menu item
+                mnuHelp = new System.Windows.Forms.ToolStripMenuItem("Help (User Manual)");
+                mnuHelp.Click += new EventHandler(mnuHelp_Click);
+
+                //For Exit context menu item
+                mnuExit = new System.Windows.Forms.ToolStripMenuItem();
+                mnuExit.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                //mnuExit.Size = new System.Drawing.Size(117, 22);
+                mnuExit.Text = "Exit";
+                mnuExit.Click += new EventHandler(mnuExit_Click);
+
+                ctxTrayMenu = new System.Windows.Forms.ContextMenuStrip();
+                ctxTrayMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { mnuRunProgram, mnuHelp, mnuExit });
+
+                trayNotifyIcon.ContextMenuStrip = ctxTrayMenu;
             }
 
             // Get current synchronization directory from command line arguments.
@@ -612,15 +660,54 @@ namespace OneSync.UI
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (trayNotifyIcon != null)
+            {
+                e.Cancel = true;
+
+                this.Hide();
+
+                trayNotifyIcon.ShowBalloonTip(3000, "OneSync is still running.",
+                    "Double click the icon to show the program window.", System.Windows.Forms.ToolTipIcon.Info);
+            }
+        }
+
+        void mnuRunProgram_Click(object sender, EventArgs e)
+        {
+            this.Show();
+        }
+
+        void mnuHelp_Click(object sender, EventArgs e)
+        {
+            if (File.Exists(STARTUP_PATH + @"\OneSync.chm"))
+                Process.Start(STARTUP_PATH + @"\OneSync.chm");
+            else
+                MessageBox.Show("The offline help file is not available.", "OneSync -- Offline Help File Not Found", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        void mnuExit_Click(object sender, EventArgs e)
+        {
             if (syncWorker.IsBusy)
             {
                 MessageBoxResult result = MessageBox.Show(
                     "Are you sure you want to close the program now? The synchronization is still ongoing.",
                     "Goodbye OneSync", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-                e.Cancel = (result == MessageBoxResult.No);
+                if (result == MessageBoxResult.Yes)
+                {
+                    saveJobsOrder();
+                    Process.GetCurrentProcess().Kill();
+                }
             }
-            if (!e.Cancel) saveJobsOrder();
+            else 
+            {
+                saveJobsOrder();
+                Process.GetCurrentProcess().Kill();
+            }
+        }
+
+        void trayNotifyIcon_MouseDoubleClick(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            this.Show();
         }
 
         #region Synchronization

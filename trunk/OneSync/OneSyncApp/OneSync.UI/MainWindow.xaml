@@ -108,16 +108,16 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 				</Grid.ColumnDefinitions>
 				
 				<!--Column 0 -->
-				<Label Grid.Column="0" Content="Sync Job Name:" FontSize="10.667" Foreground="#FF0000B9" Margin="0,0,-0.603,0" />
+				<Label Grid.Column="0" Content="Sync Job Name:" Foreground="#FF0000B9" Margin="0,-2,-0.603,2" />
 				<TextBox Grid.Column="0" x:Name="txtSyncJobName" Height="22.187" MaxLines="1" Margin="5,21.406,9.397,21.406" />
 				
 				<!--Column 1 -->
-				<Label Grid.Column="1" Content="Folder to Sync:" FontSize="10.667" Foreground="#FF0000B9" Margin="0.603,0,8,0" />
+				<Label Grid.Column="1" Content="Folder to Sync:" Foreground="#FF0000B9" Margin="0.603,-2,8,2" />
                 <ComboBox x:Name="txtSource" Margin="4.603,21.407,34.187,21.406" Grid.Column="1" IsEditable="True" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"/>
 				<Button Grid.Column="1" x:Name="btnBrowse_Source" Width="22.187" Height="22.188" Content="..." ToolTip="Click to browse folders" Click="btnBrowse_Click" Margin="0,0,8,0" HorizontalAlignment="Right" VerticalAlignment="Center" />
 				
 				<!--Column 2 -->
-				<Label Grid.Column="2" Content=" Intermediary Storage Location:" FontSize="10.667" Foreground="#FF0000B9" Margin="3.599,0,21,0" />
+				<Label Grid.Column="2" Content=" Intermediary Storage Location:" Foreground="#FF0000B9" Margin="5.599,0,19,0" />
 				<ComboBox x:Name="txtIntStorage" Margin="13.599,23.086,34.187,19.727" IsEditable="True" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop" Grid.Column="2"/>
                 <Button Grid.Column="2" x:Name="btnBrowse" Width="22.187" Height="22.188" Content="..." ToolTip="Click to browse folders" Click="btnBrowse_Click" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0"/>
 				
@@ -244,7 +244,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			<Image x:Name="btnHelp" HorizontalAlignment="Right" Margin="0,0,0,12" Width="18" Source="Resource/OneSyncHelp.png" RenderTransformOrigin="1.278,0.611" Cursor="Hand" ToolTip="Help" MouseDown="btnHelp_MouseDown"/>
 			<Label x:Name="lblSyncJobEditing" Margin="372,31,414,0" VerticalAlignment="Top" Height="36" Content="Hold on... Updating the sync jobs" Grid.Row="2" FontWeight="Bold" Visibility="Hidden"/>
 			<CheckBox x:Name="showPartialSyncJobsCheckBox" Margin="293,0,412,-8" VerticalAlignment="Bottom" Height="23" Content="Show only sync jobs assigned to the" Grid.Row="1" Checked="showPartialSyncJobsCheckBox_Checked" Unchecked="showPartialSyncJobsCheckBox_Unchecked"/>
-			<Label HorizontalAlignment="Right" Margin="0,0,401,-7.261" Width="92" Content="Folder to Sync" Grid.Row="1" Foreground="#FF0000B9" VerticalAlignment="Bottom" Height="26.261" FontSize="10.667"/>
+			<Label HorizontalAlignment="Right" Margin="0,0,401,-6.261" Width="92" Content="Folder to Sync" Grid.Row="1" Foreground="#FF0000B9" VerticalAlignment="Bottom" Height="26.261"/>
 		</Grid>
 	</Grid>
 </Window>
