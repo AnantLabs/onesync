@@ -69,8 +69,10 @@ namespace OneSync.UI
                 double Framework = Convert.ToDouble(version_names[version_names.Length - 1].Remove(0, 1));
                 int SP = Convert.ToInt32(installed_versions.OpenSubKey(version_names[version_names.Length - 1]).GetValue("SP", 0));
 
-                if(Framework < 3.5 || (Framework == 3.5 && SP < 1))
+                if(!(Framework < 3.5 || (Framework == 3.5 && SP < 1)))
                 {
+                    DotNetFrameworkErrorWindow dotNetFrameworkErrorWindow = new DotNetFrameworkErrorWindow();
+                    dotNetFrameworkErrorWindow.Show();
                     Application.Current.Shutdown();
                 }
 
