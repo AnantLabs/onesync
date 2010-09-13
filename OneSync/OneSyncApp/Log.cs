@@ -457,9 +457,12 @@ namespace OneSync
 
             try
             {
-                string s = Properties.Resources.xsl;
+                string s;
+                s = Properties.Resources.xsl;
+                if ((Properties.Settings.Default.LanguageResx).Equals("OneSync.LocalizationOneSyncChinese"))
+                    s = Properties.Resources.xslChinese;
                 fs = new FileStream(filePath, FileMode.Create);
-                sw = new StreamWriter(fs);
+                sw = new StreamWriter(fs, Encoding.Unicode);
                 sw.Write(s);
             }
             catch (Exception e)

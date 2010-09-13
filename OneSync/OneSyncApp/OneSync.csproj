@@ -182,6 +182,12 @@
     <Compile Include="OneSync.UI\WinSyncPreview.xaml.cs">
       <DependentUpon>WinSyncPreview.xaml</DependentUpon>
     </Compile>
+    <Compile Include="OneSyncInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="OneSyncInstaller.Designer.cs">
+      <DependentUpon>OneSyncInstaller.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OneSync.UI\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -225,6 +231,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Uninstall OneSync.bat" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Application.ico" />
@@ -269,6 +276,9 @@
     <EmbeddedResource Include="LocalizationOneSyncChinese.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LocalizationOneSyncChinese.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OneSyncInstaller.resx">
+      <DependentUpon>OneSyncInstaller.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
