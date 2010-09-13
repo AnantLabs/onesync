@@ -1,0 +1,464 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="btn_addNewJob" xml:space="preserve">
+    <value>Add New Job</value>
+  </data>
+  <data name="btn_preview" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="btn_showLog" xml:space="preserve">
+    <value>Show Log</value>
+  </data>
+  <data name="btn_syncJobs" xml:space="preserve">
+    <value>Sync Selected Jobs</value>
+  </data>
+  <data name="chb_showPartialSyncJobs" xml:space="preserve">
+    <value>Show only sync jobs assigned to the</value>
+  </data>
+  <data name="err_closeWhileSyncing" xml:space="preserve">
+    <value>Are you sure you want to close the program now? The synchronization is still ongoing.</value>
+  </data>
+  <data name="err_closeWhileSyncingTitle" xml:space="preserve">
+    <value>Goodbye OneSync</value>
+  </data>
+  <data name="err_deleteJob" xml:space="preserve">
+    <value>You are going to delete job {0}. Continue?</value>
+  </data>
+  <data name="err_deleteJobTitle" xml:space="preserve">
+    <value>Delete SyncJob</value>
+  </data>
+  <data name="err_deleteJobWithNoIntermediateStorage" xml:space="preserve">
+    <value>You are going to delete job {0} but its intermediate storage folder cannot be found. If you continue the deletion, you may corrupt the OneSync core files. Continue?</value>
+  </data>
+  <data name="err_deleteJobWithNoIntermediateStorageTitle" xml:space="preserve">
+    <value>Delete SyncJob -- Intermediate Storage Folder Not Found</value>
+  </data>
+  <data name="err_directoryNotFound" xml:space="preserve">
+    <value>Directory not found: {0}</value>
+  </data>
+  <data name="err_errorReported" xml:space="preserve">
+    <value>Error Reported: {0}</value>
+  </data>
+  <data name="err_filesCannotBeMoved" xml:space="preserve">
+    <value>File(s) cannot be moved to {0}. Please do it manually.</value>
+  </data>
+  <data name="err_filesCannotBeMoved2" xml:space="preserve">
+    <value>File(s) cannot be moved from old to new intermediary storage. Please do it manually.</value>
+  </data>
+  <data name="err_helpFileNotFound" xml:space="preserve">
+    <value>The offline help file is not available.</value>
+  </data>
+  <data name="err_helpFileNotFoundTitle" xml:space="preserve">
+    <value>OneSync -- Offline Help File Not Found</value>
+  </data>
+  <data name="err_insufficientSpace" xml:space="preserve">
+    <value>Insufficient space in {0} to store modified files. Please use a drive with bigger capacity.</value>
+  </data>
+  <data name="err_intermediateStorageTooSmall" xml:space="preserve">
+    <value>The new intermediate storage is too small that it cannot store all the files.</value>
+  </data>
+  <data name="err_invalidInput" xml:space="preserve">
+    <value>Please check your inputs.</value>
+  </data>
+  <data name="err_metadataMissing" xml:space="preserve">
+    <value>Metadata file is missing or corrupted.</value>
+  </data>
+  <data name="err_metadataMissingSource" xml:space="preserve">
+    <value>Metadata file doesn't contain source {0}.</value>
+  </data>
+  <data name="err_noLogFile" xml:space="preserve">
+    <value>There is no log for this job currently.</value>
+  </data>
+  <data name="err_noSyncJob" xml:space="preserve">
+    <value>Please select at least one sync job.</value>
+  </data>
+  <data name="err_syncJobNotFound" xml:space="preserve">
+    <value>The selected sync job(s) cannot be found.</value>
+  </data>
+  <data name="err_unableDeleteJob" xml:space="preserve">
+    <value>Unable to delete sync job at this moment.</value>
+  </data>
+  <data name="hdr_jobName" xml:space="preserve">
+    <value>Job Name</value>
+  </data>
+  <data name="hdr_reorder" xml:space="preserve">
+    <value>Reorder</value>
+  </data>
+  <data name="hdr_syncSourceDir" xml:space="preserve">
+    <value>Sync Source Directory</value>
+  </data>
+  <data name="hdr_syncStatus" xml:space="preserve">
+    <value>Sync Status</value>
+  </data>
+  <data name="hrd_syncIntStorageDir" xml:space="preserve">
+    <value>Intermediate Storage Directory</value>
+  </data>
+  <data name="lbl_syncDescription" xml:space="preserve">
+    <value>Number of sync jobs:
+
+Current syncing job:</value>
+  </data>
+  <data name="lbl_syncIntStorageDir" xml:space="preserve">
+    <value>Intermidiate Storage Location:</value>
+  </data>
+  <data name="lbl_syncJobName" xml:space="preserve">
+    <value>Sync Job Name:</value>
+  </data>
+  <data name="lbl_syncSourceDir" xml:space="preserve">
+    <value>Folder to Sync:</value>
+  </data>
+  <data name="lbl_syncSourceDir2" xml:space="preserve">
+    <value>Folder to Sync</value>
+  </data>
+  <data name="msg_newOneSyncVersion" xml:space="preserve">
+    <value>There is a new version of OneSync available. Do you want to download it now?</value>
+  </data>
+  <data name="msg_newOneSyncVersionTitle" xml:space="preserve">
+    <value>New Version Of OneSync Available</value>
+  </data>
+  <data name="msg_oneInstance" xml:space="preserve">
+    <value>OneSync is already running. There should be only one instance of OneSync all the time.</value>
+  </data>
+  <data name="msg_oneInstanceTitle" xml:space="preserve">
+    <value>OneSync -- One Instance Only</value>
+  </data>
+  <data name="msg_progressBar1" xml:space="preserve">
+    <value>Syncing through Dropbox now</value>
+  </data>
+  <data name="msg_progressBar2" xml:space="preserve">
+    <value>Syncing through Dropbox is done</value>
+  </data>
+  <data name="msg_progressBar3" xml:space="preserve">
+    <value>Syncing through Dropbox is done but with error</value>
+  </data>
+  <data name="msg_syncCompleted" xml:space="preserve">
+    <value>Synchronization completed.</value>
+  </data>
+  <data name="msg_syncing" xml:space="preserve">
+    <value>Synchronizing...</value>
+  </data>
+  <data name="msg_syncingDirectory" xml:space="preserve">
+    <value>Synchronizing: {0}</value>
+  </data>
+  <data name="msg_syncJobCompleted" xml:space="preserve">
+    <value>Sync job completed</value>
+  </data>
+  <data name="msg_updatedDropBox" xml:space="preserve">
+    <value>Synchronization completed.</value>
+  </data>
+  <data name="msg_updatingDropBox" xml:space="preserve">
+    <value>All files are synced but they are still being uploaded to the Dropbox server.</value>
+  </data>
+  <data name="not_exitName" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="not_helpName" xml:space="preserve">
+    <value>Help (User Manual)</value>
+  </data>
+  <data name="not_message1" xml:space="preserve">
+    <value>Double click the icon to show the program window.</value>
+  </data>
+  <data name="not_messageTitle1" xml:space="preserve">
+    <value>OneSync is still running</value>
+  </data>
+  <data name="not_name" xml:space="preserve">
+    <value>OneSync</value>
+  </data>
+  <data name="not_openName" xml:space="preserve">
+    <value>Open OneSync 3</value>
+  </data>
+  <data name="tot_browseFolder" xml:space="preserve">
+    <value>Click to browse folders</value>
+  </data>
+  <data name="tot_cancelJobs" xml:space="preserve">
+    <value>Cancel Subsequent Jobs</value>
+  </data>
+  <data name="tot_deleteJob" xml:space="preserve">
+    <value>Delete this job</value>
+  </data>
+  <data name="tot_editJob" xml:space="preserve">
+    <value>Edit this job</value>
+  </data>
+  <data name="tot_helpFile" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="tot_previewJob" xml:space="preserve">
+    <value>Preview selected job</value>
+  </data>
+  <data name="tot_showLog" xml:space="preserve">
+    <value>Show selected job's log</value>
+  </data>
+  <data name="err_cannotPreview" xml:space="preserve">
+    <value>Sync preview cannot be generated.</value>
+  </data>
+  <data name="err_cannotPreview2" xml:space="preserve">
+    <value>Sync preview cannot be generated: {0}</value>
+  </data>
+  <data name="err_directoryInaccessible" xml:space="preserve">
+    <value>Directory is inaccessible.</value>
+  </data>
+  <data name="err_IntermediateStorageNoutFound" xml:space="preserve">
+    <value>Intermediary storage path: "{0}" not found.</value>
+  </data>
+  <data name="err_activeWindowAndTaskbar" xml:space="preserve">
+    <value>A valid active Window is needed to update the Taskbar</value>
+  </data>
+  <data name="err_databaseException" xml:space="preserve">
+    <value>Database exception: Please check your job name and folder directories for selected jobs</value>
+  </data>
+  <data name="err_directoryInvalid" xml:space="preserve">
+    <value>Invalid directory path.</value>
+  </data>
+  <data name="err_directoryNoPermission" xml:space="preserve">
+    <value>Does not have permission to access directory.</value>
+  </data>
+  <data name="err_directoryNotExist" xml:space="preserve">
+    <value>Directory {0} does not exist</value>
+  </data>
+  <data name="err_directoryTooLong" xml:space="preserve">
+    <value>The directory length cannot exceed 260 characters</value>
+  </data>
+  <data name="err_intermediateStorageNotFound" xml:space="preserve">
+    <value>Intermediate storage folder cannot be found.</value>
+  </data>
+  <data name="err_jobNameCannotEmpty" xml:space="preserve">
+    <value>Sync job name cannot be empty</value>
+  </data>
+  <data name="err_jobNameEmpty" xml:space="preserve">
+    <value>SyncJob name cannot be empty.</value>
+  </data>
+  <data name="err_jobNameTooLong" xml:space="preserve">
+    <value>Sync job name cannot exceed 50 characters</value>
+  </data>
+  <data name="err_onlyTwoSyncSourceFolders" xml:space="preserve">
+    <value>Only 2 number of source folders are allowed to connect to the same intermediate storage folder.</value>
+  </data>
+  <data name="err_pathIllegal" xml:space="preserve">
+    <value>Path contains illegal characters.</value>
+  </data>
+  <data name="err_pathTooLong" xml:space="preserve">
+    <value>Path is too long.</value>
+  </data>
+  <data name="err_recursive" xml:space="preserve">
+    <value>Sync between folder and its sub-folder is not allowed</value>
+  </data>
+  <data name="err_recursive2" xml:space="preserve">
+    <value>Folder to be synchronized cannot be in the intermediate storage folder or vice-versa.</value>
+  </data>
+  <data name="err_somethingNotFound" xml:space="preserve">
+    <value>{0} is not found</value>
+  </data>
+  <data name="err_sourceIntermediateEmpty" xml:space="preserve">
+    <value>Source or Intermediate storage is empty</value>
+  </data>
+  <data name="err_sourceSameAsIntermediate" xml:space="preserve">
+    <value>Source and intermediate path cannot be the same</value>
+  </data>
+  <data name="err_syncFolderNotFound" xml:space="preserve">
+    <value>Folder to be synchronized cannot be found.</value>
+  </data>
+  <data name="err_syncFolderSameAsIntermediate" xml:space="preserve">
+    <value>Folder to be synchronized cannot be the same as intermediate storage folder.</value>
+  </data>
+  <data name="err_syncIntermediateInvalid" xml:space="preserve">
+    <value>Intermediate storage directory is invalid.</value>
+  </data>
+  <data name="err_syncjobCreated" xml:space="preserve">
+    <value>Sync job {0} is already created</value>
+  </data>
+  <data name="err_syncSourceInvalid" xml:space="preserve">
+    <value>Sync source directory is invalid.</value>
+  </data>
+  <data name="hdr_action" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="hdr_conflictResolution" xml:space="preserve">
+    <value>Conflict Resolution</value>
+  </data>
+  <data name="hdr_filePath" xml:space="preserve">
+    <value>File Path</value>
+  </data>
+  <data name="hdr_originalFilePath" xml:space="preserve">
+    <value>Original File Path</value>
+  </data>
+  <data name="hdr_skip" xml:space="preserve">
+    <value>Skip</value>
+  </data>
+  <data name="lbl_filterText" xml:space="preserve">
+    <value>Filter Text:</value>
+  </data>
+  <data name="lbl_filterType" xml:space="preserve">
+    <value>Filter Type:</value>
+  </data>
+  <data name="lbl_filterTypeConflictFiles" xml:space="preserve">
+    <value>Conflict Files</value>
+  </data>
+  <data name="lbl_filterTypeCopyOnly" xml:space="preserve">
+    <value>Copy Only</value>
+  </data>
+  <data name="lbl_filterTypeDeleteOnly" xml:space="preserve">
+    <value>Delete Only</value>
+  </data>
+  <data name="lbl_filterTypeRenameOnly" xml:space="preserve">
+    <value>Rename Only</value>
+  </data>
+  <data name="lbl_filterTypeShowAll" xml:space="preserve">
+    <value>Show All</value>
+  </data>
+  <data name="lbl_preview" xml:space="preserve">
+    <value>Sync Preview</value>
+  </data>
+  <data name="lbl_previewDone" xml:space="preserve">
+    <value>Done</value>
+  </data>
+  <data name="win_syncPreviewWindow" xml:space="preserve">
+    <value>OneSync - Sync Preview</value>
+  </data>
+  <data name="err_cannotCopyFile" xml:space="preserve">
+    <value>Cannot copy file {0}</value>
+  </data>
+  <data name="err_cannotDeleteFile" xml:space="preserve">
+    <value>Cannot delete file {0}</value>
+  </data>
+  <data name="err_cannotRenameFile" xml:space="preserve">
+    <value>Cannot rename file {0}</value>
+  </data>
+  <data name="lbl_dotNetFrameworkDescriptionText1" xml:space="preserve">
+    <value>OneSync 3 can only run on computer which has .NET 3.5 SP1 installed.</value>
+  </data>
+  <data name="lbl_dotNetFrameworkDescriptionText2" xml:space="preserve">
+    <value>Please download and then install the suitable version of .NET Framework here:</value>
+  </data>
+  <data name="lbl_download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="log_fromIntermediateStorage" xml:space="preserve">
+    <value>From intermediate storage</value>
+  </data>
+  <data name="log_toIntermediateStorage" xml:space="preserve">
+    <value>To intermediate storage</value>
+  </data>
+  <data name="log_xslFileName" xml:space="preserve">
+    <value>onesynclog.xsl</value>
+  </data>
+  <data name="win_dotNetFrameworkRequirement" xml:space="preserve">
+    <value>OneSync System Requirement</value>
+  </data>
+</root>

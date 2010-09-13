@@ -18,6 +18,9 @@ using Community.CsharpSqlite.SQLiteClient;
 using OneSync.Files;
 using OneSync.Synchronization;
 using Microsoft.Win32;
+using System.Resources;
+using System.Globalization;
+using System.Threading;
 
 namespace OneSync.UI
 {
@@ -26,7 +29,11 @@ namespace OneSync.UI
 	{
 		// Start: Global variables.        
         private string STARTUP_PATH = System.Windows.Forms.Application.StartupPath;
-        
+
+        //public ResourceManager m_ResourceManager = new ResourceManager(Properties.Settings.Default.LanguageResx,
+        //                            System.Reflection.Assembly.GetExecutingAssembly());
+        public ResourceManager m_ResourceManager;
+
         private SyncJobManager jobManager;
         private BackgroundWorker syncWorker;
         private UISyncJobEntry currentJobEntry;
@@ -51,109 +58,154 @@ namespace OneSync.UI
 		{
             this.InitializeComponent();
 
-            string RunningProcess = Process.GetCurrentProcess().ProcessName;
-            Process[] processes = Process.GetProcessesByName(RunningProcess);
+            //For debugging purpose: Reset language.
+            //Properties.Settings.Default.LanguageResx = "";
+            //Properties.Settings.Default.Save();
 
-            RegistryKey installed_versions = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\NET Framework Setup\NDP");
-            string[] version_names = installed_versions.GetSubKeyNames();
-            //version names start with 'v', eg, 'v3.5' which needs to be trimmed off before conversion
-            double Framework = Convert.ToDouble(version_names[version_names.Length - 1].Remove(0, 1));
-            int SP = Convert.ToInt32(installed_versions.OpenSubKey(version_names[version_names.Length - 1]).GetValue("SP", 0));
-
-            if (processes.Length > 1)
-            {   
-                //Make sure that there is only one OneSync application running for all the time.
-                MessageBox.Show("OneSync is already running. There should be only one instance of OneSync all the time.", "OneSync -- One Instance Only", MessageBoxButton.OK, MessageBoxImage.Stop);
-                Application.Current.Shutdown();
-            }
-            else if (Framework < 3.5 || (Framework == 3.5 && SP < 1))
+            if ((Properties.Settings.Default.LanguageResx).Equals(""))
             {
-                //Check for the .NET Framework requirement.
-                //Requirement is .NET 3.5 SP1 or later.
-                DotNetFrameworkErrorWindow dotNetFrameworkErrorWindow = new DotNetFrameworkErrorWindow();
-                dotNetFrameworkErrorWindow.Show();
+                LanguageSelection languageSelection = new LanguageSelection();
+                languageSelection.Show();
                 this.Hide();
             }
-            else 
+            else
             {
-                trayNotifyIcon = new System.Windows.Forms.NotifyIcon();
-                trayNotifyIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
-                trayNotifyIcon.Text = "OneSync";
-                trayNotifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(trayNotifyIcon_MouseDoubleClick);
-                trayNotifyIcon.Visible = true;
-                
-                //For Run Program context menu item
-                mnuRunProgram = new System.Windows.Forms.ToolStripMenuItem("Open OneSync 3");
-                mnuRunProgram.Click += new EventHandler(mnuRunProgram_Click);
+                m_ResourceManager = new ResourceManager(Properties.Settings.Default.LanguageResx,
+                                        System.Reflection.Assembly.GetExecutingAssembly());
 
-                //For Help context menu item
-                mnuHelp = new System.Windows.Forms.ToolStripMenuItem("Help (User Manual)");
-                mnuHelp.Click += new EventHandler(mnuHelp_Click);
+                string RunningProcess = Process.GetCurrentProcess().ProcessName;
+                Process[] processes = Process.GetProcessesByName(RunningProcess);
 
-                //For Exit context menu item
-                mnuExit = new System.Windows.Forms.ToolStripMenuItem();
-                mnuExit.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                //mnuExit.Size = new System.Drawing.Size(117, 22);
-                mnuExit.Text = "Exit";
-                mnuExit.Click += new EventHandler(mnuExit_Click);
+                RegistryKey installed_versions = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\NET Framework Setup\NDP");
+                string[] version_names = installed_versions.GetSubKeyNames();
+                //version names start with 'v', eg, 'v3.5' which needs to be trimmed off before conversion
+                double Framework = Convert.ToDouble(version_names[version_names.Length - 1].Remove(0, 1));
+                int SP = Convert.ToInt32(installed_versions.OpenSubKey(version_names[version_names.Length - 1]).GetValue("SP", 0));
 
-                ctxTrayMenu = new System.Windows.Forms.ContextMenuStrip();
-                ctxTrayMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { mnuRunProgram, mnuHelp, mnuExit });
-
-                trayNotifyIcon.ContextMenuStrip = ctxTrayMenu;
-
-                // Get current synchronization directory from command line arguments.
-                // Default sync directory is current directory of app.
-                string[] args = System.Environment.GetCommandLineArgs();
-
-                jobManager = SyncClient.GetSyncJobManager(STARTUP_PATH);
-
-                if (args.Length > 1 && Validator.validateDirPath(args[1]) == null)
+                if (processes.Length > 1)
                 {
-                    txtSyncJobName.Text = System.IO.Path.GetFileName(args[1]);
-                    txtSource.Text = args[1];
-                    txtSource.Focus();
+                    //Make sure that there is only one OneSync application running for all the time.
+                    MessageBox.Show(m_ResourceManager.GetString("msg_oneInstance"), m_ResourceManager.GetString("msg_oneInstanceTitle"), MessageBoxButton.OK, MessageBoxImage.Stop);
+                    Application.Current.Shutdown();
                 }
-
-                // Tag each browse button to corr TextBox
-                btnBrowse_Source.Tag = txtSource;
-                btnBrowse.Tag = txtIntStorage;
-
-                // Initialize syncWorker 
-                syncWorker = new BackgroundWorker();
-                syncWorker.WorkerSupportsCancellation = true;
-                syncWorker.DoWork += new DoWorkEventHandler(syncWorker_DoWork);
-                syncWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(syncWorker_RunWorkerCompleted);
-
-                // Configure the timer to check the Dropbox status
-                timerDropbox = new DispatcherTimer();
-                timerDropbox.Tick += new EventHandler((sender, e) => dropboxStatusChecking());
-                timerDropbox.Interval = TimeSpan.FromMilliseconds(1000);
-
-                _SyncJobEntries.CollectionChanged += (sender, e) => refreshCombobox();
-
-                // Do not show the help button if the help file is not there
-                if (!File.Exists(STARTUP_PATH + @"\OneSync.chm"))
-                    btnHelp.Visibility = Visibility.Hidden;
-
-                // Set-up data bindings
-                listAllSyncJobs.ItemsSource = this.SyncJobEntries;
-                LoadSyncJobs();
-
-                //Check for latest update.
-                //MessageBox.Show(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
-                ProgramUpdateChecker updateChecker = new ProgramUpdateChecker();
-                string updateURL = updateChecker.GetNewVersion();
-                if (!string.IsNullOrEmpty(updateURL))
+                else if (Framework < 3.5 || (Framework == 3.5 && SP < 1))
                 {
-                    MessageBoxResult gettingNewVersion = MessageBox.Show(
-                            "There is a new version of OneSync available. Do you want to download it now?", "New Version Of OneSync Available",
-                                MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    //Check for the .NET Framework requirement.
+                    //Requirement is .NET 3.5 SP1 or later.
+                    DotNetFrameworkErrorWindow dotNetFrameworkErrorWindow = new DotNetFrameworkErrorWindow();
+                    dotNetFrameworkErrorWindow.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    trayNotifyIcon = new System.Windows.Forms.NotifyIcon();
+                    trayNotifyIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
+                    trayNotifyIcon.Text = m_ResourceManager.GetString("not_name");
+                    trayNotifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(trayNotifyIcon_MouseDoubleClick);
+                    trayNotifyIcon.Visible = true;
 
-                    if (gettingNewVersion == MessageBoxResult.Yes)
-                        Process.Start(updateURL);
+                    //For Run Program context menu item
+                    mnuRunProgram = new System.Windows.Forms.ToolStripMenuItem(m_ResourceManager.GetString("not_openName"));
+                    mnuRunProgram.Click += new EventHandler(mnuRunProgram_Click);
+
+                    //For Help context menu item
+                    mnuHelp = new System.Windows.Forms.ToolStripMenuItem(m_ResourceManager.GetString("not_helpName"));
+                    mnuHelp.Click += new EventHandler(mnuHelp_Click);
+
+                    //For Exit context menu item
+                    mnuExit = new System.Windows.Forms.ToolStripMenuItem();
+                    mnuExit.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    //mnuExit.Size = new System.Drawing.Size(117, 22);
+                    mnuExit.Text = m_ResourceManager.GetString("not_exitName");
+                    mnuExit.Click += new EventHandler(mnuExit_Click);
+
+                    ctxTrayMenu = new System.Windows.Forms.ContextMenuStrip();
+                    ctxTrayMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { mnuRunProgram, mnuHelp, mnuExit });
+
+                    trayNotifyIcon.ContextMenuStrip = ctxTrayMenu;
+
+                    // Get current synchronization directory from command line arguments.
+                    // Default sync directory is current directory of app.
+                    string[] args = System.Environment.GetCommandLineArgs();
+
+                    jobManager = SyncClient.GetSyncJobManager(STARTUP_PATH);
+
+                    if (args.Length > 1 && Validator.validateDirPath(args[1]) == null)
+                    {
+                        txtSyncJobName.Text = System.IO.Path.GetFileName(args[1]);
+                        txtSource.Text = args[1];
+                        txtSource.Focus();
+                    }
+
+                    // Tag each browse button to corr TextBox
+                    btnBrowse_Source.Tag = txtSource;
+                    btnBrowse.Tag = txtIntStorage;
+
+                    // Initialize syncWorker 
+                    syncWorker = new BackgroundWorker();
+                    syncWorker.WorkerSupportsCancellation = true;
+                    syncWorker.DoWork += new DoWorkEventHandler(syncWorker_DoWork);
+                    syncWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(syncWorker_RunWorkerCompleted);
+
+                    // Configure the timer to check the Dropbox status
+                    timerDropbox = new DispatcherTimer();
+                    timerDropbox.Tick += new EventHandler((sender, e) => dropboxStatusChecking());
+                    timerDropbox.Interval = TimeSpan.FromMilliseconds(1000);
+
+                    _SyncJobEntries.CollectionChanged += (sender, e) => refreshCombobox();
+
+                    // Do not show the help button if the help file is not there
+                    if (!File.Exists(STARTUP_PATH + @"\OneSync.chm"))
+                        btnHelp.Visibility = Visibility.Hidden;
+
+                    // Set-up data bindings
+                    listAllSyncJobs.ItemsSource = this.SyncJobEntries;
+                    LoadSyncJobs();
+
+                    //Check for latest update.
+                    //MessageBox.Show(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
+                    try
+                    {
+                        ProgramUpdateChecker updateChecker = new ProgramUpdateChecker();
+                        string updateURL = updateChecker.GetNewVersion();
+                        if (!string.IsNullOrEmpty(updateURL))
+                        {
+                            MessageBoxResult gettingNewVersion = MessageBox.Show(
+                                    m_ResourceManager.GetString("msg_newOneSyncVersion"), m_ResourceManager.GetString("msg_newOneSyncVersionTitle"),
+                                        MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                            if (gettingNewVersion == MessageBoxResult.Yes)
+                                Process.Start(updateURL);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        //Do nothing
+                    }
+                    language();
                 }
             }
+        }
+
+        private void language() 
+        {
+            lblSyncJobNameDesc.Content = m_ResourceManager.GetString("lbl_syncJobName");
+            lblSyncSrcFolderDesc.Content = m_ResourceManager.GetString("lbl_syncSourceDir");
+            lblIntStorageDirDesc.Content = m_ResourceManager.GetString("lbl_syncIntStorageDir");
+            txtBlkNewJob.Text = m_ResourceManager.GetString("btn_addNewJob");
+            txtBlkProceed.Text = m_ResourceManager.GetString("btn_syncJobs");
+            showPartialSyncJobsCheckBox.Content = m_ResourceManager.GetString("chb_showPartialSyncJobs");
+            lblSyncSrcFolderDesc2.Content = m_ResourceManager.GetString("lbl_syncSourceDir2");
+            listAllSyncJobs_header_1.Header = m_ResourceManager.GetString("hdr_reorder");
+            listAllSyncJobs_header_2.Header = m_ResourceManager.GetString("hdr_jobName");
+            listAllSyncJobs_header_3.Header = m_ResourceManager.GetString("hdr_syncSourceDir");
+            listAllSyncJobs_header_4.Header = m_ResourceManager.GetString("hrd_syncIntStorageDir");
+            listAllSyncJobs_header_5.Header = m_ResourceManager.GetString("hdr_syncStatus");
+            txtBlkProceed.ToolTip = m_ResourceManager.GetString("btn_syncJobs");
+            btnBrowse_Source.ToolTip = m_ResourceManager.GetString("tot_browseFolder");
+            btnBrowse.ToolTip = m_ResourceManager.GetString("tot_browseFolder");
+            btnSyncStatic.ToolTip = m_ResourceManager.GetString("btn_syncJobs");
+            lbl_description.Content = m_ResourceManager.GetString("lbl_syncDescription");
         }
 
         private void dropboxStatusChecking()
@@ -166,27 +218,27 @@ namespace OneSync.UI
                     if (entry.DropboxStatus == OneSync.DropboxStatus.SYNCHRONIZING)
                     {
                         isStillOneWaitingForDropbox = true;
-                        entry.ProgressBarMessage = "Syncing through Dropbox now";
+                        entry.ProgressBarMessage = m_ResourceManager.GetString("msg_progressBar1");
                         entry.ProgressBarColor = "Yellow";
                     }
                     else if (entry.DropboxStatus == OneSync.DropboxStatus.UP_TO_DATE)
                     {
                         if (entry.Error == null)
                         {
-                            entry.ProgressBarMessage = "Syncing through Dropbox is done";
+                            entry.ProgressBarMessage = m_ResourceManager.GetString("msg_progressBar2");
                             entry.ProgressBarColor = "#FF01D328";
                         }
                         else
                         {
-                            entry.ProgressBarMessage = "Syncing through Dropbox is done but with error";
+                            entry.ProgressBarMessage = m_ResourceManager.GetString("msg_progressBar3");
                             entry.ProgressBarColor = "Red";
                         }
                     }
                 }
                 if (isStillOneWaitingForDropbox)
-                    lblStatus.Content = "All files are synced but they are still being uploaded to the Dropbox server";
+                    lblStatus.Content = m_ResourceManager.GetString("msg_updatingDropBox");
                 else
-                    lblStatus.Content = "Synchronization completed.";
+                    lblStatus.Content = m_ResourceManager.GetString("msg_updatedDropBox");
             }
             catch(Exception) { }            
         }
@@ -223,7 +275,7 @@ namespace OneSync.UI
 
             if (selectedJobs.Count == 0)
             {
-                showErrorMsg("Please select at least one sync job");
+                showErrorMsg(m_ResourceManager.GetString("err_noSyncJob"));
                 return;
             }
 
@@ -323,7 +375,7 @@ namespace OneSync.UI
             {
                 if (!Validator.SyncJobParamsValidated(syncJobName, syncSourceDir, intStorageDir, jobManager.LoadAllJobs()))
                 {
-                    showErrorMsg("Please check your inputs");
+                    showErrorMsg(m_ResourceManager.GetString("err_invalidInput"));
                     return;
                 }
 
@@ -352,15 +404,15 @@ namespace OneSync.UI
         {
             //TODO: Add try catch
             showErrorMsg("");
-                if (sender.GetType() == typeof(TextBlock) && e.ClickCount == 1)
-                    return;
+            if (sender.GetType() == typeof(TextBlock) && e.ClickCount == 1)
+                return;
 
-                UpdateTextBoxBindings();
+            UpdateTextBoxBindings();
 
-                FrameworkElement img = (FrameworkElement)e.Source;
-                UISyncJobEntry entry  = (UISyncJobEntry)img.DataContext;
+            FrameworkElement img = (FrameworkElement)e.Source;
+            UISyncJobEntry entry  = (UISyncJobEntry)img.DataContext;
 
-                entry.EditMode = !(entry.EditMode && saveSyncJob(entry));
+            entry.EditMode = !(entry.EditMode && saveSyncJob(entry));
         }
 
         private void imgDelete_MouseDown(object sender, MouseButtonEventArgs e)
@@ -374,20 +426,20 @@ namespace OneSync.UI
                 if (!Directory.Exists(entry.IntermediaryStoragePath))
                 {
                     MessageBoxResult intermediateStorageAvailability = MessageBox.Show(
-                        "You are going to delete job " + entry.SyncJob.Name + " but its intermediate storage folder cannot be found. If you continue the deletion, you may corrupt the OneSync core files. Continue?", "Delete SyncJob -- Intermediate Storage Folder Not Found",
+                            String.Format(m_ResourceManager.GetString("err_deleteJobWithNoIntermediateStorage"), entry.SyncJob.Name), m_ResourceManager.GetString("err_deleteJobWithNoIntermediateStorageTitle"),
                             MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                     if (intermediateStorageAvailability == MessageBoxResult.No) return;
                 }
 
                 MessageBoxResult result = MessageBox.Show(
-                            "You are going to delete job " + entry.SyncJob.Name + ". Continue?", "Delete SyncJob",
+                            String.Format(m_ResourceManager.GetString("err_deleteJob"), entry.SyncJob.Name), m_ResourceManager.GetString("err_deleteJobTitle"),
                             MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.No) return;
 
                 if (!jobManager.Delete(entry.SyncJob))
-                    showErrorMsg("Unable to delete sync job at this moment");
+                    showErrorMsg(m_ResourceManager.GetString("err_unableDeleteJob"));
                 else
                     this.SyncJobEntries.Remove(entry);
 
@@ -398,13 +450,13 @@ namespace OneSync.UI
 
                 syncSourceProvider.DeleteSyncSourceInIntermediateStorage(entry.SyncJob.SyncSource);
             }
-            catch (MetadataFileException mfe)
+            catch (MetadataFileException)
             {
-                showErrorMsg("Metadata file is missing or corrupted");
+                showErrorMsg(m_ResourceManager.GetString("err_metadataMissing"));
             }
-            catch(SqliteSyntaxException sqliteSyntaxException)
+            catch(SqliteSyntaxException)
             {
-                showErrorMsg("Metadata file is missing or corrupted");
+                showErrorMsg(m_ResourceManager.GetString("err_metadataMissing"));
             }
             catch(Exception exception)
             {
@@ -461,11 +513,11 @@ namespace OneSync.UI
                        entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
                        entry.SyncJob.SyncSource.Path = oldSyncSource;
                        entry.InfoChanged();
-                       showErrorMsg("Please check your inputs");
+                       showErrorMsg(m_ResourceManager.GetString("err_invalidInput"));
                    });
                }
                if (!Validator.IntermediaryMovable (entry.IntermediaryStoragePath, entry.SyncJob.SyncSource.ID))
-                   throw new SyncJobException("Metadata file doesn't contain source " + oldSyncSource);
+                   throw new SyncJobException(String.Format(m_ResourceManager.GetString("err_metadataMissingSource"), oldSyncSource));
 
                jobManager.Update(entry.SyncJob);
                entry.InfoChanged(); /* Force databinding to refresh */
@@ -475,7 +527,7 @@ namespace OneSync.UI
                    try
                    {
                        if (!Files.FileUtils.MoveFolder(oldIStorage, entry.SyncJob.IntermediaryStorage.Path))
-                           throw new SyncJobException("File(s) can't be moved to " + entry.SyncJob.IntermediaryStorage.Path + ". Please do it manually");
+                           throw new SyncJobException(String.Format(m_ResourceManager.GetString("err_filesCannotBeMoved"), entry.SyncJob.IntermediaryStorage.Path));
                    }
                    catch (SyncJobException ex)
                    {
@@ -496,7 +548,7 @@ namespace OneSync.UI
                            entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
                            entry.SyncJob.SyncSource.Path = oldSyncSource;
                            entry.InfoChanged();
-                           showErrorMsg("Can't move files from old to new intermediary storage. Please do it manually");
+                           showErrorMsg(m_ResourceManager.GetString("err_filesCannotBeMoved2"));
                        });
                    }
                    catch (UnauthorizedAccessException unauthorizedAccessException)
@@ -507,7 +559,7 @@ namespace OneSync.UI
                            entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
                            entry.SyncJob.SyncSource.Path = oldSyncSource;
                            entry.InfoChanged();
-                           showErrorMsg("Can't move files from old to new intermediary storage. Please do it manually");
+                           showErrorMsg(m_ResourceManager.GetString("err_filesCannotBeMoved2"));
                        });
                    }
                    catch (SyncSourceException sourceException)
@@ -529,7 +581,7 @@ namespace OneSync.UI
                            entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
                            entry.SyncJob.SyncSource.Path = oldSyncSource;
                            entry.InfoChanged();
-                           showErrorMsg("The new intermediate storage is too small that it cannot store all the files.");
+                           showErrorMsg(m_ResourceManager.GetString("err_intermediateStorageTooSmall"));
                        });
                    }
                    catch(Exception)
@@ -597,7 +649,7 @@ namespace OneSync.UI
                 if (File.Exists(Log.ReturnLogReportPath(entry.SyncSource)))
                     Log.ShowLog(entry.SyncSource);
                 else
-                    showErrorMsg("There is no log for this job currently.");
+                    showErrorMsg(m_ResourceManager.GetString("err_noLogFile"));
             
             
         }
@@ -608,7 +660,7 @@ namespace OneSync.UI
             UISyncJobEntry entry = clickedBlock.DataContext as UISyncJobEntry;
             if (entry == null || entry.SyncJob == null)
             {
-                showErrorMsg("Couldn't find selected sync job(s)");
+                showErrorMsg(m_ResourceManager.GetString("err_syncJobNotFound"));
                 return;
             }
 
@@ -668,8 +720,8 @@ namespace OneSync.UI
 
                 this.Hide();
 
-                trayNotifyIcon.ShowBalloonTip(3000, "OneSync is still running.",
-                    "Double click the icon to show the program window.", System.Windows.Forms.ToolTipIcon.Info);
+                trayNotifyIcon.ShowBalloonTip(3000, m_ResourceManager.GetString("not_messageTitle1"),
+                    m_ResourceManager.GetString("not_message1"), System.Windows.Forms.ToolTipIcon.Info);
             }
         }
 
@@ -683,7 +735,7 @@ namespace OneSync.UI
             if (File.Exists(STARTUP_PATH + @"\OneSync.chm"))
                 Process.Start(STARTUP_PATH + @"\OneSync.chm");
             else
-                MessageBox.Show("The offline help file is not available.", "OneSync -- Offline Help File Not Found", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(m_ResourceManager.GetString("err_helpFileNotFound"), m_ResourceManager.GetString("err_helpFileNotFoundTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         void mnuExit_Click(object sender, EventArgs e)
@@ -691,8 +743,8 @@ namespace OneSync.UI
             if (syncWorker.IsBusy)
             {
                 MessageBoxResult result = MessageBox.Show(
-                    "Are you sure you want to close the program now? The synchronization is still ongoing.",
-                    "Goodbye OneSync", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    m_ResourceManager.GetString("err_closeWhileSyncing"),
+                    m_ResourceManager.GetString("err_closeWhileSyncingTitle"), MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Yes)
                 {
@@ -762,7 +814,7 @@ namespace OneSync.UI
             entry.ProgressBarColor = "#FF01D328";
             entry.ProgressBarValue = 0;
             entry.ProgressBarVisibility = Visibility.Visible;
-            entry.ProgressBarMessage = "Synchronizing...";
+            entry.ProgressBarMessage = m_ResourceManager.GetString("msg_syncing");
 
             // Add event handler
             AddAgentEventHandler(entry.SyncAgent);
@@ -783,7 +835,7 @@ namespace OneSync.UI
                 
                 this.Dispatcher.Invoke((Action)delegate
                 {
-                    string errorMsg = "Metadata file is missing or corrupted";
+                    string errorMsg = m_ResourceManager.GetString("err_metadataMissing");
                     entry.ProgressBarMessage = errorMsg;
                     showErrorMsg(errorMsg);
                 });                
@@ -796,7 +848,7 @@ namespace OneSync.UI
 
                 this.Dispatcher.Invoke((Action)delegate
                 {
-                    string errorMsg = "Directory not found: " + ex.Message;
+                    string errorMsg = String.Format(m_ResourceManager.GetString("err_directoryNotFound"), ex.Message);
                     entry.ProgressBarMessage = errorMsg;
                     showErrorMsg(errorMsg);
                 });                
@@ -819,8 +871,7 @@ namespace OneSync.UI
                 string errorMsg;
                 entry.Error = ex;
                 entry.ProgressBarValue = 100;
-                errorMsg = "Insufficient space in " + entry.IntermediaryStoragePath + 
-                           " to store modified files. Please use a drive with bigger capacity.";
+                errorMsg = String.Format(m_ResourceManager.GetString("err_insufficientSpace"), entry.IntermediaryStoragePath);
                 this.Dispatcher.Invoke((Action)delegate
                 {
                     entry.ProgressBarMessage = errorMsg;
@@ -833,7 +884,7 @@ namespace OneSync.UI
                 entry.Error = ex;
                 entry.ProgressBarValue = 100;
                 entry.ProgressBarColor = "Red";
-                errorMsg = "Error Reported: " + ex.Message;
+                errorMsg = String.Format(m_ResourceManager.GetString("err_errorReported"), ex.Message);
                 this.Dispatcher.Invoke((Action)delegate
                 {
                     entry.ProgressBarMessage = errorMsg;
@@ -868,7 +919,7 @@ namespace OneSync.UI
                     UISyncJobEntry completedJobEntry = jobEntries.Dequeue();
 
                     if (completedJobEntry.Error == null)
-                        completedJobEntry.ProgressBarMessage = "Sync completed";
+                        completedJobEntry.ProgressBarMessage = m_ResourceManager.GetString("msg_syncJobCompleted");
 
                     completedJobEntry.SyncJob.SyncPreviewResult = null;
                     RemoveAgentEventHandler(completedJobEntry.SyncAgent);
@@ -882,7 +933,7 @@ namespace OneSync.UI
 
                     // Update UI and hide sync progress controls
                     SetControlsEnabledState(false, true);
-                    lblStatus.Content = "Synchronization completed.";
+                    lblStatus.Content = m_ResourceManager.GetString("msg_syncCompleted");
                     lblSubStatus.Content = "";
 
                     //listAllSyncJobs.IsEnabled = true;
@@ -972,9 +1023,9 @@ namespace OneSync.UI
         void currAgent_FileChanged(object sender, Synchronization.SyncFileChangedEventArgs e)
         {
             if (this.Dispatcher.CheckAccess())
-                lblSubStatus.Content = "Synchronizing: " + e.RelativePath;
+                lblSubStatus.Content = String.Format(m_ResourceManager.GetString("msg_syncingDirectory"), e.RelativePath);
             else
-                lblSubStatus.Dispatcher.Invoke((Action)delegate { lblSubStatus.Content = "Synchronizing: " + e.RelativePath; });
+                lblSubStatus.Dispatcher.Invoke((Action)delegate { lblSubStatus.Content = String.Format(m_ResourceManager.GetString("msg_syncingDirectory"), e.RelativePath); });
         }
 
         void syncAgent_SyncStatusChanged(object sender, SyncStatusChangedEventArgs e)
@@ -994,8 +1045,7 @@ namespace OneSync.UI
             sortJobs(jobs);
 
             foreach (SyncJob job in jobs)
-                SyncJobEntries.Add(new UISyncJobEntry(job));
-            
+                SyncJobEntries.Add(new UISyncJobEntry(job));      
         }
 
         private void MoveJobEntry(UISyncJobEntry entry, int delta)
@@ -1060,7 +1110,7 @@ namespace OneSync.UI
                 }
                 else
                 {
-                    showErrorMsg("Please check your inputs");
+                    showErrorMsg(m_ResourceManager.GetString("err_invalidInput"));
                     entry.EditMode = false;
                     SetControlsEnabledState(false, true);
                 }
@@ -1233,13 +1283,13 @@ namespace OneSync.UI
                 btnSyncRotating.Visibility = Visibility.Visible;
                 btnSyncStatic.Visibility = Visibility.Hidden;
                 lbl_description.Visibility = Visibility.Visible;
-                txtBlkProceed.Text = "Cancel Subsequent Jobs";
+                txtBlkProceed.Text = m_ResourceManager.GetString("tot_cancelJobs");
             }
             else
             {
                 btnSyncRotating.Visibility = Visibility.Hidden;
                 btnSyncStatic.Visibility = Visibility.Visible;
-                txtBlkProceed.Text = "Sync Selected Jobs";
+                txtBlkProceed.Text = m_ResourceManager.GetString("btn_syncJobs");
             }
         }
 
@@ -1249,7 +1299,7 @@ namespace OneSync.UI
 			if (File.Exists(STARTUP_PATH + @"\OneSync.chm"))
           		Process.Start(STARTUP_PATH + @"\OneSync.chm");
 			else
-				showErrorMsg("The offline help file is not available");
+                showErrorMsg(m_ResourceManager.GetString("err_helpFileNotFound"));
         }
 
         private void showPartialSyncJobsCheckBox_Checked(object sender, System.Windows.RoutedEventArgs e)

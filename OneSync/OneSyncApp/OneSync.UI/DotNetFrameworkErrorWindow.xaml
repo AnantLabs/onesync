@@ -4,11 +4,11 @@
 	x:Class="OneSync.DotNetFrameworkErrorWindow"
 	x:Name="Window"
 	Title="OneSync System Requirement"
-	Width="649" Height="226" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Icon="../Application.ico" Closing="Window_Closing">
+	Width="649" Height="226" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Icon="../Application.ico" Closing="Window_Closing">
 
 	<Grid x:Name="LayoutRoot">
-		<Label Margin="22,22,90,0" Content="OneSync 3 can only run on computer which has .NET 3.5 SP1 installed." Foreground="#FF0000B9" VerticalAlignment="Top" Height="26.261"/>
-		<Label Margin="22,52.261,90,0" Content="Please download and then install the suitable version of .NET Framework here:" Foreground="#FF0000B9" VerticalAlignment="Top" Height="26.261"/>
+		<Label x:Name="lblDescription1" Margin="22,22,90,0" Content="OneSync 3 can only run on computer which has .NET 3.5 SP1 installed." Foreground="#FF0000B9" VerticalAlignment="Top" Height="26.261"/>
+		<Label x:Name="lblDescription2" Margin="22,52.261,90,0" Content="Please download and then install the suitable version of .NET Framework here:" Foreground="#FF0000B9" VerticalAlignment="Top" Height="26.261"/>
 		<Label x:Name="lblDownloadLink" Margin="0,52.261,70,0" Content="Download .NET X.Y" Foreground="#FF0000B9" VerticalAlignment="Top" Height="26.261" HorizontalAlignment="Right" Width="134" Cursor="Hand" FontWeight="Bold" MouseDown="lblDownloadLink_MouseDown" RenderTransformOrigin="0.41,0.409"/>
 	</Grid>
 	<Window.Background>

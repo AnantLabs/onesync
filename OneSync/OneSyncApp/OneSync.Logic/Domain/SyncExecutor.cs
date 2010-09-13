@@ -9,19 +9,23 @@ using System.IO;
 using Community.CsharpSqlite;
 using Community.CsharpSqlite.SQLiteClient;
 using OneSync.Files;
+using System.Resources;
 
 
 namespace OneSync.Synchronization
 {
     public class SyncExecutor
     {
+        public static ResourceManager m_ResourceManager = new ResourceManager(Properties.Settings.Default.LanguageResx,
+                                    System.Reflection.Assembly.GetExecutingAssembly());
+
         public static void CopyToDirtyFolderAndUpdateActionTable(SyncAction action, SyncJob job)
         {
             if (!Directory.Exists(job.SyncSource.Path))
-                throw  new SyncSourceException(job.SyncSource.Path + " is not found");
+                throw new SyncSourceException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), job.SyncSource.Path));
 
             if ( !Directory.Exists(job.IntermediaryStorage.Path))
-                throw new SyncSourceException(job.IntermediaryStorage.Path + " is not found");
+                throw new SyncSourceException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), job.IntermediaryStorage.Path));
 
             if (!Directory.Exists(job.IntermediaryStorage.DirtyFolderPath))
                 Directory.CreateDirectory(job.IntermediaryStorage.DirtyFolderPath);
@@ -34,8 +38,7 @@ namespace OneSync.Synchronization
             var con = db.NewSQLiteConnection();
 
             if (con == null)
-                throw new DatabaseException(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME) +
-                                            " is not found");
+                throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME)));
 
             var transaction = (SqliteTransaction)con.BeginTransaction();
             try
@@ -44,7 +47,8 @@ namespace OneSync.Synchronization
                 actProvider.Add(action, con);
 
                 if (!FileUtils.Copy(absolutePathInSyncSource, absolutePathInImediateStorage, true))
-                    throw new Exception("Can't copy file " + absolutePathInSyncSource);
+                    throw new Exception(String.Format(m_ResourceManager.GetString("err_cannotCopyFile"), absolutePathInSyncSource));
+                
                 transaction.Commit();
             }
             catch (OutOfDiskSpaceException)
@@ -78,10 +82,10 @@ namespace OneSync.Synchronization
         public static void CopyToSyncFolderAndUpdateActionTable(SyncAction action, SyncJob job)
         {
             if (!Directory.Exists(job.SyncSource.Path))
-                throw new SyncSourceException(job.SyncSource.Path + " is not found");
+                throw new SyncSourceException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), job.SyncSource.Path));
 
             if (!Directory.Exists(job.IntermediaryStorage.Path))
-                throw new SyncSourceException(job.IntermediaryStorage.Path + " is not found");
+                throw new SyncSourceException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), job.IntermediaryStorage.Path));
             
             // TODO: atomic....
             string absolutePathInIntermediateStorage = job.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
@@ -91,15 +95,16 @@ namespace OneSync.Synchronization
             SqliteConnection con = dbAccess.NewSQLiteConnection();
 
             if (con == null)
-                throw new DatabaseException(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME) +
-                                            " is not found");
+                throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME)));
 
             SqliteTransaction trasaction = (SqliteTransaction)con.BeginTransaction();
             try
             {
                 SQLiteSyncActionsProvider actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
                 actProvider.Delete(action, con);
-                if (!Files.FileUtils.Copy(absolutePathInIntermediateStorage, absolutePathInSyncSource, true)) throw new Exception("Can't copy file " + absolutePathInIntermediateStorage);
+                if (!Files.FileUtils.Copy(absolutePathInIntermediateStorage, absolutePathInSyncSource, true))
+                    throw new Exception(String.Format(m_ResourceManager.GetString("err_cannotCopyFile"), absolutePathInIntermediateStorage));
+
                 trasaction.Commit();
                 Files.FileUtils.DeleteFileAndFolderIfEmpty(job.IntermediaryStorage.DirtyFolderPath, absolutePathInIntermediateStorage, true);
             }
@@ -123,10 +128,10 @@ namespace OneSync.Synchronization
         public static void DuplicateRenameInSyncFolderAndUpdateActionTable(SyncAction action, SyncJob job)
         {
             if (!Directory.Exists(job.SyncSource.Path))
-                throw new SyncSourceException(job.SyncSource.Path + " is not found");
+                throw new SyncSourceException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), job.SyncSource.Path));
 
             if (!Directory.Exists(job.IntermediaryStorage.Path))
-                throw new SyncSourceException(job.IntermediaryStorage.Path + " is not found");
+                throw new SyncSourceException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), job.IntermediaryStorage.Path));
 
             string absolutePathInIntermediateStorage = job.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
             string absolutePathInSyncSource = job.SyncSource.Path + action.RelativeFilePath;
@@ -135,8 +140,7 @@ namespace OneSync.Synchronization
             SqliteConnection con = access.NewSQLiteConnection();
 
             if (con == null)
-                throw new DatabaseException(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME) +
-                                            " is not found");
+                throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME)));
 
             SqliteTransaction trasaction = (SqliteTransaction)con.BeginTransaction();
             try
@@ -146,7 +150,7 @@ namespace OneSync.Synchronization
 
                 if (!Files.FileUtils.DuplicateRename(absolutePathInSyncSource, absolutePathInSyncSource)
                     || !Files.FileUtils.Copy(absolutePathInIntermediateStorage, absolutePathInSyncSource, true))
-                    throw new Exception("Can't copy file " + absolutePathInIntermediateStorage);
+                    throw new Exception(String.Format(m_ResourceManager.GetString("err_cannotCopyFile"), absolutePathInIntermediateStorage));
                 trasaction.Commit();
                 Files.FileUtils.DeleteFileAndFolderIfEmpty(job.IntermediaryStorage.DirtyFolderPath, absolutePathInIntermediateStorage, true);
             }
@@ -173,10 +177,10 @@ namespace OneSync.Synchronization
         public static void ConflictRenameAndUpdateActionTable(RenameAction action, SyncJob job, bool keepConflictedFile)
         {
             if (!Directory.Exists(job.SyncSource.Path))
-                throw new SyncSourceException(job.SyncSource.Path + " is not found");
+                throw new SyncSourceException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), job.SyncSource.Path));
 
             if (!Directory.Exists(job.IntermediaryStorage.Path))
-                throw new SyncSourceException(job.IntermediaryStorage.Path + " is not found");
+                throw new SyncSourceException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), job.IntermediaryStorage.Path));
 
             string absPathInIStorage = job.IntermediaryStorage.DirtyFolderPath + action.RelativeFilePath;
             string absPathInSyncSource = job.SyncSource.Path + action.RelativeFilePath;
@@ -186,8 +190,7 @@ namespace OneSync.Synchronization
             SqliteConnection con = access.NewSQLiteConnection();
 
             if (con == null)
-                throw new DatabaseException(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME) +
-                                            " is not found");
+                throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME)));
 
             SqliteTransaction trasaction = (SqliteTransaction)con.BeginTransaction();
             try
@@ -201,7 +204,7 @@ namespace OneSync.Synchronization
                     Files.FileUtils.DuplicateRename(absPathInSyncSource, absPathInSyncSource);
 
                 if (!Files.FileUtils.Move(absOldPathInSyncSource, absPathInSyncSource, true))
-                    throw new Exception("Can't rename file " + absPathInIStorage);
+                    throw new Exception(String.Format(m_ResourceManager.GetString("err_cannotRenameFile"), absPathInIStorage));
 
                 trasaction.Commit();
                 Files.FileUtils.DeleteFileAndFolderIfEmpty(job.IntermediaryStorage.DirtyFolderPath, absPathInIStorage, true);
@@ -230,8 +233,7 @@ namespace OneSync.Synchronization
             SqliteConnection con = access.NewSQLiteConnection();
 
             if (con == null)
-                throw new DatabaseException(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME) +
-                                            " is not found");
+                throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME)));
 
             SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
 
@@ -240,7 +242,7 @@ namespace OneSync.Synchronization
                 SQLiteSyncActionsProvider actProvider = (SQLiteSyncActionsProvider)SyncClient.GetSyncActionsProvider(job.IntermediaryStorage.Path);
                 actProvider.Delete(action);
                 if (!Files.FileUtils.Delete(absolutePathInSyncSource, true))
-                    throw new Exception("Can't delete file " + absolutePathInSyncSource);
+                    throw new Exception(String.Format(m_ResourceManager.GetString("err_cannotDeleteFile"), absolutePathInSyncSource));
                 transaction.Commit();
                 /*
                 Files.FileUtils.DeleteFileAndFolderIfEmpty(job.IntermediaryStorage.DirtyFolderPath, 
@@ -300,10 +302,10 @@ namespace OneSync.Synchronization
         public static void RenameInSyncFolderAndUpdateActionTable(RenameAction action, SyncJob job)
         {
             if (!Directory.Exists(job.SyncSource.Path))
-                throw new SyncSourceException(job.SyncSource.Path + " is not found");
+                throw new SyncSourceException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), job.SyncSource.Path));
 
             if (!Directory.Exists(job.IntermediaryStorage.Path))
-                throw new SyncSourceException(job.IntermediaryStorage.Path + " is not found");
+                throw new SyncSourceException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), job.IntermediaryStorage.Path));
             
             string oldAbsolutePathInSyncSource = job.SyncSource.Path + action.PreviousRelativeFilePath;
             string newAbsolutePathInSyncSource = job.SyncSource.Path + action.RelativeFilePath;
@@ -312,8 +314,7 @@ namespace OneSync.Synchronization
             SqliteConnection con = access.NewSQLiteConnection();
 
             if (con == null)
-                throw new DatabaseException(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME) +
-                                            " is not found");
+                throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME)));
 
             SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
 
@@ -324,7 +325,7 @@ namespace OneSync.Synchronization
 
                 if (File.Exists(oldAbsolutePathInSyncSource) &&
                     !Files.FileUtils.Move(oldAbsolutePathInSyncSource, newAbsolutePathInSyncSource, true))
-                    throw new Exception("Can't rename file " + oldAbsolutePathInSyncSource);
+                    throw new Exception(String.Format(m_ResourceManager.GetString("err_cannotRenameFile"), oldAbsolutePathInSyncSource));
                 transaction.Commit();
             }
             catch (Exception)

@@ -1,0 +1,437 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="btn_addNewJob" xml:space="preserve">
+    <value>新的同步工作</value>
+  </data>
+  <data name="btn_preview" xml:space="preserve">
+    <value>预览工作</value>
+  </data>
+  <data name="btn_showLog" xml:space="preserve">
+    <value>显示记录</value>
+  </data>
+  <data name="btn_syncJobs" xml:space="preserve">
+    <value>同步所选择的工作</value>
+  </data>
+  <data name="chb_showPartialSyncJobs" xml:space="preserve">
+    <value>只显示部分同步工作，根据所选择的</value>
+  </data>
+  <data name="err_closeWhileSyncing" xml:space="preserve">
+    <value>同步工作还在进行当中，确定要关闭OneSync吗？</value>
+  </data>
+  <data name="err_closeWhileSyncingTitle" xml:space="preserve">
+    <value>关闭OneSync</value>
+  </data>
+  <data name="err_deleteJob" xml:space="preserve">
+    <value>确定删除此同步工作： {0}？</value>
+  </data>
+  <data name="err_deleteJobTitle" xml:space="preserve">
+    <value>删除同步工作</value>
+  </data>
+  <data name="err_deleteJobWithNoIntermediateStorage" xml:space="preserve">
+    <value>你将要删除的同步工作： {0} 的中间储藏地址不存在。 如果将此工作删除，OneSync的主要文件可能受到影响。 确定继续？</value>
+  </data>
+  <data name="err_deleteJobWithNoIntermediateStorageTitle" xml:space="preserve">
+    <value>删除同步工作 -- 中间储藏地址不存在</value>
+  </data>
+  <data name="err_directoryNotFound" xml:space="preserve">
+    <value>档案目录不存在： {0}</value>
+  </data>
+  <data name="err_errorReported" xml:space="preserve">
+    <value>系统发生错误： {0}</value>
+  </data>
+  <data name="err_filesCannotBeMoved" xml:space="preserve">
+    <value>档案不能被移动至 {0}。请自行移动档案。</value>
+  </data>
+  <data name="err_filesCannotBeMoved2" xml:space="preserve">
+    <value>档案不能从旧的中间储藏地址移至新的中间储藏地址。请自行移动档案。</value>
+  </data>
+  <data name="err_helpFileNotFound" xml:space="preserve">
+    <value>用户手册不存在。</value>
+  </data>
+  <data name="err_helpFileNotFoundTitle" xml:space="preserve">
+    <value>OneSync -- 用户手册不存在</value>
+  </data>
+  <data name="err_insufficientSpace" xml:space="preserve">
+    <value>{0} 储存空间不足。请使用足够空间的储存地。</value>
+  </data>
+  <data name="err_intermediateStorageTooSmall" xml:space="preserve">
+    <value>新的中间储藏地址储存空间过小，因此有些档案无法存入新的中间储藏地址。</value>
+  </data>
+  <data name="err_invalidInput" xml:space="preserve">
+    <value>请检查输入值。</value>
+  </data>
+  <data name="err_metadataMissing" xml:space="preserve">
+    <value>元数据不存在或已被破坏。</value>
+  </data>
+  <data name="err_metadataMissingSource" xml:space="preserve">
+    <value>元数据不存有此原址 {0}.</value>
+  </data>
+  <data name="err_noLogFile" xml:space="preserve">
+    <value>此同步工作还未有任何的记录。</value>
+  </data>
+  <data name="err_noSyncJob" xml:space="preserve">
+    <value>请选择至少一个同步工作。</value>
+  </data>
+  <data name="err_syncJobNotFound" xml:space="preserve">
+    <value>所选的同步工作不存在。</value>
+  </data>
+  <data name="err_unableDeleteJob" xml:space="preserve">
+    <value>无法删除此同步工作。</value>
+  </data>
+  <data name="hdr_jobName" xml:space="preserve">
+    <value>同步工作名</value>
+  </data>
+  <data name="hdr_reorder" xml:space="preserve">
+    <value>排序</value>
+  </data>
+  <data name="hdr_syncSourceDir" xml:space="preserve">
+    <value>同步文件</value>
+  </data>
+  <data name="hdr_syncStatus" xml:space="preserve">
+    <value>同步状态</value>
+  </data>
+  <data name="hrd_syncIntStorageDir" xml:space="preserve">
+    <value>中间储藏地址</value>
+  </data>
+  <data name="lbl_syncDescription" xml:space="preserve">
+    <value>同步工作量:
+
+进行中的工作:</value>
+  </data>
+  <data name="lbl_syncIntStorageDir" xml:space="preserve">
+    <value>中间储藏地址:</value>
+  </data>
+  <data name="lbl_syncJobName" xml:space="preserve">
+    <value>同步工作名:</value>
+  </data>
+  <data name="lbl_syncSourceDir" xml:space="preserve">
+    <value>同步文件:</value>
+  </data>
+  <data name="lbl_syncSourceDir2" xml:space="preserve">
+    <value>同步文件</value>
+  </data>
+  <data name="msg_syncCompleted" xml:space="preserve">
+    <value>同步顺利完成。</value>
+  </data>
+  <data name="msg_syncing" xml:space="preserve">
+    <value>同步中......</value>
+  </data>
+  <data name="msg_syncingDirectory" xml:space="preserve">
+    <value>同步中: {0}</value>
+  </data>
+  <data name="msg_syncJobCompleted" xml:space="preserve">
+    <value>同步工作完成。</value>
+  </data>
+  <data name="not_exitName" xml:space="preserve">
+    <value>退出</value>
+  </data>
+  <data name="not_helpName" xml:space="preserve">
+    <value>帮助（英文版用户手册）</value>
+  </data>
+  <data name="not_message1" xml:space="preserve">
+    <value>双击此图标以显示OneSync视窗。</value>
+  </data>
+  <data name="not_messageTitle1" xml:space="preserve">
+    <value>OneSync 仍在运行中</value>
+  </data>
+  <data name="not_name" xml:space="preserve">
+    <value>OneSync</value>
+  </data>
+  <data name="not_openName" xml:space="preserve">
+    <value>开启 OneSync 3</value>
+  </data>
+  <data name="tot_browseFolder" xml:space="preserve">
+    <value>点击浏览文件夹</value>
+  </data>
+  <data name="tot_cancelJobs" xml:space="preserve">
+    <value>停止随后同步工作</value>
+  </data>
+  <data name="tot_deleteJob" xml:space="preserve">
+    <value>删除此工作</value>
+  </data>
+  <data name="tot_editJob" xml:space="preserve">
+    <value>编辑此工作</value>
+  </data>
+  <data name="tot_helpFile" xml:space="preserve">
+    <value>帮助</value>
+  </data>
+  <data name="tot_previewJob" xml:space="preserve">
+    <value>预览同步工作</value>
+  </data>
+  <data name="tot_showLog" xml:space="preserve">
+    <value>显示同步记录</value>
+  </data>
+  <data name="err_cannotPreview" xml:space="preserve">
+    <value>无法预览同步工作。</value>
+  </data>
+  <data name="err_cannotPreview2" xml:space="preserve">
+    <value>无法预览同步工作：{0}</value>
+  </data>
+  <data name="err_directoryInaccessible" xml:space="preserve">
+    <value>无法登入档案目录。</value>
+  </data>
+  <data name="err_IntermediateStorageNoutFound" xml:space="preserve">
+    <value>无法寻获此中间储藏地址：“{0}”。</value>
+  </data>
+  <data name="err_activeWindowAndTaskbar" xml:space="preserve">
+    <value>为了更新任务栏，再此需要一个有效使用的视窗</value>
+  </data>
+  <data name="err_databaseException" xml:space="preserve">
+    <value>数据库例外：请检查同步工作名是否合格以及所牵涉到的文件夹目录是否存在</value>
+  </data>
+  <data name="err_directoryInvalid" xml:space="preserve">
+    <value>档案目录不合格</value>
+  </data>
+  <data name="err_directoryNoPermission" xml:space="preserve">
+    <value>无法登入档案目录</value>
+  </data>
+  <data name="err_directoryNotExist" xml:space="preserve">
+    <value>{0} 不存在</value>
+  </data>
+  <data name="err_directoryTooLong" xml:space="preserve">
+    <value>同步档案目录不可超过260个英文字母</value>
+  </data>
+  <data name="err_intermediateStorageNotFound" xml:space="preserve">
+    <value>无法寻获中间储藏档案</value>
+  </data>
+  <data name="err_jobNameCannotEmpty" xml:space="preserve">
+    <value>同步工作名不可置空</value>
+  </data>
+  <data name="err_jobNameEmpty" xml:space="preserve">
+    <value>同步工作名不可置空</value>
+  </data>
+  <data name="err_jobNameTooLong" xml:space="preserve">
+    <value>同步工作名不可超过25个中文单字</value>
+  </data>
+  <data name="err_onlyTwoSyncSourceFolders" xml:space="preserve">
+    <value>每个中间储藏地址只可以使用于最多两个同步工作</value>
+  </data>
+  <data name="err_pathIllegal" xml:space="preserve">
+    <value>档案目录不合格</value>
+  </data>
+  <data name="err_pathTooLong" xml:space="preserve">
+    <value>档案目录过长</value>
+  </data>
+  <data name="err_recursive" xml:space="preserve">
+    <value>文件夹及其子文件夹间的同步不被允许</value>
+  </data>
+  <data name="err_recursive2" xml:space="preserve">
+    <value>同步源档案不可存在于或者与中间储藏档案相同，反之亦然</value>
+  </data>
+  <data name="err_somethingNotFound" xml:space="preserve">
+    <value>{0} 不存在</value>
+  </data>
+  <data name="err_sourceIntermediateEmpty" xml:space="preserve">
+    <value>同步文件与中间储藏地址不可置空</value>
+  </data>
+  <data name="err_sourceSameAsIntermediate" xml:space="preserve">
+    <value>同步文件不可与中间储藏地址相同</value>
+  </data>
+  <data name="err_syncFolderNotFound" xml:space="preserve">
+    <value>无法寻获同步源档案</value>
+  </data>
+  <data name="err_syncFolderSameAsIntermediate" xml:space="preserve">
+    <value>同步源档案不可与中间储藏档案相同</value>
+  </data>
+  <data name="err_syncIntermediateInvalid" xml:space="preserve">
+    <value>中间储藏地址不合格</value>
+  </data>
+  <data name="err_syncjobCreated" xml:space="preserve">
+    <value>此同步工作：{0}已存在</value>
+  </data>
+  <data name="err_syncSourceInvalid" xml:space="preserve">
+    <value>同步源档案目录不合格</value>
+  </data>
+  <data name="hdr_action" xml:space="preserve">
+    <value>动作</value>
+  </data>
+  <data name="hdr_conflictResolution" xml:space="preserve">
+    <value>同步冲突解决方法</value>
+  </data>
+  <data name="hdr_filePath" xml:space="preserve">
+    <value>文件路径</value>
+  </data>
+  <data name="hdr_originalFilePath" xml:space="preserve">
+    <value>初始文件路径</value>
+  </data>
+  <data name="hdr_skip" xml:space="preserve">
+    <value>省略</value>
+  </data>
+  <data name="lbl_filterText" xml:space="preserve">
+    <value>关键字：</value>
+  </data>
+  <data name="lbl_filterType" xml:space="preserve">
+    <value>预览种类：</value>
+  </data>
+  <data name="lbl_filterTypeConflictFiles" xml:space="preserve">
+    <value>存在冲突的文件</value>
+  </data>
+  <data name="lbl_filterTypeCopyOnly" xml:space="preserve">
+    <value>将被拷贝的文件</value>
+  </data>
+  <data name="lbl_filterTypeDeleteOnly" xml:space="preserve">
+    <value>将被删除的文件</value>
+  </data>
+  <data name="lbl_filterTypeRenameOnly" xml:space="preserve">
+    <value>将被易名的文件</value>
+  </data>
+  <data name="lbl_filterTypeShowAll" xml:space="preserve">
+    <value>全部的文件</value>
+  </data>
+  <data name="lbl_preview" xml:space="preserve">
+    <value>同步预览</value>
+  </data>
+  <data name="lbl_previewDone" xml:space="preserve">
+    <value>结束预览</value>
+  </data>
+  <data name="win_syncPreviewWindow" xml:space="preserve">
+    <value>OneSync - 同步预览</value>
+  </data>
+  <data name="err_cannotCopyFile" xml:space="preserve">
+    <value>不能拷贝此档案 {0}</value>
+  </data>
+  <data name="err_cannotDeleteFile" xml:space="preserve">
+    <value>不能删除此档案 {0}</value>
+  </data>
+  <data name="err_cannotRenameFile" xml:space="preserve">
+    <value>不能修改档案名 {0}</value>
+  </data>
+  <data name="lbl_dotNetFrameworkDescriptionText1" xml:space="preserve">
+    <value>OneSync 3 只能在安装有 .NET 3.5 SP1 的系统上顺利运行。</value>
+  </data>
+  <data name="lbl_dotNetFrameworkDescriptionText2" xml:space="preserve">
+    <value>请到以下网站下载及安装恰当的 .NET 版本：</value>
+  </data>
+  <data name="lbl_download" xml:space="preserve">
+    <value>下载：</value>
+  </data>
+  <data name="log_fromIntermediateStorage" xml:space="preserve">
+    <value>取自中间储藏地址</value>
+  </data>
+  <data name="log_toIntermediateStorage" xml:space="preserve">
+    <value>传送至中间储藏地址</value>
+  </data>
+  <data name="log_xslFileName" xml:space="preserve">
+    <value>onesynclog(Chinese).xsl</value>
+  </data>
+  <data name="win_dotNetFrameworkRequirement" xml:space="preserve">
+    <value>OneSync 系统需求</value>
+  </data>
+</root>

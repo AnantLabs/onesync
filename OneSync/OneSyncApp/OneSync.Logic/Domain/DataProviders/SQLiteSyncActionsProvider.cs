@@ -6,11 +6,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using Community.CsharpSqlite.SQLiteClient;
+using System;
+using System.Resources;
 
 namespace OneSync.Synchronization
 {
     public class SQLiteSyncActionsProvider : SyncActionsProvider
     {
+        public ResourceManager m_ResourceManager = new ResourceManager(Properties.Settings.Default.LanguageResx,
+                                    System.Reflection.Assembly.GetExecutingAssembly());
 
         public SQLiteSyncActionsProvider(string storagePath)
             : base(storagePath)
@@ -27,10 +31,7 @@ namespace OneSync.Synchronization
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 if (con == null)
-                    throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME) +
-                                                " is not found");
-
-                if (con == null) throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)+ " is not found");
+                    throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)));
 
                 string cmdText = "SELECT * FROM " + Configuration.TBL_ACTION + 
                                  " WHERE " + Configuration.COL_CHANGE_IN + opt + " @sourceId";
@@ -133,7 +134,8 @@ namespace OneSync.Synchronization
             SQLiteAccess db = new SQLiteAccess(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME),false);
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
-                if (con == null) throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME) + " is not found");
+                if (con == null)
+                    throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)));
                 string cmdText = "DELETE FROM " + Configuration.TBL_ACTION + 
                                  " WHERE " + Configuration.COL_ACTION_ID + " = @id";
 
@@ -165,8 +167,7 @@ namespace OneSync.Synchronization
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 if (con == null)
-                    throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME) +
-                                                " is not found");
+                    throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)));
 
                 string cmdText = "DELETE FROM " + Configuration.TBL_ACTION +
                                  " WHERE " + Configuration.COL_ACTION_ID + " = @id";
@@ -191,8 +192,7 @@ namespace OneSync.Synchronization
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 if (con == null)
-                    throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME) +
-                                                " is not found");
+                    throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)));
 
                 string cmdText = "DELETE FROM " + Configuration.TBL_ACTION + 
                                  " WHERE " + Configuration.COL_CHANGE_IN + " " + opt + " @id";
@@ -212,8 +212,7 @@ namespace OneSync.Synchronization
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 if (con == null)
-                    throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME) +
-                                                " is not found");
+                    throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)));
  
                 string cmdText = "CREATE TABLE IF NOT EXISTS " + Configuration.TBL_ACTION +
                                  " ( " + Configuration.COL_ACTION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -251,8 +250,7 @@ namespace OneSync.Synchronization
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 if (con == null)
-                    throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME) +
-                                                " is not found");
+                    throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)));
 
                 string cmdText = "INSERT INTO " + Configuration.TBL_ACTION +
                                 " ( " + Configuration.COL_CHANGE_IN + "," +
@@ -302,8 +300,7 @@ namespace OneSync.Synchronization
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 if (con == null)
-                    throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME) +
-                                                " is not found");
+                    throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)));
 
                 string cmdText = "INSERT INTO " + Configuration.TBL_ACTION +
                                  " ( " + Configuration.COL_CHANGE_IN + "," +
@@ -351,8 +348,7 @@ namespace OneSync.Synchronization
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 if (con == null)
-                    throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME) +
-                                                " is not found");
+                    throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)));
 
                 string cmdText = "INSERT INTO " + Configuration.TBL_ACTION +
                                             " ( " + Configuration.COL_CHANGE_IN + "," +

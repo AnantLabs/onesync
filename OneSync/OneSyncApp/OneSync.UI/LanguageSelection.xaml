@@ -1,0 +1,21 @@
+﻿<Window
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	x:Class="OneSync.LanguageSelection"
+	x:Name="Window"
+	Title="OneSync Language 用户语言"
+	Width="442" Height="206" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Icon="../Application.ico" Closing="Window_Closing">
+
+	<Grid x:Name="LayoutRoot">
+		<TextBlock Margin="8,8,-1,0" TextWrapping="Wrap" Foreground="#FF0000B9" VerticalAlignment="Top" Height="55"><Run Text="Please choose a language that you want to use in OneSync."/><Run Text=" This action cannot be undone."/><LineBreak/><Run Text="请选择 OneSync 的工作语言。"/><Run Text="此动作无法复原。"/></TextBlock>
+		<Button x:Name="btnEnglish" HorizontalAlignment="Left" Margin="68,0,0,54" Width="102" Content="English" VerticalAlignment="Bottom" Height="26" Click="btnEnglish_Click"/>
+		<Button x:Name="btnChinese" Margin="0,0,68,54" Content="新马华文" HorizontalAlignment="Right" Width="102" VerticalAlignment="Bottom" Height="26" Click="btnChinese_Click"/>
+	</Grid>
+	<Window.Background>
+		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+			<GradientStop Color="#FF69DAF4" Offset="1"/>
+			<GradientStop Color="White" Offset="0.337"/>
+			<GradientStop Color="#FFC9EFF8" Offset="0.768"/>
+		</LinearGradientBrush>
+	</Window.Background>
+</Window>

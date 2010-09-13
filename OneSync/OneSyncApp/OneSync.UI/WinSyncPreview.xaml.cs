@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using OneSync.Synchronization;
+using System.Resources;
 
 namespace OneSync.UI
 {
@@ -15,6 +16,9 @@ namespace OneSync.UI
         private SyncJob _job;
         private IEnumerable<SyncAction> allActions = null; /* used for filtering */
         private TaskbarManager tbManager = TaskbarManager.Instance;
+
+        public ResourceManager m_ResourceManager = new ResourceManager(Properties.Settings.Default.LanguageResx,
+                                    System.Reflection.Assembly.GetExecutingAssembly());
 
         private WinSyncPreview() { }
 
@@ -40,7 +44,23 @@ namespace OneSync.UI
                 previewUIUpdate(false);
                 previewWorker.RunWorkerAsync();
             }
+
+            language();
 		}
+
+        void language()
+        {
+            this.Title = m_ResourceManager.GetString("win_syncPreviewWindow");
+            txtBlkSyncPreview.Text = m_ResourceManager.GetString("lbl_preview");
+            txtBlkSyncPreviewFilterType.Text = m_ResourceManager.GetString("lbl_filterType");
+            txtBlkSyncPreviewFilterText.Text = m_ResourceManager.GetString("lbl_filterText");
+            filterType1.Content = m_ResourceManager.GetString("lbl_filterTypeShowAll");
+            filterType2.Content = m_ResourceManager.GetString("lbl_filterTypeConflictFiles");
+            filterType3.Content = m_ResourceManager.GetString("lbl_filterTypeCopyOnly");
+            filterType4.Content = m_ResourceManager.GetString("lbl_filterTypeDeleteOnly");
+            filterType5.Content = m_ResourceManager.GetString("lbl_filterTypeRenameOnly");
+            txtBlkDone.Text = m_ResourceManager.GetString("lbl_previewDone");
+        }
 
         void previewWorker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -54,15 +74,15 @@ namespace OneSync.UI
             }
             catch (DirectoryNotFoundException ex)
             {
-                showErrorMsgInvoke("Directory not found: " + ex.Message);
+                showErrorMsgInvoke(String.Format(m_ResourceManager.GetString("err_directoryNotFound"), ex.Message));
             }
             catch(UnauthorizedAccessException)
             {
-                showErrorMsgInvoke("Directory is inaccessible");
+                showErrorMsgInvoke(m_ResourceManager.GetString("err_directoryInaccessible"));
             }
             catch (Exception)
             {
-                showErrorMsgInvoke("Can't generate sync preview");
+                showErrorMsgInvoke(m_ResourceManager.GetString("err_cannotPreview"));
             }
         }
 
@@ -73,7 +93,7 @@ namespace OneSync.UI
 
             if (e.Error != null)
             {
-                showErrorMsg("Unable to generate preview: " + e.Error.Message);
+                showErrorMsg(String.Format(m_ResourceManager.GetString("err_cannotPreview2"), e.Error.Message));
                 return;
             }
             if (_job == null || _job.SyncPreviewResult == null) return;
@@ -135,8 +155,7 @@ namespace OneSync.UI
         {
             if (!Directory.Exists(job.IntermediaryStorage.Path))
             {
-                showErrorMsg("Intermediary storage path: \"" + job.IntermediaryStorage.Path +
-                             "\" not found.");
+                showErrorMsg(String.Format(m_ResourceManager.GetString("err_IntermediateStorageNoutFound"), job.IntermediaryStorage.Path));
                 return false;
             }
             return true;
