@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Cryptography;
 using OneSync.Synchronization;
+using System.Resources;
 
 namespace OneSync.Files
 {
@@ -17,6 +18,9 @@ namespace OneSync.Files
     /// </summary>
     public class FileUtils
     {
+        public static ResourceManager m_ResourceManager = new ResourceManager(Properties.Settings.Default.LanguageResx,
+                                    System.Reflection.Assembly.GetExecutingAssembly());
+
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool GetFileInformationByHandle(IntPtr hFile,
                                                               out BY_HANDLE_FILE_INFORMATION lpFileInformation);
@@ -388,10 +392,10 @@ namespace OneSync.Files
         public static bool MoveFolder(string sourceDir, string destinationDir)
         {
             if (!Directory.Exists(sourceDir))
-                throw new SyncSourceException(sourceDir + " is not found");
+                throw new SyncSourceException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), sourceDir));
 
             if (!Directory.Exists(destinationDir))
-                throw new SyncSourceException(destinationDir + " is not found");
+                throw new SyncSourceException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), destinationDir));
 
             bool succeeded = true;
             //may throw unauthorize access here

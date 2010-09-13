@@ -13,6 +13,7 @@ using System.Xml;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using Microsoft.Win32;
+using System.Resources;
 
 namespace OneSync
 {
@@ -73,16 +74,20 @@ namespace OneSync
     /// </summary>
     public class Log
     {
+        public static ResourceManager m_ResourceManager = new ResourceManager(Properties.Settings.Default.LanguageResx,
+                                    System.Reflection.Assembly.GetExecutingAssembly());
+
         private const string ParentDirectoryName = "Log";
         private const string SyncDirAndLogFilePairsLocation = "logpairs.dat";
-        private const string XslFileName = "onesynclog.xsl";
+        private static string XslFileName = m_ResourceManager.GetString("log_xslFileName");
         private const string ExceptionLogFileName = "exceptionlog.txt";
         private const long MaxLogFileSize = 100000000; // Roughly 10MB
-        public const string To = "To intermediate storage";
-        public const string From = "From intermediate storage";
+        public static string To = m_ResourceManager.GetString("log_toIntermediateStorage");
+        public static string From = m_ResourceManager.GetString("log_fromIntermediateStorage");
 
         public Log()
         {
+            
         }
 
         /// <summary>

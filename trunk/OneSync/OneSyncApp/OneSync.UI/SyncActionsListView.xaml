@@ -66,13 +66,13 @@
                     <GridViewColumn CellTemplate="{StaticResource SelectCell}" Width="70">                                               
                         <DockPanel>
                             <CheckBox Name="checkBoxSelectAll" Margin="5" Checked="checkBoxSelectAll_Checked" Unchecked="checkBoxSelectAll_Unchecked"></CheckBox>                                
-                            <TextBlock Text="Skip" Margin="5"></TextBlock>
+                            <TextBlock x:Name="SyncActionListView_header_1" Text="Skip" Margin="5"></TextBlock>
                         </DockPanel>                           
                     </GridViewColumn>
-                    <GridViewColumn Header="Action" DisplayMemberBinding="{Binding ChangeType, Converter={StaticResource changeTypeConverter}}" Width="60"/>
-					<GridViewColumn Header="File Path" CellTemplate="{StaticResource PathCell}" Width="300"/>
-					<GridViewColumn Header="Original File Path" CellTemplate="{StaticResource OriginalPathCell}" Width="300"/>
-					<GridViewColumn Header="Conflict Resolution" CellTemplate="{StaticResource ActionCell}" Width="120"/>
+                    <GridViewColumn x:Name="SyncActionListView_header_2" Header="Action" DisplayMemberBinding="{Binding ChangeType, Converter={StaticResource changeTypeConverter}}" Width="60"/>
+					<GridViewColumn x:Name="SyncActionListView_header_3" Header="File Path" CellTemplate="{StaticResource PathCell}" Width="300"/>
+					<GridViewColumn x:Name="SyncActionListView_header_4" Header="Original File Path" CellTemplate="{StaticResource OriginalPathCell}" Width="300"/>
+					<GridViewColumn x:Name="SyncActionListView_header_5" Header="Conflict Resolution" CellTemplate="{StaticResource ActionCell}" Width="120"/>
 				</GridView>
 			</ListView.View>
 		</ListView>

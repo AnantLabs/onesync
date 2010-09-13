@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Interop;
 using System.Diagnostics;
+using System.Resources;
 
 namespace OneSync.UI
 {
@@ -12,6 +13,9 @@ namespace OneSync.UI
     /// </summary>
     public class TaskbarManager
     {
+        public ResourceManager m_ResourceManager = new ResourceManager(Properties.Settings.Default.LanguageResx,
+                                    System.Reflection.Assembly.GetExecutingAssembly());
+
         // Hide the default constructor
         private TaskbarManager()
         {
@@ -117,7 +121,7 @@ namespace OneSync.UI
                     if (currentProcess != null && currentProcess.MainWindowHandle != IntPtr.Zero)
                         ownerHandle = currentProcess.MainWindowHandle;
                     else
-                        throw new InvalidOperationException("A valid active Window is needed to update the Taskbar");
+                        throw new InvalidOperationException(m_ResourceManager.GetString("err_activeWindowAndTaskbar"));
                 }
 
                 return ownerHandle;

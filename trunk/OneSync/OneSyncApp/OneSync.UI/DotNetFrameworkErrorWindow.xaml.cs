@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using OneSync.UI;
 using System.Diagnostics;
+using System.Resources;
 
 namespace OneSync
 {
@@ -20,16 +21,23 @@ namespace OneSync
 	public partial class DotNetFrameworkErrorWindow : Window
 	{
         // Start: Global variables.
+        ResourceManager m_ResourceManager = new ResourceManager(Properties.Settings.Default.LanguageResx,
+                                    System.Reflection.Assembly.GetExecutingAssembly());
         string[] dotNetFrameworkInfo;
         // End: Global variables.
 
 		public DotNetFrameworkErrorWindow()
 		{
-			this.InitializeComponent();
-			
+            this.InitializeComponent();
+
+            this.Title = m_ResourceManager.GetString("win_dotNetFrameworkRequirement");
+
+            lblDescription1.Content = m_ResourceManager.GetString("lbl_dotNetFrameworkDescriptionText1");
+            lblDescription2.Content = m_ResourceManager.GetString("lbl_dotNetFrameworkDescriptionText2");
+
             ProgramUpdateChecker dotNetFrameworkUpdateChecker = new ProgramUpdateChecker();
             dotNetFrameworkInfo = dotNetFrameworkUpdateChecker.GetRequiredDotNetInfo();
-            lblDownloadLink.Content = "Download " + dotNetFrameworkInfo[0];
+            lblDownloadLink.Content = m_ResourceManager.GetString("lbl_download") + " " + dotNetFrameworkInfo[0];
 		}
 
 		private void lblDownloadLink_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Community.CsharpSqlite.SQLiteClient;
+using System.Resources;
 
 namespace OneSync.Synchronization
 {
@@ -14,6 +15,9 @@ namespace OneSync.Synchronization
     /// </summary>
     public class SQLiteSyncJobManager: SyncJobManager
     {
+        public static ResourceManager m_ResourceManager = new ResourceManager(Properties.Settings.Default.LanguageResx,
+                                    System.Reflection.Assembly.GetExecutingAssembly());
+
         // TODO: Wrap Update/Add etc with try catch and return false if exception thrown?
 
         // TODO: Find a better place to define these constant?
@@ -55,8 +59,7 @@ namespace OneSync.Synchronization
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 if (con == null)
-                    throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME) +
-                                                " is not found");
+                    throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)));
 
                 string cmdText = "CREATE TABLE IF NOT EXISTS " + SYNCJOB_TABLE +
                                 "(" + COL_SYNCJOB_ID + " VARCHAR(50) PRIMARY KEY, "
@@ -99,8 +102,7 @@ namespace OneSync.Synchronization
                 using (SqliteConnection con =  db.NewSQLiteConnection ())
                 {
                     if (con == null)
-                        throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME) +
-                                                    " is not found");
+                        throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)));
     
                     using (SqliteCommand cmd = con.CreateCommand())
                     {
@@ -140,8 +142,7 @@ namespace OneSync.Synchronization
             using (SqliteConnection con = db.NewSQLiteConnection())
             {
                 if (con == null)
-                    throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME) +
-                                                " is not found");
+                    throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)));
                 string cmdText = "SELECT * FROM " + SYNCJOB_TABLE +
                                  " p, " + DATASOURCE_INFO_TABLE +
                                  " d WHERE p" + "." + COL_SYNC_SOURCE_ID + " = d" + "." + COL_SOURCE_ID +
@@ -210,12 +211,10 @@ namespace OneSync.Synchronization
                 con2 = dbAccess2.NewSQLiteConnection();
 
                 if (con1 == null)
-                    throw new DatabaseException(Path.Combine(pathToJobFolder, Configuration.DATABASE_NAME) +
-                                                " is not found");
+                    throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(pathToJobFolder, Configuration.DATABASE_NAME)));
 
                 if (con2 == null)
-                    throw new DatabaseException(Path.Combine(metaDataSource.Path, Configuration.DATABASE_NAME) +
-                                                " is not found");
+                    throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(metaDataSource.Path, Configuration.DATABASE_NAME)));
 
 
                 transaction2 = (SqliteTransaction)con2.BeginTransaction();
@@ -246,7 +245,7 @@ namespace OneSync.Synchronization
                 Console.WriteLine(ex.Message);
                 if (transaction2 != null) transaction2.Rollback();
                 if (transaction1 != null) transaction1.Rollback();
-                throw new DatabaseException("Database exception: Please check your job name and folder directories for selected jobs");
+                throw new DatabaseException(m_ResourceManager.GetString("err_databaseException"));
             }
             finally
             {
@@ -258,11 +257,11 @@ namespace OneSync.Synchronization
         public override bool Update(SyncJob job)
         {            
             if (this.SyncJobExists(job.Name, job.ID))
-                throw new SyncJobNameExistException("Sync job " + job.Name + " is already created");
+                throw new SyncJobNameExistException(String.Format(m_ResourceManager.GetString("err_syncjobCreated"), job.Name));
 
             SQLiteSyncSourceProvider provider = (SQLiteSyncSourceProvider)SyncClient.GetSyncSourceProvider(job.IntermediaryStorage.Path);
             if (provider.GetSyncSourceCount() > 2)
-                throw new SyncSourcesNumberExceededException("Only 2 number of source folders are allowed to connect to the same intermediate storage folder.");
+                throw new SyncSourcesNumberExceededException(m_ResourceManager.GetString("err_onlyTwoSyncSourceFolders"));
 
             // Update a profile requires update 2 tables at the same time, 
             // If one update on a table fails, the total update action must fail too.
@@ -280,8 +279,7 @@ namespace OneSync.Synchronization
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 if (con == null)
-                    throw new DatabaseException(Path.Combine(this.StoragePath, DATABASE_NAME) +
-                                                " is not found");
+                    throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(this.StoragePath, DATABASE_NAME)));
 
                 SqliteTransaction transaction = (SqliteTransaction)con.BeginTransaction();
                 try
@@ -305,8 +303,7 @@ namespace OneSync.Synchronization
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 if (con == null)
-                    throw new DatabaseException(Path.Combine(this.StoragePath, DATABASE_NAME) +
-                                                " is not found");
+                    throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(this.StoragePath, DATABASE_NAME)));
 
                 SqliteParameterCollection paramList = new SqliteParameterCollection();
 
@@ -329,7 +326,7 @@ namespace OneSync.Synchronization
         public override bool Add(SyncJob job)
         {
             if (this.SyncJobExists(job.Name, job.ID))
-                throw new SyncJobNameExistException("Sync job " + job.Name + " is already created");
+                throw new SyncJobNameExistException(String.Format(m_ResourceManager.GetString("err_syncjobCreated"), job.Name));
 
             
             SQLiteAccess dbAccess1 = new SQLiteAccess(Path.Combine (this.StoragePath, Configuration.DATABASE_NAME),false);
@@ -338,12 +335,10 @@ namespace OneSync.Synchronization
             SqliteConnection con2 = dbAccess2.NewSQLiteConnection();
 
             if (con1 == null)
-                throw new DatabaseException(Path.Combine(this.StoragePath, DATABASE_NAME) +
-                                            " is not found");
+                throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(this.StoragePath, DATABASE_NAME)));
 
             if (con2 == null)
-                throw new DatabaseException(Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME) +
-                                            " is not found");
+                throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(job.IntermediaryStorage.Path, Configuration.DATABASE_NAME)));
 
             SqliteTransaction transaction1 = (SqliteTransaction)con1.BeginTransaction();
             SqliteTransaction transaction2 = (SqliteTransaction)con2.BeginTransaction();
@@ -366,7 +361,8 @@ namespace OneSync.Synchronization
                 SQLiteSyncSourceProvider.Add(job.SyncSource, con1);
 
                 SQLiteSyncSourceProvider provider = (SQLiteSyncSourceProvider)SyncClient.GetSyncSourceProvider(job.IntermediaryStorage.Path);
-                if (provider.GetSyncSourceCount() == 2) throw new SyncSourcesNumberExceededException("Only 2 number of source folders are allowed to connect to the same intermediate storage folder.");
+                if (provider.GetSyncSourceCount() == 2)
+                    throw new SyncSourcesNumberExceededException(m_ResourceManager.GetString("err_onlyTwoSyncSourceFolders"));
                 SQLiteSyncSourceProvider.Add(job.SyncSource, con2);
                 
                 transaction1.Commit();
@@ -390,7 +386,7 @@ namespace OneSync.Synchronization
         public bool Add(SyncJob job, SqliteConnection con)
         {
             if (this.SyncJobExists(job.Name, job.ID))
-                throw new SyncJobNameExistException("Sync job " + job.Name + " is already created");               
+                throw new SyncJobNameExistException(String.Format(m_ResourceManager.GetString("err_syncjobCreated"), job.Name));               
 
             using (SqliteCommand cmd = con.CreateCommand ())
             {
@@ -418,8 +414,7 @@ namespace OneSync.Synchronization
             using (SqliteConnection con = db.NewSQLiteConnection ())
             {
                 if (con == null)
-                    throw new DatabaseException(Path.Combine(this.StoragePath, Configuration.DATABASE_NAME) +
-                                                " is not found");
+                    throw new DatabaseException(String.Format(m_ResourceManager.GetString("err_somethingNotFound"), Path.Combine(this.StoragePath, Configuration.DATABASE_NAME)));
 
                 // TODO: Change sql to SELECT COUNT(*)?
                 string cmdText = "SELECT * FROM " + SYNCJOB_TABLE + " WHERE "

@@ -8,16 +8,30 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Globalization;
 using OneSync.Synchronization;
+using System.Resources;
 
 namespace OneSync.UI
 {
 	public partial class SyncActionsListView
 	{
-        
+        public ResourceManager m_ResourceManager = new ResourceManager(Properties.Settings.Default.LanguageResx,
+                                    System.Reflection.Assembly.GetExecutingAssembly());
+
 		public SyncActionsListView()
 		{
 			this.InitializeComponent();
+
+            language();
 		}
+
+        private void language()
+        {
+            SyncActionListView_header_1.Text = m_ResourceManager.GetString("hdr_skip");
+            SyncActionListView_header_2.Header = m_ResourceManager.GetString("hdr_action");
+            SyncActionListView_header_3.Header = m_ResourceManager.GetString("hdr_filePath");
+            SyncActionListView_header_4.Header = m_ResourceManager.GetString("hdr_originalFilePath");
+            SyncActionListView_header_5.Header = m_ResourceManager.GetString("hdr_conflictResolution");
+        }
 
         public IEnumerable<SyncAction> ItemsSource
         {

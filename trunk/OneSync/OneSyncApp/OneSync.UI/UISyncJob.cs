@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using System.Resources;
 using OneSync.Synchronization;
 
 namespace OneSync.UI
@@ -13,6 +14,9 @@ namespace OneSync.UI
     // UI Wrapper class for SyncJob and associated SyncAgent
     public class UISyncJobEntry : INotifyPropertyChanged
     {
+        private static ResourceManager m_ResourceManager = new ResourceManager(Properties.Settings.Default.LanguageResx,
+                                    System.Reflection.Assembly.GetExecutingAssembly());
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private SyncJob _syncJob;
@@ -179,6 +183,38 @@ namespace OneSync.UI
             OnPropertyChanged("SyncSource");
             //OnPropertyChanged("DropboxStatus");
         }
+
+        //Start: Language related
+        public string PreviewButtonText
+        {
+            get { return m_ResourceManager.GetString("btn_preview"); }
+        }
+
+        public string ShowLogButtonText
+        {
+            get { return m_ResourceManager.GetString("btn_showLog"); }
+        }
+
+        public string PreviewButtonToolTipText
+        {
+            get { return m_ResourceManager.GetString("tot_previewJob"); }
+        }
+
+        public string ShowLogButtonToolTipText
+        {
+            get { return m_ResourceManager.GetString("tot_showLog"); }
+        }
+
+        public string EditJobButtonToolTipText 
+        {
+            get { return m_ResourceManager.GetString("tot_editJob"); }
+        }
+
+        public string DeleteJobButtonToolTipText
+        {
+            get { return m_ResourceManager.GetString("tot_deleteJob"); }
+        }
+        //End: Language related
 
         public static Queue<UISyncJobEntry> GetSelectedJobs(IEnumerable<UISyncJobEntry> entries)
         {

@@ -24,7 +24,7 @@
 			<RowDefinition/>
 			<RowDefinition Height="42"/>
 		</Grid.RowDefinitions>
-		<TextBlock Foreground="Blue" FontSize="14" Text="Sync Preview" />
+		<TextBlock x:Name="txtBlkSyncPreview" Foreground="Blue" FontSize="14" Text="Sync Preview" />
 		<TextBlock x:Name="txtError" HorizontalAlignment="Right" Foreground="#FFB90000" FontSize="10.667" FontStyle="Italic" FontWeight="Bold" Visibility="hidden" />
 		<Grid Grid.Row="1" d:LayoutOverrides="Height">
 			<Grid.ColumnDefinitions>
@@ -34,15 +34,15 @@
 				<ColumnDefinition Width="150"/>
 				<ColumnDefinition Width="Auto"/>
 			</Grid.ColumnDefinitions>
-			<TextBlock FontSize="12" Text="Filter Type:" VerticalAlignment="Center" />
+			<TextBlock x:Name="txtBlkSyncPreviewFilterType" FontSize="12" Text="Filter Type:" VerticalAlignment="Center" />
 			<ComboBox Margin="0,0,10,0" SelectedIndex="0" Grid.Column="1" x:Name="cmbFilter" Height="21.96" SelectionChanged="cmbFilter_SelectionChanged">
-				<ComboBoxItem Content="Show All"/>
-				<ComboBoxItem Content="Conflict Files"/>
-				<ComboBoxItem Content="Copy Only"/>
-				<ComboBoxItem Content="Delete Only"/>
-				<ComboBoxItem Content="Rename Only"/>
+				<ComboBoxItem Name="filterType1" Content="Show All"/>
+				<ComboBoxItem Name="filterType2" Content="Conflict Files"/>
+				<ComboBoxItem Name="filterType3" Content="Copy Only"/>
+				<ComboBoxItem Name="filterType4" Content="Delete Only"/>
+				<ComboBoxItem Name="filterType5" Content="Rename Only"/>
 			</ComboBox>
-			<TextBlock Grid.Column="2" FontSize="12" Text="Filter Text:" VerticalAlignment="Center" />
+			<TextBlock x:Name="txtBlkSyncPreviewFilterText" Grid.Column="2" FontSize="12" Text="Filter Text:" VerticalAlignment="Center" />
 			<TextBox Grid.Column="3" Foreground="#FF808080" x:Name="txtFilter" Height="21.96" TextChanged="txtFilter_TextChanged" GotFocus="txtFilter_GotFocus"/>
 		</Grid>
 		<TextBlock x:Name="txtStatus" Grid.Row="3" FontSize="10" Visibility="Hidden"/>
