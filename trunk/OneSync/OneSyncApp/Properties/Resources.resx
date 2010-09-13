@@ -191,4 +191,78 @@ tr.d1 td { background-color: #FEFEF2; }
 &lt;/xsl:template&gt;
 &lt;/xsl:stylesheet&gt;</value>
   </data>
+  <data name="xslChinese" xml:space="preserve">
+    <value>&lt;?xml version='1.0' encoding='ISO-8859-1'?&gt;
+&lt;xsl:stylesheet version='1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'&gt;
+&lt;xsl:template match='/'&gt;
+&lt;html&gt;
+&lt;body style='FONT-FAMILY: arial; FONT-SIZE: 12px'&gt;
+&lt;style type='text/css'&gt;
+table.t1 { background-color: #FEFEF2; }tr.da { background-color: #E0ECF8; }
+tr.db { background-color: #EFFBEF; }
+tr.f { background-color: #F5A9A9; }
+tr.dh th { background-color: #FCF6CF; }
+tr.d0 td { background-color: #FCF6CF; }
+tr.d1 td { background-color: #FEFEF2; }
+&lt;/style&gt;
+&lt;table width='100%'&gt;
+&lt;tr class='da'&gt;&lt;td width='20%'&gt;同步文件&lt;/td&gt;
+&lt;td&gt;：&lt;xsl:value-of select='syncdirectory/@value'/&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+&lt;br&gt;&lt;/br&gt;&lt;br&gt;&lt;/br&gt;
+&lt;xsl:for-each select='syncdirectory/syncsession'&gt;
+&lt;table class='t1' width='100%'&gt;
+&lt;tr&gt;&lt;td width='20%'&gt;同步工作名&lt;/td&gt;&lt;td&gt;：&lt;xsl:value-of select='profilename'/&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td width='20%'&gt;日期&lt;/td&gt;&lt;td&gt;：&lt;xsl:value-of select='syncdate'/&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td width='20%'&gt;中间储藏地址&lt;/td&gt;&lt;td&gt;：&lt;xsl:value-of select='storagedirectory'/&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td width='20%'&gt;同步方向&lt;/td&gt;&lt;td&gt;：&lt;xsl:value-of select='syncdirection'/&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td width='20%'&gt;已处理档案数量&lt;/td&gt;&lt;td&gt;：&lt;xsl:value-of select='numberoffilesprocessed'/&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;xsl:if test='syncrecord'&gt;
+&lt;tr&gt;&lt;td width='20%'&gt;同步工作开始时间&lt;/td&gt;&lt;td&gt;：&lt;xsl:value-of select='starttime'/&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td width='20%'&gt;同步工作结束时间&lt;/td&gt;&lt;td&gt;：&lt;xsl:value-of select='endtime'/&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td colspan='2'&gt;
+&lt;table width='100%' cellpadding='3'&gt;
+&lt;tr class='dh' align='left'&gt;&lt;th width='75%'&gt;档案&lt;/th&gt;&lt;th&gt;动作&lt;/th&gt;&lt;th&gt;状态&lt;/th&gt;&lt;/tr&gt;
+&lt;xsl:for-each select='syncrecord'&gt;
+&lt;xsl:choose&gt;
+&lt;xsl:when test="status='FAIL'"&gt;
+&lt;tr class='f'&gt;
+&lt;td width='75%'&gt;&lt;xsl:value-of select='file'/&gt;&lt;/td&gt;
+&lt;td width='75%'&gt;&lt;xsl:value-of select='action'/&gt;&lt;/td&gt;
+&lt;td width='75%'&gt;&lt;xsl:value-of select='status'/&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/xsl:when&gt;
+&lt;xsl:otherwise&gt;
+&lt;xsl:choose&gt;
+&lt;xsl:when test='(position() mod 2 = 1)'&gt;
+&lt;tr class='d1'&gt;
+&lt;td width='75%'&gt;&lt;xsl:value-of select='file'/&gt;&lt;/td&gt;
+&lt;td width='75%'&gt;&lt;xsl:value-of select='action'/&gt;&lt;/td&gt;
+&lt;td width='75%'&gt;&lt;xsl:value-of select='status'/&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/xsl:when&gt;
+&lt;xsl:otherwise&gt;
+&lt;tr class='d0'&gt;
+&lt;td width='75%'&gt;&lt;xsl:value-of select='file'/&gt;&lt;/td&gt;
+&lt;td width='75%'&gt;&lt;xsl:value-of select='action'/&gt;&lt;/td&gt;
+&lt;td width='75%'&gt;&lt;xsl:value-of select='status'/&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/xsl:otherwise&gt;
+&lt;/xsl:choose&gt;
+&lt;/xsl:otherwise&gt;
+&lt;/xsl:choose&gt;
+&lt;/xsl:for-each&gt;
+&lt;/table&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/xsl:if&gt;
+&lt;/table&gt;
+&lt;br&gt;&lt;/br&gt;&lt;br&gt;&lt;/br&gt;&lt;br&gt;&lt;/br&gt;&lt;br&gt;&lt;/br&gt;
+&lt;/xsl:for-each&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;</value>
+  </data>
 </root>
