@@ -122,6 +122,9 @@
 &lt;xsl:stylesheet version='1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'&gt;
 &lt;xsl:template match='/'&gt;
 &lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Log of &lt;xsl:value-of select='syncdirectory/@value'/&gt;&lt;/title&gt;
+&lt;/head&gt;
 &lt;body style='FONT-FAMILY: arial; FONT-SIZE: 12px'&gt;
 &lt;style type='text/css'&gt;
 table.t1 { background-color: #FEFEF2; }tr.da { background-color: #E0ECF8; }
@@ -192,10 +195,13 @@ tr.d1 td { background-color: #FEFEF2; }
 &lt;/xsl:stylesheet&gt;</value>
   </data>
   <data name="xslChinese" xml:space="preserve">
-    <value>&lt;?xml version='1.0' encoding='ISO-8859-1'?&gt;
+    <value>&lt;?xml version='1.0' encoding='UTF-8'?&gt;
 &lt;xsl:stylesheet version='1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'&gt;
 &lt;xsl:template match='/'&gt;
 &lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;&lt;xsl:value-of select='syncdirectory/@value'/&gt;的同步记录&lt;/title&gt;
+&lt;/head&gt;
 &lt;body style='FONT-FAMILY: arial; FONT-SIZE: 12px'&gt;
 &lt;style type='text/css'&gt;
 table.t1 { background-color: #FEFEF2; }tr.da { background-color: #E0ECF8; }

@@ -115,6 +115,8 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 				<Label x:Name="lblSyncSrcFolderDesc" Grid.Column="1" Content="Folder to Sync:" Foreground="#FF0000B9" Margin="0.603,-2,8,2" />
                 <ComboBox x:Name="txtSource" Margin="4.603,21.407,34.187,21.406" Grid.Column="1" IsEditable="True" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"/>
 				<Button Grid.Column="1" x:Name="btnBrowse_Source" Width="22.187" Height="22.188" Content="..." ToolTip="Click to browse folders" Click="btnBrowse_Click" Margin="0,0,8,0" HorizontalAlignment="Right" VerticalAlignment="Center" />
+				<CheckBox Grid.Column="1" x:Name="showPartialSyncJobsCheckBox" Margin="4.603,0,0,-4" VerticalAlignment="Bottom" Height="23" Content="Show only sync jobs assigned to the" Grid.Row="1" Checked="showPartialSyncJobsCheckBox_Checked" Unchecked="showPartialSyncJobsCheckBox_Unchecked"/>
+				<Label Grid.Column="1" x:Name="lblSyncSrcFolderDesc2" Margin="211,0,0,-2" Content="Folder to Sync" Grid.Row="1" Foreground="#FF0000B9" VerticalAlignment="Bottom" Height="26.261"/>
 				
 				<!--Column 2 -->
 				<Label x:Name="lblIntStorageDirDesc" Grid.Column="2" Content=" Intermediate Storage Location:" Foreground="#FF0000B9" Margin="5.599,0,19,0" />
@@ -243,8 +245,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			<Label Grid.Row="3" x:Name="lblSubStatus" Content=""  FontSize="10.667" Margin = "130.398,0,64.602,33" VerticalAlignment="Bottom" Height="24.739" />
 			<Image x:Name="btnHelp" HorizontalAlignment="Right" Margin="0,0,0,12" Width="18" Source="Resource/OneSyncHelp.png" RenderTransformOrigin="1.278,0.611" Cursor="Hand" ToolTip="Help" MouseDown="btnHelp_MouseDown"/>
 			<Label x:Name="lblSyncJobEditing" Margin="372,31,424,0" VerticalAlignment="Top" Height="36" Content="Hold on... Updating the sync jobs" Grid.Row="2" FontWeight="Bold" Visibility="Hidden"/>
-			<CheckBox x:Name="showPartialSyncJobsCheckBox" Margin="293,0,422,-8" VerticalAlignment="Bottom" Height="23" Content="Show only sync jobs assigned to the" Grid.Row="1" Checked="showPartialSyncJobsCheckBox_Checked" Unchecked="showPartialSyncJobsCheckBox_Unchecked"/>
-			<Label x:Name="lblSyncSrcFolderDesc2" Margin="500,0,411,-6.261" Content="Folder to Sync" Grid.Row="1" Foreground="#FF0000B9" VerticalAlignment="Bottom" Height="26.261"/>
+			
 		</Grid>
 	</Grid>
 	

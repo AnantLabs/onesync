@@ -65,15 +65,15 @@ namespace OneSync.Properties {
         ///&lt;xsl:stylesheet version=&apos;1.0&apos; xmlns:xsl=&apos;http://www.w3.org/1999/XSL/Transform&apos;&gt;
         ///&lt;xsl:template match=&apos;/&apos;&gt;
         ///&lt;html&gt;
+        ///&lt;head&gt;
+        ///&lt;title&gt;Log of &lt;xsl:value-of select=&apos;syncdirectory/@value&apos;/&gt;&lt;/title&gt;
+        ///&lt;/head&gt;
         ///&lt;body style=&apos;FONT-FAMILY: arial; FONT-SIZE: 12px&apos;&gt;
         ///&lt;style type=&apos;text/css&apos;&gt;
         ///table.t1 { background-color: #FEFEF2; }tr.da { background-color: #E0ECF8; }
         ///tr.db { background-color: #EFFBEF; }
         ///tr.f { background-color: #F5A9A9; }
-        ///tr.dh th { background-color: #FCF6CF; }
-        ///tr.d0 td { background-color: #FCF6CF; }
-        ///tr.d1 td { background-color: #FEFEF2; }
-        /// [rest of string was truncated]&quot;;.
+        ///tr.dh th { background-color: #FCF6CF; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string xsl {
             get {
@@ -82,19 +82,20 @@ namespace OneSync.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&apos;1.0&apos; encoding=&apos;ISO-8859-1&apos;?&gt;
+        ///   Looks up a localized string similar to &lt;?xml version=&apos;1.0&apos; encoding=&apos;UTF-8&apos;?&gt;
         ///&lt;xsl:stylesheet version=&apos;1.0&apos; xmlns:xsl=&apos;http://www.w3.org/1999/XSL/Transform&apos;&gt;
         ///&lt;xsl:template match=&apos;/&apos;&gt;
         ///&lt;html&gt;
+        ///&lt;head&gt;
+        ///&lt;title&gt;&lt;xsl:value-of select=&apos;syncdirectory/@value&apos;/&gt;的同步记录&lt;/title&gt;
+        ///&lt;/head&gt;
         ///&lt;body style=&apos;FONT-FAMILY: arial; FONT-SIZE: 12px&apos;&gt;
         ///&lt;style type=&apos;text/css&apos;&gt;
         ///table.t1 { background-color: #FEFEF2; }tr.da { background-color: #E0ECF8; }
         ///tr.db { background-color: #EFFBEF; }
         ///tr.f { background-color: #F5A9A9; }
         ///tr.dh th { background-color: #FCF6CF; }
-        ///tr.d0 td { background-color: #FCF6CF; }
-        ///tr.d1 td { background-color: #FEFEF2; }
-        /// [rest of string was truncated]&quot;;.
+        ///tr. [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string xslChinese {
             get {

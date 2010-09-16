@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using OneSync.Files;
+using System.Resources;
 
 namespace OneSync.Synchronization
 {
@@ -39,6 +40,9 @@ namespace OneSync.Synchronization
         
         #endregion Events
 
+        public ResourceManager m_ResourceManager = new ResourceManager(Properties.Settings.Default.LanguageResx,
+                                    System.Reflection.Assembly.GetExecutingAssembly());
+
         private SyncJob _job;
 
         /* To keep track of progress */
@@ -70,7 +74,7 @@ namespace OneSync.Synchronization
         /// <exception cref="DirectoryNotFoundException"></exception>
         public SyncPreviewResult GenerateSyncPreview(StatusCallbackDelegate statusCallback)
         {
-            OnStatusChanged(new SyncStatusChangedEventArgs("Preparing to sync"));
+            OnStatusChanged(new SyncStatusChangedEventArgs(m_ResourceManager.GetString("lbl_peparingToSync")));
 
             // Load actions to be executed.
             IList<SyncAction> actions = actProvider.Load(_job.SyncSource.ID, SourceOption.SOURCE_ID_NOT_EQUALS);
@@ -96,10 +100,10 @@ namespace OneSync.Synchronization
         {
             try
             {
-                OnStatusChanged(new SyncStatusChangedEventArgs("Applying patch"));
+                OnStatusChanged(new SyncStatusChangedEventArgs(m_ResourceManager.GetString("lbl_applyingPatch")));
                 ApplyPatch(preview);
                 SyncEmptyFolders();
-                OnStatusChanged(new SyncStatusChangedEventArgs("Generating patch"));
+                OnStatusChanged(new SyncStatusChangedEventArgs(m_ResourceManager.GetString("lbl_generatingPatch")));
                 GeneratePatch();
                 OnSyncCompleted(new SyncCompletedEventArgs());
             }
