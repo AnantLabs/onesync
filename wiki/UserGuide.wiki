@@ -119,7 +119,7 @@ In OneSync 3, there is an option called "Open OneSync 3" which allows you to run
 
 *Step 2*
 
-The OneSync Window will pop up. Enter the sync job name, directory of the folder to sync and directory of intermediate storage and click on the "Add New Job" button. After that, you can just click on the "Sync Selected Jobs" to start your newly created sync job.
+The OneSync Window will pop up. The sync job name and the directory of the folder to sync will be automatically filled in if the option "Sync with OneSync 3" is chosen in the Step 1. You then just need to enter the directory of intermediate storage and click on the "Add New Job" button. After that, please click on the "Sync Selected Jobs" button to start your newly created sync job.
 
 [http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot5.jpg]
 
