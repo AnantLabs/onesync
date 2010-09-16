@@ -11,7 +11,7 @@ This guide gives you an opportunity to learn the core features of OneSync. Just 
 
   * [UserGuide#Getting_Started Getting started]
     * [UserGuide#The_OneSync_Concepts The OneSync concepts]
-    * [UserGuide#Features_in_Version_3 Features in version 3]
+    * [UserGuide#Features_in_Version_3 Features in Version 3]
     * [UserGuide#Downloading_and_Installing Downloading and installing]
     * [UserGuide#Getting_Around Getting around]
   * [UserGuide#Syncing_My_Folders Syncing my folders]
