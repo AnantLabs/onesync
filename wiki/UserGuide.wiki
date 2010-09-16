@@ -1,4 +1,4 @@
-#summary This user guide describes OneSync Version 2.0.
+#summary This user guide describes OneSync 3.
 #labels Featured,Phase-Deploy
 
 == Introduction ==
@@ -11,7 +11,7 @@ This guide gives you an opportunity to learn the core features of OneSync. Just 
 
   * [UserGuide#Getting_Started Getting started]
     * [UserGuide#The_OneSync_Concepts The OneSync concepts]
-    * [UserGuide#New_Features_in_Version_2.0 New features in version 2.0]
+    * [UserGuide#Features_in_Version_3 Features in version 3]
     * [UserGuide#Downloading_and_Installing Downloading and installing]
     * [UserGuide#Getting_Around Getting around]
   * [UserGuide#Syncing_My_Folders Syncing my folders]
@@ -40,7 +40,7 @@ When a user syncs his folder, he must first choose the location of the intermedi
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_1_v2.jpg]
 
-===New Features in Version 2.0===
+===Features in Version 3===
 
 This version of OneSync has a number of exciting new features, including:
  # Multiple Jobs Synchronization - Sync more than one sync job sequentially.
@@ -111,11 +111,11 @@ Why put your files in different PCs and keep doing copy-and-paste whenever you u
 ===Syncing Through Portable Drive===
 *Step 1*
 
-Make sure you have plugged in the portable drive (or thumb drive) to your computer. On your PC, right-click the folder you want to sync, and click "Sync This Folder with OneSync". Depending on the version you are currently using, the name will be a bit different.
+Make sure you have plugged in the portable drive (or thumb drive) to your computer. On your PC, right-click the folder you want to sync, and click "Sync with OneSync 3". Depending on the version you are currently using, the name will be a bit different.
 
 [http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_03.jpg]
 
-In OneSync V2.0, there is another option called "Open OneSync V2.0" which allows you to run the OneSync directly.
+In OneSync 3, there is an option called "Open OneSync 3" which allows you to run the OneSync directly.
 
 *Step 2*
 
