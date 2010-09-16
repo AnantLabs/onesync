@@ -232,7 +232,7 @@ namespace OneSync {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 档案目录不合格.
+        ///   Looks up a localized string similar to 档案目录无效.
         /// </summary>
         internal static string err_directoryInvalid {
             get {
@@ -322,7 +322,7 @@ namespace OneSync {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} 储存空间不足。请使用足够空间的储存地。.
+        ///   Looks up a localized string similar to {0} 储存空间不足。请确保有足够储存空间。.
         /// </summary>
         internal static string err_insufficientSpace {
             get {
@@ -385,7 +385,7 @@ namespace OneSync {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 同步工作名不可超过25个中文单字.
+        ///   Looks up a localized string similar to 同步工作名不可超过25个中文字符.
         /// </summary>
         internal static string err_jobNameTooLong {
             get {
@@ -655,6 +655,15 @@ namespace OneSync {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 下载档案.
+        /// </summary>
+        internal static string lbl_applyingPatch {
+            get {
+                return ResourceManager.GetString("lbl_applyingPatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OneSync 3 只能在安装有 .NET 3.5 SP1 的系统上顺利运行。.
         /// </summary>
         internal static string lbl_dotNetFrameworkDescriptionText1 {
@@ -741,6 +750,24 @@ namespace OneSync {
         internal static string lbl_filterTypeShowAll {
             get {
                 return ResourceManager.GetString("lbl_filterTypeShowAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 上传档案.
+        /// </summary>
+        internal static string lbl_generatingPatch {
+            get {
+                return ResourceManager.GetString("lbl_generatingPatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 预备同步中.
+        /// </summary>
+        internal static string lbl_peparingToSync {
+            get {
+                return ResourceManager.GetString("lbl_peparingToSync", resourceCulture);
             }
         }
         

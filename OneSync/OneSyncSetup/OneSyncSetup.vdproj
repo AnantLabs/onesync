@@ -45,6 +45,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_B7D8FBECAE004903B1167928B213B860"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_E93CBEBB75FA4EA98BAE3121E5219D36"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -52,12 +58,6 @@
         "Entry"
         {
         "MsmKey" = "8:_EF43B6C4A22D4452B4CB34AF2F37A7FC"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_FF88D1FCC1F84143B1EADC788344A245"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -314,10 +314,10 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E93CBEBB75FA4EA98BAE3121E5219D36"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B7D8FBECAE004903B1167928B213B860"
             {
-            "SourcePath" = "8:..\\..\\..\\Modules Material\\A Is The Only Option, A+ Otherwise\\CS3215\\Graphic Design\\Installation Setup Logo V1.bmp"
-            "TargetName" = "8:Installation Setup Logo V1.bmp"
+            "SourcePath" = "8:..\\OneSync.chm"
+            "TargetName" = "8:OneSync.chm"
             "Tag" = "8:"
             "Folder" = "8:_E017F1941B1444CBBF2A995811C34F54"
             "Condition" = "8:"
@@ -334,10 +334,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FF88D1FCC1F84143B1EADC788344A245"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E93CBEBB75FA4EA98BAE3121E5219D36"
             {
-            "SourcePath" = "8:..\\OneSync.chm"
-            "TargetName" = "8:OneSync.chm"
+            "SourcePath" = "8:..\\..\\..\\Modules Material\\A Is The Only Option, A+ Otherwise\\CS3215\\Graphic Design\\Installation Setup Logo V1.bmp"
+            "TargetName" = "8:Installation Setup Logo V1.bmp"
             "Tag" = "8:"
             "Folder" = "8:_E017F1941B1444CBBF2A995811C34F54"
             "Condition" = "8:"
@@ -371,7 +371,7 @@
                 {
                     "{9EF0B969-E518-4E46-987F-47570745A589}:_DA6FBBEDC48B4897A8A9C068CEB10B43"
                     {
-                    "Name" = "8:OneSync"
+                    "Name" = "8:OneSync 3"
                     "AlwaysCreate" = "11:FALSE"
                     "Condition" = "8:"
                     "Transitive" = "11:FALSE"
@@ -557,7 +557,7 @@
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_FA73037E4F4647A5A10458F0379E7038"
             {
-            "Name" = "8:OneSync"
+            "Name" = "8:OneSync 3"
             "Arguments" = "8:"
             "Description" = "8:The only one sync tool you'll ever need"
             "ShowCmd" = "3:1"

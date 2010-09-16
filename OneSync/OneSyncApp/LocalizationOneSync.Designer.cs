@@ -655,6 +655,15 @@ namespace OneSync {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Applying patch.
+        /// </summary>
+        internal static string lbl_applyingPatch {
+            get {
+                return ResourceManager.GetString("lbl_applyingPatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OneSync 3 can only run on computer which has .NET 3.5 SP1 installed..
         /// </summary>
         internal static string lbl_dotNetFrameworkDescriptionText1 {
@@ -741,6 +750,24 @@ namespace OneSync {
         internal static string lbl_filterTypeShowAll {
             get {
                 return ResourceManager.GetString("lbl_filterTypeShowAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generating patch.
+        /// </summary>
+        internal static string lbl_generatingPatch {
+            get {
+                return ResourceManager.GetString("lbl_generatingPatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preparing to sync.
+        /// </summary>
+        internal static string lbl_peparingToSync {
+            get {
+                return ResourceManager.GetString("lbl_peparingToSync", resourceCulture);
             }
         }
         

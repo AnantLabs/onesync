@@ -169,7 +169,7 @@
     <value>OneSync -- 用户手册不存在</value>
   </data>
   <data name="err_insufficientSpace" xml:space="preserve">
-    <value>{0} 储存空间不足。请使用足够空间的储存地。</value>
+    <value>{0} 储存空间不足。请确保有足够储存空间。</value>
   </data>
   <data name="err_intermediateStorageTooSmall" xml:space="preserve">
     <value>新的中间储藏地址储存空间过小，因此有些档案无法存入新的中间储藏地址。</value>
@@ -297,7 +297,7 @@
     <value>数据库例外：请检查同步工作名是否合格以及所牵涉到的文件夹目录是否存在</value>
   </data>
   <data name="err_directoryInvalid" xml:space="preserve">
-    <value>档案目录不合格</value>
+    <value>档案目录无效</value>
   </data>
   <data name="err_directoryNoPermission" xml:space="preserve">
     <value>无法登入档案目录</value>
@@ -318,7 +318,7 @@
     <value>同步工作名不可置空</value>
   </data>
   <data name="err_jobNameTooLong" xml:space="preserve">
-    <value>同步工作名不可超过25个中文单字</value>
+    <value>同步工作名不可超过25个中文字符</value>
   </data>
   <data name="err_onlyTwoSyncSourceFolders" xml:space="preserve">
     <value>每个中间储藏地址只可以使用于最多两个同步工作</value>
@@ -433,5 +433,14 @@
   </data>
   <data name="win_dotNetFrameworkRequirement" xml:space="preserve">
     <value>OneSync 系统需求</value>
+  </data>
+  <data name="lbl_applyingPatch" xml:space="preserve">
+    <value>下载档案</value>
+  </data>
+  <data name="lbl_generatingPatch" xml:space="preserve">
+    <value>上传档案</value>
+  </data>
+  <data name="lbl_peparingToSync" xml:space="preserve">
+    <value>预备同步中</value>
   </data>
 </root>

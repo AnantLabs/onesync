@@ -461,4 +461,13 @@ Current syncing job:</value>
   <data name="win_dotNetFrameworkRequirement" xml:space="preserve">
     <value>OneSync System Requirement</value>
   </data>
+  <data name="lbl_applyingPatch" xml:space="preserve">
+    <value>Applying patch</value>
+  </data>
+  <data name="lbl_generatingPatch" xml:space="preserve">
+    <value>Generating patch</value>
+  </data>
+  <data name="lbl_peparingToSync" xml:space="preserve">
+    <value>Preparing to sync</value>
+  </data>
 </root>
