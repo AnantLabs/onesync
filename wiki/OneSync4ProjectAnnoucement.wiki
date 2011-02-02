@@ -8,11 +8,26 @@ OneSync is an open source sync tool which initially be designed for users using 
 
 Simplicity and speed will also be two important aspects that we will take into consideration when we are designing the OneSync 4 so that it can be a faster and more lightweight sync tool. OneSync 4 will still be a no frills piece of software. This is to make sure that users can easily sync two folders without going through many redundant steps.
 
-Our team definitely has a lot of work to do in order to make OneSync 4 a sync tool which serves you better. So, stay tuned for more updates.
+Our team and our project partner definitely have a lot of work to do in order to make OneSync 4 a sync tool which serves you better. So, stay tuned for more updates.
 
-= Details =
+= Proposed Features for OneSync 4 =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+The following are some of the interesting and useful features proposed for OneSync 4.
+  * Scheduled syncing
+  * N-way sync
+  * Portability
+  * Support OS other than Windows, for example Linux
+  * Online sync with SkyDrive
+
+= Development Plan =
+
+The whole OneSync 4 development process will begin in May 2011:
+*May 2011*: Requirements Study and Domain Analysis
+*June - August 2011*: Implementation
+*August - October 2011*: Testing
+
+OneSync 4 is currently planned to be released in the winter of this year. The exact release date will be confirmed in the near future.
+
+= GCL Project =
+
+GCL Project will be our project partner in OneSync 4 development. GCL Project was playing an important role in building OneSync 3, the latest version of OneSync. GCL Project is in charge of planning and most of the development of OneSync 4.
