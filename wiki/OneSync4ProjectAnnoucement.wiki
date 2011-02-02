@@ -8,6 +8,8 @@ OneSync is an open source sync tool which initially be designed for users using 
 
 Simplicity and speed will also be two important aspects that we will take into consideration when we are designing the OneSync 4 so that it can be a faster and more lightweight sync tool. OneSync 4 will still be a no frills piece of software. This is to make sure that users can easily sync two folders without going through many redundant steps.
 
+Our team definitely has a lot of work to do in order to make OneSync 4 a sync tool which serves you better. So, stay tuned for more updates.
+
 = Details =
 
 Add your content here.  Format your content with:
