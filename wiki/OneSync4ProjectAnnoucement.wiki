@@ -22,12 +22,14 @@ The following are some of the interesting and useful features proposed for OneSy
 = Development Plan =
 
 The whole OneSync 4 development process will begin in May 2011:
-*May 2011*: Requirements Study and Domain Analysis
-*June - August 2011*: Implementation
-*August - October 2011*: Testing
+  * *May 2011*: Requirements Study and Domain Analysis
+  * *June - August 2011*: Implementation
+  * *August - October 2011*: Testing
 
 OneSync 4 is currently planned to be released in the winter of this year. The exact release date will be confirmed in the near future.
 
 = GCL Project =
 
 GCL Project will be our project partner in OneSync 4 development. GCL Project was playing an important role in building OneSync 3, the latest version of OneSync. GCL Project is in charge of planning and most of the development of OneSync 4.
+
+One of the major reasons of choosing GCL Project as the OneSync 4 project partner because Chun Lin from our CodeDroids team is leading the GCL Project as well. So, this cooperation is to help improving OneSync in order to serve our users better.
