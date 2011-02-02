@@ -1,0 +1,16 @@
+#summary New features and updates proposed for OneSync 4 as well as the development plan.
+
+= Introduction =
+
+It has been about one year since we, the CodeDroids team, released the OneSync V1.0, a free open source synchronization tool which can do both online and offline sync for Windows users. We designed OneSync for people who work on two different computers, for example computer in office and another computer at your home. There are many sync tools, for example Dropbox, available for syncing folders between two or more PCs. However, many of them do not provide a light-weight sync solution, i.e. syncing two folders without storing the same copy on either user's portable hard drive or online file storage server. Hence, we proposed OneSync last year as the solution which offers this feature of light-weight syncing.
+
+OneSync is an open source sync tool which initially be designed for users using portable hard drive, network drive as well as the Dropbox. In OneSync 4, which will be released in later of this year, we will try to add in feature which allows light-weight syncing through SkyDrive. This is one of the high-demand features suggested by our users.
+
+Simplicity and speed will also be two important aspects that we will take into consideration when we are designing the OneSync 4 so that it can be a faster and more lightweight sync tool. OneSync 4 will still be a no frills piece of software. This is to make sure that users can easily sync two folders without going through many redundant steps.
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
