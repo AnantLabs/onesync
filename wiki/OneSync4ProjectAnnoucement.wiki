@@ -19,7 +19,7 @@ The following are some of the interesting and useful features proposed for OneSy
   * Support OS other than Windows, for example Linux
   * Online sync with SkyDrive
 
-We will do our best to implement these useful features. However, due to the nature of our sync logic in OneSync, for example the light-weight sync, some features proposed above may not be possible.
+Due to the nature of our sync logic in OneSync, for example the light-weight sync, some features proposed above may not be possible. However, we will do our best to implement these useful features.
 
 = Development Plan =
 
