@@ -25,8 +25,8 @@ We will do our best to implement these useful features. However, due to the natu
 
 The whole OneSync 4 development process will begin in May 2011:
   * *May - June 2011*: Functionalities Study and Domain Analysis
-  * *July - August 2011*: Implementation
-  * *August - October 2011*: Testing
+  * *July - September 2011*: Implementation
+  * *September - November 2011*: Testing
 
 OneSync 4 is currently planned to be released in the winter of this year. The exact release date will be confirmed in the near future.
 
