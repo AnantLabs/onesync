@@ -15,7 +15,7 @@ http://www.comp.nus.edu.sg/~gohchunl/OneSync%204%20Announced!.png
 = Proposed Features for OneSync 4 =
 
 The following are some of the interesting and useful features proposed for OneSync 4.
-  * Scheduled syncing
+  * Scheduled sync
   * N-way sync
   * Portability
   * Support OS other than Windows, for example Linux
