@@ -10,7 +10,7 @@ Simplicity and speed will also be two important aspects that we will take into c
 
 Our team and our project partner definitely have a lot of work to do in order to make OneSync 4 a sync tool which serves you better. So, stay tuned for more updates.
 
-[http://code.google.com/p/onesync/wiki/OneSync4ProjectAnnoucement http://www.comp.nus.edu.sg/~gohchunl/OneSync%204%20Announced!.png]
+http://www.comp.nus.edu.sg/~gohchunl/OneSync%204%20Announced!.png
 
 = Proposed Features for OneSync 4 =
 
