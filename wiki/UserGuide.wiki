@@ -55,7 +55,7 @@ If you encounter any difficulties while installing, please contact us.
 
 The following diagram describes some of the things that you will see in the main window of OneSync:
 
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync%203%20(Intro).jpg]
+[http://gohchunlin.appspot.com/OneSync-Resources/OneSync4/OneSync-4-Main-GUI.jpg]
 
  # *Sync Job Name* - The name of your new/existing sync job.
  # *Folder To Sync* - The directory shown above is the directory of the folder that you are going to sync later. Hence, the folder is your *Sync Source Folder*.
@@ -71,16 +71,15 @@ The following diagram describes some of the things that you will see in the main
 
 You can edit any of your sync jobs by clicking on the corresponding *Edit* button for the sync job. The main window will change as shown below:
 
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync%203%20(Edit%20Sync%20Job).jpg]
+[http://gohchunlin.appspot.com/OneSync-Resources/OneSync4/OneSync-4-Edit-Sync-Job-GUI.jpg]
 
  # *New Job Name* - Change the name of your sync job here.
- # *Folder to Sync* - Update the sync source folder here.
  # *Intermediate Storage Location* - Update the intermediate storage location here.
  # *Save Job* - Save and finish updating the sync job. If you decide not to save the update, you can click on other sync job to cancel the update.
 
 The following diagram describes some of the things that you will see when you click on the *Preview* button:
 
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync%203%20(Preview).jpg]
+[http://gohchunlin.appspot.com/OneSync-Resources/OneSync4/OneSync-4-Sync-Job-Preview.jpg]
 
  # *Filter by Action* - Choose one from the list and the preview will only show the corresponding actions.
  # *Filter by Search* - The preview will show files whose names match the text in the box.
@@ -90,7 +89,7 @@ The following diagram describes some of the things that you will see when you cl
 
 When you click on the *Sync Selected Jobs* button, the main window will start executing the sync jobs selected while it is updating their corresponding status at the same time:
 
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync%203%20(Sync%20Page).jpg]
+[http://gohchunlin.appspot.com/OneSync-Resources/OneSync4/OneSync-4-Sync.jpg]
 
  # *Sync Selected Jobs* - Click to start selected jobs in order.
  # *Current syncing job* - The sync job in process.
@@ -105,7 +104,7 @@ Why put your files in different PCs and keep doing copy-and-paste whenever you u
 
 Make sure you have plugged in the portable drive (or thumb drive) to your computer. On your PC, right-click the folder you want to sync, and click "Sync with OneSync 3". Depending on the version you are currently using, the name will be a bit different.
 
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync%203%20(Shortcut).jpg]
+[http://gohchunlin.appspot.com/OneSync-Resources/OneSync4/OneSync-4-Shortcut.jpg]
 
 In OneSync 3, there is an option called "Open OneSync 3" which allows you to run the OneSync directly.
 
@@ -113,11 +112,11 @@ In OneSync 3, there is an option called "Open OneSync 3" which allows you to run
 
 The OneSync Window will pop up. The sync job name and the directory of the folder to sync will be automatically filled in if the option "Sync with OneSync 3" is chosen in the Step 1. You then just need to enter the directory of intermediate storage and click on the "Add New Job" button. After that, please click on the "Sync Selected Jobs" button to start your newly created sync job.
 
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync%203%20(Add%20New%20Sync%20Job%20Through%20Shortcut).jpg]
+[http://gohchunlin.appspot.com/OneSync-Resources/OneSync4/OneSync-4-Add-New-Sync-Job-Through-Shortcut.jpg]
 
 After a few moments (unless your sync source folder is huge), the sync process will be completed successfully. =)
 
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync%203%20(Sync%20Folder).jpg]
+[http://gohchunlin.appspot.com/OneSync-Resources/OneSync4/OneSync-4-Sync-Folder.jpg]
 
 ===Syncing Through Drop Box===
 
@@ -140,7 +139,7 @@ As shown below, OneSync uses three colors to indicate different sync statuses:
  * Yellow - Special case for Dropbox folders. The sync status will turn yellow after the sync job for the Dropbox folder has been done However, do note that the PC is still interacting with the Dropbox main server, e.g. it may be uploading files in the folder to the server.
  * Red - Errors occur while syncing. Please check the status message at the top of OneSync window.
 
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync%203%20(Three%20Color%20Bars).jpg]
+[http://gohchunlin.appspot.com/OneSync-Resources/OneSync4/OneSync-4-Three-Color-Progress-Bars.jpg]
 
 
 ===Handling Conflicts===
