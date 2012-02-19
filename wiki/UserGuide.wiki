@@ -156,7 +156,7 @@ For example, suppose you are working on two folders on different PCs. You modify
 
 The default operation for handling conflicts is "Keep both" when you don't go through the sync preview. 
 
-[http://gohchunlin.appspot.com/OneSync-Resources/OneSync4/OneSync-2-Conflict-Resolution]
+[http://gohchunlin.appspot.com/OneSync-Resources/OneSync4/OneSync-2-Conflict-Resolution.jpg]
 
 ==What You Should Not Do==
 
