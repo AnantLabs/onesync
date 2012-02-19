@@ -31,13 +31,13 @@ OneSync is based on two important concepts. These are the concepts that distingu
 
 The first concept is called the *Light-weight Sync*. OneSync tries to make optimal use of the intermediate storage. Hence, only your modified files will be uploaded to or downloaded from the intermediate storage. This will not only prevent the storage of duplicated copies of your files on the intermediate storage but also make the whole sync process faster.
 
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_2_v2.jpg]
+[http://gohchunlin.appspot.com/OneSync-Resources/OneSync-General/OneSync_Concept_2_v2.jpg]
 
 The second concept is known as *Half Way Sync*. Instead of doing synchronization directly between two PCs, there is an intermediate storage that plays an important role during the sync process.
 
 When a user syncs his folder, he must first choose the location of the intermediate storage. The storage can be a folder in his portable drive, a Windows Shared Folder or a Dropbox local folder that is stored on his computer. When he does the sync on one PC, his files (or *patch*) will be sent to the intermediate storage. After that, he has to do the sync again on his other computer in order to download the *patch* from the intermediate storage and complete the sync process. It is important that the user chooses the same folder as the intermediate storage in subsequent rounds of synchronization for these couple of folders on the two different PCs.
 
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync_Concept_1_v2.jpg]
+[http://gohchunlin.appspot.com/OneSync-Resources/OneSync-General/OneSync_Concept_1_v2.jpg]
 
 ===Downloading and Installing===
 
@@ -63,11 +63,15 @@ The following diagram describes some of the things that you will see in the main
  # *Add New Job* - Add the new sync job to your collection of sync jobs so that you can do the same job again in the future.
  # *Filter Check Box* - Show only sync jobs having the folder specified in the *Folder to Sync* as Sync Source Directory.
  # *Check Box* - Check all the sync jobs that you are going to sync.
- # *Reorder* - Sort your sync jobs by clicking on the arrows. This is important if you plan to carry out more than one sync job. The sync job at the top always gets synced first.
+ # *Reorder* - Sort your sync jobs by clicking on the arrows. This is important if you plan to carry out more than one sync job. The sync job at the top always gets synced first. You can reorder them by using the drag-and-drop manner (as shown in the screenshot below).
  # *Edit* - Edit your sync job name and folder directories.
  # *Delete* - Delete your sync job.
  # *Preview* - Preview the sync actions that will be carried out.
  # *Show log* - Click on it to view log records for the sync folder.
+
+You can use drag-and-drop feature to reorder sync jobs in OneSync 4.
+
+[http://gohchunlin.appspot.com/OneSync-Resources/OneSync4/OneSync-4-Drag-and-drop.jpg]
 
 You can edit any of your sync jobs by clicking on the corresponding *Edit* button for the sync job. The main window will change as shown below:
 
@@ -124,7 +128,7 @@ Firstly, please install Dropbox. You can find the installer at https://www.dropb
 
 The steps are the same as the steps mentioned in Syncing Through Portable Drive. However, please remember that the intermediate storage path has to be your Dropbox folder directory. If you do not know what is your Dropbox folder, double click on the Dropbox icon on your system tray and the Dropbox folder will be displayed.
 
-[http://www.comp.nus.edu.sg/~gohchunl/OneSync_User_Manual_06.jpg]
+[http://gohchunlin.appspot.com/OneSync-Resources/OneSync4/OneSync-4-Dropbox-Tray-Icon.jpg]
 
 ===Syncing Through Windows Shared Folders===
 If you do not have your portable drive and also do not want to install Dropbox, you may want to use a Windows Shared Folder as your intermediate storage as well. The steps to do this are the same as those mentioned in Syncing Through Portable Drive.
@@ -152,7 +156,7 @@ For example, suppose you are working on two folders on different PCs. You modify
 
 The default operation for handling conflicts is "Keep both" when you don't go through the sync preview. 
 
-[http://www.comp.nus.edu.sg/~naing07/one_sync_2_0/one_sync_2_0_screenshot7.jpg]
+[http://gohchunlin.appspot.com/OneSync-Resources/OneSync4/OneSync-2-Conflict-Resolution]
 
 ==What You Should Not Do==
 
