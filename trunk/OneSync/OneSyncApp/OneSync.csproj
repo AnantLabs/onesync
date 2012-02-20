@@ -23,6 +23,8 @@
     </SccAuxPath>
     <SccProvider>
     </SccProvider>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <ApplicationManifest>uac-manifest.manifest</ApplicationManifest>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -35,7 +37,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -167,6 +168,7 @@
     <Compile Include="OneSync.UI\DotNetFrameworkErrorWindow.xaml.cs">
       <DependentUpon>DotNetFrameworkErrorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="OneSync.UI\DragAdorner.cs" />
     <Compile Include="OneSync.UI\Interop\CoreErrorHelper.cs" />
     <Compile Include="OneSync.UI\Interop\TaskbarCOMInterface.cs" />
     <Compile Include="OneSync.UI\Interop\TaskbarManager.cs" />
@@ -174,6 +176,8 @@
     <Compile Include="OneSync.UI\LanguageSelection.xaml.cs">
       <DependentUpon>LanguageSelection.xaml</DependentUpon>
     </Compile>
+    <Compile Include="OneSync.UI\ListViewDragDrop.cs" />
+    <Compile Include="OneSync.UI\MouseUtilities.cs" />
     <Compile Include="OneSync.UI\ProgramUpdateChecker.cs" />
     <Compile Include="OneSync.UI\SyncActionsListView.xaml.cs">
       <DependentUpon>SyncActionsListView.xaml</DependentUpon>
@@ -231,6 +235,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="uac-manifest.manifest" />
     <None Include="Uninstall OneSync.bat" />
   </ItemGroup>
   <ItemGroup>
@@ -247,6 +252,11 @@
     <Resource Include="OneSync.UI\Resource\OneSync Transparent Logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
       <Visible>False</Visible>
       <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
@@ -262,6 +272,11 @@
       <ProductName>.NET Framework 3.5</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
       <Visible>False</Visible>
       <ProductName>Windows Installer 3.1</ProductName>
@@ -272,10 +287,12 @@
     <EmbeddedResource Include="LocalizationOneSync.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LocalizationOneSync.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="LocalizationOneSyncChinese.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LocalizationOneSyncChinese.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="OneSyncInstaller.resx">
       <DependentUpon>OneSyncInstaller.cs</DependentUpon>

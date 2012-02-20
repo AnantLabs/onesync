@@ -63,6 +63,307 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 		    	</Setter.Value>
 		   </Setter>
 		</Style>
+		
+		<!-- Reference: http://social.msdn.microsoft.com/Forums/en/wpf/thread/5362accc-c892-44b7-b721-0ba26764e61a -->
+		<!-- Flat Button Style -->
+		<Color x:Key="DefaultColor" A="255" R="240" G ="240" B="240"/>
+		<Color x:Key="HighlightColor" A="255" R="229" G ="229" B="229"/>
+		<Color x:Key="PressedColor" A="255" R="215" G ="215" B="215"/>
+		 
+		<SolidColorBrush x:Key="DefaultBrush" Color="{StaticResource DefaultColor}" />
+		<SolidColorBrush x:Key="HighlightBrush" Color="{StaticResource HighlightColor}" />
+		<SolidColorBrush x:Key="PressedBrush" Color="{StaticResource PressedColor}" />
+		 
+		<Style x:Key="btnFlatStyle" TargetType="{x:Type Button}">
+		    <Setter Property="OverridesDefaultStyle" Value="True" />
+		    <Setter Property="Background" Value="{StaticResource DefaultBrush}" />
+		    <Setter Property="BorderThickness" Value="1" />
+		    <Setter Property="BorderBrush" Value="Black" />
+		    <Setter Property="Template">
+		        <Setter.Value>
+		            <ControlTemplate TargetType="Button">
+		                <Border BorderThickness="{TemplateBinding BorderThickness}"
+		                    BorderBrush="{TemplateBinding BorderBrush}"
+		                    Background="{TemplateBinding Background}"
+		                    Padding="{TemplateBinding Padding}"
+		                    CornerRadius="2">
+		                        <ContentControl Content="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+		                </Border>
+		            </ControlTemplate>
+		        </Setter.Value>
+		    </Setter>
+		    <Style.Triggers>
+		        <Trigger Property="IsMouseOver" Value="True">
+		            <Setter Property="Background" Value="{StaticResource HighlightBrush}" />
+		        </Trigger>
+		        <Trigger Property="IsPressed" Value="True">
+		            <Setter Property="Background" Value="{StaticResource PressedBrush}" />
+		        </Trigger>
+		    </Style.Triggers>
+		</Style>
+		<!-- End Flat Button Style -->
+		<!-- Fill Brushes -->
+
+<LinearGradientBrush x:Key="NormalBrush" StartPoint="0,0" EndPoint="0,1">
+  <GradientBrush.GradientStops>
+    <GradientStopCollection>
+      <GradientStop Color="#FFF" Offset="0.0"/>
+      <GradientStop Color="#CCC" Offset="1.0"/>
+    </GradientStopCollection>
+  </GradientBrush.GradientStops>
+</LinearGradientBrush>
+
+<LinearGradientBrush x:Key="HorizontalNormalBrush" StartPoint="0,0" EndPoint="1,0">
+  <GradientBrush.GradientStops>
+    <GradientStopCollection>
+      <GradientStop Color="#FFF" Offset="0.0"/>
+      <GradientStop Color="#CCC" Offset="1.0"/>
+    </GradientStopCollection>
+  </GradientBrush.GradientStops>
+</LinearGradientBrush>
+
+<LinearGradientBrush x:Key="LightBrush" StartPoint="0,0" EndPoint="0,1">
+  <GradientBrush.GradientStops>
+    <GradientStopCollection>
+      <GradientStop Color="#FFF" Offset="0.0"/>
+      <GradientStop Color="#EEE" Offset="1.0"/>
+    </GradientStopCollection>
+  </GradientBrush.GradientStops>
+</LinearGradientBrush>
+
+<LinearGradientBrush x:Key="HorizontalLightBrush" StartPoint="0,0" EndPoint="1,0">
+  <GradientBrush.GradientStops>
+    <GradientStopCollection>
+      <GradientStop Color="#FFF" Offset="0.0"/>
+      <GradientStop Color="#EEE" Offset="1.0"/>
+    </GradientStopCollection>
+  </GradientBrush.GradientStops>
+</LinearGradientBrush>
+
+<LinearGradientBrush x:Key="DarkBrush" StartPoint="0,0" EndPoint="0,1">
+  <GradientBrush.GradientStops>
+    <GradientStopCollection>
+      <GradientStop Color="#FFF" Offset="0.0"/>
+      <GradientStop Color="#AAA" Offset="1.0"/>
+    </GradientStopCollection>
+  </GradientBrush.GradientStops>
+</LinearGradientBrush>
+
+<SolidColorBrush x:Key="DisabledForegroundBrush" Color="#888" />
+
+<SolidColorBrush x:Key="DisabledBackgroundBrush" Color="#EEE" />
+
+<SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FFF" />
+
+<SolidColorBrush x:Key="SelectedBackgroundBrush" Color="#DDD" />
+
+<!-- Border Brushes -->
+
+<LinearGradientBrush x:Key="NormalBorderBrush" StartPoint="0,0" EndPoint="0,1">
+  <GradientBrush.GradientStops>
+    <GradientStopCollection>
+      <GradientStop Color="#CCC" Offset="0.0"/>
+      <GradientStop Color="#444" Offset="1.0"/>
+    </GradientStopCollection>
+  </GradientBrush.GradientStops>
+</LinearGradientBrush>
+
+<LinearGradientBrush x:Key="HorizontalNormalBorderBrush" StartPoint="0,0" EndPoint="1,0">
+  <GradientBrush.GradientStops>
+    <GradientStopCollection>
+      <GradientStop Color="#CCC" Offset="0.0"/>
+      <GradientStop Color="#444" Offset="1.0"/>
+    </GradientStopCollection>
+  </GradientBrush.GradientStops>
+</LinearGradientBrush>
+
+<LinearGradientBrush x:Key="DefaultedBorderBrush" StartPoint="0,0" EndPoint="0,1">
+  <GradientBrush.GradientStops>
+    <GradientStopCollection>
+      <GradientStop Color="#777" Offset="0.0"/>
+      <GradientStop Color="#000" Offset="1.0"/>
+    </GradientStopCollection>
+  </GradientBrush.GradientStops>
+</LinearGradientBrush>
+
+<LinearGradientBrush x:Key="PressedBorderBrush" StartPoint="0,0" EndPoint="0,1">
+  <GradientBrush.GradientStops>
+    <GradientStopCollection>
+      <GradientStop Color="#444" Offset="0.0"/>
+      <GradientStop Color="#888" Offset="1.0"/>
+    </GradientStopCollection>
+  </GradientBrush.GradientStops>
+</LinearGradientBrush>
+
+<SolidColorBrush x:Key="DisabledBorderBrush" Color="#AAA" />
+
+<SolidColorBrush x:Key="SolidBorderBrush" Color="#888" />
+
+<SolidColorBrush x:Key="LightBorderBrush" Color="#AAA" />
+
+<!-- Miscellaneous Brushes -->
+<SolidColorBrush x:Key="GlyphBrush" Color="#444" />
+
+<SolidColorBrush x:Key="LightColorBrush" Color="#DDD" />
+		<ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition />
+      <ColumnDefinition Width="20" />
+    </Grid.ColumnDefinitions>
+    <Border
+      x:Name="Border" 
+      Grid.ColumnSpan="2"
+      CornerRadius="2"
+	  BorderBrush="{TemplateBinding BorderBrush}"
+	  Background="{StaticResource DefaultBrush}"
+      BorderThickness="1" />
+    <Border 
+      Grid.Column="0"
+      CornerRadius="2,0,0,2" 
+      Margin="1" 
+      Background="{StaticResource WindowBackgroundBrush}" 
+      BorderBrush="{StaticResource NormalBorderBrush}"
+      BorderThickness="0,0,1,0" />
+    <Path 
+      x:Name="Arrow"
+      Grid.Column="1"     
+      Fill="{StaticResource GlyphBrush}"
+      HorizontalAlignment="Center"
+      VerticalAlignment="Center"
+      Data="M 0 0 L 4 4 L 8 0 Z"/>
+  </Grid>
+  <ControlTemplate.Triggers>
+    <Trigger Property="ToggleButton.IsMouseOver" Value="true">
+      <Setter TargetName="Border" Property="Background" Value="{StaticResource HighlightBrush}" />
+    </Trigger>
+    <Trigger Property="ToggleButton.IsChecked" Value="true">
+      <Setter TargetName="Border" Property="Background" Value="{StaticResource PressedBrush}" />
+    </Trigger>
+    <Trigger Property="IsEnabled" Value="False">
+      <Setter TargetName="Border" Property="Background" Value="{StaticResource DisabledBackgroundBrush}" />
+      <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource DisabledBorderBrush}" />
+      <Setter Property="Foreground" Value="{StaticResource DisabledForegroundBrush}"/>
+      <Setter TargetName="Arrow" Property="Fill" Value="{StaticResource DisabledForegroundBrush}" />
+    </Trigger>
+  </ControlTemplate.Triggers>
+</ControlTemplate>
+
+<ControlTemplate x:Key="ComboBoxTextBox" TargetType="TextBox">
+  <Border x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" />
+</ControlTemplate>
+
+<Style x:Key="cbFlatStyle" TargetType="ComboBox">
+  <Setter Property="SnapsToDevicePixels" Value="true"/>
+  <Setter Property="OverridesDefaultStyle" Value="true"/>
+  <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+  <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+  <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+  <Setter Property="MinWidth" Value="120"/>
+  <Setter Property="MinHeight" Value="20"/>
+  <Setter Property="Template">
+    <Setter.Value>
+      <ControlTemplate TargetType="ComboBox">
+        <Grid>
+          <ToggleButton 
+            Name="ToggleButton" 
+            Template="{StaticResource ComboBoxToggleButton}" 
+            Grid.Column="2" 
+            Focusable="false"
+            IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
+            ClickMode="Press">
+          </ToggleButton>
+          <ContentPresenter
+            Name="ContentSite"
+            IsHitTestVisible="False" 
+            Content="{TemplateBinding SelectionBoxItem}"
+            ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+            ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+            Margin="3,3,23,3"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Left" />
+          <TextBox x:Name="PART_EditableTextBox"
+            Style="{x:Null}" 
+            Template="{StaticResource ComboBoxTextBox}" 
+            HorizontalAlignment="Left" 
+            VerticalAlignment="Center" 
+            Margin="3,3,23,3"
+            Focusable="True" 
+            Background="Transparent"
+            Visibility="Hidden"
+            IsReadOnly="{TemplateBinding IsReadOnly}"/>
+          <Popup 
+            Name="Popup"
+            Placement="Bottom"
+            IsOpen="{TemplateBinding IsDropDownOpen}"
+            AllowsTransparency="True" 
+            Focusable="False"
+            PopupAnimation="Slide">
+            <Grid 
+              Name="DropDown"
+              SnapsToDevicePixels="True"                
+              MinWidth="{TemplateBinding ActualWidth}"
+              MaxHeight="{TemplateBinding MaxDropDownHeight}">
+              <Border 
+                x:Name="DropDownBorder"
+                Background="{StaticResource WindowBackgroundBrush}"
+                BorderThickness="1"
+                BorderBrush="{StaticResource SolidBorderBrush}"/>
+              <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+              </ScrollViewer>
+            </Grid>
+          </Popup>
+        </Grid>
+        <ControlTemplate.Triggers>
+          <Trigger Property="HasItems" Value="false">
+            <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95"/>
+          </Trigger>
+          <Trigger Property="IsEnabled" Value="false">
+            <Setter Property="Foreground" Value="{StaticResource DisabledForegroundBrush}"/>
+          </Trigger>
+          <Trigger Property="IsGrouping" Value="true">
+            <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+          </Trigger>
+          <Trigger SourceName="Popup" Property="Popup.AllowsTransparency" Value="true">
+            <Setter TargetName="DropDownBorder" Property="CornerRadius" Value="4"/>
+            <Setter TargetName="DropDownBorder" Property="Margin" Value="0,2,0,0"/>
+          </Trigger>
+          <Trigger Property="IsEditable"
+               Value="true">
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter TargetName="PART_EditableTextBox" Property="Visibility"    Value="Visible"/>
+            <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden"/>
+          </Trigger>
+        </ControlTemplate.Triggers>
+      </ControlTemplate>
+    </Setter.Value>
+  </Setter>
+  <Style.Triggers>
+  </Style.Triggers>
+</Style>
+		
+		<ControlTemplate x:Key="tbFlatStyle" TargetType="{x:Type TextBoxBase}">
+			<Border x:Name="Bd" BorderThickness="1"
+		            BorderBrush="Black"
+		            Background="{TemplateBinding Background}"
+					CornerRadius="2"> 
+	            <ScrollViewer x:Name="PART_ContentHost"/>
+	        </Border>
+	        <ControlTemplate.Triggers>
+	            <Trigger Property="IsEnabled" Value="False">
+	                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" TargetName="Bd"/>
+	                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+	            </Trigger>
+	            <Trigger Property="Width" Value="Auto">
+	                <Setter Property="MinWidth" Value="100"/>
+	            </Trigger>
+	            <Trigger Property="Height" Value="Auto">
+	                <Setter Property="MinHeight" Value="20"/>
+	            </Trigger>
+	        </ControlTemplate.Triggers>
+	    </ControlTemplate>
+
 		<Storyboard x:Key="sbRotateSync" RepeatBehavior="Forever">
 			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="btnSyncRotating" Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)">
 				<LinearDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
@@ -109,22 +410,27 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 				
 				<!--Column 0 -->
 				<Label x:Name="lblSyncJobNameDesc" Grid.Column="0" Content="Sync Job Name:" Foreground="#FF0000B9" Margin="0,-2,-0.603,2" />
-				<TextBox Grid.Column="0" x:Name="txtSyncJobName" Height="22.187" MaxLines="1" Margin="5,21.406,9.397,21.406" />
+				<TextBox Grid.Column="0" x:Name="txtSyncJobName" Template="{StaticResource tbFlatStyle}" Height="22.187" MaxLines="1" Margin="5,21.406,9.397,21.406" />
 				
 				<!--Column 1 -->
 				<Label x:Name="lblSyncSrcFolderDesc" Grid.Column="1" Content="Folder to Sync:" Foreground="#FF0000B9" Margin="0.603,-2,8,2" />
-                <ComboBox x:Name="txtSource" Margin="4.603,21.407,34.187,21.406" Grid.Column="1" IsEditable="True" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"/>
-				<Button Grid.Column="1" x:Name="btnBrowse_Source" Width="22.187" Height="22.188" Content="..." ToolTip="Click to browse folders" Click="btnBrowse_Click" Margin="0,0,8,0" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                <ComboBox x:Name="txtSource" Style="{StaticResource cbFlatStyle}" Margin="4.603,21.407,34.187,21.406" Grid.Column="1" IsEditable="True" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"/>
+				<Button Grid.Column="1" x:Name="btnBrowse_Source" Style="{StaticResource btnFlatStyle}" Width="22.187" Height="22.188" Content="..." ToolTip="Click to browse folders" Click="btnBrowse_Click" Margin="0,0,8,0" HorizontalAlignment="Right" VerticalAlignment="Center" />
 				<CheckBox Grid.Column="1" x:Name="showPartialSyncJobsCheckBox" Margin="4.603,0,0,-4" VerticalAlignment="Bottom" Height="23" Content="Show only sync jobs assigned to the" Grid.Row="1" Checked="showPartialSyncJobsCheckBox_Checked" Unchecked="showPartialSyncJobsCheckBox_Unchecked"/>
 				<Label Grid.Column="1" x:Name="lblSyncSrcFolderDesc2" Margin="211,0,0,-2" Content="Folder to Sync" Grid.Row="1" Foreground="#FF0000B9" VerticalAlignment="Bottom" Height="26.261"/>
 				
 				<!--Column 2 -->
 				<Label x:Name="lblIntStorageDirDesc" Grid.Column="2" Content=" Intermediate Storage Location:" Foreground="#FF0000B9" Margin="5.599,0,19,0" />
-				<ComboBox x:Name="txtIntStorage" Margin="13.599,23.086,34.187,19.727" IsEditable="True" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop" Grid.Column="2"/>
-                <Button Grid.Column="2" x:Name="btnBrowse" Width="22.187" Height="22.188" Content="..." ToolTip="Click to browse folders" Click="btnBrowse_Click" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0"/>
+				<ComboBox x:Name="txtIntStorage" Style="{StaticResource cbFlatStyle}" Margin="13.599,23.086,34.187,19.727" IsEditable="True" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop" Grid.Column="2"/>
+                <Button Grid.Column="2" x:Name="btnBrowse" Style="{StaticResource btnFlatStyle}" Width="22.187" Height="22.188" Content="..." ToolTip="Click to browse folders" Click="btnBrowse_Click" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0"/>
 				
 				<!--Column 3 -->
+                <!--
 				<TextBlock Grid.Column="3" x:Name="txtBlkNewJob" Style="{StaticResource blueLinkLabel}" Text="Add New Job" MouseDown="txtBlkNewJob_MouseDown" HorizontalAlignment="Right" Margin="0,23.086,17,24.181" d:LayoutOverrides="Height"/>
+                -->
+				<Button Grid.Column="3" x:Name="btnAddNewJob" Style="{StaticResource btnFlatStyle}" Content="Add New Job&#xd;&#xa;" Click="btnAddNewJob_Click" ToolTip="Create new sync job" Margin="16.04,21.406,17,21.406" />
+				
+				
 			</Grid>
 			
 			<!--Row 2 -->
@@ -172,8 +478,8 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 											<ColumnDefinition Width="22.2"/>
 										</Grid.ColumnDefinitions>
 										<TextBlock Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource jobInfo}" Text="{Binding SyncSource}" ToolTip="{Binding SyncSource}"  MouseDown="edit_MouseDown" />
-										<TextBox Grid.Column="0" Text="{Binding NewSyncSource}" Visibility="Hidden" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"  Loaded="editControls_Loaded"/>
-										<Button Grid.Column="1" Width="22.187" Height="22.188" Content="..." Click="btnBrowse_Click" Visibility="Hidden" Loaded="editControls_Loaded" />
+										<TextBox Grid.Column="0" Text="{Binding NewSyncSource}" Visibility="Collapsed" PreviewDragEnter="txtDir_PreviewDragEnter" PreviewDragOver="txtDir_PreviewDragOver" PreviewDrop="txtDir_PreviewDrop"  Loaded="editControls_Loaded"/>
+										<Button Grid.Column="1" Width="22.187" Height="22.188" Content="..." Click="btnBrowse_Click" Visibility="Collapsed" Loaded="editControls_Loaded" />
 									</Grid>
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
@@ -231,7 +537,7 @@ $Id: MainWindow.xaml 287 2010-03-18 02:25:56Z gclin009 $
 			</ListView>
 			
 			<!--Row 3 -->
-			<TextBlock Grid.Row="3" x:Name="txtBlkProceed" Text="Sync Selected Jobs" Style="{StaticResource blueLinkLabel}" MouseDown="sync_MouseDown" Margin="8,0,0,15.27" VerticalAlignment="Bottom" HorizontalAlignment="Left" TextAlignment="Center" />
+			<TextBlock Grid.Row="3" x:Name="txtBlkProceed" Text="Sync Selected Jobs" Style="{StaticResource blueLinkLabel}" MouseDown="sync_MouseDown" Margin="3,0,0,15.27" VerticalAlignment="Bottom" HorizontalAlignment="Left" TextAlignment="Center" Height="17.73" Width="117.413" />
 			<Image Grid.Row="3" x:Name="btnSyncRotating" ToolTip="Cancel Subsequent Jobs" HorizontalAlignment="Left" Margin="8,8,0,33" Width="104" Source="Resource/OneSync Transparent Logo.png" RenderTransformOrigin="0.5,0.5" d:LayoutOverrides="GridBox" Visibility="Hidden" Cursor="Hand" MouseDown="sync_MouseDown" >
 				<Image.RenderTransform>
 					<RotateTransform Angle="0"/>
