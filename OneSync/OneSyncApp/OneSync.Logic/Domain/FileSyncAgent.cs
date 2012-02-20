@@ -138,6 +138,7 @@ namespace OneSync.Synchronization
                 ExecuteDeleteActions(previewResult.ItemsToDelete);
                 ExecuteRenameActions(previewResult.ItemsToRename);
                 ExecuteConflictActions(previewResult.ConflictItems);
+                UpdateSyncSourceMetadata();
             }
             catch (Exception){}
             finally
@@ -274,7 +275,7 @@ namespace OneSync.Synchronization
         {
             ExecuteActions(conflictList, a =>
             {
-                if (a.ChangeType == ChangeType.NEWLY_CREATED)
+                if (a.ChangeType == ChangeType.NEWLY_CREATED || a.ChangeType == ChangeType.MODIFIED)
                 {
                     if (a.ConflictResolution == ConflictResolution.DUPLICATE_RENAME)
                         SyncExecutor.DuplicateRenameInSyncFolderAndUpdateActionTable((CreateAction)a, _job);

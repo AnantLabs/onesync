@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="xsl" xml:space="preserve">
-    <value>&lt;?xml version='1.0' encoding='ISO-8859-1'?&gt;
+    <value>&lt;?xml version='1.0' encoding='UTF-8'?&gt;
 &lt;xsl:stylesheet version='1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'&gt;
 &lt;xsl:template match='/'&gt;
 &lt;html&gt;

@@ -41,11 +41,11 @@
     <AspNetConfiguration>$(Configuration)</AspNetConfiguration>
   </PropertyGroup>
   <PropertyGroup>
-    <SolutionDir>C:\Users\u0707373\Documents\Visual Studio 2008\OneSync V2.0\</SolutionDir>
+    <SolutionDir>C:\Users\adminNUS\Desktop\Backup\Documents\Visual Studio 2008\OneSync V2.0\</SolutionDir>
     <SolutionExt>.sln</SolutionExt>
     <SolutionFileName>OneSyncWPF.sln</SolutionFileName>
     <SolutionName>OneSyncWPF</SolutionName>
-    <SolutionPath>C:\Users\u0707373\Documents\Visual Studio 2008\OneSync V2.0\OneSyncWPF.sln</SolutionPath>
+    <SolutionPath>C:\Users\adminNUS\Desktop\Backup\Documents\Visual Studio 2008\OneSync V2.0\OneSyncWPF.sln</SolutionPath>
   </PropertyGroup>
   <PropertyGroup>
     <TargetFrameworkVersion Condition="'$(TargetFrameworkVersion)' == '' and '$(MSBuildToolsVersion)' == '2.0'">v2.0</TargetFrameworkVersion>

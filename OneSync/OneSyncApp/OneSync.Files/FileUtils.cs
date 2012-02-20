@@ -287,8 +287,8 @@ namespace OneSync.Files
                 GetFileInformationByHandle(fs.SafeFileHandle.DangerousGetHandle(), out info);
             }
 
-            uid = info.FileSizeHigh << 32;
-            uid &= info.FileSizeLow;
+            uid = info.FileIndexHigh << 32;
+            uid &= info.FileIndexLow;
 
             return uid;
         }

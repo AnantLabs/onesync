@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace OneSync.Synchronization
 {
@@ -20,10 +21,13 @@ namespace OneSync.Synchronization
         private string _jobId;
         private SyncSource _syncSource;       
         private IntermediaryStorage _iStorage;
+        private FileSystemWatcher _syncSourceWatcher;
+        private FileSystemWatcher _syncIntermediateWatcher;
         
         public SyncJob(string name , SyncSource syncSource, IntermediaryStorage iStorage)
             : this(System.Guid.NewGuid().ToString(), name, syncSource, iStorage)
         {
+
         }
 
         public SyncJob(string id, string name, SyncSource syncSource, IntermediaryStorage iStorage)
@@ -32,8 +36,10 @@ namespace OneSync.Synchronization
             this.Name = name;
             this._syncSource = syncSource;
             this._iStorage = iStorage;
-        }
-        
+
+            //this._syncSourceWatcher = new FileSystemWatcher(syncSource.Path);
+            //this._syncIntermediateWatcher = new FileSystemWatcher(iStorage.Path);
+        }     
         
         /// <summary>
         /// Returns the SyncJob name. Each PC will have unique Job name.
@@ -63,6 +69,16 @@ namespace OneSync.Synchronization
         public IntermediaryStorage IntermediaryStorage
         {
             get { return this._iStorage; }
+        }
+
+        public FileSystemWatcher SyncSourceWatcher 
+        {
+            get { return this._syncSourceWatcher; }
+        }
+
+        public FileSystemWatcher SyncIntermediateWatcher
+        {
+            get { return this._syncIntermediateWatcher; }
         }
 
         /// <summary>

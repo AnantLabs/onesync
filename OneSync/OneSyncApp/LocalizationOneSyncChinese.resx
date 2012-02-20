@@ -255,7 +255,7 @@
     <value>OneSync</value>
   </data>
   <data name="not_openName" xml:space="preserve">
-    <value>开启 OneSync 3</value>
+    <value>开启 OneSync 4</value>
   </data>
   <data name="tot_browseFolder" xml:space="preserve">
     <value>点击浏览文件夹</value>
@@ -414,7 +414,7 @@
     <value>不能修改档案名 {0}</value>
   </data>
   <data name="lbl_dotNetFrameworkDescriptionText1" xml:space="preserve">
-    <value>OneSync 3 只能在安装有 .NET 3.5 SP1 的系统上顺利运行。</value>
+    <value>OneSync 只能在安装有 .NET 3.5 SP1 的系统上顺利运行。</value>
   </data>
   <data name="lbl_dotNetFrameworkDescriptionText2" xml:space="preserve">
     <value>请到以下网站下载及安装恰当的 .NET 版本：</value>
@@ -442,5 +442,11 @@
   </data>
   <data name="lbl_peparingToSync" xml:space="preserve">
     <value>预备同步中</value>
+  </data>
+  <data name="msg_newOneSyncVersion" xml:space="preserve">
+    <value>最新版本的 OneSync 已经推出。您是否要下载呢？</value>
+  </data>
+  <data name="msg_newOneSyncVersionTitle" xml:space="preserve">
+    <value>找到最新版本的 OneSync！</value>
   </data>
 </root>

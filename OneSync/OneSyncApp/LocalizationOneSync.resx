@@ -282,7 +282,7 @@ Current syncing job:</value>
     <value>OneSync</value>
   </data>
   <data name="not_openName" xml:space="preserve">
-    <value>Open OneSync 3</value>
+    <value>Open OneSync 4</value>
   </data>
   <data name="tot_browseFolder" xml:space="preserve">
     <value>Click to browse folders</value>
@@ -441,7 +441,7 @@ Current syncing job:</value>
     <value>Cannot rename file {0}</value>
   </data>
   <data name="lbl_dotNetFrameworkDescriptionText1" xml:space="preserve">
-    <value>OneSync 3 can only run on computer which has .NET 3.5 SP1 installed.</value>
+    <value>OneSync can only run on computer which has .NET 3.5 SP1 installed.</value>
   </data>
   <data name="lbl_dotNetFrameworkDescriptionText2" xml:space="preserve">
     <value>Please download and then install the suitable version of .NET Framework here:</value>

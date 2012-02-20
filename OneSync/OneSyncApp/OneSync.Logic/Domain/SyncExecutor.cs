@@ -56,7 +56,7 @@ namespace OneSync.Synchronization
                 transaction.Rollback();
                 throw; 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 transaction.Rollback();
                 throw;

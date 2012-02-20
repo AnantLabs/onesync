@@ -21,13 +21,14 @@ using Microsoft.Win32;
 using System.Resources;
 using System.Globalization;
 using System.Threading;
+using WPF.JoshSmith.ServiceProviders.UI;
 
 namespace OneSync.UI
 {
 
-	public partial class MainWindow : Window
-	{
-		// Start: Global variables.        
+    public partial class MainWindow : Window
+    {
+        // Start: Global variables.        
         private string STARTUP_PATH = System.Windows.Forms.Application.StartupPath;
 
         //public ResourceManager m_ResourceManager = new ResourceManager(Properties.Settings.Default.LanguageResx,
@@ -46,16 +47,21 @@ namespace OneSync.UI
 
         TextBox editTextBox;
 
-        private DispatcherTimer timerDropbox; //The time to check the Dropbox status frequently.
+        Dictionary<UISyncJobEntry, FileSystemWatcher> toAutoSyncList = new Dictionary<UISyncJobEntry, FileSystemWatcher>();
+
+        private DispatcherTimer timerDropbox; // The timer to check the Dropbox status.
+        //private DispatcherTimer timerAutoSync; // The timer to check the auto sync waiting list.
 
         private ObservableCollection<UISyncJobEntry> _SyncJobEntries = new ObservableCollection<UISyncJobEntry>();
 
+        Queue<UISyncJobEntry> toAutoSyncJobs = new Queue<UISyncJobEntry>();
+
         TaskbarManager tbManager = TaskbarManager.Instance;
         // End: Global variables.
-		
-		
-		public MainWindow()
-		{
+
+
+        public MainWindow()
+        {
             this.InitializeComponent();
 
             //For debugging purpose: Reset language.
@@ -152,6 +158,12 @@ namespace OneSync.UI
                     timerDropbox.Tick += new EventHandler((sender, e) => dropboxStatusChecking());
                     timerDropbox.Interval = TimeSpan.FromMilliseconds(1000);
 
+                    // Configure the timer to check the auto sync waiting list
+                    //timerAutoSync = new DispatcherTimer();
+                    //timerAutoSync.Tick += new EventHandler(timerAutoSync_Tick);
+                    //timerAutoSync.Interval = TimeSpan.FromMilliseconds(4000);
+                    //timerAutoSync.Start();
+
                     _SyncJobEntries.CollectionChanged += (sender, e) => refreshCombobox();
 
                     // Do not show the help button if the help file is not there
@@ -161,6 +173,7 @@ namespace OneSync.UI
                     // Set-up data bindings
                     listAllSyncJobs.ItemsSource = this.SyncJobEntries;
                     LoadSyncJobs();
+                    new ListViewDragDrop<UISyncJobEntry>(listAllSyncJobs);
 
                     //Check for latest update.
                     //MessageBox.Show(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
@@ -187,16 +200,27 @@ namespace OneSync.UI
             }
         }
 
-        private void language() 
+        void timerAutoSync_Tick(object sender, EventArgs e)
+        {
+            if (toAutoSyncJobs.Count != 0 && !syncWorker.IsBusy)
+            {
+                Synchronize(toAutoSyncJobs);
+
+                toAutoSyncJobs = new Queue<UISyncJobEntry>();
+            }
+        }
+
+        private void language()
         {
             lblSyncJobNameDesc.Content = m_ResourceManager.GetString("lbl_syncJobName");
             lblSyncSrcFolderDesc.Content = m_ResourceManager.GetString("lbl_syncSourceDir");
             lblIntStorageDirDesc.Content = m_ResourceManager.GetString("lbl_syncIntStorageDir");
-            txtBlkNewJob.Text = m_ResourceManager.GetString("btn_addNewJob");
+            btnAddNewJob.Content = m_ResourceManager.GetString("btn_addNewJob");
             txtBlkProceed.Text = m_ResourceManager.GetString("btn_syncJobs");
             showPartialSyncJobsCheckBox.Content = m_ResourceManager.GetString("chb_showPartialSyncJobs");
             lblSyncSrcFolderDesc2.Content = m_ResourceManager.GetString("lbl_syncSourceDir2");
-            listAllSyncJobs_header_1.Header = m_ResourceManager.GetString("hdr_reorder");
+            //Replace by drag-and-drop
+            //listAllSyncJobs_header_1.Header = m_ResourceManager.GetString("hdr_reorder");
             listAllSyncJobs_header_2.Header = m_ResourceManager.GetString("hdr_jobName");
             listAllSyncJobs_header_3.Header = m_ResourceManager.GetString("hdr_syncSourceDir");
             listAllSyncJobs_header_4.Header = m_ResourceManager.GetString("hrd_syncIntStorageDir");
@@ -240,10 +264,10 @@ namespace OneSync.UI
                 else
                     lblStatus.Content = m_ResourceManager.GetString("msg_updatedDropBox");
             }
-            catch(Exception) { }            
+            catch (Exception) { }
         }
 
-        private void refreshCombobox() 
+        private void refreshCombobox()
         {
             ///TODO: Add Exception
             txtSource.Items.Clear();
@@ -262,6 +286,7 @@ namespace OneSync.UI
         {
             showErrorMsg("");
 
+            // Cancel subsequent sync jobs
             if (syncWorker.IsBusy)
             {
                 txtBlkProceed.Text = "Cancelling...";
@@ -288,13 +313,15 @@ namespace OneSync.UI
             try
             {
                 Synchronize(selectedJobs);
-            }catch(SyncJobException syncJobException)
+            }
+            catch (SyncJobException syncJobException)
             {
                 this.Dispatcher.Invoke((Action)delegate
                 {
                     showErrorMsg(syncJobException.Message);
                 });
-            }catch(Exception exception)
+            }
+            catch (Exception exception)
             {
                 try
                 {
@@ -303,13 +330,11 @@ namespace OneSync.UI
                         showErrorMsg(exception.Message);
                     });
                 }
-                catch(Exception) { } //If you don't have .NET 3.5 SP1.
+                catch (Exception) { } //If you don't have .NET 3.5 SP1.
             }
-
-
         }
 
-		private void btnBrowse_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void btnBrowse_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             try
             {
@@ -359,10 +384,10 @@ namespace OneSync.UI
                 ((Button)sender).Tag = editTextBox;
         }
 
-        private void txtBlkNewJob_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void btnAddNewJob_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             showErrorMsg("");
-        	//Check the three required inputs for a new sync job:
+            //Check the three required inputs for a new sync job:
             // 1. Sync Job Name;
             // 2. Sync Source Folder Directory;
             // 3. Intermediate Storage Location.
@@ -390,11 +415,11 @@ namespace OneSync.UI
             {
                 showErrorMsg(ex.Message);
             }
-            catch(SyncJobException sje)
+            catch (SyncJobException sje)
             {
                 showErrorMsg(sje.Message);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 showErrorMsg(ex.Message);
             }
@@ -410,7 +435,7 @@ namespace OneSync.UI
             UpdateTextBoxBindings();
 
             FrameworkElement img = (FrameworkElement)e.Source;
-            UISyncJobEntry entry  = (UISyncJobEntry)img.DataContext;
+            UISyncJobEntry entry = (UISyncJobEntry)img.DataContext;
 
             entry.EditMode = !(entry.EditMode && saveSyncJob(entry));
         }
@@ -454,11 +479,11 @@ namespace OneSync.UI
             {
                 showErrorMsg(m_ResourceManager.GetString("err_metadataMissing"));
             }
-            catch(SqliteSyntaxException)
+            catch (SqliteSyntaxException)
             {
                 showErrorMsg(m_ResourceManager.GetString("err_metadataMissing"));
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 showErrorMsg(exception.Message);
             }
@@ -484,7 +509,7 @@ namespace OneSync.UI
         }
         */
 
-        
+
         void editJobWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             this.Dispatcher.Invoke((Action)delegate
@@ -495,108 +520,108 @@ namespace OneSync.UI
 
             UISyncJobEntry entry = e.Argument as UISyncJobEntry;
             if (entry == null) return;
-            
+
             string oldIStorage = entry.SyncJob.IntermediaryStorage.Path;
             string oldSyncSource = entry.SyncJob.SyncSource.Path;
             string oldSyncJobName = entry.SyncJob.Name;
-            
+
             entry.SyncJob.Name = entry.NewJobName;
             entry.SyncJob.IntermediaryStorage.Path = entry.NewIntermediaryStoragePath;
             entry.SyncJob.SyncSource.Path = entry.NewSyncSource;
-           try
-           {
-               if (!Validator.SyncJobParamsValidated(entry.NewJobName, entry.NewSyncSource, entry.NewIntermediaryStoragePath, jobManager.LoadAllJobs())) 
-               {
-                   this.Dispatcher.Invoke((Action)delegate
-                   {
-                       entry.SyncJob.Name = oldSyncJobName;
-                       entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
-                       entry.SyncJob.SyncSource.Path = oldSyncSource;
-                       entry.InfoChanged();
-                       showErrorMsg(m_ResourceManager.GetString("err_invalidInput"));
-                   });
-               }
-               if (!Validator.IntermediaryMovable (entry.IntermediaryStoragePath, entry.SyncJob.SyncSource.ID))
-                   throw new SyncJobException(String.Format(m_ResourceManager.GetString("err_metadataMissingSource"), oldSyncSource));
+            try
+            {
+                if (!Validator.SyncJobParamsValidated(entry.NewJobName, entry.NewSyncSource, entry.NewIntermediaryStoragePath, jobManager.LoadAllJobs()))
+                {
+                    this.Dispatcher.Invoke((Action)delegate
+                    {
+                        entry.SyncJob.Name = oldSyncJobName;
+                        entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
+                        entry.SyncJob.SyncSource.Path = oldSyncSource;
+                        entry.InfoChanged();
+                        showErrorMsg(m_ResourceManager.GetString("err_invalidInput"));
+                    });
+                }
+                if (!Validator.IntermediaryMovable(entry.IntermediaryStoragePath, entry.SyncJob.SyncSource.ID))
+                    throw new SyncJobException(String.Format(m_ResourceManager.GetString("err_metadataMissingSource"), oldSyncSource));
 
-               jobManager.Update(entry.SyncJob);
-               entry.InfoChanged(); /* Force databinding to refresh */
+                jobManager.Update(entry.SyncJob);
+                entry.InfoChanged(); /* Force databinding to refresh */
 
-               if (!entry.SyncJob.IntermediaryStorage.Path.Equals(oldIStorage))
-               {
-                   try
-                   {
-                       if (!Files.FileUtils.MoveFolder(oldIStorage, entry.SyncJob.IntermediaryStorage.Path))
-                           throw new SyncJobException(String.Format(m_ResourceManager.GetString("err_filesCannotBeMoved"), entry.SyncJob.IntermediaryStorage.Path));
-                   }
-                   catch (SyncJobException ex)
-                   {
-                       this.Dispatcher.Invoke((Action)delegate
-                       {
-                           entry.SyncJob.Name = oldSyncJobName;
-                           entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
-                           entry.SyncJob.SyncSource.Path = oldSyncSource;
-                           entry.InfoChanged();
-                           showErrorMsg(ex.Message);
-                       });
-                   }
-                   catch (DirectoryNotFoundException directoryNotFoundException)
-                   {
-                       this.Dispatcher.Invoke((Action)delegate
-                       {
-                           entry.SyncJob.Name = oldSyncJobName;
-                           entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
-                           entry.SyncJob.SyncSource.Path = oldSyncSource;
-                           entry.InfoChanged();
-                           showErrorMsg(m_ResourceManager.GetString("err_filesCannotBeMoved2"));
-                       });
-                   }
-                   catch (UnauthorizedAccessException unauthorizedAccessException)
-                   {
-                       this.Dispatcher.Invoke((Action)delegate
-                       {
-                           entry.SyncJob.Name = oldSyncJobName;
-                           entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
-                           entry.SyncJob.SyncSource.Path = oldSyncSource;
-                           entry.InfoChanged();
-                           showErrorMsg(m_ResourceManager.GetString("err_filesCannotBeMoved2"));
-                       });
-                   }
-                   catch (SyncSourceException sourceException)
-                   {
-                       this.Dispatcher.Invoke((Action)delegate
-                       {
-                           entry.SyncJob.Name = oldSyncJobName;
-                           entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
-                           entry.SyncJob.SyncSource.Path = oldSyncSource;
-                           entry.InfoChanged();
-                           showErrorMsg(sourceException.Message);
-                       });
-                   }
-                   catch (OutOfDiskSpaceException)
-                   {
-                       this.Dispatcher.Invoke((Action)delegate
-                       {
-                           entry.SyncJob.Name = oldSyncJobName;
-                           entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
-                           entry.SyncJob.SyncSource.Path = oldSyncSource;
-                           entry.InfoChanged();
-                           showErrorMsg(m_ResourceManager.GetString("err_intermediateStorageTooSmall"));
-                       });
-                   }
-                   catch(Exception)
-                   {
-                       this.Dispatcher.Invoke((Action)delegate
-                       {
-                           
-                       });
-                   }
-               }
+                if (!entry.SyncJob.IntermediaryStorage.Path.Equals(oldIStorage))
+                {
+                    try
+                    {
+                        if (!Files.FileUtils.MoveFolder(oldIStorage, entry.SyncJob.IntermediaryStorage.Path))
+                            throw new SyncJobException(String.Format(m_ResourceManager.GetString("err_filesCannotBeMoved"), entry.SyncJob.IntermediaryStorage.Path));
+                    }
+                    catch (SyncJobException ex)
+                    {
+                        this.Dispatcher.Invoke((Action)delegate
+                        {
+                            entry.SyncJob.Name = oldSyncJobName;
+                            entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
+                            entry.SyncJob.SyncSource.Path = oldSyncSource;
+                            entry.InfoChanged();
+                            showErrorMsg(ex.Message);
+                        });
+                    }
+                    catch (DirectoryNotFoundException)
+                    {
+                        this.Dispatcher.Invoke((Action)delegate
+                        {
+                            entry.SyncJob.Name = oldSyncJobName;
+                            entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
+                            entry.SyncJob.SyncSource.Path = oldSyncSource;
+                            entry.InfoChanged();
+                            showErrorMsg(m_ResourceManager.GetString("err_filesCannotBeMoved2"));
+                        });
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        this.Dispatcher.Invoke((Action)delegate
+                        {
+                            entry.SyncJob.Name = oldSyncJobName;
+                            entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
+                            entry.SyncJob.SyncSource.Path = oldSyncSource;
+                            entry.InfoChanged();
+                            showErrorMsg(m_ResourceManager.GetString("err_filesCannotBeMoved2"));
+                        });
+                    }
+                    catch (SyncSourceException sourceException)
+                    {
+                        this.Dispatcher.Invoke((Action)delegate
+                        {
+                            entry.SyncJob.Name = oldSyncJobName;
+                            entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
+                            entry.SyncJob.SyncSource.Path = oldSyncSource;
+                            entry.InfoChanged();
+                            showErrorMsg(sourceException.Message);
+                        });
+                    }
+                    catch (OutOfDiskSpaceException)
+                    {
+                        this.Dispatcher.Invoke((Action)delegate
+                        {
+                            entry.SyncJob.Name = oldSyncJobName;
+                            entry.SyncJob.IntermediaryStorage.Path = oldIStorage;
+                            entry.SyncJob.SyncSource.Path = oldSyncSource;
+                            entry.InfoChanged();
+                            showErrorMsg(m_ResourceManager.GetString("err_intermediateStorageTooSmall"));
+                        });
+                    }
+                    catch (Exception)
+                    {
+                        this.Dispatcher.Invoke((Action)delegate
+                        {
 
-               
-               e.Result = entry;
-           }
-            catch(SyncJobNameExistException profileNameExistException)
+                        });
+                    }
+                }
+
+
+                e.Result = entry;
+            }
+            catch (SyncJobNameExistException profileNameExistException)
             {
                 this.Dispatcher.Invoke((Action)delegate
                 {
@@ -632,7 +657,7 @@ namespace OneSync.UI
             entry.EditMode = false;
 
             refreshCombobox();
-            
+
             SetControlsEnabledState(false, true);
 
             lblSyncJobEditing.Visibility = Visibility.Hidden;
@@ -642,16 +667,16 @@ namespace OneSync.UI
         {
             showErrorMsg(""); //Clear error msg
 
-                TextBlock clickedBlock = (TextBlock)e.Source;
-                UISyncJobEntry entry = clickedBlock.DataContext as UISyncJobEntry;
+            TextBlock clickedBlock = (TextBlock)e.Source;
+            UISyncJobEntry entry = clickedBlock.DataContext as UISyncJobEntry;
 
-                //View log file (The extension of the file should be .html).
-                if (File.Exists(Log.ReturnLogReportPath(entry.SyncSource)))
-                    Log.ShowLog(entry.SyncSource);
-                else
-                    showErrorMsg(m_ResourceManager.GetString("err_noLogFile"));
-            
-            
+            //View log file (The extension of the file should be .html).
+            if (File.Exists(Log.ReturnLogReportPath(entry.SyncSource)))
+                Log.ShowLog(entry.SyncSource);
+            else
+                showErrorMsg(m_ResourceManager.GetString("err_noLogFile"));
+
+
         }
 
         private void textBoxPreview_MouseDown(object sender, MouseButtonEventArgs e)
@@ -752,7 +777,7 @@ namespace OneSync.UI
                     Process.GetCurrentProcess().Kill();
                 }
             }
-            else 
+            else
             {
                 saveJobsOrder();
                 Process.GetCurrentProcess().Kill();
@@ -785,8 +810,9 @@ namespace OneSync.UI
 
                 // Run sync
                 syncWorker.RunWorkerAsync(selectedEntries);
+                
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 string errorMsg = Validator.validateSyncDirs(currentJobEntry.SyncSource, currentJobEntry.IntermediaryStoragePath);
                 if (errorMsg != null)
@@ -798,8 +824,9 @@ namespace OneSync.UI
 
         void syncWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            //Stop the Dropbox checker.
+            // Stop the timers.
             timerDropbox.Stop();
+            //timerAutoSync.Stop();
 
             Queue<UISyncJobEntry> jobEntries = e.Argument as Queue<UISyncJobEntry>;
             if (jobEntries == null || jobEntries.Count <= 0) return;
@@ -832,15 +859,15 @@ namespace OneSync.UI
                 entry.Error = ex;
                 entry.ProgressBarValue = 100;
                 entry.ProgressBarColor = "Red";
-                
+
                 this.Dispatcher.Invoke((Action)delegate
                 {
                     string errorMsg = m_ResourceManager.GetString("err_metadataMissing");
                     entry.ProgressBarMessage = errorMsg;
                     showErrorMsg(errorMsg);
-                });                
+                });
             }
-            catch(System.IO.DirectoryNotFoundException ex)
+            catch (System.IO.DirectoryNotFoundException ex)
             {
                 entry.Error = ex;
                 entry.ProgressBarValue = 100;
@@ -851,9 +878,9 @@ namespace OneSync.UI
                     string errorMsg = String.Format(m_ResourceManager.GetString("err_directoryNotFound"), ex.Message);
                     entry.ProgressBarMessage = errorMsg;
                     showErrorMsg(errorMsg);
-                });                
+                });
             }
-            catch(SyncJobException syncJobException)
+            catch (SyncJobException syncJobException)
             {
                 entry.Error = syncJobException;
                 entry.ProgressBarValue = 100;
@@ -876,7 +903,7 @@ namespace OneSync.UI
                 {
                     entry.ProgressBarMessage = errorMsg;
                     showErrorMsg(errorMsg);
-                });    
+                });
             }
             catch (Exception ex)
             {
@@ -889,7 +916,7 @@ namespace OneSync.UI
                 {
                     entry.ProgressBarMessage = errorMsg;
                     showErrorMsg(errorMsg);
-                });    
+                });
             }
 
             if (syncWorker.CancellationPending)
@@ -900,51 +927,53 @@ namespace OneSync.UI
             }
 
             e.Result = jobEntries;
-            
+
         }
 
         void syncWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-                if (e.Error != null)
-                {
-                    return;
-                }
+            if (e.Error != null)
+            {
+                return;
+            }
 
-                Queue<UISyncJobEntry> jobEntries = e.Result as Queue<UISyncJobEntry>;
-                if (jobEntries == null) return;
+            Queue<UISyncJobEntry> jobEntries = e.Result as Queue<UISyncJobEntry>;
+            if (jobEntries == null) return;
 
-                if (jobEntries.Count > 0 && jobEntries.Peek() != null)
-                {
-                    //Remove the synced agent and sync job.
-                    UISyncJobEntry completedJobEntry = jobEntries.Dequeue();
+            if (jobEntries.Count > 0 && jobEntries.Peek() != null)
+            {
+                //Remove the synced agent and sync job.
+                UISyncJobEntry completedJobEntry = jobEntries.Dequeue();
 
-                    if (completedJobEntry.Error == null)
-                        completedJobEntry.ProgressBarMessage = m_ResourceManager.GetString("msg_syncJobCompleted");
+                if (completedJobEntry.Error == null)
+                    completedJobEntry.ProgressBarVisibility = Visibility.Hidden;
+                //completedJobEntry.ProgressBarMessage = m_ResourceManager.GetString("msg_syncJobCompleted");
 
-                    completedJobEntry.SyncJob.SyncPreviewResult = null;
-                    RemoveAgentEventHandler(completedJobEntry.SyncAgent);
-                }
+                completedJobEntry.SyncJob.SyncPreviewResult = null;
+                RemoveAgentEventHandler(completedJobEntry.SyncAgent);
+            }
 
-                // Check for more sync jobs to run or whether cancel pending
-                if (jobEntries.Count <= 0)
-                {
-                    // Start the Dropbox checker now.
-                    timerDropbox.Start();
+            // Check for more sync jobs to run or whether cancel pending
+            if (jobEntries.Count <= 0)
+            {
+                // Start the timers now.
+                timerDropbox.Start();
+                //timerAutoSync.Start();
 
-                    // Update UI and hide sync progress controls
-                    SetControlsEnabledState(false, true);
-                    lblStatus.Content = m_ResourceManager.GetString("msg_syncCompleted");
-                    lblSubStatus.Content = "";
+                // Update UI and hide sync progress controls
+                SetControlsEnabledState(false, true);
+                lblStatus.Content = m_ResourceManager.GetString("msg_syncCompleted");
+                lblSubStatus.Content = "";
 
-                    //listAllSyncJobs.IsEnabled = true;
-                }
-                else
-                {
-                    UpdateSyncInfoUI(jobEntries.Peek().SyncJob);
-                    syncWorker.RunWorkerAsync(jobEntries);
-                }
-            
-            
+                //listAllSyncJobs.IsEnabled = true;
+            }
+            else
+            {
+                UpdateSyncInfoUI(jobEntries.Peek().SyncJob);
+                syncWorker.RunWorkerAsync(jobEntries);
+            }
+
+
         }
 
         private void AddAgentEventHandler(FileSyncAgent agent)
@@ -953,10 +982,9 @@ namespace OneSync.UI
             agent.ProgressChanged += new SyncProgressChangedHandler(currAgent_ProgressChanged);
             agent.SyncFileChanged += new SyncFileChangedHandler(currAgent_FileChanged);
             agent.StatusChanged += new SyncStatusChangedHandler(syncAgent_SyncStatusChanged);
-            
         }
 
-        
+
         private void RemoveAgentEventHandler(FileSyncAgent agent)
         {
             if (agent == null) return;
@@ -976,9 +1004,9 @@ namespace OneSync.UI
             lblSyncJobName.Content = p.Name;
             lblSyncJobName.ToolTip = p.Name;
         }
-		
-		private void showErrorMsg(string message)
-		{
+
+        private void showErrorMsg(string message)
+        {
             if (String.IsNullOrEmpty(message))
             {
                 label_notification.Visibility = Visibility.Hidden;
@@ -987,7 +1015,7 @@ namespace OneSync.UI
             else
             {
                 label_notification.Content = message;
-                label_notification.Visibility = Visibility.Visible;       
+                label_notification.Visibility = Visibility.Visible;
             }
         }
 
@@ -1000,7 +1028,7 @@ namespace OneSync.UI
         /// Update the progress bar.
         /// </summary>
         void currAgent_ProgressChanged(object sender, Synchronization.SyncProgressChangedEventArgs e)
-        {   
+        {
             currentJobEntry.ProgressBarValue = e.Progress;
             if (tbManager != null) tbManager.SetProgressValue(e.Progress, 100);
         }
@@ -1045,7 +1073,57 @@ namespace OneSync.UI
             sortJobs(jobs);
 
             foreach (SyncJob job in jobs)
-                SyncJobEntries.Add(new UISyncJobEntry(job));      
+            {
+                UISyncJobEntry jobEntry = new UISyncJobEntry(job);
+                SyncJobEntries.Add(jobEntry);
+
+                //job.SyncSourceWatcher.Changed += new FileSystemEventHandler((sender, e) => autoSync(jobEntry));
+                //job.SyncSourceWatcher.Deleted += new FileSystemEventHandler((sender, e) => autoSync(jobEntry));
+                //job.SyncSourceWatcher.Renamed += new RenamedEventHandler((sender, e) => autoSync(jobEntry));
+                //job.SyncSourceWatcher.Created += new FileSystemEventHandler((sender, e) => autoSync(jobEntry));
+                //job.SyncSourceWatcher.EnableRaisingEvents = true;
+            }
+        }
+
+        private void autoSync(UISyncJobEntry jobEntry) 
+        {
+            Queue<UISyncJobEntry> selectedJobs = new Queue<UISyncJobEntry>();
+            selectedJobs.Enqueue(jobEntry);
+
+            this.Dispatcher.Invoke((Action)delegate
+            {
+                lblJobsNumber.Content = selectedJobs.Count;
+            });
+
+            try
+            {
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    // Push the sync job to the waiting list while there are jobs now being synced
+                    if (syncWorker.IsBusy)
+                        toAutoSyncJobs.Enqueue(jobEntry);
+                    else
+                        Synchronize(selectedJobs);
+                });
+            }
+            catch (SyncJobException syncJobException)
+            {
+                this.Dispatcher.Invoke((Action)delegate
+                {
+                    showErrorMsg(syncJobException.Message);
+                });
+            }
+            catch (Exception exception)
+            {
+                try
+                {
+                    this.Dispatcher.Invoke((Action)delegate
+                    {
+                        showErrorMsg(exception.Message);
+                    });
+                }
+                catch (Exception) { } //If you don't have .NET 3.5 SP1.
+            }
         }
 
         private void MoveJobEntry(UISyncJobEntry entry, int delta)
@@ -1096,7 +1174,7 @@ namespace OneSync.UI
 
             string syncSourceDir = txtSource.Text;
             string intStorageDir = txtIntStorage.Text;
-            
+
             try
             {
                 if (Validator.SyncJobParamsValidated(entry.NewJobName, entry.NewSyncSource, entry.NewIntermediaryStoragePath, jobManager.LoadAllJobs()))
@@ -1122,10 +1200,10 @@ namespace OneSync.UI
                     showErrorMsg(syncJobException.Message);
                     entry.EditMode = false;
                     SetControlsEnabledState(false, true);
-                });                
+                });
                 return false;
             }
-            catch(SyncJobNameExistException profileNameExistException)
+            catch (SyncJobNameExistException profileNameExistException)
             {
                 this.Dispatcher.Invoke((Action)delegate
                 {
@@ -1135,7 +1213,7 @@ namespace OneSync.UI
                 });
                 return false;
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 this.Dispatcher.Invoke((Action)delegate
                 {
@@ -1209,9 +1287,9 @@ namespace OneSync.UI
                         tb.Focus();
                     }
                 }
-                else 
+                else
                 {
-                    if (Directory.Exists(folders[0])) 
+                    if (Directory.Exists(folders[0]))
                     {
                         cb.Text = folders[0];
                         if (txtSyncJobName.Text.Length <= 0)
@@ -1259,11 +1337,11 @@ namespace OneSync.UI
                     if (saveSyncJob(entry)) entry.EditMode = false;
                 }
             }
-			else if (e.Key == Key.F1)
-			{
+            else if (e.Key == Key.F1)
+            {
                 if (File.Exists(STARTUP_PATH + @"\OneSync.chm"))
                     Process.Start(STARTUP_PATH + @"\OneSync.chm");
-			}
+            }
         }
 
         private void SetControlsEnabledState(bool syncInProgress, bool isEnabled)
@@ -1272,14 +1350,14 @@ namespace OneSync.UI
             txtSyncJobName.IsEnabled = isEnabled;
             txtSource.IsEnabled = isEnabled;
             txtIntStorage.IsEnabled = isEnabled;
-            txtBlkNewJob.IsEnabled = isEnabled;
+            btnAddNewJob.IsEnabled = isEnabled;
             btnBrowse.IsEnabled = isEnabled;
             btnBrowse_Source.IsEnabled = isEnabled;
             btnSyncStatic.IsEnabled = isEnabled;
 
             if (syncInProgress)
             {
-				txtBlkProceed.IsEnabled = true;
+                txtBlkProceed.IsEnabled = true;
                 btnSyncRotating.Visibility = Visibility.Visible;
                 btnSyncStatic.Visibility = Visibility.Hidden;
                 lbl_description.Visibility = Visibility.Visible;
@@ -1295,10 +1373,10 @@ namespace OneSync.UI
 
         private void btnHelp_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-        	showErrorMsg("");
-			if (File.Exists(STARTUP_PATH + @"\OneSync.chm"))
-          		Process.Start(STARTUP_PATH + @"\OneSync.chm");
-			else
+            showErrorMsg("");
+            if (File.Exists(STARTUP_PATH + @"\OneSync.chm"))
+                Process.Start(STARTUP_PATH + @"\OneSync.chm");
+            else
                 showErrorMsg(m_ResourceManager.GetString("err_helpFileNotFound"));
         }
 
@@ -1308,7 +1386,7 @@ namespace OneSync.UI
 
             List<UISyncJobEntry> tempSyncJobEntries = new List<UISyncJobEntry>();
 
-            foreach (UISyncJobEntry entry in SyncJobEntries) 
+            foreach (UISyncJobEntry entry in SyncJobEntries)
             {
                 if (entry.SyncSource.Equals(selectedSyncSource))
                 {
@@ -1332,9 +1410,9 @@ namespace OneSync.UI
         private void showPartialSyncJobsCheckBox_Unchecked(object sender, System.Windows.RoutedEventArgs e)
         {
             SyncJobEntries.Clear();
-            
+
             LoadSyncJobs();
         }
 
-	}
+    }
 }
