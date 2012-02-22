@@ -110,8 +110,6 @@ Make sure you have plugged in the portable drive (or thumb drive) to your comput
 
 [http://gohchunlin.appspot.com/OneSync-Resources/OneSync4/OneSync-4-Shortcut.jpg]
 
-In OneSync 3, there is an option called "Open OneSync 3" which allows you to run the OneSync directly.
-
 *Step 2*
 
 The OneSync Window will pop up. The sync job name and the directory of the folder to sync will be automatically filled in if the option "Sync with OneSync 3" is chosen in the Step 1. You then just need to enter the directory of intermediate storage and click on the "Add New Job" button. After that, please click on the "Sync Selected Jobs" button to start your newly created sync job.
