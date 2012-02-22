@@ -106,13 +106,13 @@ Why put your files in different PCs and keep doing copy-and-paste whenever you u
 ===Syncing Through Portable Drive===
 *Step 1*
 
-Make sure you have plugged in the portable drive (or thumb drive) to your computer. On your PC, right-click the folder you want to sync, and click "Sync with OneSync 3". Depending on the version you are currently using, the name will be a bit different.
+Make sure you have plugged in the portable drive (or thumb drive) to your computer. On your PC, right-click the folder you want to sync, and click "Sync with OneSync 4". Depending on the version you are currently using, the name will be a bit different.
 
 [http://gohchunlin.appspot.com/OneSync-Resources/OneSync4/OneSync-4-Shortcut.jpg]
 
 *Step 2*
 
-The OneSync Window will pop up. The sync job name and the directory of the folder to sync will be automatically filled in if the option "Sync with OneSync 3" is chosen in the Step 1. You then just need to enter the directory of intermediate storage and click on the "Add New Job" button. After that, please click on the "Sync Selected Jobs" button to start your newly created sync job.
+The OneSync Window will pop up. The sync job name and the directory of the folder to sync will be automatically filled in if the option "Sync with OneSync 4" is chosen in the Step 1. You then just need to enter the directory of intermediate storage and click on the "Add New Job" button. After that, please click on the "Sync Selected Jobs" button to start your newly created sync job.
 
 [http://gohchunlin.appspot.com/OneSync-Resources/OneSync4/OneSync-4-Add-New-Sync-Job-Through-Shortcut.jpg]
 
