@@ -1,4 +1,4 @@
-#summary This developer guide describes how OneSync 3 works as well as its architecture.
+#summary This developer guide describes how OneSync 4 works as well as its architecture.
 #labels Featured
 
 === Introduction ===
