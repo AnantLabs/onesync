@@ -1,4 +1,4 @@
-#summary This user guide describes OneSync 3.
+#summary This user guide describes OneSync 4.
 #labels Featured,Phase-Deploy
 
 == Introduction ==
